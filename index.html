@@ -360,12 +360,12 @@
     }
 
     /* ==========================================
-       BENTO GRID & GAME CARDS
+       BENTO GRID & GAME CARDS (COMPACT 1/5 SCALE)
        ========================================== */
     .bento-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 1.6rem;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 240px));
+      gap: 1.1rem;
       justify-content: flex-start;
     }
 
@@ -373,7 +373,7 @@
       position: relative;
       background: var(--bg-card);
       border: 1px solid var(--border-glass);
-      border-radius: var(--radius-card);
+      border-radius: 12px;
       padding: 0;
       display: flex;
       flex-direction: column;
@@ -383,7 +383,8 @@
       transition: transform var(--transition-smooth), border-color var(--transition-smooth), box-shadow var(--transition-smooth), background var(--transition-smooth);
       cursor: pointer;
       overflow: hidden;
-      min-height: 440px;
+      min-height: 250px;
+      max-width: 250px;
     }
 
     .game-card::before {
@@ -392,7 +393,7 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 3px;
+      height: 2px;
       background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet));
       opacity: 0;
       transition: opacity var(--transition-fast);
@@ -400,7 +401,7 @@
     }
 
     .game-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-4px);
       background: var(--bg-card-hover);
       border-color: var(--border-glow);
       box-shadow: var(--shadow-glow);
@@ -410,11 +411,11 @@
       opacity: 1;
     }
 
-    /* Game In-Game Visual Preview Banner */
+    /* Game In-Game Visual Preview Banner (Compact) */
     .card-preview-banner {
       position: relative;
       width: 100%;
-      height: 220px;
+      height: 110px;
       overflow: hidden;
       background: #080b14;
       border-bottom: 1px solid var(--border-glass);
@@ -440,28 +441,28 @@
 
     .preview-badge-overlay {
       position: absolute;
-      top: 12px;
-      right: 12px;
+      top: 8px;
+      right: 8px;
       z-index: 3;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
     }
 
     .preview-category-pill {
-      font-size: 0.72rem;
+      font-size: 0.62rem;
       font-weight: 800;
-      letter-spacing: 0.05em;
-      padding: 0.28rem 0.75rem;
+      letter-spacing: 0.04em;
+      padding: 0.2rem 0.5rem;
       border-radius: var(--radius-pill);
-      background: rgba(11, 15, 25, 0.88);
+      background: rgba(11, 15, 25, 0.9);
       border: 1px solid rgba(34, 211, 238, 0.35);
       color: var(--accent-cyan);
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       backdrop-filter: blur(10px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     }
 
     .preview-category-pill[data-cat="spatial"] {
@@ -475,49 +476,49 @@
     }
 
     .preview-cat-dot {
-      width: 7px;
-      height: 7px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background: var(--accent-cyan);
-      box-shadow: 0 0 8px var(--accent-cyan);
+      box-shadow: 0 0 6px var(--accent-cyan);
     }
 
     .preview-category-pill[data-cat="spatial"] .preview-cat-dot {
       background: #a855f7;
-      box-shadow: 0 0 8px #a855f7;
+      box-shadow: 0 0 6px #a855f7;
     }
 
     .preview-category-pill[data-cat="puzzle"] .preview-cat-dot {
       background: #f59e0b;
-      box-shadow: 0 0 8px #f59e0b;
+      box-shadow: 0 0 6px #f59e0b;
     }
 
     .card-content-wrap {
-      padding: 1.35rem;
+      padding: 0.8rem;
       display: flex;
       flex-direction: column;
       flex: 1;
       justify-content: space-between;
-      gap: 1.1rem;
+      gap: 0.65rem;
     }
 
     .card-top {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 1rem;
+      gap: 0.6rem;
     }
 
     .game-icon-wrap {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
       background: rgba(15, 23, 42, 0.75);
       border: 1px solid rgba(148, 163, 184, 0.18);
       display: grid;
       place-items: center;
-      font-size: 1.4rem;
-      box-shadow: inset 0 0 15px rgba(34, 211, 238, 0.08);
+      font-size: 1.05rem;
+      box-shadow: inset 0 0 10px rgba(34, 211, 238, 0.08);
       flex-shrink: 0;
     }
 
@@ -525,15 +526,15 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 0.4rem;
+      gap: 0.25rem;
     }
 
     .category-badge {
-      font-size: 0.7rem;
+      font-size: 0.62rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.07em;
-      padding: 0.24rem 0.65rem;
+      letter-spacing: 0.05em;
+      padding: 0.18rem 0.5rem;
       border-radius: var(--radius-pill);
       background: rgba(34, 211, 238, 0.12);
       color: var(--accent-cyan);
@@ -561,52 +562,56 @@
     .difficulty-dots {
       display: inline-flex;
       align-items: center;
-      gap: 3px;
-      font-size: 0.68rem;
+      gap: 2px;
+      font-size: 0.62rem;
       color: var(--text-secondary);
     }
 
     .diff-dot {
-      width: 6px;
-      height: 6px;
+      width: 4px;
+      height: 4px;
       border-radius: 50%;
       background: rgba(148, 163, 184, 0.25);
     }
 
     .diff-dot.filled {
       background: var(--accent-cyan);
-      box-shadow: 0 0 6px rgba(34, 211, 238, 0.6);
+      box-shadow: 0 0 5px rgba(34, 211, 238, 0.6);
     }
 
     .card-body h2 {
-      font-size: 1.2rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: var(--text-primary);
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.25rem;
       letter-spacing: -0.01em;
     }
 
     .card-desc {
-      font-size: 0.85rem;
+      font-size: 0.72rem;
       color: var(--text-secondary);
-      line-height: 1.45;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .card-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-top: 0.9rem;
+      padding-top: 0.6rem;
       border-top: 1px solid rgba(148, 163, 184, 0.1);
-      gap: 0.75rem;
+      gap: 0.5rem;
     }
 
     .best-score-tag {
-      font-size: 0.78rem;
+      font-size: 0.7rem;
       color: var(--text-secondary);
       display: flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.25rem;
     }
 
     .best-score-tag strong {
@@ -615,13 +620,13 @@
     }
 
     .launch-pill {
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: var(--accent-cyan);
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
-      padding: 0.38rem 0.85rem;
+      gap: 0.25rem;
+      padding: 0.28rem 0.65rem;
       border-radius: var(--radius-pill);
       background: rgba(34, 211, 238, 0.1);
       border: 1px solid rgba(34, 211, 238, 0.25);
@@ -631,7 +636,7 @@
     .game-card:hover .launch-pill {
       background: var(--accent-cyan);
       color: #0b0f19;
-      box-shadow: 0 0 14px rgba(34, 211, 238, 0.45);
+      box-shadow: 0 0 10px rgba(34, 211, 238, 0.45);
     }
 
     .empty-grid-state {

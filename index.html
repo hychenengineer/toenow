@@ -364,7 +364,7 @@
        ========================================== */
     .bento-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 460px));
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
       gap: 1.6rem;
       justify-content: flex-start;
     }
@@ -469,6 +469,11 @@
       color: #c4b5fd;
     }
 
+    .preview-category-pill[data-cat="puzzle"] {
+      border-color: rgba(245, 158, 11, 0.45);
+      color: #fcd34d;
+    }
+
     .preview-cat-dot {
       width: 7px;
       height: 7px;
@@ -480,6 +485,11 @@
     .preview-category-pill[data-cat="spatial"] .preview-cat-dot {
       background: #a855f7;
       box-shadow: 0 0 8px #a855f7;
+    }
+
+    .preview-category-pill[data-cat="puzzle"] .preview-cat-dot {
+      background: #f59e0b;
+      box-shadow: 0 0 8px #f59e0b;
     }
 
     .card-content-wrap {
@@ -1272,6 +1282,7 @@
         <button type="button" class="tab-btn active" data-category="all">All Disciplines</button>
         <button type="button" class="tab-btn" data-category="math">Arithmetic &amp; Numbers</button>
         <button type="button" class="tab-btn" data-category="spatial">Spatial &amp; 3D</button>
+        <button type="button" class="tab-btn" data-category="puzzle">Pattern &amp; Puzzle</button>
       </nav>
 
       <!-- Action Bar -->
@@ -1453,6 +1464,15 @@
         url: 'games/quantum-shell/index.html',
         difficulty: 4,
         description: 'High-velocity spatial tracking simulation. Track quantum cores inside rapidly shuffling shielded drone capsules.'
+      },
+      {
+        id: 'chip-defrag',
+        title: 'Chip Defrag',
+        category: 'puzzle',
+        icon: '🖲️',
+        url: 'games/chip-defrag/index.html',
+        difficulty: 3,
+        description: 'Cyberpunk semiconductor deconstruction. Shatter excess blocks from the active die matrix to match target circuit blueprints.'
       }
     ];
 
@@ -1708,6 +1728,14 @@
             <img class="card-preview-img" src="assets/quantum-shell-preview.png" alt="Quantum Shell In-Game Arena" loading="lazy" />
             <div class="preview-badge-overlay">
               <span class="preview-category-pill" data-cat="spatial"><span class="preview-cat-dot"></span> Spatial &amp; 3D</span>
+            </div>
+          </div>
+        `,
+        'chip-defrag': `
+          <div class="card-preview-banner">
+            <img class="card-preview-img" src="assets/chip-defrag-preview.png" alt="Chip Defrag In-Game Arena" loading="lazy" />
+            <div class="preview-badge-overlay">
+              <span class="preview-category-pill" data-cat="puzzle"><span class="preview-cat-dot"></span> Pattern &amp; Puzzle</span>
             </div>
           </div>
         `
@@ -1990,6 +2018,18 @@
         { player: 'VectorCollapse', score: 12100, date: '2026-10-13' },
         { player: 'SubZero_Math', score: 10850, date: '2026-10-12' },
         { player: 'CadetOperator', score: 9400, date: '2026-10-11' }
+      ],
+      'chip-defrag': [
+        { player: 'SiliconShredder', score: 26800, date: '2026-10-18' },
+        { player: 'DefragMaster_9', score: 23400, date: '2026-10-18' },
+        { player: 'WaferCarver', score: 20100, date: '2026-10-17' },
+        { player: 'LogicDie_X', score: 18500, date: '2026-10-16' },
+        { player: 'ChronoVent', score: 16200, date: '2026-10-15' },
+        { player: 'OverclockedDie', score: 14700, date: '2026-10-14' },
+        { player: 'NanoEtcher', score: 12900, date: '2026-10-14' },
+        { player: 'BinaryShatter', score: 11200, date: '2026-10-13' },
+        { player: 'CircuitBreaker', score: 9800, date: '2026-10-12' },
+        { player: 'SemiconZero', score: 8400, date: '2026-10-11' }
       ]
     };
 

@@ -364,8 +364,9 @@
        ========================================== */
     .bento-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-      gap: 1.35rem;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 460px));
+      gap: 1.6rem;
+      justify-content: flex-start;
     }
 
     .game-card {
@@ -373,25 +374,16 @@
       background: var(--bg-card);
       border: 1px solid var(--border-glass);
       border-radius: var(--radius-card);
-      padding: 1.5rem;
+      padding: 0;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 1.25rem;
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       transition: transform var(--transition-smooth), border-color var(--transition-smooth), box-shadow var(--transition-smooth), background var(--transition-smooth);
       cursor: pointer;
       overflow: hidden;
-      min-height: 235px;
-    }
-
-    /*Featured wide bento card on desktop for the first item when showing all */
-    @media (min-width: 1024px) {
-      .game-card.bento-featured {
-        grid-column: span 2;
-        background: linear-gradient(135deg, rgba(20, 29, 47, 0.78) 0%, rgba(30, 27, 75, 0.55) 100%);
-      }
+      min-height: 440px;
     }
 
     .game-card::before {
@@ -404,10 +396,11 @@
       background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet));
       opacity: 0;
       transition: opacity var(--transition-fast);
+      z-index: 4;
     }
 
     .game-card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-5px);
       background: var(--bg-card-hover);
       border-color: var(--border-glow);
       box-shadow: var(--shadow-glow);
@@ -415,6 +408,72 @@
 
     .game-card:hover::before {
       opacity: 1;
+    }
+
+    /* Game In-Game Visual Preview Banner */
+    .card-preview-banner {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      background: #080b14;
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-preview-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .game-card:hover .card-preview-svg {
+      transform: scale(1.04);
+    }
+
+    .preview-badge-overlay {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .preview-live-pill {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-pill);
+      background: rgba(11, 15, 25, 0.85);
+      border: 1px solid var(--border-glass);
+      color: #cbd5e1;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      backdrop-filter: blur(8px);
+    }
+
+    .preview-live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 6px var(--accent-cyan);
+    }
+
+    .card-content-wrap {
+      padding: 1.35rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+      gap: 1.1rem;
     }
 
     .card-top {
@@ -425,14 +484,14 @@
     }
 
     .game-icon-wrap {
-      width: 54px;
-      height: 54px;
-      border-radius: 15px;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
       background: rgba(15, 23, 42, 0.75);
       border: 1px solid rgba(148, 163, 184, 0.18);
       display: grid;
       place-items: center;
-      font-size: 1.65rem;
+      font-size: 1.4rem;
       box-shadow: inset 0 0 15px rgba(34, 211, 238, 0.08);
       flex-shrink: 0;
     }
@@ -1198,8 +1257,6 @@
         <button type="button" class="tab-btn active" data-category="all">All Disciplines</button>
         <button type="button" class="tab-btn" data-category="math">Arithmetic &amp; Numbers</button>
         <button type="button" class="tab-btn" data-category="spatial">Spatial &amp; 3D</button>
-        <button type="button" class="tab-btn" data-category="puzzle">Pattern &amp; Puzzle</button>
-        <button type="button" class="tab-btn" data-category="logic">Deductive Logic</button>
       </nav>
 
       <!-- Action Bar -->
@@ -1381,11 +1438,7 @@
         url: 'games/quantum-shell/index.html',
         difficulty: 4,
         description: 'High-velocity spatial tracking simulation. Track quantum cores inside rapidly shuffling shielded drone capsules.'
-      },
-      { id: 'math-balloon', title: 'Factor Slicer', category: 'math', icon: '🎈', url: 'balloon.html', difficulty: 2 },
-      { id: 'spatial-cube', title: 'Cube Perspective 3D', category: 'spatial', icon: '🧊', url: 'games/spatial-cube/index.html', difficulty: 4 },
-      { id: 'logic-scale', title: 'Equilibrium Scale', category: 'logic', icon: '⚖️', url: 'scale.html', difficulty: 3 },
-      { id: 'puzzle-tessellation', title: 'Geometric Tessellation', category: 'puzzle', icon: '🧩', url: 'games/puzzle/play.html', difficulty: 3 }
+      }
     ];
 
     const CATEGORY_META = {
@@ -1626,44 +1679,164 @@
         return;
       }
 
-      grid.innerHTML = filtered.map((game, idx) => {
+      const GAME_PREVIEWS = {
+        'quantum-core-collapse': `
+          <div class="card-preview-banner">
+            <svg class="card-preview-svg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="qcc-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="qcc-glow-magenta" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#e879f9" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="#e879f9" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="qcc-grid" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(34,211,238,0.18)"/>
+                  <stop offset="100%" stop-color="rgba(34,211,238,0.02)"/>
+                </linearGradient>
+              </defs>
+              <rect width="400" height="200" fill="#080b15"/>
+              <!-- Perspective Grid -->
+              <g stroke="rgba(34,211,238,0.12)" stroke-width="1">
+                <line x1="20" y1="0" x2="20" y2="200"/>
+                <line x1="80" y1="0" x2="80" y2="200"/>
+                <line x1="140" y1="0" x2="140" y2="200"/>
+                <line x1="200" y1="0" x2="200" y2="200"/>
+                <line x1="260" y1="0" x2="260" y2="200"/>
+                <line x1="320" y1="0" x2="320" y2="200"/>
+                <line x1="380" y1="0" x2="380" y2="200"/>
+                <line x1="0" y1="35" x2="400" y2="35"/>
+                <line x1="0" y1="85" x2="400" y2="85"/>
+                <line x1="0" y1="135" x2="400" y2="135"/>
+                <line x1="0" y1="185" x2="400" y2="185"/>
+              </g>
+              <!-- Core 1 (Cyan Hexagon with Fraction) -->
+              <circle cx="85" cy="100" r="50" fill="url(#qcc-glow)"/>
+              <polygon points="85,60 115,78 115,122 85,140 55,122 55,78" fill="rgba(13,18,32,0.92)" stroke="#22d3ee" stroke-width="2.5"/>
+              <polygon points="85,72 105,84 105,116 85,128 65,116 65,84" fill="none" stroke="rgba(34,211,238,0.4)" stroke-width="1.2"/>
+              <text x="85" y="93" fill="#f8fafc" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800" text-anchor="middle">1</text>
+              <line x1="72" y1="100" x2="98" y2="100" stroke="#f8fafc" stroke-width="2" stroke-linecap="round"/>
+              <text x="85" y="117" fill="#f8fafc" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800" text-anchor="middle">4</text>
+              <!-- Core 2 (Target Pop Lowest Integer - 2) -->
+              <circle cx="205" cy="115" r="58" fill="url(#qcc-glow-magenta)"/>
+              <polygon points="205,70 238,88 238,138 205,158 172,138 172,88" fill="rgba(24,10,34,0.92)" stroke="#e879f9" stroke-width="3"/>
+              <!-- Fraction arc indicator -->
+              <path d="M 205,70 A 45,45 0 0,1 245,115" fill="none" stroke="#f5d0fe" stroke-width="3.5" stroke-linecap="round"/>
+              <text x="205" y="123" fill="#ffffff" font-family="'JetBrains Mono', monospace" font-size="24" font-weight="800" text-anchor="middle">2</text>
+              <!-- Core 3 (Decimal - 0.75) -->
+              <circle cx="325" cy="85" r="46" fill="url(#qcc-glow)"/>
+              <polygon points="325,48 354,64 354,104 325,122 296,104 296,64" fill="rgba(13,18,32,0.92)" stroke="#38bdf8" stroke-width="2.2"/>
+              <text x="325" y="92" fill="#f8fafc" font-family="'JetBrains Mono', monospace" font-size="15" font-weight="800" text-anchor="middle">0.75</text>
+              <!-- Order directive overlay -->
+              <rect x="15" y="155" width="165" height="28" rx="6" fill="rgba(15,23,42,0.85)" stroke="rgba(34,211,238,0.3)"/>
+              <text x="97" y="173" fill="#22d3ee" font-family="'Outfit', sans-serif" font-size="11" font-weight="700" text-anchor="middle">TARGET: ASCENDING ORDER</text>
+            </svg>
+            <div class="preview-badge-overlay">
+              <span class="preview-live-pill"><span class="preview-live-dot"></span> IN-GAME SIMULATION</span>
+            </div>
+          </div>
+        `,
+        'quantum-shell': `
+          <div class="card-preview-banner">
+            <svg class="card-preview-svg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="qs-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.45"/>
+                  <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="qs-core-gold" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#fef08a" stop-opacity="1"/>
+                  <stop offset="40%" stop-color="#facc15" stop-opacity="0.9"/>
+                  <stop offset="100%" stop-color="#ca8a04" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <rect width="400" height="200" fill="#080b15"/>
+              <!-- Orbital tracking rings -->
+              <ellipse cx="200" cy="100" rx="145" ry="58" fill="none" stroke="rgba(139,92,246,0.22)" stroke-width="1.5" stroke-dasharray="5 5"/>
+              <ellipse cx="200" cy="100" rx="110" ry="42" fill="none" stroke="rgba(34,211,238,0.28)" stroke-width="1.5"/>
+              <!-- Capsule 1 (Left Drone) -->
+              <g transform="translate(90, 85)">
+                <ellipse cx="0" cy="0" rx="34" ry="24" fill="rgba(15,23,42,0.95)" stroke="#64748b" stroke-width="2"/>
+                <ellipse cx="0" cy="0" rx="20" ry="12" fill="rgba(30,41,59,0.85)" stroke="rgba(148,163,184,0.4)" stroke-width="1"/>
+                <circle cx="-28" cy="0" r="3" fill="#38bdf8"/>
+                <circle cx="28" cy="0" r="3" fill="#38bdf8"/>
+              </g>
+              <!-- Capsule 2 (Center Drone - Revealed Golden Quantum Core) -->
+              <g transform="translate(200, 105)">
+                <circle cx="0" cy="0" r="38" fill="url(#qs-glow)"/>
+                <circle cx="0" cy="0" r="22" fill="url(#qs-core-gold)"/>
+                <circle cx="0" cy="0" r="10" fill="#ffffff"/>
+                <!-- Upper dome hovering -->
+                <path d="M -30,-8 C -30,-28 30,-28 30,-8 Z" fill="rgba(15,23,42,0.95)" stroke="#c084fc" stroke-width="2"/>
+                <!-- Lower base hovering -->
+                <path d="M -30,12 C -30,28 30,28 30,12 Z" fill="rgba(15,23,42,0.95)" stroke="#c084fc" stroke-width="2"/>
+                <circle cx="0" cy="-20" r="3" fill="#e879f9"/>
+              </g>
+              <!-- Capsule 3 (Right Drone) -->
+              <g transform="translate(310, 85)">
+                <ellipse cx="0" cy="0" rx="34" ry="24" fill="rgba(15,23,42,0.95)" stroke="#64748b" stroke-width="2"/>
+                <ellipse cx="0" cy="0" rx="20" ry="12" fill="rgba(30,41,59,0.85)" stroke="rgba(148,163,184,0.4)" stroke-width="1"/>
+                <circle cx="-28" cy="0" r="3" fill="#38bdf8"/>
+                <circle cx="28" cy="0" r="3" fill="#38bdf8"/>
+              </g>
+              <!-- Dynamic Orbit Vector Arrows -->
+              <path d="M 125,70 Q 200,45 275,70" fill="none" stroke="#22d3ee" stroke-width="1.8" stroke-dasharray="4 4"/>
+              <polygon points="278,70 268,64 272,74" fill="#22d3ee"/>
+              <!-- Tracker Status Indicator -->
+              <rect x="15" y="155" width="165" height="28" rx="6" fill="rgba(15,23,42,0.85)" stroke="rgba(139,92,246,0.3)"/>
+              <text x="97" y="173" fill="#c084fc" font-family="'Outfit', sans-serif" font-size="11" font-weight="700" text-anchor="middle">TRACK: QUANTUM CAPSULE</text>
+            </svg>
+            <div class="preview-badge-overlay">
+              <span class="preview-live-pill"><span class="preview-live-dot" style="background:#a855f7;box-shadow:0 0 6px #a855f7;"></span> SPATIAL TRACKER</span>
+            </div>
+          </div>
+        `
+      };
+
+      grid.innerHTML = filtered.map((game) => {
         const meta = CATEGORY_META[game.category] || {
           label: game.category.toUpperCase(),
           description: 'Modular cognitive training simulation.'
         };
         const record = scores[game.id];
         const bestText = record ? `${record.bestScore.toLocaleString()} pts` : 'Unranked';
-        const isFeatured = activeCategory === 'all' && idx === 0;
 
         let dotsHtml = '';
         for (let i = 1; i <= 5; i++) {
           dotsHtml += `<span class="diff-dot ${i <= game.difficulty ? 'filled' : ''}"></span>`;
         }
 
+        const previewHtml = GAME_PREVIEWS[game.id] || '';
+
         return `
-          <article class="game-card ${isFeatured ? 'bento-featured' : ''}" data-game-id="${game.id}" tabindex="0" role="button" aria-label="Launch ${game.title}">
-            <div class="card-top">
-              <div class="game-icon-wrap" aria-hidden="true">${game.icon}</div>
-              <div class="card-badges">
-                <span class="category-badge" data-cat="${game.category}">${meta.label}</span>
-                <div class="difficulty-dots" title="Difficulty Tier ${game.difficulty}/5">
-                  <span>Tier</span>
-                  ${dotsHtml}
+          <article class="game-card" data-game-id="${game.id}" tabindex="0" role="button" aria-label="Launch ${game.title}">
+            ${previewHtml}
+            <div class="card-content-wrap">
+              <div class="card-top">
+                <div class="game-icon-wrap" aria-hidden="true">${game.icon}</div>
+                <div class="card-badges">
+                  <span class="category-badge" data-cat="${game.category}">${meta.label}</span>
+                  <div class="difficulty-dots" title="Difficulty Tier ${game.difficulty}/5">
+                    <span>Tier</span>
+                    ${dotsHtml}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="card-body">
-              <h2>${game.title}</h2>
-              <p class="card-desc">${game.description || meta.description}</p>
-            </div>
-
-            <div class="card-footer">
-              <div class="best-score-tag">
-                <span>Personal Best:</span>
-                <strong>${bestText}</strong>
+              <div class="card-body">
+                <h2>${game.title}</h2>
+                <p class="card-desc">${game.description || meta.description}</p>
               </div>
-              <span class="launch-pill">Launch Sandbox →</span>
+
+              <div class="card-footer">
+                <div class="best-score-tag">
+                  <span>Personal Best:</span>
+                  <strong>${bestText}</strong>
+                </div>
+                <span class="launch-pill">Launch Sandbox →</span>
+              </div>
             </div>
           </article>
         `;
@@ -1900,54 +2073,6 @@
         { player: 'VectorCollapse', score: 12100, date: '2026-10-13' },
         { player: 'SubZero_Math', score: 10850, date: '2026-10-12' },
         { player: 'CadetOperator', score: 9400, date: '2026-10-11' }
-      ],
-      'math-balloon': [
-        { player: 'AeroQuant_99', score: 1480, date: '2026-10-16' },
-        { player: 'PrimeSlicerX', score: 1425, date: '2026-10-15' },
-        { player: 'EulerPulse', score: 1390, date: '2026-10-14' },
-        { player: 'NovaVector', score: 1310, date: '2026-10-14' },
-        { player: 'Kestrel_07', score: 1265, date: '2026-10-13' },
-        { player: 'CipherMinds', score: 1210, date: '2026-10-12' },
-        { player: 'TensorFlowZ', score: 1180, date: '2026-10-11' },
-        { player: 'SynapseDrift', score: 1120, date: '2026-10-10' },
-        { player: 'ZeroLatency', score: 1085, date: '2026-10-09' },
-        { player: 'ModuloNine', score: 1020, date: '2026-10-08' }
-      ],
-      'spatial-cube': [
-        { player: 'VoxelArchitect', score: 1640, date: '2026-10-17' },
-        { player: 'HyperCube_3D', score: 1575, date: '2026-10-16' },
-        { player: 'Quaternions', score: 1490, date: '2026-10-15' },
-        { player: 'IsoMetricPro', score: 1430, date: '2026-10-14' },
-        { player: 'VertexRunner', score: 1385, date: '2026-10-13' },
-        { player: 'OrbitalFold', score: 1320, date: '2026-10-12' },
-        { player: 'AxisShift', score: 1270, date: '2026-10-11' },
-        { player: 'PolyhedronX', score: 1215, date: '2026-10-10' },
-        { player: 'ParallaxView', score: 1160, date: '2026-10-09' },
-        { player: 'Tesseract_88', score: 1105, date: '2026-10-08' }
-      ],
-      'logic-scale': [
-        { player: 'AxiomSolver', score: 1520, date: '2026-10-16' },
-        { player: 'FulcrumMind', score: 1460, date: '2026-10-15' },
-        { player: 'DeductionZen', score: 1410, date: '2026-10-14' },
-        { player: 'SyllogismX', score: 1355, date: '2026-10-13' },
-        { player: 'Equilibrium7', score: 1300, date: '2026-10-12' },
-        { player: 'BayesTheorem', score: 1250, date: '2026-10-11' },
-        { player: 'LogicGate_IO', score: 1195, date: '2026-10-10' },
-        { player: 'TruthTable', score: 1140, date: '2026-10-09' },
-        { player: 'ParityCheck', score: 1090, date: '2026-10-08' },
-        { player: 'OccamRazor', score: 1040, date: '2026-10-07' }
-      ],
-      'puzzle-tessellation': [
-        { player: 'PenroseTile', score: 1590, date: '2026-10-17' },
-        { player: 'EscherGrid', score: 1510, date: '2026-10-16' },
-        { player: 'VoronoiCell', score: 1445, date: '2026-10-15' },
-        { player: 'HexLattice', score: 1390, date: '2026-10-14' },
-        { player: 'FractalMosaic', score: 1335, date: '2026-10-13' },
-        { player: 'SymmetryCore', score: 1280, date: '2026-10-12' },
-        { player: 'PolygonWeave', score: 1225, date: '2026-10-11' },
-        { player: 'PrismShift', score: 1170, date: '2026-10-10' },
-        { player: 'CipherTess', score: 1115, date: '2026-10-09' },
-        { player: 'VertexLock', score: 1060, date: '2026-10-08' }
       ]
     };
 

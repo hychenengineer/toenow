@@ -472,6 +472,11 @@
       color: #c4b5fd;
     }
 
+    .preview-category-pill[data-cat="logic"] {
+      border-color: rgba(16, 185, 129, 0.45);
+      color: #6ee7b7;
+    }
+
     .preview-category-pill[data-cat="puzzle"] {
       border-color: rgba(245, 158, 11, 0.45);
       color: #fcd34d;
@@ -488,6 +493,11 @@
     .preview-category-pill[data-cat="spatial"] .preview-cat-dot {
       background: #a855f7;
       box-shadow: 0 0 6px #a855f7;
+    }
+
+    .preview-category-pill[data-cat="logic"] .preview-cat-dot {
+      background: #10b981;
+      box-shadow: 0 0 6px #10b981;
     }
 
     .preview-category-pill[data-cat="puzzle"] .preview-cat-dot {
@@ -1294,6 +1304,7 @@
         <button type="button" class="tab-btn active" data-category="all">All Disciplines</button>
         <button type="button" class="tab-btn" data-category="math">Arithmetic &amp; Numbers</button>
         <button type="button" class="tab-btn" data-category="spatial">Spatial &amp; 3D</button>
+        <button type="button" class="tab-btn" data-category="logic">Deductive Logic</button>
         <button type="button" class="tab-btn" data-category="puzzle">Pattern &amp; Puzzle</button>
       </nav>
 
@@ -1494,6 +1505,15 @@
         url: 'games/overclock-reactor/index.html',
         difficulty: 4,
         description: 'High-speed mental arithmetic reflex drill. Stabilize the fission core by linking floating plasma battery nodes to match target energy sums.'
+      },
+      {
+        id: 'gravitational-anomaly',
+        title: 'Gravitational Anomaly',
+        category: 'logic',
+        icon: '⚖️',
+        url: 'games/gravitational-anomaly/index.html',
+        difficulty: 4,
+        description: 'Deep-space logical deduction drill. Analyze kinetic scales, asymmetric lever moments, and celestial densities to identify target masses.'
       }
     ];
 
@@ -1765,6 +1785,14 @@
             <img class="card-preview-img" src="assets/overclock-reactor-preview.png" alt="Overclock Reactor In-Game Arena" loading="lazy" />
             <div class="preview-badge-overlay">
               <span class="preview-category-pill" data-cat="math"><span class="preview-cat-dot"></span> Arithmetic &amp; Numbers</span>
+            </div>
+          </div>
+        `,
+        'gravitational-anomaly': `
+          <div class="card-preview-banner">
+            <img class="card-preview-img" src="assets/gravitational-anomaly-preview.png" alt="Gravitational Anomaly In-Game Arena" loading="lazy" />
+            <div class="preview-badge-overlay">
+              <span class="preview-category-pill" data-cat="logic"><span class="preview-cat-dot"></span> Deductive Logic</span>
             </div>
           </div>
         `
@@ -2071,6 +2099,18 @@
         { player: 'QuantumFission', score: 13800, date: '2026-10-14' },
         { player: 'ArcDischarge', score: 11900, date: '2026-10-13' },
         { player: 'OverclockCadet', score: 9600, date: '2026-10-12' }
+      ],
+      'gravitational-anomaly': [
+        { player: 'SingularityMaster', score: 29500, date: '2026-10-19' },
+        { player: 'CosmicArchitect_X', score: 26200, date: '2026-10-19' },
+        { player: 'AstrometricPro', score: 23100, date: '2026-10-18' },
+        { player: 'TorqueDeductor', score: 20400, date: '2026-10-18' },
+        { player: 'LeverArmSpecialist', score: 17800, date: '2026-10-17' },
+        { player: 'StellarCartographer', score: 15300, date: '2026-10-16' },
+        { player: 'GravimetricScout', score: 13200, date: '2026-10-15' },
+        { player: 'NeutronCore_7', score: 11400, date: '2026-10-14' },
+        { player: 'EquilibriumSeeker', score: 9800, date: '2026-10-13' },
+        { player: 'CadetAnalyst', score: 8100, date: '2026-10-12' }
       ]
     };
 

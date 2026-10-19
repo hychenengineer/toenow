@@ -1,0 +1,3856 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Quantum Shell</title>
+    <meta
+      name="description"
+      content="Quantum Shell — High-velocity spatial memory game. Memorize the glowing targets, follow the circular orbit shuffle, and tap the matching capsules."
+    />
+    <meta property="og:title" content="Quantum Shell" />
+    <meta
+      property="og:description"
+      content="Memorize the glowing targets in the top-right lineup, follow the circular orbit shuffle, and tap the matching capsules."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Outfit:wght@700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-void: #0a0a12;
+        --bg-surface: rgba(14, 18, 30, 0.88);
+        --bg-elevated: rgba(20, 26, 44, 0.94);
+        --cyan-core: #22d3ee;
+        --cyan-bright: #67e8f9;
+        --teal-hull: #14b8a6;
+        --amber-warn: #f59e0b;
+        --yellow-go: #facc15;
+        --overdrive-orange: #ff7849;
+        --crimson-err: #f43f5e;
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --text-muted: #64748b;
+        --border-hairline: rgba(148, 163, 184, 0.18);
+        --border-cyan: rgba(34, 211, 238, 0.42);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+      }
+
+      button:focus,
+      button:focus-visible,
+      canvas:focus {
+        outline: none;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: var(--bg-void);
+        color: var(--text-primary);
+        font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        touch-action: none;
+      }
+
+      #app-shell {
+        position: relative;
+        width: 100vw;
+        height: 100dvh;
+        overflow: hidden;
+        background: radial-gradient(circle at 50% 52%, #111628 0%, #0a0a12 74%);
+      }
+
+      #game-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        cursor: pointer;
+      }
+
+      /* Mobile-First Responsive Top HUD Wrapper */
+      .hud-wrapper {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        right: 0;
+        z-index: 20;
+        pointer-events: none;
+        width: 94vw;
+        max-width: 580px;
+        margin: 0 auto;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        transition: opacity 220ms ease, transform 220ms ease;
+      }
+
+      body[data-mode='title'] .hud-wrapper {
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+      }
+
+      .hud-top {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        justify-content: space-between;
+        gap: 6px;
+      }
+
+      .hud-cluster {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        pointer-events: auto;
+      }
+
+      .hud-cluster-left {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      .hud-cluster-right {
+        flex: 0 0 auto;
+        margin-left: auto;
+      }
+
+      .hud-pill {
+        background: var(--bg-surface);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-hairline);
+        border-radius: 8px;
+        padding: 5px 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 66px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      .hud-pill.overdrive-pill {
+        border-color: rgba(255, 120, 73, 0.35);
+      }
+
+      .hud-pill.shield-pill {
+        min-width: 86px;
+      }
+
+      .hud-label {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        line-height: 1.1;
+      }
+
+      .hud-value {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-primary);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.25;
+      }
+
+      .hud-value.cyan {
+        color: var(--cyan-core);
+        text-shadow: 0 0 10px rgba(34, 211, 238, 0.35);
+      }
+
+      .hud-value.amber {
+        color: var(--amber-warn);
+        text-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+      }
+
+      .hud-value.overdrive {
+        color: var(--overdrive-orange);
+        text-shadow: 0 0 12px rgba(255, 120, 73, 0.45);
+      }
+
+      /* 3-Shield Energy Bar: Depleted shields render as EMPTY hollow grey/cyan outlines (never red) */
+      .shield-icons-row {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 2px;
+        height: 20px;
+      }
+
+      .shield-pip {
+        width: 15px;
+        height: 17px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease;
+      }
+
+      .shield-pip svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      .shield-pip.active {
+        color: var(--cyan-core);
+        filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.65));
+      }
+
+      .shield-pip.depleted {
+        color: rgba(148, 163, 184, 0.55);
+        opacity: 0.72;
+        transform: scale(0.94);
+        filter: none;
+      }
+
+      /* Top Status & Progress Strip with "WAVE [X] | TARGET: [Y]" on the right */
+      .hud-phase-bar {
+        width: 100%;
+        background: var(--bg-surface);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-hairline);
+        border-radius: 8px;
+        padding: 6px 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      .hud-phase-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+      }
+
+      .hud-phase-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .hud-phase-title {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--cyan-core);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .hud-phase-timer {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text-secondary);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      .hud-wave-target-indicator {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        color: var(--text-primary);
+        background: rgba(34, 211, 238, 0.12);
+        border: 1px solid rgba(34, 211, 238, 0.35);
+        border-radius: 5px;
+        padding: 2px 8px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        text-shadow: 0 0 8px rgba(34, 211, 238, 0.25);
+      }
+
+      .hud-gauge-track {
+        width: 100%;
+        height: 4px;
+        background: rgba(148, 163, 184, 0.16);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .hud-gauge-fill {
+        width: 100%;
+        height: 100%;
+        background: var(--cyan-core);
+        transform-origin: left center;
+        transform: scaleX(1);
+        transition: background-color 150ms ease;
+      }
+
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: var(--bg-surface);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-hairline);
+        color: var(--text-secondary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 140ms ease;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      .icon-btn:hover {
+        color: var(--text-primary);
+        border-color: var(--border-cyan);
+        background: rgba(34, 211, 238, 0.1);
+      }
+
+      .icon-btn:active {
+        transform: scale(0.95);
+      }
+
+      .icon-btn svg {
+        width: 17px;
+        height: 17px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+      }
+
+      /* Clean Bottom HUD: ONLY Overdrive Button & Bet Multiplier Readout (No Tab Prompts) */
+      .bottom-hud {
+        position: absolute;
+        bottom: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 22;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        pointer-events: none;
+        width: 94vw;
+        max-width: 420px;
+        transition: opacity 180ms ease, transform 180ms ease;
+      }
+
+      body[data-mode='title'] .bottom-hud,
+      body[data-mode='gameover'] .bottom-hud,
+      body[data-mode='paused'] .bottom-hud,
+      body[data-mode='perk'] .bottom-hud {
+        opacity: 0;
+        pointer-events: none;
+        transform: translate(-50%, 14px);
+      }
+
+      .overdrive-btn {
+        pointer-events: auto;
+        position: relative;
+        width: 100%;
+        max-width: 340px;
+        padding: 10px 18px;
+        border-radius: 10px;
+        background: rgba(20, 24, 38, 0.92);
+        border: 1.5px solid rgba(255, 120, 73, 0.48);
+        color: var(--text-primary);
+        font-family: 'Outfit', sans-serif;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 14px rgba(255, 120, 73, 0.14);
+        transition: all 140ms ease;
+        touch-action: none;
+      }
+
+      .overdrive-btn:hover {
+        border-color: rgba(255, 120, 73, 0.85);
+      }
+
+      .overdrive-btn.active {
+        background: linear-gradient(135deg, rgba(255, 120, 73, 0.32), rgba(245, 158, 11, 0.24));
+        border-color: #ff7849;
+        box-shadow: 0 0 24px rgba(255, 120, 73, 0.55);
+        transform: scale(0.98);
+      }
+
+      .overdrive-bet-readout {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        color: #fdba74;
+        text-transform: uppercase;
+        text-shadow: 0 0 10px rgba(255, 120, 73, 0.3);
+      }
+
+      /* Center Wave / Staging Banner ("WAVE 1", "READY", "GO!") */
+      .wave-banner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.92);
+        z-index: 25;
+        pointer-events: none;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 150ms ease, transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
+        background: rgba(10, 12, 22, 0.9);
+        border: 1.5px solid rgba(34, 211, 238, 0.45);
+        padding: 14px 32px;
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), 0 0 28px rgba(34, 211, 238, 0.2);
+      }
+
+      .wave-banner.visible {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      .wave-banner-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(1.75rem, 4.8vw, 2.75rem);
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-primary);
+        text-shadow: 0 0 24px rgba(34, 211, 238, 0.55);
+        white-space: nowrap;
+      }
+
+      .wave-banner.ready-mode {
+        border-color: rgba(56, 189, 248, 0.72);
+        background: rgba(10, 16, 30, 0.92);
+      }
+
+      .wave-banner.ready-mode .wave-banner-title {
+        color: #38bdf8;
+        font-size: clamp(1.9rem, 5vw, 2.9rem);
+        text-shadow: 0 0 28px rgba(56, 189, 248, 0.75);
+      }
+
+      .wave-banner.go-mode {
+        border-color: rgba(250, 204, 21, 0.85);
+        background: rgba(24, 20, 8, 0.94);
+      }
+
+      .wave-banner.go-mode .wave-banner-title {
+        color: var(--yellow-go);
+        font-size: clamp(2.1rem, 5.5vw, 3.25rem);
+        text-shadow: 0 0 32px rgba(250, 204, 21, 0.85);
+      }
+
+      /* Overlay Modals */
+      .overlay-screen {
+        position: absolute;
+        inset: 0;
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: radial-gradient(circle at 50% 50%, rgba(10, 10, 18, 0.58) 0%, rgba(10, 10, 18, 0.88) 100%);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 220ms ease;
+      }
+
+      .overlay-screen.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .modal-card {
+        width: 100%;
+        max-width: 440px;
+        background: var(--bg-elevated);
+        border: 1px solid rgba(34, 211, 238, 0.3);
+        border-radius: 16px;
+        padding: 24px 22px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.72), 0 0 36px rgba(34, 211, 238, 0.1);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .modal-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 12%;
+        right: 12%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--cyan-core), transparent);
+      }
+
+      .eyebrow-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--cyan-core);
+        background: rgba(34, 211, 238, 0.1);
+        border: 1px solid rgba(34, 211, 238, 0.28);
+        padding: 4px 10px;
+        border-radius: 999px;
+        margin-bottom: 12px;
+      }
+
+      .game-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(2rem, 6vw, 2.75rem);
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+        text-transform: uppercase;
+        color: var(--text-primary);
+        text-shadow: 0 0 28px rgba(34, 211, 238, 0.35);
+        margin-bottom: 12px;
+      }
+
+      .modal-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(1.35rem, 4.5vw, 1.75rem);
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+      }
+
+      .modal-subtitle {
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--text-secondary);
+        margin: 0 auto 16px;
+      }
+
+      /* 3-Step Intro List */
+      .steps-box {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        text-align: left;
+        background: rgba(10, 14, 24, 0.72);
+        border: 1px solid var(--border-hairline);
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 16px;
+      }
+
+      .step-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        color: var(--text-primary);
+        line-height: 1.35;
+      }
+
+      .step-num {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        background: rgba(34, 211, 238, 0.16);
+        border: 1px solid rgba(34, 211, 238, 0.45);
+        color: var(--cyan-core);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .tip-banner {
+        font-size: 12px;
+        color: #fdba74;
+        background: rgba(255, 120, 73, 0.1);
+        border: 1px solid rgba(255, 120, 73, 0.3);
+        border-radius: 8px;
+        padding: 8px 10px;
+        margin-bottom: 16px;
+        line-height: 1.35;
+      }
+
+      /* Perk Cards: Strictly Left-Aligned Content & Description */
+      .perk-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        margin-bottom: 6px;
+        text-align: left;
+        align-items: stretch;
+      }
+
+      .perk-card {
+        width: 100%;
+        background: rgba(15, 21, 36, 0.92);
+        border: 1px solid rgba(148, 163, 184, 0.24);
+        border-radius: 10px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 12px;
+        text-align: left;
+        cursor: pointer;
+        transition: all 140ms ease;
+        color: var(--text-primary);
+      }
+
+      .perk-card:hover {
+        border-color: var(--cyan-core);
+        background: rgba(34, 211, 238, 0.11);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(34, 211, 238, 0.16);
+      }
+
+      .perk-card:active {
+        transform: scale(0.98);
+      }
+
+      .perk-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: rgba(34, 211, 238, 0.14);
+        border: 1px solid rgba(34, 211, 238, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--cyan-core);
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+
+      .perk-card-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        text-align: left;
+        gap: 3px;
+        min-width: 0;
+        flex: 1;
+      }
+
+      .perk-card-name {
+        font-family: 'Outfit', sans-serif;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        color: var(--text-primary);
+        text-align: left;
+        width: 100%;
+      }
+
+      .perk-card-desc {
+        font-size: 12px;
+        color: var(--text-secondary);
+        line-height: 1.35;
+        text-align: left;
+        width: 100%;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-bottom: 18px;
+      }
+
+      .stat-box {
+        background: rgba(10, 12, 22, 0.68);
+        border: 1px solid var(--border-hairline);
+        border-radius: 10px;
+        padding: 10px 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .stat-box-label {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      .stat-box-val {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--text-primary);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .stat-box-val.highlight {
+        color: var(--cyan-core);
+      }
+
+      .btn-row {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .btn-primary {
+        flex: 1;
+        padding: 13px 20px;
+        border-radius: 10px;
+        border: 1px solid rgba(34, 211, 238, 0.6);
+        background: linear-gradient(135deg, rgba(34, 211, 238, 0.24), rgba(20, 184, 166, 0.18));
+        color: var(--text-primary);
+        font-family: 'Outfit', sans-serif;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 150ms ease;
+        box-shadow: 0 0 20px rgba(34, 211, 238, 0.22);
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(135deg, rgba(34, 211, 238, 0.36), rgba(20, 184, 166, 0.28));
+        border-color: var(--cyan-bright);
+        transform: translateY(-1px);
+      }
+
+      .btn-primary:active {
+        transform: translateY(0) scale(0.98);
+      }
+
+      .btn-secondary {
+        padding: 13px 16px;
+        border-radius: 10px;
+        border: 1px solid var(--border-hairline);
+        background: rgba(15, 23, 42, 0.75);
+        color: var(--text-secondary);
+        font-family: 'Outfit', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 150ms ease;
+      }
+
+      .btn-secondary:hover {
+        color: var(--text-primary);
+        border-color: rgba(148, 163, 184, 0.4);
+      }
+
+      /* Mobile Viewport Adjustments (< 480px) to Prevent Any Right-Edge Clipping */
+      @media (max-width: 480px) {
+        .hud-wrapper {
+          width: 94vw;
+          max-width: 480px;
+          top: 6px;
+          gap: 5px;
+        }
+
+        .hud-top {
+          gap: 4px;
+        }
+
+        .hud-cluster {
+          gap: 4px;
+        }
+
+        .hud-pill {
+          padding: 4px 6px;
+          min-width: 0;
+          flex: 1 1 auto;
+          border-radius: 6px;
+        }
+
+        .hud-pill.shield-pill {
+          min-width: 72px;
+          flex: 1.15 1 auto;
+        }
+
+        .hud-label {
+          font-size: 8px;
+          letter-spacing: 0.05em;
+        }
+
+        .hud-value {
+          font-size: 13px;
+        }
+
+        .shield-icons-row {
+          gap: 2px;
+          height: 15px;
+        }
+
+        .shield-pip {
+          width: 12px;
+          height: 14px;
+        }
+
+        .icon-btn {
+          width: 30px;
+          height: 30px;
+          border-radius: 6px;
+        }
+
+        .icon-btn svg {
+          width: 14px;
+          height: 14px;
+        }
+
+        .hud-phase-bar {
+          padding: 5px 8px;
+          border-radius: 6px;
+        }
+
+        .hud-phase-title,
+        .hud-phase-timer {
+          font-size: 9.5px;
+        }
+
+        .hud-wave-target-indicator {
+          font-size: 9.5px;
+          padding: 2px 6px;
+        }
+
+        .bottom-hud {
+          bottom: 8px;
+          width: 94vw;
+          gap: 4px;
+        }
+
+        .overdrive-btn {
+          padding: 8px 12px;
+          font-size: 11px;
+        }
+
+        .overdrive-bet-readout {
+          font-size: 10px;
+        }
+
+        .modal-card {
+          padding: 18px 16px;
+        }
+      }
+    </style>
+  </head>
+  <body data-mode="title" data-phase="idle">
+    <div id="app-shell">
+      <canvas id="game-canvas" aria-label="Quantum Shell Game Board"></canvas>
+
+      <!-- Responsive Top HUD -->
+      <header class="hud-wrapper" id="hud-top">
+        <div class="hud-top">
+          <div class="hud-cluster hud-cluster-left">
+            <div class="hud-pill">
+              <span class="hud-label">Score</span>
+              <span class="hud-value" id="hud-score">0</span>
+            </div>
+            <div class="hud-pill">
+              <span class="hud-label">Speed</span>
+              <span class="hud-value amber" id="hud-mult">1x</span>
+            </div>
+            <div class="hud-pill overdrive-pill">
+              <span class="hud-label">Overdrive</span>
+              <span class="hud-value overdrive" id="hud-overdrive-mult">1.0x</span>
+            </div>
+            <div class="hud-pill">
+              <span class="hud-label">Best</span>
+              <span class="hud-value" id="hud-best">0</span>
+            </div>
+            <div class="hud-pill shield-pill" id="hud-shields-pill" aria-label="Shield Vitality">
+              <span class="hud-label">Shields</span>
+              <div class="shield-icons-row" id="hud-shields-row"></div>
+            </div>
+          </div>
+
+          <div class="hud-cluster hud-cluster-right">
+            <button class="icon-btn" id="btn-mute" type="button" title="Mute / Unmute Audio (M)" aria-label="Toggle Mute">
+              <svg id="icon-sound-on" viewBox="0 0 24 24">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+              </svg>
+              <svg id="icon-sound-off" viewBox="0 0 24 24" style="display: none">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+              </svg>
+            </button>
+            <button class="icon-btn" id="btn-pause" type="button" title="Pause Game (P)" aria-label="Pause Game">
+              <svg viewBox="0 0 24 24">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+            </button>
+            <button class="icon-btn" id="btn-restart-hud" type="button" title="Restart Run (R)" aria-label="Restart Run">
+              <svg viewBox="0 0 24 24">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Status & Progress Strip with "WAVE [X] | TARGET: [Y]" on the right -->
+        <div class="hud-phase-bar">
+          <div class="hud-phase-header">
+            <div class="hud-phase-left">
+              <span class="hud-phase-title" id="hud-phase-text">STANDBY</span>
+              <span class="hud-phase-timer" id="hud-timer">--</span>
+            </div>
+            <span class="hud-wave-target-indicator" id="hud-wave-target">WAVE 1 | TARGET: 1</span>
+          </div>
+          <div class="hud-gauge-track">
+            <div class="hud-gauge-fill" id="hud-gauge-fill"></div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Clean Bottom HUD: ONLY Overdrive Hold Prompt & Bet Multiplier Readout -->
+      <div class="bottom-hud" id="bottom-hud">
+        <button class="overdrive-btn" id="btn-overdrive" type="button" aria-label="Hold Shift for Overdrive">
+          <span id="overdrive-btn-label">HOLD [SHIFT] FOR OVERDRIVE</span>
+        </button>
+        <div class="overdrive-bet-readout" id="overdrive-mult-readout">BET MULTIPLIER: 1.0x -&gt; 3.5x</div>
+      </div>
+
+      <!-- Center Staging / Wave Banner ("WAVE 1", "READY", "GO!") -->
+      <div class="wave-banner" id="wave-banner">
+        <div class="wave-banner-title" id="wave-banner-title">WAVE 1</div>
+      </div>
+
+      <!-- Title Overlay -->
+      <section class="overlay-screen active" id="screen-title" aria-labelledby="title-heading">
+        <div class="modal-card">
+          <div class="eyebrow-tag">SPATIAL MEMORY ARCADE</div>
+          <h1 class="game-title" id="title-heading">QUANTUM SHELL</h1>
+          <p class="modal-subtitle">
+            Track the glowing targets from the top-right queue as they lock into the circular orbit and shuffle.
+          </p>
+
+          <div class="steps-box">
+            <div class="step-row">
+              <span class="step-num">1</span>
+              <span>Memorize the glowing targets in the top-right <strong>TARGET</strong> queue.</span>
+            </div>
+            <div class="step-row">
+              <span class="step-num">2</span>
+              <span>Wait for <strong>READY &rarr; GO!</strong> and follow the circular orbit shuffle.</span>
+            </div>
+            <div class="step-row">
+              <span class="step-num">3</span>
+              <span>Tap every target capsule before the timer runs out.</span>
+            </div>
+          </div>
+
+          <div class="tip-banner">
+            <strong>Tip:</strong> Hold <strong>OVERDRIVE</strong> during shuffle to speed up movement and multiply your score up to <strong>3.5x</strong>.
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-box">
+              <span class="stat-box-label">Best Score</span>
+              <span class="stat-box-val highlight" id="title-best-score">0</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-box-label">Max Wave</span>
+              <span class="stat-box-val" id="title-best-wave">1</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-box-label">Shields</span>
+              <span class="stat-box-val">3</span>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn-primary" id="btn-start-game" type="button">START GAME</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Perk Selection Modal (No "UPGRADE" wording, strictly left-aligned descriptions) -->
+      <section class="overlay-screen" id="screen-perk" aria-labelledby="perk-title">
+        <div class="modal-card">
+          <div class="eyebrow-tag" id="perk-eyebrow">WAVE MILESTONE</div>
+          <h2 class="modal-title" id="perk-title">CHOOSE A PERK FOR NEXT WAVE</h2>
+          <p class="modal-subtitle" id="perk-subtitle">
+            Select one perk to carry into the next wave.
+          </p>
+
+          <div class="perk-grid">
+            <button class="perk-card" id="perk-btn-shield" type="button">
+              <div class="perk-icon">+1</div>
+              <div class="perk-card-info">
+                <div class="perk-card-name">Quantum Shield</div>
+                <div class="perk-card-desc">Gain +1 Shield charge.</div>
+              </div>
+            </button>
+
+            <button class="perk-card" id="perk-btn-surge" type="button">
+              <div class="perk-icon">2x</div>
+              <div class="perk-card-info">
+                <div class="perk-card-name">Double Surge</div>
+                <div class="perk-card-desc">Double the score if cleared without using shields.</div>
+              </div>
+            </button>
+
+            <button class="perk-card" id="perk-btn-calm" type="button">
+              <div class="perk-icon">-15%</div>
+              <div class="perk-card-info">
+                <div class="perk-card-name">Calm Drift</div>
+                <div class="perk-card-desc">Shuffling speed slowed by 15%.</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pause Overlay -->
+      <section class="overlay-screen" id="screen-pause" aria-labelledby="pause-title">
+        <div class="modal-card">
+          <div class="eyebrow-tag">GAME PAUSED</div>
+          <h2 class="modal-title" id="pause-title">PAUSED</h2>
+          <p class="modal-subtitle">
+            Capsules and timers are paused. Ready to continue?
+          </p>
+
+          <div class="stats-grid">
+            <div class="stat-box">
+              <span class="stat-box-label">Score</span>
+              <span class="stat-box-val highlight" id="pause-stat-score">0</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-box-label">Wave</span>
+              <span class="stat-box-val" id="pause-stat-wave">1</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-box-label">Shields</span>
+              <span class="stat-box-val" id="pause-stat-shields">3</span>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn-primary" id="btn-resume-game" type="button">RESUME</button>
+            <button class="btn-secondary" id="btn-restart-pause" type="button">RESTART</button>
+            <button class="btn-secondary" id="btn-title-pause" type="button">TITLE</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Game Over Overlay -->
+      <section class="overlay-screen" id="screen-gameover" aria-labelledby="gameover-title">
+        <div class="modal-card">
+          <div class="eyebrow-tag" style="color: var(--crimson-err); border-color: rgba(244, 63, 94, 0.35); background: rgba(244, 63, 94, 0.12)">
+            OUT OF SHIELDS
+          </div>
+          <h2 class="modal-title" id="gameover-title">GAME OVER</h2>
+          <p class="modal-subtitle" id="gameover-reason">
+            All 3 shields were lost.
+          </p>
+
+          <div class="stats-grid">
+            <div class="stat-box">
+              <span class="stat-box-label">Final Score</span>
+              <span class="stat-box-val highlight" id="go-stat-score">0</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-box-label">Wave Reached</span>
+              <span class="stat-box-val" id="go-stat-wave">1</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-box-label">Best Score</span>
+              <span class="stat-box-val" id="go-stat-best">0</span>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn-primary" id="btn-try-again" type="button">PLAY AGAIN</button>
+            <button class="btn-secondary" id="btn-title-gameover" type="button">TITLE</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      (function () {
+        'use strict';
+
+        // --- Persistent High Score Storage ---
+        const STORAGE_KEY_SCORE = 'quantum_shell_best_score_v5';
+        const STORAGE_KEY_WAVE = 'quantum_shell_best_wave_v5';
+
+        let bestScore = 0;
+        let bestWave = 1;
+        try {
+          bestScore = Math.max(0, parseInt(localStorage.getItem(STORAGE_KEY_SCORE) || '0', 10) || 0);
+          bestWave = Math.max(1, parseInt(localStorage.getItem(STORAGE_KEY_WAVE) || '1', 10) || 1);
+        } catch (_e) {
+          bestScore = 0;
+          bestWave = 1;
+        }
+
+        function saveRecords(score, wave) {
+          if (score > bestScore) bestScore = score;
+          if (wave > bestWave) bestWave = wave;
+          try {
+            localStorage.setItem(STORAGE_KEY_SCORE, String(bestScore));
+            localStorage.setItem(STORAGE_KEY_WAVE, String(bestWave));
+          } catch (_e) {
+            // Ignore storage errors in restricted iframes
+          }
+        }
+
+        // --- Native Web Audio API Synthesizer (100% Silent Overdrive, Discrete Event Chimes Only) ---
+        class QuantumAudioEngine {
+          constructor() {
+            this.ctx = null;
+            this.muted = false;
+            this.masterGain = null;
+          }
+
+          ensureContext() {
+            if (this.muted) return null;
+            if (!this.ctx) {
+              const AudioCtx = window.AudioContext || window.webkitAudioContext;
+              if (!AudioCtx) return null;
+              this.ctx = new AudioCtx();
+              this.masterGain = this.ctx.createGain();
+              this.masterGain.gain.value = 0.28;
+              this.masterGain.connect(this.ctx.destination);
+            }
+            if (this.ctx.state === 'suspended') {
+              this.ctx.resume().catch(() => {});
+            }
+            return this.ctx;
+          }
+
+          toggleMute() {
+            this.muted = !this.muted;
+            if (this.masterGain && this.ctx) {
+              this.masterGain.gain.setValueAtTime(this.muted ? 0 : 0.28, this.ctx.currentTime);
+            }
+            return this.muted;
+          }
+
+          playUiClick(freq = 540) {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+            osc.frequency.exponentialRampToValueAtTime(freq * 1.35, now + 0.055);
+            gain.gain.setValueAtTime(0.16, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start(now);
+            osc.stop(now + 0.065);
+          }
+
+          playRevealHum(targetCount = 1) {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const baseFreqs = [330, 440, 554.37, 659.25, 880];
+            for (let i = 0; i < Math.min(targetCount + 1, baseFreqs.length); i++) {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(baseFreqs[i], now + i * 0.04);
+              gain.gain.setValueAtTime(0.001, now + i * 0.04);
+              gain.gain.linearRampToValueAtTime(0.11, now + i * 0.04 + 0.06);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+              osc.connect(gain);
+              gain.connect(this.masterGain);
+              osc.start(now + i * 0.04);
+              osc.stop(now + 0.48);
+            }
+          }
+
+          playCoreLockLatch() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(360, now);
+            osc.frequency.exponentialRampToValueAtTime(140, now + 0.085);
+            gain.gain.setValueAtTime(0.22, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start(now);
+            osc.stop(now + 0.095);
+          }
+
+          playReadyChime() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, now); // Steady C5 mid tone
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.18, now + 0.025);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.34);
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start(now);
+            osc.stop(now + 0.36);
+          }
+
+          playGoTone() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const notes = [659.25, 880, 1046.5]; // Ascending E5 -> A5 -> C6 launch chord
+            notes.forEach((freq, idx) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(freq, now + idx * 0.025);
+              osc.frequency.exponentialRampToValueAtTime(freq * 1.06, now + idx * 0.025 + 0.24);
+              gain.gain.setValueAtTime(0.001, now + idx * 0.025);
+              gain.gain.linearRampToValueAtTime(0.18, now + idx * 0.025 + 0.02);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.025 + 0.26);
+              osc.connect(gain);
+              gain.connect(this.masterGain);
+              osc.start(now + idx * 0.025);
+              osc.stop(now + idx * 0.025 + 0.28);
+            });
+          }
+
+          playSwapWhoosh(stepIdx = 0) {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            const startF = 180 + (stepIdx % 5) * 20;
+            osc.frequency.setValueAtTime(startF, now);
+            osc.frequency.exponentialRampToValueAtTime(startF * 1.35, now + 0.06);
+            osc.frequency.exponentialRampToValueAtTime(startF * 0.85, now + 0.13);
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.065, now + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start(now);
+            osc.stop(now + 0.15);
+          }
+
+          playCorrectTap(comboIdx = 1) {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const notes = [523.25, 659.25, 783.99, 1046.5];
+            const base = notes[Math.min(notes.length - 1, comboIdx - 1)];
+
+            [base, base * 1.25].forEach((freq, i) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(freq, now + i * 0.035);
+              osc.frequency.exponentialRampToValueAtTime(freq * 1.08, now + i * 0.035 + 0.18);
+              gain.gain.setValueAtTime(0.2, now + i * 0.035);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.035 + 0.22);
+              osc.connect(gain);
+              gain.connect(this.masterGain);
+              osc.start(now + i * 0.035);
+              osc.stop(now + i * 0.035 + 0.23);
+            });
+          }
+
+          playWaveClearChord() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const chord = [523.25, 659.25, 783.99, 1046.5];
+            chord.forEach((freq, idx) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'sine';
+              const t0 = now + idx * 0.04;
+              osc.frequency.setValueAtTime(freq, t0);
+              gain.gain.setValueAtTime(0.001, t0);
+              gain.gain.linearRampToValueAtTime(0.14, t0 + 0.03);
+              gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.42);
+              osc.connect(gain);
+              gain.connect(this.masterGain);
+              osc.start(t0);
+              osc.stop(t0 + 0.44);
+            });
+          }
+
+          playPartialDecryptChime() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const chord = [440, 554.37, 659.25];
+            chord.forEach((freq, idx) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'triangle';
+              const t0 = now + idx * 0.055;
+              osc.frequency.setValueAtTime(freq, t0);
+              gain.gain.setValueAtTime(0.14, t0);
+              gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.32);
+              osc.connect(gain);
+              gain.connect(this.masterGain);
+              osc.start(t0);
+              osc.stop(t0 + 0.34);
+            });
+          }
+
+          playShieldCrackleAlarm() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            [210, 155].forEach((freq, idx) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'sawtooth';
+              const t0 = now + idx * 0.06;
+              osc.frequency.setValueAtTime(freq, t0);
+              osc.frequency.linearRampToValueAtTime(freq * 0.72, t0 + 0.16);
+              gain.gain.setValueAtTime(0.16, t0);
+              gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.18);
+              osc.connect(gain);
+              gain.connect(this.masterGain);
+              osc.start(t0);
+              osc.stop(t0 + 0.19);
+            });
+          }
+
+          playDefeatBuzz() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, now);
+            osc.frequency.linearRampToValueAtTime(58, now + 0.45);
+            gain.gain.setValueAtTime(0.22, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.48);
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start(now);
+            osc.stop(now + 0.5);
+          }
+
+          playTimerTick(urgent = false) {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(urgent ? 880 : 640, now);
+            gain.gain.setValueAtTime(urgent ? 0.1 : 0.05, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start(now);
+            osc.stop(now + 0.045);
+          }
+        }
+
+        const audio = new QuantumAudioEngine();
+
+        // --- Calibrated Wave 1-9 Points & Wave 10+ Concentric Architecture ---
+        const EARLY_WAVE_TABLE = {
+          1: { shells: 3, targets: 1, basePts: 100, rotating: false },
+          2: { shells: 4, targets: 1, basePts: 120, rotating: false },
+          3: { shells: 4, targets: 2, basePts: 150, rotating: false },
+          4: { shells: 5, targets: 2, basePts: 180, rotating: false },
+          5: { shells: 5, targets: 3, basePts: 220, rotating: false },
+          6: { shells: 6, targets: 3, basePts: 280, rotating: false },
+          7: { shells: 6, targets: 3, basePts: 350, rotating: true },
+          8: { shells: 7, targets: 3, basePts: 450, rotating: true },
+          9: { shells: 7, targets: 4, basePts: 600, rotating: true },
+        };
+
+        function getWaveConfig(wave, bonusTimeBufferMs = 0, calmDriftCount = 0) {
+          const safeWave = Math.max(1, Math.floor(wave));
+
+          let tier = 1;
+          let tierName = 'SINGLE ORBIT';
+          let shellCount = 3;
+          let targetCount = 1;
+          let baseWavePoints = 100;
+          let isDualRing = false;
+          let innerRingCount = 0;
+          let outerRingCount = 3;
+          let hasBoardRotation = false;
+          let boardRotationSpeedRad = 0;
+          let innerRingSpeedRad = 0;
+          let outerRingSpeedRad = 0;
+          let radialHopChance = 0;
+
+          if (safeWave <= 9) {
+            const spec = EARLY_WAVE_TABLE[safeWave];
+            shellCount = spec.shells;
+            targetCount = spec.targets;
+            baseWavePoints = spec.basePts;
+            isDualRing = false;
+            innerRingCount = 0;
+            outerRingCount = shellCount;
+            hasBoardRotation = spec.rotating;
+            if (safeWave <= 5) {
+              tier = 1;
+              tierName = 'TIER 1 · SINGLE RING';
+            } else {
+              tier = 2;
+              tierName = spec.rotating ? 'TIER 2 · ROTATING ORBIT' : 'TIER 2 · SINGLE RING';
+              if (spec.rotating) {
+                const dir = safeWave % 2 === 0 ? 1 : -1;
+                boardRotationSpeedRad = dir * (0.28 + (safeWave - 7) * 0.04);
+              }
+            }
+          } else if (safeWave <= 12) {
+            // Tier 3 (Waves 10-12): Dual Concentric Rings
+            tier = 3;
+            tierName = 'TIER 3 · DUAL CONCENTRIC RINGS';
+            isDualRing = true;
+            if (safeWave === 10) {
+              shellCount = 8;
+              innerRingCount = 4;
+              outerRingCount = 4;
+              targetCount = 4;
+            } else {
+              shellCount = 6;
+              innerRingCount = 3;
+              outerRingCount = 3;
+              targetCount = 3;
+            }
+            baseWavePoints = Math.round(1200 * Math.pow(1.3, safeWave - 10));
+            innerRingSpeedRad = 0.34 + (safeWave - 10) * 0.025; // CW
+            outerRingSpeedRad = -(0.28 + (safeWave - 10) * 0.02); // CCW
+            radialHopChance = 0.42;
+          } else if (safeWave <= 16) {
+            // Tier 4 (Waves 13-16): Dual Concentric 4+4
+            tier = 4;
+            tierName = 'TIER 4 · DUAL CONCENTRIC 4+4';
+            shellCount = 8;
+            targetCount = 4;
+            isDualRing = true;
+            innerRingCount = 4;
+            outerRingCount = 4;
+            baseWavePoints = Math.round(1200 * Math.pow(1.32, safeWave - 10));
+            innerRingSpeedRad = 0.38 + (safeWave - 13) * 0.02; // CW
+            outerRingSpeedRad = -(0.32 + (safeWave - 13) * 0.02); // CCW
+            radialHopChance = 0.45;
+          } else if (safeWave <= 20) {
+            // Tier 5 (Waves 17-20): Expanded Single Ring Grandmaster (9 to 10 capsules)
+            tier = 5;
+            tierName = 'TIER 5 · GRANDMASTER RING';
+            shellCount = safeWave <= 18 ? 9 : 10;
+            targetCount = safeWave <= 17 ? 4 : 5;
+            isDualRing = false;
+            innerRingCount = 0;
+            outerRingCount = shellCount;
+            baseWavePoints = Math.round(1200 * Math.pow(1.35, safeWave - 10));
+            hasBoardRotation = true;
+            const dir = safeWave % 2 === 0 ? 1 : -1;
+            boardRotationSpeedRad = dir * 0.32;
+          } else {
+            // Tier 6 (Waves 21+): Dual Concentric 5+5 Master Tier
+            tier = 6;
+            tierName = 'TIER 6 · DUAL 5+5 SINGULARITY';
+            shellCount = 10;
+            targetCount = 5;
+            isDualRing = true;
+            innerRingCount = 5;
+            outerRingCount = 5;
+            baseWavePoints = Math.round(1200 * Math.pow(1.38, safeWave - 10));
+            innerRingSpeedRad = Math.min(0.46, 0.4 + (safeWave - 21) * 0.012); // CW
+            outerRingSpeedRad = -Math.min(0.4, 0.34 + (safeWave - 21) * 0.01); // CCW
+            radialHopChance = 0.48;
+          }
+
+          // Calm Drift perk slows shuffling speed by 15% per stack
+          const calmSlowFactor = Math.pow(1 / 0.85, Math.max(0, calmDriftCount));
+          boardRotationSpeedRad /= calmSlowFactor;
+          innerRingSpeedRad /= calmSlowFactor;
+          outerRingSpeedRad /= calmSlowFactor;
+
+          const swapCount = Math.min(14, 4 + Math.floor(safeWave * 0.75));
+          const rawSwapDurationMs = Math.max(540, 740 - safeWave * 11);
+          const swapDurationMs = Math.round(rawSwapDurationMs * calmSlowFactor);
+
+          const lineupDurationMs = 1200; // 1.2s top-right TARGET lineup
+          const insertDurationMs = 750; // Smooth Bezier insertion into circular orbit
+          const readyDurationMs = 600; // 0.6s "READY" staging beat
+          const goDurationMs = 400; // 0.4s "GO!" launch beat
+
+          const baseSelectMs = Math.max(
+            4500,
+            5400 - safeWave * 90 + (targetCount - 1) * 900 + Math.max(0, shellCount - 5) * 350
+          );
+          const selectDurationMs = baseSelectMs + Math.max(0, bonusTimeBufferMs);
+
+          return {
+            wave: safeWave,
+            tier,
+            tierName,
+            shellCount,
+            targetCount,
+            baseWavePoints,
+            isDualRing,
+            innerRingCount,
+            outerRingCount,
+            swapCount,
+            swapDurationMs,
+            lineupDurationMs,
+            insertDurationMs,
+            readyDurationMs,
+            goDurationMs,
+            selectDurationMs,
+            hasBoardRotation,
+            boardRotationSpeedRad,
+            innerRingSpeedRad,
+            outerRingSpeedRad,
+            radialHopChance,
+          };
+        }
+
+        // Strict Early-Game Score Pacing: Waves 1-9 strictly < 4,800 cumulative cap; Wave 10+ 1,200+ exponential lift
+        function calculateWaveClearScore(params) {
+          const {
+            wave,
+            baseWavePoints,
+            currentTotalScore,
+            overdriveMultiplier,
+            hasDoubleSurge,
+            shieldsLostThisWave,
+          } = params;
+
+          const doubleSurgeTriggered = Boolean(hasDoubleSurge && shieldsLostThisWave === 0);
+          const surgeMult = doubleSurgeTriggered ? 2.0 : 1.0;
+          const odMult = Math.max(1.0, Math.min(3.5, overdriveMultiplier));
+
+          if (wave <= 9) {
+            const clampedCombinedMult = Math.min(1.9, odMult * surgeMult);
+            const rawWaveScore = Math.round(baseWavePoints * clampedCombinedMult);
+            const maxAllowedTotal = 4780;
+            const cappedTotal = Math.min(maxAllowedTotal, currentTotalScore + rawWaveScore);
+            const waveScore = Math.max(0, cappedTotal - currentTotalScore);
+            return {
+              waveScore,
+              newTotalScore: cappedTotal,
+              doubleSurgeTriggered,
+            };
+          }
+
+          const waveScore = Math.round(baseWavePoints * odMult * surgeMult);
+          return {
+            waveScore,
+            newTotalScore: currentTotalScore + waveScore,
+            doubleSurgeTriggered,
+          };
+        }
+
+        function calculateSpeedMultiplier(remainingMs, totalSelectMs, streak) {
+          if (totalSelectMs <= 0) return 1;
+          const ratio = Math.max(0, Math.min(1, remainingMs / totalSelectMs));
+          const speedBonus = ratio >= 0.65 ? 1.5 : ratio >= 0.35 ? 1.2 : 1.0;
+          const streakBonus = Math.min(1.5, Math.floor(Math.max(0, streak) / 2) * 0.25);
+          return Math.round((speedBonus + streakBonus) * 10) / 10;
+        }
+
+        function calculateOverdriveMultiplier(overdriveHeldMs) {
+          const safeMs = Math.max(0, overdriveHeldMs);
+          const rawBonus = Math.min(2.5, (safeMs / 1000) * 0.65);
+          return Math.round((1.0 + rawBonus) * 10) / 10;
+        }
+
+        function generateSwapSchedule(config) {
+          const steps = [];
+          const curvePool = ['bezier_cw', 'bezier_ccw', 'bezier_wide_cw', 'bezier_wide_ccw'];
+          let lastPairKey = '';
+
+          for (let i = 0; i < config.swapCount; i++) {
+            let a = 0;
+            let b = 1;
+            let isRadialHop = false;
+
+            if (config.isDualRing && config.innerRingCount > 0 && config.outerRingCount > 0) {
+              const doRadialHop = Math.random() < config.radialHopChance;
+              if (doRadialHop) {
+                isRadialHop = true;
+                a = Math.floor(Math.random() * config.innerRingCount);
+                b = config.innerRingCount + Math.floor(Math.random() * config.outerRingCount);
+              } else {
+                const useInner = Math.random() < 0.45;
+                if (useInner) {
+                  a = Math.floor(Math.random() * config.innerRingCount);
+                  b = Math.floor(Math.random() * config.innerRingCount);
+                  if (b === a) b = (a + 1) % config.innerRingCount;
+                } else {
+                  const offset = config.innerRingCount;
+                  const localA = Math.floor(Math.random() * config.outerRingCount);
+                  let localB = Math.floor(Math.random() * config.outerRingCount);
+                  if (localB === localA) localB = (localA + 1) % config.outerRingCount;
+                  a = offset + localA;
+                  b = offset + localB;
+                }
+              }
+            } else {
+              a = Math.floor(Math.random() * config.shellCount);
+              b = Math.floor(Math.random() * config.shellCount);
+              if (b === a) b = (a + 1) % config.shellCount;
+            }
+
+            const minIdx = Math.min(a, b);
+            const maxIdx = Math.max(a, b);
+            const key = `${minIdx}-${maxIdx}`;
+
+            if (key === lastPairKey && config.shellCount >= 3) {
+              b = (b + 1) % config.shellCount;
+              if (b === a) b = (a + 2) % config.shellCount;
+              isRadialHop =
+                config.isDualRing &&
+                ((a < config.innerRingCount && b >= config.innerRingCount) ||
+                  (b < config.innerRingCount && a >= config.innerRingCount));
+            }
+            lastPairKey = `${Math.min(a, b)}-${Math.max(a, b)}`;
+
+            const curve = curvePool[Math.floor(Math.random() * curvePool.length)];
+            const jitter = (Math.random() - 0.5) * 40;
+            const durationMs = Math.max(500, Math.round(config.swapDurationMs + jitter));
+
+            steps.push({
+              pairA: a,
+              pairB: b,
+              durationMs,
+              curve,
+              isDecelerationStep: false,
+              isRadialHop,
+            });
+          }
+
+          let tailAccumMs = 0;
+          for (let i = steps.length - 1; i >= 0; i--) {
+            steps[i].isDecelerationStep = true;
+            steps[i].durationMs = Math.round(steps[i].durationMs * 1.25);
+            tailAccumMs += steps[i].durationMs;
+            if (tailAccumMs >= 800) break;
+          }
+
+          return steps;
+        }
+
+        // --- DOM References ---
+        const bodyEl = document.body;
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+
+        const hudScoreEl = document.getElementById('hud-score');
+        const hudMultEl = document.getElementById('hud-mult');
+        const hudOverdriveMultEl = document.getElementById('hud-overdrive-mult');
+        const hudBestEl = document.getElementById('hud-best');
+        const hudShieldsRowEl = document.getElementById('hud-shields-row');
+        const hudPhaseTextEl = document.getElementById('hud-phase-text');
+        const hudTimerEl = document.getElementById('hud-timer');
+        const hudWaveTargetEl = document.getElementById('hud-wave-target');
+        const hudGaugeFillEl = document.getElementById('hud-gauge-fill');
+
+        const btnOverdrive = document.getElementById('btn-overdrive');
+        const overdriveMultReadoutEl = document.getElementById('overdrive-mult-readout');
+
+        const waveBannerEl = document.getElementById('wave-banner');
+        const waveBannerTitleEl = document.getElementById('wave-banner-title');
+
+        const screenTitleEl = document.getElementById('screen-title');
+        const screenPerkEl = document.getElementById('screen-perk');
+        const screenPauseEl = document.getElementById('screen-pause');
+        const screenGameoverEl = document.getElementById('screen-gameover');
+
+        const titleBestScoreEl = document.getElementById('title-best-score');
+        const titleBestWaveEl = document.getElementById('title-best-wave');
+
+        const perkSubtitleEl = document.getElementById('perk-subtitle');
+        const perkBtnShield = document.getElementById('perk-btn-shield');
+        const perkBtnSurge = document.getElementById('perk-btn-surge');
+        const perkBtnCalm = document.getElementById('perk-btn-calm');
+
+        const pauseStatScoreEl = document.getElementById('pause-stat-score');
+        const pauseStatWaveEl = document.getElementById('pause-stat-wave');
+        const pauseStatShieldsEl = document.getElementById('pause-stat-shields');
+
+        const goStatScoreEl = document.getElementById('go-stat-score');
+        const goStatWaveEl = document.getElementById('go-stat-wave');
+        const goStatBestEl = document.getElementById('go-stat-best');
+        const gameoverReasonEl = document.getElementById('gameover-reason');
+
+        const btnStartGame = document.getElementById('btn-start-game');
+        const btnResumeGame = document.getElementById('btn-resume-game');
+        const btnRestartPause = document.getElementById('btn-restart-pause');
+        const btnTitlePause = document.getElementById('btn-title-pause');
+        const btnTryAgain = document.getElementById('btn-try-again');
+        const btnTitleGameover = document.getElementById('btn-title-gameover');
+        const btnMute = document.getElementById('btn-mute');
+        const btnPause = document.getElementById('btn-pause');
+        const btnRestartHud = document.getElementById('btn-restart-hud');
+        const iconSoundOn = document.getElementById('icon-sound-on');
+        const iconSoundOff = document.getElementById('icon-sound-off');
+
+        // --- Shield SVG Helper: Depleted shields render as EMPTY hollow grey/cyan outlines (never red) ---
+        function renderShieldIcons(activeShields, maxShields = 3) {
+          const totalToRender = Math.max(maxShields, activeShields);
+          let html = '';
+          for (let i = 0; i < totalToRender; i++) {
+            const isActive = i < activeShields;
+            const cls = isActive ? 'shield-pip active' : 'shield-pip depleted';
+            const fill = isActive ? 'rgba(34, 211, 238, 0.28)' : 'transparent';
+            const stroke = isActive ? '#22d3ee' : 'rgba(148, 163, 184, 0.55)';
+            html += `<span class="${cls}" data-shield-index="${i}">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2L4 5.5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5.5L12 2z" fill="${fill}" stroke="${stroke}" stroke-width="2" stroke-linejoin="round"/>
+              </svg>
+            </span>`;
+          }
+          hudShieldsRowEl.innerHTML = html;
+        }
+
+        // --- Viewport & Strict 1:1 Circular Geometry ---
+        let viewportWidth = window.innerWidth;
+        let viewportHeight = window.innerHeight;
+        let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        let hexPatternCanvas = null;
+        function buildHexPattern() {
+          const pCanvas = document.createElement('canvas');
+          const w = 52;
+          const h = 90;
+          pCanvas.width = w;
+          pCanvas.height = h;
+          const pCtx = pCanvas.getContext('2d');
+          pCtx.strokeStyle = 'rgba(34, 211, 238, 0.04)';
+          pCtx.lineWidth = 1;
+
+          function drawHex(cx, cy, r) {
+            pCtx.beginPath();
+            for (let i = 0; i < 6; i++) {
+              const angle = (Math.PI / 3) * i + Math.PI / 6;
+              const x = cx + r * Math.cos(angle);
+              const y = cy + r * Math.sin(angle);
+              if (i === 0) pCtx.moveTo(x, y);
+              else pCtx.lineTo(x, y);
+            }
+            pCtx.closePath();
+            pCtx.stroke();
+          }
+
+          drawHex(w / 2, h / 4, 24);
+          drawHex(0, (h * 3) / 4, 24);
+          drawHex(w, (h * 3) / 4, 24);
+          hexPatternCanvas = pCanvas;
+        }
+
+        function resizeCanvas() {
+          viewportWidth = window.innerWidth;
+          viewportHeight = window.innerHeight;
+          dpr = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.floor(viewportWidth * dpr);
+          canvas.height = Math.floor(viewportHeight * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          buildHexPattern();
+          recomputeShellSlotPositions();
+          if (waveBannerEl) {
+            const { cx, cy } = getPlayboardGeometry();
+            waveBannerEl.style.left = `${cx}px`;
+            waveBannerEl.style.top = `${cy}px`;
+          }
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        // --- Object-Pooled Particle & Popup System ---
+        const MAX_PARTICLES = 180;
+        const particlePool = [];
+        for (let i = 0; i < MAX_PARTICLES; i++) {
+          particlePool.push({
+            active: false,
+            x: 0,
+            y: 0,
+            vx: 0,
+            vy: 0,
+            size: 2,
+            alpha: 1,
+            life: 0,
+            maxLife: 1,
+            color: '#22d3ee',
+            kind: 'spark',
+            rotation: 0,
+            vRot: 0,
+          });
+        }
+
+        function spawnParticle(x, y, vx, vy, size, maxLife, color, kind = 'spark') {
+          for (let i = 0; i < MAX_PARTICLES; i++) {
+            const p = particlePool[i];
+            if (!p.active) {
+              p.active = true;
+              p.x = x;
+              p.y = y;
+              p.vx = vx;
+              p.vy = vy;
+              p.size = size;
+              p.alpha = 1;
+              p.life = maxLife;
+              p.maxLife = maxLife;
+              p.color = color;
+              p.kind = kind;
+              p.rotation = Math.random() * Math.PI * 2;
+              p.vRot = (Math.random() - 0.5) * 10;
+              return;
+            }
+          }
+        }
+
+        function triggerCoreCrackBurst(x, y, isSuccess) {
+          const primaryColor = isSuccess ? '#22d3ee' : '#f43f5e';
+          const secondaryColor = isSuccess ? '#a5f3fc' : '#fda4af';
+
+          spawnParticle(x, y, 0, 0, 14, 0.36, primaryColor, 'ring');
+
+          const count = isSuccess ? 28 : 22;
+          for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.25;
+            const speed = 75 + Math.random() * 210;
+            const color = i % 3 === 0 ? '#ffffff' : i % 2 === 0 ? primaryColor : secondaryColor;
+            const kind = i % 4 === 0 ? 'shard' : 'spark';
+            spawnParticle(
+              x,
+              y,
+              Math.cos(angle) * speed,
+              Math.sin(angle) * speed,
+              kind === 'shard' ? 4 + Math.random() * 4 : 2 + Math.random() * 3,
+              0.28 + Math.random() * 0.34,
+              color,
+              kind
+            );
+          }
+        }
+
+        const floatingPopups = [];
+        function spawnPopup(x, y, text, subtext, color = '#22d3ee') {
+          floatingPopups.push({
+            x,
+            y,
+            text,
+            subtext,
+            color,
+            life: 0.9,
+            maxLife: 0.9,
+          });
+        }
+
+        // --- Game State ---
+        const state = {
+          mode: 'title', // 'title' | 'playing' | 'perk' | 'paused' | 'gameover'
+          phase: 'idle', // 'idle' | 'wave_ready' | 'lineup' | 'insert' | 'ready_banner' | 'go_banner' | 'shuffle' | 'select' | 'wave_clear' | 'resolve' | 'defeat_beat'
+          wave: 1,
+          score: 0,
+          waveStartScore: 0,
+          waveTargetScore: 100,
+          waveAwardedSoFar: 0,
+          streak: 0,
+          currentMult: 1,
+          shields: 3,
+          maxShields: 3,
+          shieldsLostThisWave: 0,
+          bonusTimeBufferMs: 0,
+          // Active Run Perks (Quantum Shield, Double Surge, Calm Drift)
+          perkDoubleSurge: false,
+          perkCalmDriftCount: 0,
+          pendingNextWave: 4,
+          // Overdrive Acceleration State
+          isOverdrive: false,
+          overdriveHeldDurationMs: 0,
+          overdriveMultiplier: 1.0,
+          // Orbital Rotation Angles
+          boardRotationAngle: 0,
+          innerRingAngle: 0,
+          outerRingAngle: 0,
+          config: getWaveConfig(1, 0, 0),
+          shells: [],
+          swapSchedule: [],
+          currentSwapIndex: 0,
+          swapElapsedMs: 0,
+          phaseElapsedMs: 0,
+          phaseDurationMs: 1200,
+          activeSwap: null,
+          trauma: 0,
+          hitstopMs: 0,
+          lastTickSecond: -1,
+          pointerX: -999,
+          pointerY: -999,
+          frozenSnapshot: {
+            score: 0,
+            wave: 1,
+            best: 0,
+            reason: '',
+          },
+        };
+
+        // Responsive Capsule Radius scaled for up to 10 capsules & mobile screens
+        function getCapsuleRadius() {
+          const stageSpan = Math.min(viewportWidth, viewportHeight, 640);
+          const count = state.config ? state.config.shellCount : 3;
+          const isDual = state.config ? state.config.isDualRing : false;
+          const isMobile = viewportWidth < 480;
+
+          if (isDual) {
+            if (count >= 10) {
+              return Math.max(15, Math.min(23, stageSpan * (isMobile ? 0.043 : 0.036)));
+            }
+            if (count >= 8) {
+              return Math.max(16, Math.min(25, stageSpan * (isMobile ? 0.046 : 0.039)));
+            }
+            return Math.max(18, Math.min(27, stageSpan * (isMobile ? 0.05 : 0.042)));
+          }
+
+          if (count >= 9) {
+            return Math.max(15, Math.min(24, stageSpan * (isMobile ? 0.045 : 0.038)));
+          }
+          if (count >= 7) {
+            return Math.max(18, Math.min(27, stageSpan * (isMobile ? 0.052 : 0.044)));
+          }
+          if (count >= 5) {
+            return Math.max(20, Math.min(30, stageSpan * (isMobile ? 0.058 : 0.048)));
+          }
+          return Math.max(22, Math.min(33, stageSpan * (isMobile ? 0.064 : 0.052)));
+        }
+
+        /**
+         * Computes playboard geometry:
+         * - Coaxially centered orbit (`cx = viewportWidth * 0.5`) aligned with Top & Bottom HUD
+         * - Bounded central arcade stage (`max-width: 580px`) so preview and published full-screen match
+         * - Top-Right anchored "TARGET" vertical lineup coordinates (`queueX`, `queueTopY`)
+         */
+        function getPlayboardGeometry() {
+          const isMobile = viewportWidth < 520;
+          const hudEl = document.getElementById('hud-top');
+          const measuredHudBottom =
+            hudEl && state.mode !== 'title' ? hudEl.getBoundingClientRect().bottom : 0;
+          const hudTopClearance = Math.max(isMobile ? 148 : 118, measuredHudBottom + 10);
+          const hudBottomClearance = isMobile ? 84 : 90;
+          const availH = Math.max(200, viewportHeight - hudTopClearance - hudBottomClearance);
+
+          const stageW = Math.min(viewportWidth * 0.94, 580);
+          const stageRight = viewportWidth * 0.5 + stageW * 0.5;
+          const panelW = isMobile ? 66 : 86;
+          const queueColW = panelW + (isMobile ? 8 : 14);
+
+          // Keep orbit horizontally centered with the Top HUD & Bottom Overdrive button
+          const cx = viewportWidth * 0.5;
+          const cy = hudTopClearance + availH * (isMobile ? 0.55 : 0.52);
+
+          const R = getCapsuleRadius();
+          // Ensure centered orbit never collides with the top-right TARGET queue inside the stage
+          const halfStageClear = Math.max(115, stageW * 0.5 - panelW - (isMobile ? 6 : 14));
+          const maxRadiusFromStage = halfStageClear - R * 0.85;
+          const maxRadiusFromHeight = availH * 0.41;
+          const outerRadius = Math.max(
+            R * 2.25,
+            Math.min(162, maxRadiusFromStage, maxRadiusFromHeight)
+          );
+          const innerRadius = Math.max(R * 1.6, outerRadius * 0.52);
+
+          const queueX = stageRight - panelW * 0.5;
+          // Anchor TARGET queue at the top-right of the bounded stage below the HUD
+          const queueTopY = hudTopClearance + R + (isMobile ? 34 : 40);
+
+          return {
+            cx,
+            cy,
+            innerRadius,
+            outerRadius,
+            queueX,
+            queueTopY,
+            queueColW,
+            panelW,
+            hudTopClearance,
+            isMobile,
+          };
+        }
+
+        // Compute Top-Right Vertical Target Lineup Coordinates downwards
+        function computeTargetLineupPositions(targetCount) {
+          const { queueX, queueTopY, isMobile } = getPlayboardGeometry();
+          const R = getCapsuleRadius();
+          const count = Math.max(1, targetCount);
+          const gap = Math.max(R * (isMobile ? 2.02 : 2.12), isMobile ? 36 : 44);
+          const coords = [];
+          for (let i = 0; i < count; i++) {
+            coords.push({
+              x: queueX,
+              y: queueTopY + i * gap,
+              index: i,
+            });
+          }
+          return coords;
+        }
+
+        // Strict 1:1 Circular Orbit Slot Coordinates
+        function computeLiveSlotCoordinates() {
+          const { cx, cy, innerRadius, outerRadius } = getPlayboardGeometry();
+          const cfg = state.config;
+          const coords = [];
+
+          if (cfg && cfg.isDualRing) {
+            const innerCount = Math.max(1, cfg.innerRingCount);
+            const outerCount = Math.max(1, cfg.outerRingCount);
+
+            for (let i = 0; i < innerCount; i++) {
+              const baseAngle = -Math.PI / 2 + (i * Math.PI * 2) / innerCount;
+              const angle = baseAngle + state.innerRingAngle;
+              coords.push({
+                x: cx + Math.cos(angle) * innerRadius,
+                y: cy + Math.sin(angle) * innerRadius,
+                ring: 'inner',
+                ringIndex: i,
+              });
+            }
+
+            for (let j = 0; j < outerCount; j++) {
+              const baseAngle = -Math.PI / 2 + Math.PI / outerCount + (j * Math.PI * 2) / outerCount;
+              const angle = baseAngle + state.outerRingAngle;
+              coords.push({
+                x: cx + Math.cos(angle) * outerRadius,
+                y: cy + Math.sin(angle) * outerRadius,
+                ring: 'outer',
+                ringIndex: j,
+              });
+            }
+
+            return coords;
+          }
+
+          const count = state.shells.length || (cfg ? cfg.shellCount : 3);
+          for (let i = 0; i < count; i++) {
+            const baseAngle = -Math.PI / 2 + (i * Math.PI * 2) / count;
+            const angle = baseAngle + state.boardRotationAngle;
+            coords.push({
+              x: cx + Math.cos(angle) * outerRadius,
+              y: cy + Math.sin(angle) * outerRadius,
+              ring: 'single',
+              ringIndex: i,
+            });
+          }
+          return coords;
+        }
+
+        function recomputeShellSlotPositions() {
+          if (!state.shells.length) return;
+          const slots = computeLiveSlotCoordinates();
+          const lineupCoords = computeTargetLineupPositions(state.config.targetCount);
+          for (const shell of state.shells) {
+            const slot = slots[shell.slotIndex] || slots[0];
+            shell.baseX = slot.x;
+            shell.baseY = slot.y;
+            shell.ring = slot.ring;
+            if (shell.hasCore && typeof shell.targetOrder === 'number' && lineupCoords[shell.targetOrder]) {
+              shell.lineupX = lineupCoords[shell.targetOrder].x;
+              shell.lineupY = lineupCoords[shell.targetOrder].y;
+            }
+            if (state.phase === 'lineup' || state.phase === 'wave_ready') {
+              if (shell.hasCore) {
+                shell.x = shell.lineupX;
+                shell.y = shell.lineupY;
+              } else {
+                shell.x = slot.x;
+                shell.y = slot.y;
+              }
+            } else if (state.phase !== 'shuffle' && state.phase !== 'insert') {
+              shell.x = slot.x;
+              shell.y = slot.y;
+            }
+          }
+        }
+
+        function createTitleShowcaseShells() {
+          state.config = getWaveConfig(1, 0, 0);
+          state.boardRotationAngle = 0;
+          state.innerRingAngle = 0;
+          state.outerRingAngle = 0;
+          state.shells = [];
+          for (let i = 0; i < 3; i++) {
+            state.shells.push({
+              id: i,
+              slotIndex: i,
+              ring: 'single',
+              hasCore: i === 0,
+              targetOrder: i === 0 ? 0 : -1,
+              picked: false,
+              x: 0,
+              y: 0,
+              baseX: 0,
+              baseY: 0,
+              lineupX: 0,
+              lineupY: 0,
+              shieldOpen: i === 0 ? 1 : 0,
+              scaleX: 1,
+              scaleY: 1,
+              flash: 0,
+              revealedState: 'none',
+              trail: [],
+            });
+          }
+          const slots = computeLiveSlotCoordinates();
+          for (let i = 0; i < state.shells.length; i++) {
+            state.shells[i].x = slots[i].x;
+            state.shells[i].y = slots[i].y;
+            state.shells[i].baseX = slots[i].x;
+            state.shells[i].baseY = slots[i].y;
+          }
+        }
+
+        function setBodyState(mode, phase) {
+          state.mode = mode;
+          state.phase = phase;
+          bodyEl.setAttribute('data-mode', mode);
+          bodyEl.setAttribute('data-phase', phase);
+
+          screenTitleEl.classList.toggle('active', mode === 'title');
+          screenPerkEl.classList.toggle('active', mode === 'perk');
+          screenPauseEl.classList.toggle('active', mode === 'paused');
+          screenGameoverEl.classList.toggle('active', mode === 'gameover');
+
+          // Show wave/staging banner centered at (cx, cy) during wave_ready, ready_banner, or go_banner
+          const showBanner =
+            mode === 'playing' &&
+            (phase === 'wave_ready' || phase === 'ready_banner' || phase === 'go_banner');
+          if (showBanner) {
+            const { cx, cy } = getPlayboardGeometry();
+            waveBannerEl.style.left = `${cx}px`;
+            waveBannerEl.style.top = `${cy}px`;
+          }
+          waveBannerEl.classList.toggle('visible', showBanner);
+          waveBannerEl.classList.toggle('ready-mode', phase === 'ready_banner');
+          waveBannerEl.classList.toggle('go-mode', phase === 'go_banner');
+        }
+
+        function updateHudReadouts() {
+          hudScoreEl.textContent = String(Math.round(state.score));
+          hudMultEl.textContent = state.currentMult.toFixed(1).replace(/\.0$/, '') + 'x';
+          hudOverdriveMultEl.textContent = state.overdriveMultiplier.toFixed(1) + 'x';
+          hudBestEl.textContent = String(Math.round(bestScore));
+          titleBestScoreEl.textContent = String(Math.round(bestScore));
+          titleBestWaveEl.textContent = String(bestWave);
+          // Exact required indicator format: "WAVE [X] | TARGET: [Y]"
+          hudWaveTargetEl.textContent = `WAVE ${state.wave} | TARGET: ${state.config.targetCount}`;
+          renderShieldIcons(state.shields, state.maxShields);
+        }
+
+        // Overdrive State Setter (100% Silent — Zero Audio Oscillator)
+        function setOverdriveState(active) {
+          const canOverdrive = state.mode === 'playing' && state.phase === 'shuffle';
+          const nextState = Boolean(active && canOverdrive);
+          if (state.isOverdrive === nextState) return;
+          state.isOverdrive = nextState;
+          btnOverdrive.classList.toggle('active', nextState);
+        }
+
+        // Strict Timer Gate Helper: Timer stays 100% FROZEN until "GO!"
+        function setFrozenTimerHud(phaseLabel, colorHex = '#22d3ee') {
+          hudPhaseTextEl.textContent = phaseLabel;
+          hudPhaseTextEl.style.color = colorHex;
+          hudTimerEl.textContent = (state.config.selectDurationMs / 1000).toFixed(1) + 's';
+          hudGaugeFillEl.style.transform = 'scaleX(1)';
+          hudGaugeFillEl.style.backgroundColor = colorHex;
+        }
+
+        // --- Initialize Wave with Top-Right "TARGET" Lineup & READY -> GO! Staging ---
+        function initWave(waveNum, showWaveBanner = true) {
+          state.wave = waveNum;
+          state.config = getWaveConfig(
+            waveNum,
+            state.bonusTimeBufferMs,
+            state.perkCalmDriftCount
+          );
+          state.bonusTimeBufferMs = 0;
+          state.shieldsLostThisWave = 0;
+          state.waveStartScore = state.score;
+          state.waveAwardedSoFar = 0;
+
+          state.isOverdrive = false;
+          state.overdriveHeldDurationMs = 0;
+          state.overdriveMultiplier = 1.0;
+          state.boardRotationAngle = 0;
+          state.innerRingAngle = 0;
+          state.outerRingAngle = 0;
+          btnOverdrive.classList.remove('active');
+          overdriveMultReadoutEl.textContent = 'BET MULTIPLIER: 1.0x -> 3.5x';
+          hudOverdriveMultEl.textContent = '1.0x';
+
+          const indices = [];
+          for (let i = 0; i < state.config.shellCount; i++) indices.push(i);
+          for (let i = indices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const tmp = indices[i];
+            indices[i] = indices[j];
+            indices[j] = tmp;
+          }
+          const targetSet = new Set(indices.slice(0, state.config.targetCount));
+
+          state.shells = [];
+          for (let i = 0; i < state.config.shellCount; i++) {
+            state.shells.push({
+              id: i,
+              slotIndex: i,
+              ring: 'single',
+              hasCore: targetSet.has(i),
+              targetOrder: -1,
+              picked: false,
+              x: 0,
+              y: 0,
+              baseX: 0,
+              baseY: 0,
+              lineupX: 0,
+              lineupY: 0,
+              shieldOpen: targetSet.has(i) ? 1 : 0,
+              scaleX: 1,
+              scaleY: 1,
+              flash: 0,
+              revealedState: 'none',
+              trail: [],
+            });
+          }
+
+          // Assign vertical lineup order (0..targetCount-1) for target capsules in the top-right "TARGET" queue
+          const slots = computeLiveSlotCoordinates();
+          const targetShells = state.shells.filter((s) => s.hasCore);
+          targetShells.sort((a, b) => slots[a.slotIndex].y - slots[b.slotIndex].y);
+          const lineupCoords = computeTargetLineupPositions(state.config.targetCount);
+
+          targetShells.forEach((s, idx) => {
+            s.targetOrder = idx;
+            s.lineupX = lineupCoords[idx].x;
+            s.lineupY = lineupCoords[idx].y;
+          });
+
+          for (let i = 0; i < state.shells.length; i++) {
+            const s = state.shells[i];
+            const slot = slots[s.slotIndex];
+            s.baseX = slot.x;
+            s.baseY = slot.y;
+            s.ring = slot.ring;
+            if (s.hasCore) {
+              // Target capsules start in the top-right TARGET lineup
+              s.x = s.lineupX;
+              s.y = s.lineupY;
+            } else {
+              // Decoy capsules sit on the circular track as dimmed neutral hulls
+              s.x = slot.x;
+              s.y = slot.y;
+            }
+          }
+
+          state.swapSchedule = generateSwapSchedule(state.config);
+          state.currentSwapIndex = 0;
+          state.swapElapsedMs = 0;
+          state.activeSwap = null;
+          state.lastTickSecond = -1;
+
+          saveRecords(state.score, state.wave);
+          updateHudReadouts();
+
+          if (showWaveBanner) {
+            waveBannerTitleEl.textContent = `WAVE ${state.wave}`;
+            state.phaseElapsedMs = 0;
+            // Wave 1 display duration increased by +1.5s (520ms + 1500ms = 2020ms)
+            state.phaseDurationMs = state.wave === 1 ? 2020 : 1200;
+            setBodyState('playing', 'wave_ready');
+            setFrozenTimerHud(`WAVE ${state.wave}`, '#22d3ee');
+          } else {
+            enterLineupPhase();
+          }
+        }
+
+        function enterLineupPhase() {
+          state.phaseElapsedMs = 0;
+          state.phaseDurationMs = state.config.lineupDurationMs;
+          setBodyState('playing', 'lineup');
+          setFrozenTimerHud(`TARGET LINEUP (${state.config.targetCount})`, '#22d3ee');
+          audio.playRevealHum(state.config.targetCount);
+        }
+
+        function beginShuffleStep(stepIndex) {
+          if (stepIndex >= state.swapSchedule.length) {
+            setOverdriveState(false);
+            state.activeSwap = null;
+            state.phaseElapsedMs = 0;
+            state.phaseDurationMs = state.config.selectDurationMs;
+            setBodyState('playing', 'select');
+
+            // Strict Selection State Reset: All capsules look 100% uniform and neutral until tapped
+            const slots = computeLiveSlotCoordinates();
+            for (const s of state.shells) {
+              const slot = slots[s.slotIndex] || slots[0];
+              s.baseX = slot.x;
+              s.baseY = slot.y;
+              s.x = slot.x;
+              s.y = slot.y;
+              s.shieldOpen = 0;
+              s.scaleX = 1;
+              s.scaleY = 1;
+              s.flash = 0;
+              s.revealedState = 'none';
+              s.trail.length = 0;
+            }
+
+            hudPhaseTextEl.textContent = `TAP TARGETS (${state.config.targetCount})`;
+            hudPhaseTextEl.style.color = '#22d3ee';
+            hudGaugeFillEl.style.backgroundColor = '#22d3ee';
+            hudGaugeFillEl.style.transform = 'scaleX(1)';
+            return;
+          }
+
+          const step = state.swapSchedule[stepIndex];
+          const shellA = state.shells.find((s) => s.slotIndex === step.pairA);
+          const shellB = state.shells.find((s) => s.slotIndex === step.pairB);
+
+          if (!shellA || !shellB) {
+            state.currentSwapIndex += 1;
+            beginShuffleStep(state.currentSwapIndex);
+            return;
+          }
+
+          const fromSlotA = shellA.slotIndex;
+          const fromSlotB = shellB.slotIndex;
+          shellA.slotIndex = fromSlotB;
+          shellB.slotIndex = fromSlotA;
+
+          const liveSlots = computeLiveSlotCoordinates();
+          shellA.baseX = liveSlots[shellA.slotIndex].x;
+          shellA.baseY = liveSlots[shellA.slotIndex].y;
+          shellA.ring = liveSlots[shellA.slotIndex].ring;
+          shellB.baseX = liveSlots[shellB.slotIndex].x;
+          shellB.baseY = liveSlots[shellB.slotIndex].y;
+          shellB.ring = liveSlots[shellB.slotIndex].ring;
+
+          state.activeSwap = {
+            shellA,
+            shellB,
+            fromSlotA,
+            toSlotA: shellA.slotIndex,
+            fromSlotB,
+            toSlotB: shellB.slotIndex,
+            durationMs: step.durationMs,
+            curve: step.curve,
+            isDecelerationStep: step.isDecelerationStep,
+            isRadialHop: step.isRadialHop,
+          };
+
+          state.swapElapsedMs = 0;
+          audio.playSwapWhoosh(stepIndex);
+        }
+
+        function startNewGame() {
+          audio.playUiClick(580);
+          if (document.activeElement && typeof document.activeElement.blur === 'function') {
+            document.activeElement.blur();
+          }
+          state.score = 0;
+          state.streak = 0;
+          state.currentMult = 1;
+          state.shields = 3;
+          state.maxShields = 3;
+          state.shieldsLostThisWave = 0;
+          state.bonusTimeBufferMs = 0;
+          state.perkDoubleSurge = false;
+          state.perkCalmDriftCount = 0;
+          state.overdriveMultiplier = 1.0;
+          state.overdriveHeldDurationMs = 0;
+          state.isOverdrive = false;
+          state.trauma = 0;
+          state.hitstopMs = 0;
+          floatingPopups.length = 0;
+          initWave(1, true);
+        }
+
+        // --- Milestone Perk Modal Trigger (Every 3 Waves: Wave 3, 6, 9, 12...) ---
+        function checkMilestonePerkTrigger(clearedWave) {
+          if (clearedWave > 0 && clearedWave % 3 === 0) {
+            state.pendingNextWave = clearedWave + 1;
+            perkSubtitleEl.textContent = `Wave ${clearedWave} cleared! Choose a perk for Wave ${state.pendingNextWave}.`;
+            setBodyState('perk', 'idle');
+            return true;
+          }
+          return false;
+        }
+
+        function applyPerkChoice(perkType) {
+          audio.playUiClick(680);
+          if (document.activeElement && typeof document.activeElement.blur === 'function') {
+            document.activeElement.blur();
+          }
+          if (perkType === 'shield') {
+            state.shields += 1;
+            state.maxShields = Math.max(state.maxShields, state.shields);
+          } else if (perkType === 'surge') {
+            state.perkDoubleSurge = true;
+          } else if (perkType === 'calm') {
+            state.perkCalmDriftCount += 1;
+          }
+          updateHudReadouts();
+          initWave(state.pendingNextWave, true);
+        }
+
+        // --- Capsule Selection (Direct Click / Tap Only) ---
+        function handleShellSelection(shell) {
+          if (state.mode !== 'playing' || state.phase !== 'select') return;
+          if (!shell || shell.picked) return;
+
+          const remainingMs = Math.max(0, state.phaseDurationMs - state.phaseElapsedMs);
+
+          // 1. Wrong / Empty Shell Selected -> Open shutter to show empty dark interior (ZERO light / ZERO flash)
+          if (!shell.hasCore) {
+            shell.picked = true;
+            shell.revealedState = 'wrong';
+            shell.shieldOpen = 1;
+            shell.flash = 0;
+            shell.scaleX = 0.94;
+            shell.scaleY = 0.94;
+
+            state.shields = Math.max(0, state.shields - 1);
+            state.shieldsLostThisWave += 1;
+            state.streak = 0;
+            state.currentMult = 1;
+            state.hitstopMs = 45;
+            state.trauma = Math.min(1, state.trauma + 0.35);
+
+            audio.playShieldCrackleAlarm();
+            renderShieldIcons(state.shields, state.maxShields);
+            updateHudReadouts();
+
+            spawnPopup(
+              shell.x,
+              shell.y - 44,
+              'EMPTY · -1 SHIELD',
+              state.shields > 0 ? `${state.shields} SHIELD${state.shields > 1 ? 'S' : ''} LEFT` : 'SHIELDS DEPLETED',
+              '#f43f5e'
+            );
+
+            if (state.shields <= 0) {
+              for (const s of state.shells) {
+                if (s.hasCore && !s.picked) {
+                  s.revealedState = 'missed';
+                  s.shieldOpen = 1;
+                }
+              }
+              audio.playDefeatBuzz();
+              saveRecords(state.score, state.wave);
+
+              state.frozenSnapshot = {
+                score: Math.round(state.score),
+                wave: state.wave,
+                best: Math.round(bestScore),
+                reason: 'All shields depleted during target selection.',
+              };
+
+              hudPhaseTextEl.textContent = 'SHIELDS DEPLETED';
+              hudPhaseTextEl.style.color = '#f43f5e';
+              hudGaugeFillEl.style.backgroundColor = '#f43f5e';
+              state.phaseElapsedMs = 0;
+              state.phaseDurationMs = 600;
+              setBodyState('playing', 'defeat_beat');
+              return;
+            }
+
+            hudPhaseTextEl.textContent = `SHIELD LOST · ${state.shields} LEFT`;
+            hudPhaseTextEl.style.color = '#f43f5e';
+            return;
+          }
+
+          // 2. Correct Target Capsule Selected! (Opens to reveal glowing cyan core)
+          shell.picked = true;
+          shell.revealedState = 'correct';
+          shell.shieldOpen = 1;
+          shell.flash = 0.25;
+          shell.scaleX = 1.14;
+          shell.scaleY = 0.88;
+
+          state.streak += 1;
+          const mult = calculateSpeedMultiplier(
+            remainingMs,
+            state.phaseDurationMs,
+            state.streak
+          );
+          state.currentMult = mult;
+
+          // Compute total wave clear reward using the calibrated Wave 1-9 (<4,800 cap) / Wave 10+ formula
+          const scoreCalc = calculateWaveClearScore({
+            wave: state.wave,
+            baseWavePoints: state.config.baseWavePoints,
+            currentTotalScore: state.waveStartScore,
+            overdriveMultiplier: state.overdriveMultiplier,
+            hasDoubleSurge: state.perkDoubleSurge,
+            shieldsLostThisWave: state.shieldsLostThisWave,
+          });
+
+          const totalTargets = Math.max(1, state.config.targetCount);
+          const pickedTargetsNow = state.shells.filter((s) => s.hasCore && s.picked).length;
+          const unpickedTargets = totalTargets - pickedTargetsNow;
+
+          let pointsEarned = 0;
+          if (unpickedTargets === 0) {
+            pointsEarned = Math.max(0, scoreCalc.waveScore - state.waveAwardedSoFar);
+            state.score = scoreCalc.newTotalScore;
+          } else {
+            const share = Math.floor(scoreCalc.waveScore / totalTargets);
+            pointsEarned = share;
+            state.waveAwardedSoFar += share;
+            state.score = state.waveStartScore + state.waveAwardedSoFar;
+          }
+
+          saveRecords(state.score, state.wave);
+          updateHudReadouts();
+
+          state.hitstopMs = 45;
+          state.trauma = Math.min(1, state.trauma + 0.22);
+          triggerCoreCrackBurst(shell.x, shell.y, true);
+
+          if (unpickedTargets === 0) {
+            audio.playWaveClearChord();
+          } else {
+            audio.playCorrectTap(state.streak);
+          }
+
+          const subtextParts = [];
+          if (state.overdriveMultiplier > 1.05) {
+            subtextParts.push(`OVERDRIVE ${state.overdriveMultiplier.toFixed(1)}x`);
+          }
+          if (unpickedTargets === 0 && scoreCalc.doubleSurgeTriggered) {
+            subtextParts.push('DOUBLE SURGE 2x');
+          }
+          if (subtextParts.length === 0) {
+            subtextParts.push(unpickedTargets === 0 ? 'WAVE CLEAR' : 'TARGET LOCKED');
+          }
+
+          spawnPopup(
+            shell.x,
+            shell.y - 48,
+            `+${pointsEarned}`,
+            subtextParts.join(' · '),
+            state.overdriveMultiplier > 1.05 ? '#ff7849' : '#22d3ee'
+          );
+
+          if (unpickedTargets === 0) {
+            hudPhaseTextEl.textContent = 'WAVE CLEAR';
+            hudPhaseTextEl.style.color = '#14b8a6';
+            hudGaugeFillEl.style.backgroundColor = '#14b8a6';
+            state.phaseElapsedMs = 0;
+            state.phaseDurationMs = 760;
+            setBodyState('playing', 'wave_clear');
+          }
+        }
+
+        function handleSelectionTimeout() {
+          const pickedTargets = state.shells.filter((s) => s.hasCore && s.picked).length;
+          const totalTargets = state.config.targetCount;
+
+          // Partial Success (Soft Failure) if at least 1 target was found on a multi-target wave
+          if (pickedTargets >= 1 && totalTargets > 1) {
+            audio.playPartialDecryptChime();
+            state.bonusTimeBufferMs += 1500;
+            saveRecords(state.score, state.wave);
+            updateHudReadouts();
+
+            for (const s of state.shells) {
+              if (s.hasCore && !s.picked) {
+                s.revealedState = 'missed';
+                s.shieldOpen = 1;
+              }
+            }
+
+            hudPhaseTextEl.textContent = 'PARTIAL CLEAR · +1.5S BONUS';
+            hudPhaseTextEl.style.color = '#fbbf24';
+            hudGaugeFillEl.style.backgroundColor = '#fbbf24';
+            spawnPopup(viewportWidth * 0.5, viewportHeight * 0.45, 'PARTIAL CLEAR', '+1.5S NEXT WAVE', '#fbbf24');
+
+            state.phaseElapsedMs = 0;
+            state.phaseDurationMs = 900;
+            setBodyState('playing', 'resolve');
+            return;
+          }
+
+          // Zero targets found before timeout -> Consume 1 Shield
+          audio.playShieldCrackleAlarm();
+          state.shields = Math.max(0, state.shields - 1);
+          state.shieldsLostThisWave += 1;
+          state.streak = 0;
+          state.currentMult = 1;
+          state.trauma = Math.min(1, state.trauma + 0.5);
+          renderShieldIcons(state.shields, state.maxShields);
+
+          for (const s of state.shells) {
+            if (s.hasCore && !s.picked) {
+              s.revealedState = 'missed';
+              s.shieldOpen = 1;
+            }
+          }
+
+          if (state.shields <= 0) {
+            audio.playDefeatBuzz();
+            saveRecords(state.score, state.wave);
+            state.frozenSnapshot = {
+              score: Math.round(state.score),
+              wave: state.wave,
+              best: Math.round(bestScore),
+              reason: 'Time expired with zero shields left.',
+            };
+            hudPhaseTextEl.textContent = 'SHIELDS DEPLETED';
+            hudPhaseTextEl.style.color = '#f43f5e';
+            state.phaseElapsedMs = 0;
+            state.phaseDurationMs = 600;
+            setBodyState('playing', 'defeat_beat');
+          } else {
+            hudPhaseTextEl.textContent = `TIME UP · ${state.shields} SHIELDS LEFT`;
+            hudPhaseTextEl.style.color = '#f43f5e';
+            spawnPopup(viewportWidth * 0.5, viewportHeight * 0.45, 'SHIELD LOST', 'TIME EXPIRED', '#f43f5e');
+            state.phaseElapsedMs = 0;
+            state.phaseDurationMs = 950;
+            setBodyState('playing', 'resolve');
+          }
+        }
+
+        function showGameOverModal() {
+          goStatScoreEl.textContent = String(state.frozenSnapshot.score);
+          goStatWaveEl.textContent = String(state.frozenSnapshot.wave);
+          goStatBestEl.textContent = String(state.frozenSnapshot.best);
+          gameoverReasonEl.textContent = state.frozenSnapshot.reason;
+          setBodyState('gameover', 'idle');
+
+          // Tounow Hub Cross-Origin Runtime Contract
+          try {
+            if (window.parent && window.parent !== window) {
+              window.parent.postMessage(
+                {
+                  type: 'GAME_OVER',
+                  gameId: 'quantum-shell',
+                  category: 'spatial',
+                  score: Math.round(state.frozenSnapshot.score || state.score || 0),
+                  wave: state.frozenSnapshot.wave || state.wave || 1
+                },
+                '*'
+              );
+            }
+          } catch (_) {}
+        }
+
+        function togglePause() {
+          audio.playUiClick(460);
+          if (state.mode === 'playing') {
+            pauseStatScoreEl.textContent = String(Math.round(state.score));
+            pauseStatWaveEl.textContent = String(state.wave);
+            pauseStatShieldsEl.textContent = String(state.shields);
+            setOverdriveState(false);
+            setBodyState('paused', state.phase);
+          } else if (state.mode === 'paused') {
+            if (document.activeElement && typeof document.activeElement.blur === 'function') {
+              document.activeElement.blur();
+            }
+            setBodyState('playing', state.phase);
+          }
+        }
+
+        function returnToTitle() {
+          audio.playUiClick(420);
+          if (document.activeElement && typeof document.activeElement.blur === 'function') {
+            document.activeElement.blur();
+          }
+          setOverdriveState(false);
+          createTitleShowcaseShells();
+          setBodyState('title', 'idle');
+        }
+
+        function screenToWorld(clientX, clientY) {
+          const rect = canvas.getBoundingClientRect();
+          return {
+            x: clientX - rect.left,
+            y: clientY - rect.top,
+          };
+        }
+
+        function findShellAtPoint(wx, wy) {
+          const R = getCapsuleRadius();
+          const hitRadius = Math.max(32, R * 1.42);
+          let closest = null;
+          let bestDist = hitRadius;
+
+          for (const s of state.shells) {
+            const dx = wx - s.x;
+            const dy = wy - s.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist <= bestDist) {
+              bestDist = dist;
+              closest = s;
+            }
+          }
+          return closest;
+        }
+
+        canvas.addEventListener(
+          'pointermove',
+          (e) => {
+            const pt = screenToWorld(e.clientX, e.clientY);
+            state.pointerX = pt.x;
+            state.pointerY = pt.y;
+          },
+          { passive: true }
+        );
+
+        canvas.addEventListener('pointerdown', (e) => {
+          const pt = screenToWorld(e.clientX, e.clientY);
+          state.pointerX = pt.x;
+          state.pointerY = pt.y;
+          if (state.mode === 'playing' && state.phase === 'select') {
+            const picked = findShellAtPoint(pt.x, pt.y);
+            if (picked) {
+              handleShellSelection(picked);
+            }
+          }
+        });
+
+        // Player-Controlled Overdrive Hold Listeners (100% Silent Visual-Only Feedback)
+        btnOverdrive.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          setOverdriveState(true);
+        });
+        window.addEventListener('pointerup', () => {
+          if (state.isOverdrive) setOverdriveState(false);
+        });
+        window.addEventListener('pointercancel', () => {
+          if (state.isOverdrive) setOverdriveState(false);
+        });
+
+        // Keyboard Controls: Shift for Overdrive, P/Escape for Pause, M for Mute, R for Restart
+        // (No Tab or keyboard capsule pre-selection)
+        window.addEventListener('keydown', (e) => {
+          const key = e.key;
+
+          if (e.shiftKey || key === 'Shift') {
+            if (state.mode === 'playing' && state.phase === 'shuffle') {
+              setOverdriveState(true);
+            }
+          }
+
+          if (e.repeat) return;
+
+          if (state.mode === 'title') {
+            if (key === 'Enter' || key === ' ') {
+              e.preventDefault();
+              startNewGame();
+            }
+            return;
+          }
+
+          if (state.mode === 'gameover') {
+            if (key === 'Enter' || key === ' ') {
+              e.preventDefault();
+              startNewGame();
+            }
+            return;
+          }
+
+          if (key === 'Escape' || key === 'p' || key === 'P') {
+            e.preventDefault();
+            togglePause();
+            return;
+          }
+
+          if (key === 'm' || key === 'M') {
+            e.preventDefault();
+            const isMuted = audio.toggleMute();
+            iconSoundOn.style.display = isMuted ? 'none' : 'block';
+            iconSoundOff.style.display = isMuted ? 'block' : 'none';
+            return;
+          }
+
+          if (key === 'r' || key === 'R') {
+            e.preventDefault();
+            startNewGame();
+          }
+        });
+
+        window.addEventListener('keyup', (e) => {
+          if (e.key === 'Shift') {
+            setOverdriveState(false);
+          }
+        });
+
+        window.addEventListener('blur', () => {
+          setOverdriveState(false);
+        });
+
+        btnStartGame.addEventListener('click', (e) => {
+          e.currentTarget.blur();
+          startNewGame();
+        });
+
+        btnTryAgain.addEventListener('click', (e) => {
+          e.currentTarget.blur();
+          startNewGame();
+        });
+
+        btnResumeGame.addEventListener('click', (e) => {
+          e.currentTarget.blur();
+          togglePause();
+        });
+
+        btnRestartPause.addEventListener('click', (e) => {
+          e.currentTarget.blur();
+          startNewGame();
+        });
+
+        btnRestartHud.addEventListener('click', (e) => {
+          e.currentTarget.blur();
+          startNewGame();
+        });
+
+        btnPause.addEventListener('click', (e) => {
+          e.currentTarget.blur();
+          togglePause();
+        });
+
+        btnMute.addEventListener('click', (e) => {
+          e.currentTarget.blur();
+          const isMuted = audio.toggleMute();
+          iconSoundOn.style.display = isMuted ? 'none' : 'block';
+          iconSoundOff.style.display = isMuted ? 'block' : 'none';
+        });
+
+        btnTitlePause.addEventListener('click', (e) => {
+          e.currentTarget.blur();
+          returnToTitle();
+        });
+
+        btnTitleGameover.addEventListener('click', (e) => {
+          e.currentTarget.blur();
+          returnToTitle();
+        });
+
+        perkBtnShield.addEventListener('click', () => applyPerkChoice('shield'));
+        perkBtnSurge.addEventListener('click', () => applyPerkChoice('surge'));
+        perkBtnCalm.addEventListener('click', () => applyPerkChoice('calm'));
+
+        function easeInOutCubic(t) {
+          return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        function easeOutCubic(t) {
+          return 1 - Math.pow(1 - t, 3);
+        }
+
+        function evaluateQuadraticBezier(startX, startY, cpX, cpY, endX, endY, t) {
+          const inv = 1 - t;
+          return {
+            x: inv * inv * startX + 2 * inv * t * cpX + t * t * endX,
+            y: inv * inv * startY + 2 * inv * t * cpY + t * t * endY,
+          };
+        }
+
+        function enforceCapsuleSeparation(shellA, shellB) {
+          const R = getCapsuleRadius();
+          const minSep = R * 2.04;
+
+          const abDx = shellB.x - shellA.x;
+          const abDy = shellB.y - shellA.y;
+          const abDist = Math.hypot(abDx, abDy) || 1;
+          if (abDist < minSep) {
+            const push = (minSep - abDist) * 0.5;
+            const nx = abDx / abDist;
+            const ny = abDy / abDist;
+            shellA.x -= nx * push;
+            shellA.y -= ny * push;
+            shellB.x += nx * push;
+            shellB.y += ny * push;
+          }
+
+          for (const other of state.shells) {
+            if (other.id === shellA.id || other.id === shellB.id) continue;
+            for (const moving of [shellA, shellB]) {
+              const dx = moving.x - other.x;
+              const dy = moving.y - other.y;
+              const dist = Math.hypot(dx, dy) || 1;
+              if (dist < minSep) {
+                const push = minSep - dist;
+                moving.x += (dx / dist) * push;
+                moving.y += (dy / dist) * push;
+              }
+            }
+          }
+        }
+
+        // --- Simulation Update Loop ---
+        function updateSimulation(dtSeconds) {
+          const realDtMs = dtSeconds * 1000;
+          let dtMs = realDtMs;
+
+          if (state.mode === 'playing' && state.phase === 'shuffle' && state.isOverdrive) {
+            dtMs *= 1.8;
+            state.overdriveHeldDurationMs += realDtMs;
+            state.overdriveMultiplier = calculateOverdriveMultiplier(state.overdriveHeldDurationMs);
+            hudOverdriveMultEl.textContent = `${state.overdriveMultiplier.toFixed(1)}x`;
+          }
+
+          // Orbital Rotation Updates strictly during Shuffle Phase (after GO!)
+          if (state.mode === 'playing' && state.phase === 'shuffle') {
+            const rotFactor = state.isOverdrive ? 1.8 : 1.0;
+            if (state.config.isDualRing) {
+              state.innerRingAngle += state.config.innerRingSpeedRad * rotFactor * dtSeconds;
+              state.outerRingAngle += state.config.outerRingSpeedRad * rotFactor * dtSeconds;
+            } else if (state.config.hasBoardRotation) {
+              state.boardRotationAngle += state.config.boardRotationSpeedRad * rotFactor * dtSeconds;
+            }
+          }
+
+          state.trauma = Math.max(0, state.trauma - dtSeconds * 1.8);
+
+          // Particles
+          for (let i = 0; i < MAX_PARTICLES; i++) {
+            const p = particlePool[i];
+            if (!p.active) continue;
+            p.life -= dtSeconds;
+            if (p.life <= 0) {
+              p.active = false;
+              continue;
+            }
+            if (p.kind === 'ring') {
+              p.size += dtSeconds * 210;
+            } else {
+              p.x += p.vx * dtSeconds;
+              p.y += p.vy * dtSeconds;
+              p.vx *= 0.94;
+              p.vy *= 0.94;
+              p.rotation += p.vRot * dtSeconds;
+            }
+            p.alpha = Math.max(0, p.life / p.maxLife);
+          }
+
+          // Floating Popups
+          for (let i = floatingPopups.length - 1; i >= 0; i--) {
+            const pop = floatingPopups[i];
+            pop.life -= dtSeconds;
+            pop.y -= dtSeconds * 34;
+            if (pop.life <= 0) {
+              floatingPopups.splice(i, 1);
+            }
+          }
+
+          if (state.hitstopMs > 0) {
+            state.hitstopMs = Math.max(0, state.hitstopMs - realDtMs);
+            return;
+          }
+
+          if (state.mode === 'title') {
+            const slots = computeLiveSlotCoordinates();
+            for (let i = 0; i < state.shells.length; i++) {
+              const s = state.shells[i];
+              s.x = slots[i].x;
+              s.y = slots[i].y;
+              s.shieldOpen = i === 0 ? 1 : 0;
+            }
+            return;
+          }
+
+          if (state.mode !== 'playing') return;
+
+          const liveSlots = computeLiveSlotCoordinates();
+          const lineupCoords = computeTargetLineupPositions(state.config.targetCount);
+
+          for (const s of state.shells) {
+            s.scaleX += (1 - s.scaleX) * Math.min(1, dtSeconds * 14);
+            s.scaleY += (1 - s.scaleY) * Math.min(1, dtSeconds * 14);
+            s.flash = Math.max(0, s.flash - dtSeconds * 4.5);
+
+            const slot = liveSlots[s.slotIndex] || liveSlots[0];
+            s.baseX = slot.x;
+            s.baseY = slot.y;
+            s.ring = slot.ring;
+
+            if (s.hasCore && typeof s.targetOrder === 'number' && lineupCoords[s.targetOrder]) {
+              s.lineupX = lineupCoords[s.targetOrder].x;
+              s.lineupY = lineupCoords[s.targetOrder].y;
+            }
+
+            const targetOpen =
+              ((state.phase === 'lineup' || state.phase === 'wave_ready') && s.hasCore) ||
+              (state.phase === 'insert' && s.hasCore && state.phaseElapsedMs < state.phaseDurationMs * 0.72) ||
+              s.revealedState === 'correct' ||
+              s.revealedState === 'wrong' ||
+              s.revealedState === 'missed'
+                ? 1
+                : 0;
+            s.shieldOpen += (targetOpen - s.shieldOpen) * Math.min(1, dtSeconds * 14);
+
+            if (state.phase === 'lineup' || state.phase === 'wave_ready') {
+              if (s.hasCore) {
+                s.x = s.lineupX;
+                s.y = s.lineupY;
+              } else {
+                s.x = slot.x;
+                s.y = slot.y;
+              }
+              s.trail.length = 0;
+            } else if (state.phase === 'insert') {
+              if (s.hasCore) {
+                const rawInsertT = Math.min(1, state.phaseElapsedMs / Math.max(1, state.phaseDurationMs));
+                const t = easeInOutCubic(rawInsertT);
+                const cpx = (s.lineupX + slot.x) * 0.5 - 34;
+                const cpy = (s.lineupY + slot.y) * 0.5 - 16;
+                const pos = evaluateQuadraticBezier(s.lineupX, s.lineupY, cpx, cpy, slot.x, slot.y, t);
+                s.x = pos.x;
+                s.y = pos.y;
+                s.trail.unshift({ x: s.x, y: s.y });
+                if (s.trail.length > 9) s.trail.pop();
+              } else {
+                s.x = slot.x;
+                s.y = slot.y;
+                s.trail.length = 0;
+              }
+            } else {
+              const isSwapping =
+                state.phase === 'shuffle' &&
+                state.activeSwap &&
+                (state.activeSwap.shellA.id === s.id || state.activeSwap.shellB.id === s.id);
+
+              if (!isSwapping) {
+                s.x = slot.x;
+                s.y = slot.y;
+                if (s.trail.length > 0) {
+                  s.trail.length = 0;
+                }
+              } else {
+                s.trail.unshift({ x: s.x, y: s.y });
+                if (s.trail.length > 10) s.trail.pop();
+
+                if (state.isOverdrive && Math.random() < 0.3) {
+                  spawnParticle(
+                    s.x + (Math.random() - 0.5) * 12,
+                    s.y + (Math.random() - 0.5) * 12,
+                    (Math.random() - 0.5) * 48,
+                    (Math.random() - 0.5) * 48,
+                    2 + Math.random() * 2,
+                    0.2,
+                    '#ffedd5',
+                    'spark'
+                  );
+                }
+              }
+            }
+          }
+
+          state.phaseElapsedMs += dtMs;
+
+          if (state.phase === 'wave_ready') {
+            if (state.phaseElapsedMs >= state.phaseDurationMs) {
+              enterLineupPhase();
+            }
+          } else if (state.phase === 'lineup') {
+            // 1.2s top-right TARGET lineup (Timer strictly FROZEN)
+            if (state.phaseElapsedMs >= state.phaseDurationMs) {
+              state.phaseElapsedMs = 0;
+              state.phaseDurationMs = state.config.insertDurationMs;
+              setBodyState('playing', 'insert');
+              setFrozenTimerHud('INSERTING TARGETS', '#38bdf8');
+            }
+          } else if (state.phase === 'insert') {
+            // Smooth Bezier glide from top-right TARGET lineup into circular orbit slots (Timer strictly FROZEN)
+            if (state.phaseElapsedMs >= state.phaseDurationMs) {
+              for (const s of state.shells) {
+                s.x = s.baseX;
+                s.y = s.baseY;
+                s.shieldOpen = 0;
+                s.trail.length = 0;
+                if (s.hasCore) {
+                  s.scaleX = 1.08;
+                  s.scaleY = 0.92;
+                  s.flash = 0;
+                }
+              }
+              audio.playCoreLockLatch();
+              // Show "READY" in the center for 0.6s with steady mid tone (Timer strictly FROZEN)
+              waveBannerTitleEl.textContent = 'READY';
+              state.phaseElapsedMs = 0;
+              state.phaseDurationMs = state.config.readyDurationMs;
+              setBodyState('playing', 'ready_banner');
+              setFrozenTimerHud('READY', '#38bdf8');
+              audio.playReadyChime();
+            }
+          } else if (state.phase === 'ready_banner') {
+            // "READY" (0.6s) -> Flash "GO!" (0.4s) in the center in vibrant yellow with ascending tone
+            if (state.phaseElapsedMs >= state.phaseDurationMs) {
+              waveBannerTitleEl.textContent = 'GO!';
+              state.phaseElapsedMs = 0;
+              state.phaseDurationMs = state.config.goDurationMs;
+              setBodyState('playing', 'go_banner');
+              hudPhaseTextEl.textContent = 'GO!';
+              hudPhaseTextEl.style.color = '#facc15';
+              hudGaugeFillEl.style.backgroundColor = '#facc15';
+              audio.playGoTone();
+            }
+          } else if (state.phase === 'go_banner') {
+            // Timer starts ticking upon "GO!"
+            const goRatio = Math.max(0, 1 - (state.phaseElapsedMs / Math.max(1, state.phaseDurationMs)) * 0.08);
+            hudGaugeFillEl.style.transform = `scaleX(${goRatio.toFixed(3)})`;
+            if (state.phaseElapsedMs >= state.phaseDurationMs) {
+              setBodyState('playing', 'shuffle');
+              hudPhaseTextEl.textContent = state.config.isDualRing
+                ? 'DUAL RINGS · TRACK'
+                : state.config.hasBoardRotation
+                  ? 'ORBIT SPIN · TRACK'
+                  : 'TRACK MOVEMENT';
+              hudPhaseTextEl.style.color = '#38bdf8';
+              hudGaugeFillEl.style.backgroundColor = '#22d3ee';
+              state.currentSwapIndex = 0;
+              beginShuffleStep(0);
+            }
+          } else if (state.phase === 'shuffle') {
+            const active = state.activeSwap;
+            if (!active) {
+              beginShuffleStep(state.currentSwapIndex);
+              return;
+            }
+
+            state.swapElapsedMs += dtMs;
+            const rawT = Math.min(1, state.swapElapsedMs / Math.max(1, active.durationMs));
+            const t = active.isDecelerationStep ? easeOutCubic(rawT) : easeInOutCubic(rawT);
+
+            const startA = liveSlots[active.fromSlotA] || liveSlots[0];
+            const endA = liveSlots[active.toSlotA] || liveSlots[0];
+            const startB = liveSlots[active.fromSlotB] || liveSlots[0];
+            const endB = liveSlots[active.toSlotB] || liveSlots[0];
+
+            const midX = (startA.x + endA.x) * 0.5;
+            const midY = (startA.y + endA.y) * 0.5;
+            const dx = endA.x - startA.x;
+            const dy = endA.y - startA.y;
+            const dist = Math.hypot(dx, dy) || 1;
+            const nx = -dy / dist;
+            const ny = dx / dist;
+
+            const isWide = active.curve === 'bezier_wide_cw' || active.curve === 'bezier_wide_ccw';
+            const dir = active.curve.endsWith('_ccw') ? -1 : 1;
+            const bowHeight = active.isRadialHop
+              ? Math.max(54, Math.min(105, dist * 0.38))
+              : isWide
+                ? Math.max(85, Math.min(155, dist * 0.48))
+                : Math.max(70, Math.min(130, dist * 0.42));
+
+            const cpAX = midX + dir * nx * bowHeight;
+            const cpAY = midY + dir * ny * bowHeight;
+            const cpBX = midX - dir * nx * bowHeight;
+            const cpBY = midY - dir * ny * bowHeight;
+
+            active.liveCurve = {
+              startAX: startA.x,
+              startAY: startA.y,
+              endAX: endA.x,
+              endAY: endA.y,
+              cpAX,
+              cpAY,
+              startBX: startB.x,
+              startBY: startB.y,
+              endBX: endB.x,
+              endBY: endB.y,
+              cpBX,
+              cpBY,
+            };
+
+            const posA = evaluateQuadraticBezier(
+              startA.x,
+              startA.y,
+              cpAX,
+              cpAY,
+              endA.x,
+              endA.y,
+              t
+            );
+            const posB = evaluateQuadraticBezier(
+              startB.x,
+              startB.y,
+              cpBX,
+              cpBY,
+              endB.x,
+              endB.y,
+              t
+            );
+
+            active.shellA.x = posA.x;
+            active.shellA.y = posA.y;
+            active.shellB.x = posB.x;
+            active.shellB.y = posB.y;
+
+            if (rawT > 0.05 && rawT < 0.95) {
+              enforceCapsuleSeparation(active.shellA, active.shellB);
+            }
+
+            const totalProgress =
+              (state.currentSwapIndex + rawT) / Math.max(1, state.swapSchedule.length);
+            hudGaugeFillEl.style.transform = `scaleX(${(1 - totalProgress).toFixed(3)})`;
+            hudTimerEl.textContent = `${state.swapSchedule.length - state.currentSwapIndex}`;
+
+            if (rawT >= 1) {
+              active.shellA.x = endA.x;
+              active.shellA.y = endA.y;
+              active.shellB.x = endB.x;
+              active.shellB.y = endB.y;
+              active.shellA.trail.length = 0;
+              active.shellB.trail.length = 0;
+              state.currentSwapIndex += 1;
+              beginShuffleStep(state.currentSwapIndex);
+            }
+          } else if (state.phase === 'select') {
+            const rem = Math.max(0, state.phaseDurationMs - state.phaseElapsedMs);
+            const ratio = rem / Math.max(1, state.phaseDurationMs);
+            hudTimerEl.textContent = (rem / 1000).toFixed(1) + 's';
+            hudGaugeFillEl.style.transform = `scaleX(${ratio.toFixed(3)})`;
+
+            const secCeil = Math.ceil(rem / 1000);
+            if (secCeil !== state.lastTickSecond && secCeil > 0 && secCeil <= 3) {
+              state.lastTickSecond = secCeil;
+              audio.playTimerTick(secCeil <= 1);
+            }
+
+            if (ratio < 0.3) {
+              hudGaugeFillEl.style.backgroundColor = '#f43f5e';
+              hudPhaseTextEl.style.color = '#f43f5e';
+            }
+
+            const liveMult = calculateSpeedMultiplier(
+              rem,
+              state.phaseDurationMs,
+              state.streak + 1
+            );
+            hudMultEl.textContent = liveMult.toFixed(1).replace(/\.0$/, '') + 'x';
+
+            if (rem <= 0) {
+              handleSelectionTimeout();
+            }
+          } else if (state.phase === 'wave_clear') {
+            if (state.phaseElapsedMs >= state.phaseDurationMs) {
+              if (checkMilestonePerkTrigger(state.wave)) {
+                return;
+              }
+              initWave(state.wave + 1, true);
+            }
+          } else if (state.phase === 'resolve') {
+            if (state.phaseElapsedMs >= state.phaseDurationMs) {
+              const pickedCount = state.shells.filter((s) => s.hasCore && s.picked).length;
+              const nextWave = pickedCount >= 1 ? state.wave + 1 : state.wave;
+              initWave(nextWave, true);
+            }
+          } else if (state.phase === 'defeat_beat') {
+            if (state.phaseElapsedMs >= state.phaseDurationMs) {
+              showGameOverModal();
+            }
+          }
+        }
+
+        // --- Canvas 2D Renderer (Strict 1:1 Circular Orbits + Top-Right "TARGET" Queue) ---
+        function drawArenaBackground() {
+          const { cx, cy, innerRadius, outerRadius } = getPlayboardGeometry();
+          const maxSpan = Math.max(viewportWidth, viewportHeight) * 1.6;
+
+          if (hexPatternCanvas) {
+            const pattern = ctx.createPattern(hexPatternCanvas, 'repeat');
+            if (pattern) {
+              ctx.fillStyle = pattern;
+              ctx.fillRect(cx - maxSpan * 0.5, cy - maxSpan * 0.5, maxSpan, maxSpan);
+            }
+          }
+
+          const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, outerRadius * 1.45);
+          grad.addColorStop(0, state.isOverdrive ? 'rgba(255, 120, 73, 0.11)' : 'rgba(20, 184, 166, 0.08)');
+          grad.addColorStop(0.6, state.isOverdrive ? 'rgba(245, 158, 11, 0.05)' : 'rgba(14, 116, 144, 0.04)');
+          grad.addColorStop(1, 'rgba(10, 10, 18, 0)');
+          ctx.fillStyle = grad;
+          ctx.fillRect(cx - maxSpan * 0.5, cy - maxSpan * 0.5, maxSpan, maxSpan);
+
+          ctx.save();
+          ctx.translate(cx, cy);
+
+          // Outer Strict 1:1 Circular Orbit Ring
+          ctx.strokeStyle = state.isOverdrive ? 'rgba(255, 120, 73, 0.28)' : 'rgba(56, 189, 248, 0.2)';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(0, 0, outerRadius, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Inner Strict 1:1 Circular Orbit Ring (Visible in Dual Concentric Waves 10+)
+          if (state.mode !== 'title' && state.config && state.config.isDualRing) {
+            ctx.strokeStyle = state.isOverdrive ? 'rgba(251, 191, 36, 0.32)' : 'rgba(20, 184, 166, 0.26)';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([6, 6]);
+            ctx.beginPath();
+            ctx.arc(0, 0, innerRadius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+
+          ctx.restore();
+
+          if (state.mode !== 'title') {
+            const slots = computeLiveSlotCoordinates();
+            const R = getCapsuleRadius();
+            const slotR = R + 5;
+            for (let i = 0; i < slots.length; i++) {
+              const shellAtSlot = state.shells.find((s) => s.slotIndex === i);
+              const isPendingTargetSlot =
+                (state.phase === 'lineup' || state.phase === 'insert' || state.phase === 'wave_ready') &&
+                shellAtSlot &&
+                shellAtSlot.hasCore;
+
+              ctx.save();
+              if (isPendingTargetSlot) {
+                ctx.strokeStyle = 'rgba(34, 211, 238, 0.45)';
+                ctx.lineWidth = 1.6;
+                ctx.setLineDash([4, 4]);
+              } else {
+                ctx.strokeStyle = slots[i].ring === 'inner'
+                  ? 'rgba(20, 184, 166, 0.18)'
+                  : 'rgba(148, 163, 184, 0.15)';
+                ctx.lineWidth = 1;
+              }
+              ctx.beginPath();
+              ctx.arc(slots[i].x, slots[i].y, slotR, 0, Math.PI * 2);
+              ctx.stroke();
+              ctx.restore();
+            }
+          }
+        }
+
+        // Top-Right "TARGET" Vertical Lineup Queue Panel during Inspection & Insertion
+        function drawTargetLineupPanel() {
+          if (state.mode !== 'playing') return;
+          if (state.phase !== 'lineup' && state.phase !== 'insert' && state.phase !== 'wave_ready') return;
+
+          const { queueX, panelW, isMobile } = getPlayboardGeometry();
+          const targetCount = state.config.targetCount;
+          const lineupCoords = computeTargetLineupPositions(targetCount);
+          const R = getCapsuleRadius();
+
+          const fadeAlpha =
+            state.phase === 'insert'
+              ? Math.max(0, 1 - state.phaseElapsedMs / Math.max(1, state.phaseDurationMs * 0.9))
+              : 1;
+
+          const topY = lineupCoords[0].y - R - (isMobile ? 30 : 36);
+          const bottomY = lineupCoords[lineupCoords.length - 1].y + R + 14;
+          const panelH = Math.max(82, bottomY - topY);
+          const panelX = Math.min(viewportWidth - panelW - 6, queueX - panelW * 0.5);
+
+          ctx.save();
+          ctx.globalAlpha = fadeAlpha;
+
+          ctx.fillStyle = 'rgba(10, 14, 26, 0.92)';
+          ctx.strokeStyle = 'rgba(34, 211, 238, 0.48)';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.roundRect(panelX, topY, panelW, panelH, 10);
+          ctx.fill();
+          ctx.stroke();
+
+          // Exact required container label: "TARGET"
+          ctx.font = isMobile ? '800 10px "Outfit", sans-serif' : '800 12px "Outfit", sans-serif';
+          ctx.fillStyle = '#22d3ee';
+          ctx.textAlign = 'center';
+          ctx.fillText('TARGET', panelX + panelW * 0.5, topY + 20);
+
+          // Draw queue cradle rings & curved Bezier insertion preview arcs
+          for (let i = 0; i < lineupCoords.length; i++) {
+            const pt = lineupCoords[i];
+            ctx.strokeStyle = 'rgba(34, 211, 238, 0.28)';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, R + 4, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+
+          for (const s of state.shells) {
+            if (!s.hasCore) continue;
+            const cpx = (s.lineupX + s.baseX) * 0.5 - 34;
+            const cpy = (s.lineupY + s.baseY) * 0.5 - 16;
+            ctx.save();
+            ctx.strokeStyle = state.phase === 'insert'
+              ? 'rgba(34, 211, 238, 0.42)'
+              : 'rgba(34, 211, 238, 0.18)';
+            ctx.lineWidth = 1.4;
+            ctx.setLineDash([4, 5]);
+            ctx.beginPath();
+            ctx.moveTo(s.lineupX, s.lineupY);
+            ctx.quadraticCurveTo(cpx, cpy, s.baseX, s.baseY);
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          ctx.restore();
+        }
+
+        // Draw Trajectory Arcs & Ease-Out Deceleration Cues
+        function drawTrajectoryArcs() {
+          if (state.mode !== 'playing' || state.phase !== 'shuffle' || !state.activeSwap) return;
+          const active = state.activeSwap;
+          if (!active.liveCurve) return;
+          const lc = active.liveCurve;
+
+          const baseAlpha = active.isDecelerationStep ? 0.28 : 0.15;
+          const colorA = state.isOverdrive
+            ? `rgba(255, 120, 73, ${baseAlpha})`
+            : active.isRadialHop
+              ? `rgba(20, 184, 166, ${baseAlpha + 0.08})`
+              : `rgba(56, 189, 248, ${baseAlpha})`;
+
+          ctx.save();
+          ctx.lineWidth = active.isDecelerationStep ? 2.2 : 1.5;
+          ctx.setLineDash([5, 6]);
+
+          ctx.strokeStyle = colorA;
+          ctx.beginPath();
+          ctx.moveTo(lc.startAX, lc.startAY);
+          ctx.quadraticCurveTo(lc.cpAX, lc.cpAY, lc.endAX, lc.endAY);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(lc.startBX, lc.startBY);
+          ctx.quadraticCurveTo(lc.cpBX, lc.cpBY, lc.endBX, lc.endBY);
+          ctx.stroke();
+
+          ctx.setLineDash([]);
+          if (active.isDecelerationStep) {
+            const R = getCapsuleRadius();
+            ctx.strokeStyle = 'rgba(34, 211, 238, 0.35)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(lc.endAX, lc.endAY, R + 7, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(lc.endBX, lc.endBY, R + 7, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+
+        // Render Motion Trails ONLY on the two actively swapping capsules (zero smearing)
+        function drawShellTrail(shell) {
+          if (shell.trail.length < 2) return;
+          ctx.save();
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+
+          const trailRGB = state.isOverdrive ? '255, 120, 73' : '34, 211, 238';
+          const R = getCapsuleRadius();
+          for (let i = 0; i < shell.trail.length - 1; i++) {
+            const p0 = shell.trail[i];
+            const p1 = shell.trail[i + 1];
+            const ratio = 1 - i / shell.trail.length;
+            ctx.strokeStyle = `rgba(${trailRGB}, ${ratio * 0.32})`;
+            ctx.lineWidth = R * 0.48 * ratio;
+            ctx.beginPath();
+            ctx.moveTo(p0.x, p0.y);
+            ctx.lineTo(p1.x, p1.y);
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+
+        function drawShellCapsule(shell, timeSec) {
+          const R = getCapsuleRadius();
+
+          ctx.save();
+          ctx.translate(shell.x, shell.y);
+          ctx.scale(shell.scaleX, shell.scaleY);
+
+          // Neutral non-glowing appearance for all sealed/closed capsules and empty wrong capsules
+          let ringColor = '#475569';
+          let glowColor = 'transparent';
+          let glowBlur = 0;
+
+          const isTargetVisiblyOpen =
+            shell.hasCore &&
+            shell.shieldOpen > 0.15 &&
+            (state.mode === 'title' ||
+              state.phase === 'lineup' ||
+              state.phase === 'wave_ready' ||
+              state.phase === 'insert' ||
+              shell.revealedState === 'correct' ||
+              shell.revealedState === 'missed');
+
+          if (shell.revealedState === 'correct') {
+            ringColor = '#22d3ee';
+            glowColor = 'rgba(34, 211, 238, 0.72)';
+            glowBlur = 16;
+          } else if (shell.revealedState === 'wrong') {
+            // Empty capsule: muted border, ZERO light/glow
+            ringColor = 'rgba(244, 63, 94, 0.65)';
+            glowColor = 'transparent';
+            glowBlur = 0;
+          } else if (shell.revealedState === 'missed') {
+            ringColor = '#f59e0b';
+            glowColor = 'rgba(245, 158, 11, 0.65)';
+            glowBlur = 14;
+          } else if (isTargetVisiblyOpen) {
+            ringColor = '#22d3ee';
+            glowColor = 'rgba(34, 211, 238, 0.78)';
+            glowBlur = 16;
+          } else if (state.phase === 'shuffle' && state.isOverdrive) {
+            ringColor = '#ff7849';
+            glowColor = 'rgba(255, 120, 73, 0.5)';
+            glowBlur = 12;
+          }
+
+          ctx.shadowColor = glowColor;
+          ctx.shadowBlur = glowBlur;
+
+          const hullGrad = ctx.createRadialGradient(-R * 0.28, -R * 0.28, 3, 0, 0, R);
+          hullGrad.addColorStop(0, '#243048');
+          hullGrad.addColorStop(0.65, '#111829');
+          hullGrad.addColorStop(1, '#080b14');
+
+          ctx.fillStyle = hullGrad;
+          ctx.beginPath();
+          ctx.arc(0, 0, R, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.shadowBlur = 0;
+
+          ctx.strokeStyle = ringColor;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(0, 0, R - 1, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Segmented rotating collar
+          ctx.save();
+          ctx.rotate(timeSec * 0.55 + shell.id * 1.1);
+          ctx.strokeStyle = 'rgba(148, 163, 184, 0.24)';
+          ctx.lineWidth = 1.3;
+          for (let k = 0; k < 4; k++) {
+            const a0 = (k * Math.PI) / 2 + 0.22;
+            const a1 = a0 + 0.72;
+            ctx.beginPath();
+            ctx.arc(0, 0, R - 5, a0, a1);
+            ctx.stroke();
+          }
+          ctx.restore();
+
+          // Inner socket chamber (dark unlit recess when shutter opens)
+          const chamberR = R * 0.64;
+          if (shell.shieldOpen > 0.02) {
+            ctx.fillStyle = '#060810';
+            ctx.beginPath();
+            ctx.arc(0, 0, chamberR, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Glowing Quantum Core (ONLY drawn when shell.hasCore is true — empty capsules have NO light inside)
+          if (shell.shieldOpen > 0.02 && shell.hasCore) {
+            const openAmt = Math.max(0, Math.min(1, shell.shieldOpen));
+            const coreR = R * 0.5 * openAmt;
+            const pulse = 1 + Math.sin(timeSec * 8 + shell.id) * 0.1;
+            const cColor = shell.revealedState === 'missed' ? '#f59e0b' : '#22d3ee';
+            const coreGrad = ctx.createRadialGradient(0, 0, 1, 0, 0, coreR * 1.65 * pulse);
+            coreGrad.addColorStop(0, '#ffffff');
+            coreGrad.addColorStop(0.45, cColor);
+            coreGrad.addColorStop(1, 'rgba(34, 211, 238, 0)');
+
+            ctx.fillStyle = coreGrad;
+            ctx.beginPath();
+            ctx.arc(0, 0, coreR * 1.65 * pulse, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(0, 0, coreR * 0.5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Mechanical Shutter Blades (100% opaque and identical during shuffle/select)
+          const closedAmt = 1 - Math.max(0, Math.min(1, shell.shieldOpen));
+          if (closedAmt > 0.02) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(0, 0, chamberR, 0, Math.PI * 2);
+            ctx.clip();
+
+            const slideOffset = (1 - closedAmt) * chamberR * 1.05;
+            ctx.fillStyle = '#182238';
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.32)';
+            ctx.lineWidth = 1.2;
+
+            ctx.beginPath();
+            ctx.rect(-chamberR, -chamberR - slideOffset, chamberR * 2, chamberR);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.rect(-chamberR, slideOffset, chamberR * 2, chamberR);
+            ctx.fill();
+            ctx.stroke();
+
+            if (closedAmt > 0.85) {
+              ctx.fillStyle = 'rgba(148, 163, 184, 0.45)';
+              ctx.beginPath();
+              ctx.arc(0, 0, 2.5, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            ctx.restore();
+          }
+
+          // Empty wrong selection: subtle non-glowing 'X' inside dark hollow chamber
+          if (shell.revealedState === 'wrong') {
+            const xSize = R * 0.28;
+            ctx.strokeStyle = 'rgba(244, 63, 94, 0.78)';
+            ctx.lineWidth = 2.4;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(-xSize, -xSize);
+            ctx.lineTo(xSize, xSize);
+            ctx.moveTo(xSize, -xSize);
+            ctx.lineTo(-xSize, xSize);
+            ctx.stroke();
+          }
+
+          // Subtle matte rim highlight (no bright flash on empty shells)
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.arc(0, 0, R - 3, -Math.PI * 0.78, -Math.PI * 0.32);
+          ctx.stroke();
+
+          if (shell.hasCore && shell.flash > 0.01) {
+            ctx.fillStyle = `rgba(103, 232, 249, ${shell.flash * 0.35})`;
+            ctx.beginPath();
+            ctx.arc(0, 0, R, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.restore();
+        }
+
+        function drawParticlesAndPopups() {
+          for (let i = 0; i < MAX_PARTICLES; i++) {
+            const p = particlePool[i];
+            if (!p.active) continue;
+            ctx.save();
+            ctx.globalAlpha = p.alpha;
+            if (p.kind === 'ring') {
+              ctx.strokeStyle = p.color;
+              ctx.lineWidth = 2.5;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.stroke();
+            } else if (p.kind === 'shard') {
+              ctx.translate(p.x, p.y);
+              ctx.rotate(p.rotation);
+              ctx.fillStyle = p.color;
+              ctx.beginPath();
+              ctx.moveTo(0, -p.size);
+              ctx.lineTo(p.size * 0.75, p.size);
+              ctx.lineTo(-p.size * 0.75, p.size);
+              ctx.closePath();
+              ctx.fill();
+            } else {
+              ctx.fillStyle = p.color;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            ctx.restore();
+          }
+
+          for (const pop of floatingPopups) {
+            const alpha = Math.max(0, Math.min(1, pop.life / pop.maxLife));
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.textAlign = 'center';
+            ctx.font = '800 18px "JetBrains Mono", monospace';
+            ctx.fillStyle = pop.color;
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
+            ctx.shadowBlur = 8;
+            ctx.fillText(pop.text, pop.x, pop.y);
+
+            if (pop.subtext) {
+              ctx.font = '700 10px "Space Grotesk", sans-serif';
+              ctx.fillStyle = '#f8fafc';
+              ctx.fillText(pop.subtext, pop.x, pop.y + 14);
+            }
+            ctx.restore();
+          }
+        }
+
+        function renderScene(timeSec) {
+          // Complete frame wipe every tick to guarantee zero smearing or ghosting
+          ctx.clearRect(0, 0, viewportWidth, viewportHeight);
+          ctx.fillStyle = '#0a0a12';
+          ctx.fillRect(0, 0, viewportWidth, viewportHeight);
+
+          ctx.save();
+          if (state.trauma > 0.001) {
+            const shake = state.trauma * state.trauma * 10;
+            const ox = (Math.random() - 0.5) * 2 * shake;
+            const oy = (Math.random() - 0.5) * 2 * shake;
+            ctx.translate(ox, oy);
+          }
+
+          drawArenaBackground();
+          drawTargetLineupPanel();
+          drawTrajectoryArcs();
+
+          for (const s of state.shells) {
+            drawShellTrail(s);
+          }
+          for (const s of state.shells) {
+            drawShellCapsule(s, timeSec);
+          }
+
+          drawParticlesAndPopups();
+          ctx.restore();
+        }
+
+        // --- Main 60 FPS Animation Loop ---
+        let lastFrameTime = performance.now();
+        function frameLoop(now) {
+          const dtSeconds = Math.min(0.05, Math.max(0.001, (now - lastFrameTime) / 1000));
+          lastFrameTime = now;
+
+          updateSimulation(dtSeconds);
+          renderScene(now / 1000);
+
+          requestAnimationFrame(frameLoop);
+        }
+
+        // --- Deterministic Test & Verification Hooks ---
+        window.__QUANTUM_SHELL__ = {
+          getState: () => ({
+            mode: state.mode,
+            phase: state.phase,
+            wave: state.wave,
+            tier: state.config.tier,
+            tierName: state.config.tierName,
+            isDualRing: state.config.isDualRing,
+            innerRingCount: state.config.innerRingCount,
+            outerRingCount: state.config.outerRingCount,
+            score: state.score,
+            bestScore,
+            bestWave,
+            streak: state.streak,
+            shields: state.shields,
+            maxShields: state.maxShields,
+            shieldsLostThisWave: state.shieldsLostThisWave,
+            perkDoubleSurge: state.perkDoubleSurge,
+            perkCalmDriftCount: state.perkCalmDriftCount,
+            isOverdrive: state.isOverdrive,
+            overdriveMultiplier: state.overdriveMultiplier,
+            targetCount: state.config.targetCount,
+            shellCount: state.config.shellCount,
+            shells: state.shells.map((s) => ({
+              id: s.id,
+              slotIndex: s.slotIndex,
+              ring: s.ring,
+              hasCore: s.hasCore,
+              targetOrder: s.targetOrder,
+              picked: s.picked,
+              x: s.x,
+              y: s.y,
+              lineupX: s.lineupX,
+              lineupY: s.lineupY,
+              revealedState: s.revealedState,
+            })),
+          }),
+          startNewGame,
+          jumpToWave: (waveNum) => {
+            initWave(waveNum, false);
+          },
+          openPerkModalForWave: (clearedWave) => {
+            checkMilestonePerkTrigger(clearedWave);
+          },
+          setOverdrive: (active) => {
+            setOverdriveState(active);
+          },
+          forceSelectPhase: () => {
+            if (state.mode === 'playing') {
+              beginShuffleStep(state.swapSchedule.length);
+            }
+          },
+          pickShellById: (id) => {
+            const target = state.shells.find((s) => s.id === id);
+            if (target) handleShellSelection(target);
+          },
+        };
+
+        // Initialize
+        resizeCanvas();
+        createTitleShowcaseShells();
+        updateHudReadouts();
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('autostart') === '1') {
+          startNewGame();
+        }
+
+        requestAnimationFrame(frameLoop);
+      })();
+    </script>
+  </body>
+</html>

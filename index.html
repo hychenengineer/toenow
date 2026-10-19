@@ -1,0 +1,2149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TOUNOW — Cognitive Training Sandbox | tounow.com</title>
+  <meta name="description" content="Tounow (tounow.com) — High-performance modular Brain Training & Puzzle Game Hub." />
+  <style>
+    :root {
+      --bg-primary: #0b0f19;
+      --bg-elevated: rgba(17, 24, 39, 0.72);
+      --bg-card: rgba(20, 29, 47, 0.65);
+      --bg-card-hover: rgba(28, 40, 66, 0.82);
+      --border-glass: rgba(148, 163, 184, 0.14);
+      --border-glow: rgba(56, 189, 248, 0.45);
+      --accent-cyan: #22d3ee;
+      --accent-sky: #38bdf8;
+      --accent-violet: #8b5cf6;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --radius-card: 18px;
+      --radius-pill: 9999px;
+      --shadow-glow: 0 12px 40px -10px rgba(34, 211, 238, 0.22), 0 0 25px -5px rgba(139, 92, 246, 0.18);
+      --transition-fast: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-smooth: 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100%;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Ambient futuristic background mesh */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 12% 15%, rgba(34, 211, 238, 0.09) 0%, transparent 40%),
+        radial-gradient(circle at 88% 20%, rgba(139, 92, 246, 0.10) 0%, transparent 42%),
+        radial-gradient(circle at 50% 85%, rgba(56, 189, 248, 0.06) 0%, transparent 50%),
+        linear-gradient(180deg, #0b0f19 0%, #070a12 100%);
+      pointer-events: none;
+    }
+
+    /* Subtle grid overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(to right, rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
+      pointer-events: none;
+    }
+
+    /* ==========================================
+       STICKY HEADER & NAVIGATION
+       ========================================== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(11, 15, 25, 0.82);
+      border-bottom: 1px solid var(--border-glass);
+      transition: var(--transition-fast);
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0.9rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(139, 92, 246, 0.3));
+      border: 1px solid rgba(34, 211, 238, 0.45);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 20px rgba(34, 211, 238, 0.25);
+      position: relative;
+    }
+
+    .brand-mark svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--accent-cyan);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      background: linear-gradient(90deg, #ffffff 0%, #38bdf8 55%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-domain {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.12rem 0.45rem;
+      border-radius: var(--radius-pill);
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      color: var(--accent-cyan);
+      letter-spacing: 0.04em;
+    }
+
+    .brand-subtitle {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.03em;
+      margin-top: 1px;
+    }
+
+    /* Category Filter Tabs */
+    .category-tabs {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(15, 23, 42, 0.75);
+      padding: 0.32rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-glass);
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    .tab-btn {
+      appearance: none;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.48rem 0.95rem;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active {
+      color: var(--text-primary);
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.18), rgba(139, 92, 246, 0.22));
+      border-color: rgba(34, 211, 238, 0.45);
+      box-shadow: 0 0 16px rgba(34, 211, 238, 0.18);
+    }
+
+    /* Action Bar (Right) */
+    .action-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-action {
+      appearance: none;
+      background: rgba(30, 41, 59, 0.65);
+      border: 1px solid var(--border-glass);
+      color: var(--text-primary);
+      font-size: 0.84rem;
+      font-weight: 600;
+      padding: 0.52rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-fast);
+    }
+
+    .btn-action:hover {
+      border-color: var(--border-glow);
+      background: rgba(30, 41, 59, 0.95);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px -6px rgba(34, 211, 238, 0.28);
+    }
+
+    .profile-trigger {
+      appearance: none;
+      background: linear-gradient(135deg, rgba(20, 29, 47, 0.85), rgba(30, 41, 59, 0.75));
+      border: 1px solid var(--border-glass);
+      color: var(--text-primary);
+      padding: 0.35rem 0.85rem 0.35rem 0.4rem;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      transition: var(--transition-fast);
+    }
+
+    .profile-trigger:hover {
+      border-color: rgba(139, 92, 246, 0.55);
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.22);
+      transform: translateY(-1px);
+    }
+
+    .guest-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+      display: grid;
+      place-items: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #0b0f19;
+      box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.4);
+    }
+
+    .profile-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.15;
+    }
+
+    .profile-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .profile-status {
+      font-size: 0.68rem;
+      color: var(--accent-cyan);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 8px var(--accent-emerald);
+    }
+
+    /* ==========================================
+       MAIN CONTAINER & HERO TELEMETRY STRIP
+       ========================================== */
+    .main-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1.75rem 4rem;
+    }
+
+    .hub-intro {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+    }
+
+    .hub-intro-left h1 {
+      font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+
+    .hub-intro-left p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      max-width: 620px;
+    }
+
+    .hub-stats-strip {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: 14px;
+      padding: 0.55rem 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      backdrop-filter: blur(12px);
+    }
+
+    .stat-pill-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+    }
+
+    .stat-pill-value {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+    }
+
+    /* ==========================================
+       BENTO GRID & GAME CARDS
+       ========================================== */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 1.35rem;
+    }
+
+    .game-card {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-card);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.25rem;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: transform var(--transition-smooth), border-color var(--transition-smooth), box-shadow var(--transition-smooth), background var(--transition-smooth);
+      cursor: pointer;
+      overflow: hidden;
+      min-height: 235px;
+    }
+
+    /*Featured wide bento card on desktop for the first item when showing all */
+    @media (min-width: 1024px) {
+      .game-card.bento-featured {
+        grid-column: span 2;
+        background: linear-gradient(135deg, rgba(20, 29, 47, 0.78) 0%, rgba(30, 27, 75, 0.55) 100%);
+      }
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet));
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+    }
+
+    .game-card:hover {
+      transform: translateY(-4px);
+      background: var(--bg-card-hover);
+      border-color: var(--border-glow);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .game-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .game-icon-wrap {
+      width: 54px;
+      height: 54px;
+      border-radius: 15px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      display: grid;
+      place-items: center;
+      font-size: 1.65rem;
+      box-shadow: inset 0 0 15px rgba(34, 211, 238, 0.08);
+      flex-shrink: 0;
+    }
+
+    .card-badges {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.4rem;
+    }
+
+    .category-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 0.24rem 0.65rem;
+      border-radius: var(--radius-pill);
+      background: rgba(34, 211, 238, 0.12);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(34, 211, 238, 0.28);
+    }
+
+    .category-badge[data-cat="spatial"] {
+      background: rgba(139, 92, 246, 0.15);
+      color: #c4b5fd;
+      border-color: rgba(139, 92, 246, 0.35);
+    }
+
+    .category-badge[data-cat="logic"] {
+      background: rgba(16, 185, 129, 0.14);
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+
+    .category-badge[data-cat="puzzle"] {
+      background: rgba(245, 158, 11, 0.14);
+      color: #fcd34d;
+      border-color: rgba(245, 158, 11, 0.35);
+    }
+
+    .difficulty-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.68rem;
+      color: var(--text-secondary);
+    }
+
+    .diff-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(148, 163, 184, 0.25);
+    }
+
+    .diff-dot.filled {
+      background: var(--accent-cyan);
+      box-shadow: 0 0 6px rgba(34, 211, 238, 0.6);
+    }
+
+    .card-body h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.01em;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.9rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.1);
+      gap: 0.75rem;
+    }
+
+    .best-score-tag {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .best-score-tag strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .launch-pill {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.38rem 0.85rem;
+      border-radius: var(--radius-pill);
+      background: rgba(34, 211, 238, 0.1);
+      border: 1px solid rgba(34, 211, 238, 0.25);
+      transition: var(--transition-fast);
+    }
+
+    .game-card:hover .launch-pill {
+      background: var(--accent-cyan);
+      color: #0b0f19;
+      box-shadow: 0 0 14px rgba(34, 211, 238, 0.45);
+    }
+
+    .empty-grid-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3.5rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px dashed var(--border-glass);
+      border-radius: var(--radius-card);
+      color: var(--text-secondary);
+    }
+
+    /* ==========================================
+       THEATER VIEWPORT MODAL
+       ========================================== */
+    .theater-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(5, 8, 15, 0.92);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition-smooth);
+    }
+
+    .theater-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .theater-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: rgba(11, 15, 25, 0.95);
+      border-bottom: 1px solid var(--border-glass);
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .theater-game-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .theater-game-icon {
+      font-size: 1.35rem;
+    }
+
+    .theater-game-title {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .theater-game-url {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: monospace;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-glass);
+    }
+
+    .theater-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .theater-btn {
+      appearance: none;
+      background: rgba(30, 41, 59, 0.75);
+      border: 1px solid var(--border-glass);
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.48rem 0.95rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .theater-btn:hover {
+      border-color: var(--border-glow);
+      background: rgba(51, 65, 85, 0.85);
+    }
+
+    .theater-btn.btn-simulate {
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+      background: rgba(16, 185, 129, 0.12);
+    }
+
+    .theater-btn.btn-simulate:hover {
+      background: rgba(16, 185, 129, 0.24);
+    }
+
+    .theater-btn.btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .theater-btn.btn-danger:hover {
+      background: rgba(239, 68, 68, 0.3);
+      color: #ffffff;
+    }
+
+    .theater-stage {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #050811;
+      overflow: hidden;
+    }
+
+    #gameViewer {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #050811;
+    }
+
+    /* ==========================================
+       USER PROFILE DRAWER (RIGHT SLIDE-OUT)
+       ========================================== */
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      background: rgba(5, 8, 15, 0.65);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition-smooth);
+    }
+
+    .drawer-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .profile-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(440px, 94vw);
+      z-index: 85;
+      background: rgba(13, 19, 33, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-left: 1px solid var(--border-glass);
+      box-shadow: -20px 0 60px rgba(0, 0, 0, 0.65);
+      transform: translateX(100%);
+      transition: transform var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .profile-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 1.35rem 1.5rem;
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: rgba(13, 19, 33, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 2;
+    }
+
+    .drawer-title-group h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      background: linear-gradient(90deg, #fff, var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .drawer-title-group p {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .icon-close-btn {
+      appearance: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid var(--border-glass);
+      background: rgba(30, 41, 59, 0.6);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+      transition: var(--transition-fast);
+    }
+
+    .icon-close-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--border-glow);
+    }
+
+    .drawer-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .radar-card {
+      background: rgba(17, 25, 42, 0.78);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-card);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .radar-canvas-container {
+      position: relative;
+      width: 100%;
+      max-width: 340px;
+      aspect-ratio: 1 / 1;
+      display: grid;
+      place-items: center;
+    }
+
+    #brainRadarCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .dimension-readouts {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+    }
+
+    .readout-item {
+      background: rgba(11, 15, 25, 0.65);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      border-radius: 12px;
+      padding: 0.6rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .readout-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+    }
+
+    .readout-label {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .readout-val {
+      color: var(--accent-cyan);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .readout-bar {
+      width: 100%;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.15);
+      overflow: hidden;
+    }
+
+    .readout-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet));
+      transition: width var(--transition-smooth);
+    }
+
+    /* Account Tier Placeholder Card */
+    .account-tier-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.55), rgba(15, 23, 42, 0.85));
+      border: 1px solid rgba(139, 92, 246, 0.32);
+      border-radius: var(--radius-card);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .tier-status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .tier-badge {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #fcd34d;
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-pill);
+    }
+
+    .tier-desc {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    .btn-primary-gradient {
+      appearance: none;
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(34, 211, 238, 0.45);
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.22), rgba(139, 92, 246, 0.28));
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 0.86rem;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .btn-primary-gradient:hover {
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.35), rgba(139, 92, 246, 0.42));
+      box-shadow: 0 0 20px rgba(34, 211, 238, 0.25);
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================
+       GLOBAL LEADERBOARDS MODAL
+       ========================================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      background: rgba(5, 8, 15, 0.78);
+      backdrop-filter: blur(12px);
+      display: grid;
+      place-items: center;
+      padding: 1.25rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition-smooth);
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .leaderboard-dialog {
+      width: min(760px, 100%);
+      max-height: 88vh;
+      background: rgba(15, 22, 38, 0.96);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-card);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.75), 0 0 40px rgba(34, 211, 238, 0.12);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .lb-header {
+      padding: 1.35rem 1.6rem;
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .lb-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .lb-trophy {
+      font-size: 1.6rem;
+    }
+
+    .lb-title-wrap h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .lb-title-wrap p {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    .lb-controls {
+      padding: 1rem 1.6rem;
+      background: rgba(11, 15, 25, 0.65);
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .lb-select-group {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .lb-select-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .lb-select {
+      flex: 1;
+      background: rgba(20, 29, 47, 0.9);
+      color: var(--text-primary);
+      border: 1px solid var(--border-glass);
+      border-radius: 10px;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .lb-select:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .lb-table-wrap {
+      overflow-y: auto;
+      padding: 0.5rem 1.6rem 1.5rem;
+    }
+
+    .lb-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.86rem;
+    }
+
+    .lb-table th {
+      padding: 0.85rem 0.75rem;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-glass);
+    }
+
+    .lb-table td {
+      padding: 0.8rem 0.75rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.07);
+      vertical-align: middle;
+    }
+
+    .lb-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 30px;
+      height: 26px;
+      padding: 0 0.45rem;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.76rem;
+      background: rgba(30, 41, 59, 0.7);
+      color: var(--text-secondary);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+    }
+
+    .rank-badge.gold {
+      background: linear-gradient(135deg, rgba(250, 204, 21, 0.25), rgba(217, 119, 6, 0.25));
+      color: #fde047;
+      border-color: rgba(250, 204, 21, 0.55);
+      box-shadow: 0 0 12px rgba(250, 204, 21, 0.22);
+    }
+
+    .rank-badge.silver {
+      background: linear-gradient(135deg, rgba(226, 232, 240, 0.22), rgba(148, 163, 184, 0.22));
+      color: #f1f5f9;
+      border-color: rgba(203, 213, 225, 0.5);
+    }
+
+    .rank-badge.bronze {
+      background: linear-gradient(135deg, rgba(251, 146, 60, 0.22), rgba(180, 83, 9, 0.25));
+      color: #fdba74;
+      border-color: rgba(251, 146, 60, 0.45);
+    }
+
+    .player-tag {
+      font-weight: 700;
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .player-you-pill {
+      font-size: 0.65rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 6px;
+      background: rgba(34, 211, 238, 0.18);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+    }
+
+    .brain-score-cell {
+      font-weight: 800;
+      color: var(--accent-cyan);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .date-cell {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ==========================================
+       TOAST NOTIFICATION
+       ========================================== */
+    .toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 120;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      max-width: 400px;
+      pointer-events: none;
+    }
+
+    .toast-msg {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border-glow);
+      border-left: 4px solid var(--accent-cyan);
+      color: var(--text-primary);
+      padding: 0.9rem 1.15rem;
+      border-radius: 12px;
+      font-size: 0.84rem;
+      line-height: 1.4;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+      pointer-events: auto;
+      animation: toastSlideIn 260ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes toastSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-inner {
+        padding: 0.8rem 1rem;
+      }
+      .main-container {
+        padding: 1.25rem 1rem 3rem;
+      }
+      .category-tabs {
+        order: 3;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================
+       STICKY HEADER
+       ========================================== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand-group" id="brandHomeTrigger" title="Tounow Cognitive Hub">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 21 7 21 17 12 22 3 17 3 7 12 2"></polygon>
+            <circle cx="12" cy="12" r="3"></circle>
+            <line x1="12" y1="2" x2="12" y2="9"></line>
+            <line x1="21" y1="17" x2="14.6" y2="13.5"></line>
+            <line x1="3" y1="17" x2="9.4" y2="13.5"></line>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="brand-title-row">
+            <span class="brand-title">TOUNOW</span>
+            <span class="brand-domain">tounow.com</span>
+          </div>
+          <span class="brand-subtitle">Cognitive Training Sandbox</span>
+        </div>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <nav class="category-tabs" aria-label="Cognitive Discipline Filters" id="categoryTabs">
+        <button type="button" class="tab-btn active" data-category="all">All Disciplines</button>
+        <button type="button" class="tab-btn" data-category="math">Arithmetic &amp; Numbers</button>
+        <button type="button" class="tab-btn" data-category="spatial">Spatial &amp; 3D</button>
+        <button type="button" class="tab-btn" data-category="puzzle">Pattern &amp; Puzzle</button>
+        <button type="button" class="tab-btn" data-category="logic">Deductive Logic</button>
+      </nav>
+
+      <!-- Action Bar -->
+      <div class="action-bar">
+        <button type="button" class="btn-action" id="openLeaderboardBtn">
+          <span>🏆</span>
+          <span>Leaderboard</span>
+        </button>
+
+        <button type="button" class="profile-trigger" id="openProfileBtn" aria-label="Open Tounow Brain Matrix Profile">
+          <div class="guest-avatar">GO</div>
+          <div class="profile-meta">
+            <span class="profile-name">Guest Operator</span>
+            <span class="profile-status"><span class="status-dot"></span> Matrix Active</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       MAIN BENTO HUB
+       ========================================== -->
+  <main class="main-container">
+    <section class="hub-intro">
+      <div class="hub-intro-left">
+        <h1>Neural Simulation Modules</h1>
+        <p>Select a cognitive discipline below to launch an isolated telemetry sandbox. High scores dynamically recalibrate your Tounow Brain Matrix.</p>
+      </div>
+      <div class="hub-stats-strip">
+        <div class="stat-pill">
+          <div>
+            <div class="stat-pill-label">Mounted Modules</div>
+            <div class="stat-pill-value" id="statModuleCount">4</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div>
+            <div class="stat-pill-label">Composite Index</div>
+            <div class="stat-pill-value" id="statCompositeIndex">50</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bento-grid" id="gamesBentoGrid" aria-live="polite"></section>
+  </main>
+
+  <!-- ==========================================
+       THEATER VIEWPORT MODAL
+       ========================================== -->
+  <section class="theater-modal" id="theaterModal" aria-hidden="true" role="dialog" aria-label="Game Viewport">
+    <div class="theater-toolbar">
+      <div class="theater-game-info">
+        <span class="theater-game-icon" id="theaterIcon">🎮</span>
+        <span class="theater-game-title" id="theaterTitle">Module Title</span>
+        <span class="theater-game-url" id="theaterUrl">about:blank</span>
+      </div>
+      <div class="theater-controls">
+        <button type="button" class="theater-btn btn-simulate" id="simulateScoreBtn" title="Dispatch a test GAME_OVER postMessage payload">
+          ⚡ Simulate Telemetry Score
+        </button>
+        <button type="button" class="theater-btn" id="restartGameBtn">
+          ↺ Restart
+        </button>
+        <button type="button" class="theater-btn" id="fullscreenGameBtn">
+          ⛶ Fullscreen
+        </button>
+        <button type="button" class="theater-btn btn-danger" id="closeTheaterBtn">
+          ✕ Close Hub
+        </button>
+      </div>
+    </div>
+    <div class="theater-stage" id="theaterStage">
+      <iframe id="gameViewer" src="about:blank" title="Tounow Game Sandbox" allow="fullscreen; autoplay"></iframe>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       USER PROFILE DRAWER & BRAIN HEXAGON RADAR
+       ========================================== -->
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="profile-drawer" id="profileDrawer" aria-hidden="true" aria-label="Tounow Brain Matrix Drawer">
+    <div class="drawer-header">
+      <div class="drawer-title-group">
+        <h2>Tounow Brain Matrix</h2>
+        <p>Operator Telemetry &amp; 6-Axis Cognitive Hexagon</p>
+      </div>
+      <button type="button" class="icon-close-btn" id="closeProfileBtn" aria-label="Close Profile Drawer">✕</button>
+    </div>
+
+    <div class="drawer-content">
+      <div class="radar-card">
+        <div class="radar-canvas-container">
+          <canvas id="brainRadarCanvas" width="340" height="340"></canvas>
+        </div>
+        <div class="dimension-readouts" id="dimensionReadouts"></div>
+      </div>
+
+      <div class="account-tier-card">
+        <div class="tier-status-row">
+          <strong>Account Telemetry Tier</strong>
+          <span class="tier-badge">Cloud Sync Disabled (Guest Mode)</span>
+        </div>
+        <p class="tier-desc">
+          Your cognitive vectors and personal records are currently persisted in local browser storage (<code>tounow.com</code> sandbox).
+        </p>
+        <button type="button" class="btn-primary-gradient" id="signInRegisterBtn">
+          Sign In / Register
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       GLOBAL LEADERBOARDS MODAL
+       ========================================== -->
+  <div class="modal-overlay" id="leaderboardModal" aria-hidden="true" role="dialog" aria-label="Tounow Global Arena">
+    <div class="leaderboard-dialog">
+      <div class="lb-header">
+        <div class="lb-title-wrap">
+          <span class="lb-trophy">🏆</span>
+          <div>
+            <h2>Tounow Global Arena</h2>
+            <p>Verified Top 10 Operator Rankings across tounow.com</p>
+          </div>
+        </div>
+        <button type="button" class="icon-close-btn" id="closeLeaderboardBtn" aria-label="Close Leaderboard">✕</button>
+      </div>
+
+      <div class="lb-controls">
+        <div class="lb-select-group">
+          <label for="leaderboardGameSelect">Training Module:</label>
+          <select id="leaderboardGameSelect" class="lb-select"></select>
+        </div>
+      </div>
+
+      <div class="lb-table-wrap">
+        <table class="lb-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Player Tag</th>
+              <th>Brain Score</th>
+              <th>Date Completed</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- ==========================================
+       APPLICATION LOGIC
+       ========================================== -->
+  <script>
+    /* ============================================================================
+       1. UNIVERSAL GAME MOUNTING & RESOLUTION
+       ============================================================================ */
+    const GAMES_CONFIG = [
+      {
+        id: 'quantum-core-collapse',
+        title: 'Quantum Core Collapse',
+        category: 'math',
+        icon: '⚛️',
+        url: 'games/quantum-core-collapse/index.html',
+        difficulty: 4,
+        description: 'Cyberpunk magnitude-ordering arcade simulation with integers, decimals, intuitive fraction gauges, and Fever overdrive.'
+      },
+      { id: 'math-balloon', title: 'Factor Slicer', category: 'math', icon: '🎈', url: 'balloon.html', difficulty: 2 },
+      { id: 'spatial-cube', title: 'Cube Perspective 3D', category: 'spatial', icon: '🧊', url: 'games/spatial-cube/index.html', difficulty: 4 },
+      { id: 'logic-scale', title: 'Equilibrium Scale', category: 'logic', icon: '⚖️', url: 'scale.html', difficulty: 3 },
+      { id: 'puzzle-tessellation', title: 'Geometric Tessellation', category: 'puzzle', icon: '🧩', url: 'games/puzzle/play.html', difficulty: 3 }
+    ];
+
+    const CATEGORY_META = {
+      math: {
+        label: 'Arithmetic & Numbers',
+        description: 'High-velocity quantitative decomposition, prime factorization, and numerical fluency drills.'
+      },
+      spatial: {
+        label: 'Spatial & 3D',
+        description: 'Mental rotation, orthographic projection, and volumetric perspective reconstruction.'
+      },
+      logic: {
+        label: 'Deductive Logic',
+        description: 'Multi-variable constraint balancing, relational inference, and symbolic deduction.'
+      },
+      puzzle: {
+        label: 'Pattern & Puzzle',
+        description: 'Non-verbal geometric synthesis, symmetry completion, and tessellation lattice solving.'
+      }
+    };
+
+    const STORAGE_KEYS = {
+      USER_PROFILE: 'tounow_user_profile',
+      GAME_SCORES: 'tounow_game_scores'
+    };
+
+    const COGNITIVE_AXES = [
+      { key: 'math', shortLabel: 'Math', fullLabel: 'Quantitative Processing (Math)' },
+      { key: 'spatial', shortLabel: 'Spatial', fullLabel: 'Spatial Perception (3D)' },
+      { key: 'logic', shortLabel: 'Logic', fullLabel: 'Logical Deduction (Logic)' },
+      { key: 'puzzle', shortLabel: 'Puzzle', fullLabel: 'Pattern Recognition (Puzzle)' },
+      { key: 'memory', shortLabel: 'Memory', fullLabel: 'Working Memory (Memory)' },
+      { key: 'reaction', shortLabel: 'Reaction', fullLabel: 'Processing Speed (Reaction)' }
+    ];
+
+    let activeCategory = 'all';
+    let currentMountedGame = null;
+
+    /**
+     * Dynamically scans project root and subdirectories (e.g., games/*/index.html, *.html)
+     * when served over HTTP/HTTPS or via an optional games/manifest.json index.
+     */
+    async function discoverAdditionalGames() {
+      if (window.location.protocol === 'file:') {
+        return;
+      }
+
+      const knownUrls = new Set(GAMES_CONFIG.map(g => g.url.replace(/^\.?\//, '')));
+
+      const registerDiscoveredFile = (rawPath) => {
+        const cleanUrl = rawPath.replace(/^\.?\//, '');
+        if (!cleanUrl.endsWith('.html')) return;
+        if (cleanUrl.toLowerCase() === 'index.html') return;
+        if (knownUrls.has(cleanUrl)) return;
+
+        knownUrls.add(cleanUrl);
+        const slug = cleanUrl
+          .replace(/\/index\.html$/i, '')
+          .replace(/\.html$/i, '')
+          .split('/')
+          .filter(Boolean)
+          .pop() || 'custom-module';
+
+        const inferredCategory =
+          /math|num|calc|factor/i.test(cleanUrl) ? 'math' :
+          /spatial|cube|3d|rotat/i.test(cleanUrl) ? 'spatial' :
+          /logic|scale|deduct/i.test(cleanUrl) ? 'logic' : 'puzzle';
+
+        const formattedTitle = slug
+          .split(/[-_]/)
+          .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' ');
+
+        GAMES_CONFIG.push({
+          id: `auto-${slug.toLowerCase()}`,
+          title: formattedTitle,
+          category: inferredCategory,
+          icon: '🧠',
+          url: cleanUrl,
+          difficulty: 3
+        });
+      };
+
+      try {
+        // Check optional manifest or directory listing on local/dev server
+        const dirsToScan = ['./', './games/'];
+        for (const dir of dirsToScan) {
+          const res = await fetch(dir, { method: 'GET' });
+          if (!res.ok) continue;
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('text/html')) {
+            const html = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const links = Array.from(doc.querySelectorAll('a[href]')).map(a => a.getAttribute('href'));
+            for (const href of links) {
+              if (!href || href.startsWith('?') || href.startsWith('#') || href.startsWith('..')) continue;
+              if (href.endsWith('.html')) {
+                registerDiscoveredFile(dir === './' ? href : `games/${href.replace(/^\.?\//, '')}`);
+              } else if (dir === './games/' && href.endsWith('/')) {
+                const subIndex = `games/${href.replace(/^\.?\//, '')}index.html`;
+                try {
+                  const headCheck = await fetch(subIndex, { method: 'HEAD' });
+                  if (headCheck.ok) registerDiscoveredFile(subIndex);
+                } catch (_) {}
+              }
+            }
+          }
+        }
+      } catch (_) {
+        // Silent fallback when static host disables directory listing
+      }
+
+      renderBentoGrid();
+      populateLeaderboardDropdown();
+    }
+
+    /* ============================================================================
+       2. STORAGE & COGNITIVE RADAR PROFILE MANAGEMENT
+       ============================================================================ */
+    function getUserProfile() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.USER_PROFILE);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          const profile = {};
+          COGNITIVE_AXES.forEach(axis => {
+            const val = Number(parsed[axis.key]);
+            profile[axis.key] = Number.isFinite(val) ? Math.max(0, Math.min(100, Math.round(val))) : 50;
+          });
+          return profile;
+        }
+      } catch (_) {}
+
+      const defaultProfile = {
+        math: 50,
+        spatial: 50,
+        logic: 50,
+        puzzle: 50,
+        memory: 50,
+        reaction: 50
+      };
+      localStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(defaultProfile));
+      return defaultProfile;
+    }
+
+    function saveUserProfile(profile) {
+      localStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(profile));
+      updateCompositeStat(profile);
+    }
+
+    function getGameScores() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.GAME_SCORES);
+        if (raw) {
+          return JSON.parse(raw) || {};
+        }
+      } catch (_) {}
+      return {};
+    }
+
+    function saveGameScore(gameId, category, score) {
+      const scores = getGameScores();
+      const prevBest = scores[gameId]?.bestScore || 0;
+      const numericScore = Math.max(0, Math.round(Number(score) || 0));
+      const isNewBest = numericScore >= prevBest;
+
+      scores[gameId] = {
+        bestScore: Math.max(prevBest, numericScore),
+        lastScore: numericScore,
+        category: category || 'puzzle',
+        updatedAt: new Date().toISOString().slice(0, 10)
+      };
+
+      localStorage.setItem(STORAGE_KEYS.GAME_SCORES, JSON.stringify(scores));
+      return { isNewBest, bestScore: scores[gameId].bestScore, numericScore };
+    }
+
+    function updateCompositeStat(profile) {
+      const values = COGNITIVE_AXES.map(a => profile[a.key] ?? 50);
+      const avg = Math.round(values.reduce((acc, v) => acc + v, 0) / values.length);
+      const el = document.getElementById('statCompositeIndex');
+      if (el) el.textContent = avg;
+    }
+
+    /**
+     * Computes weighted progression from a completed game session and recalibrates
+     * the 6-axis Tounow Brain Matrix.
+     */
+    function recalibrateCognitiveProfile(gameId, category, rawScore) {
+      const profile = getUserProfile();
+      const gameConfig = GAMES_CONFIG.find(g => g.id === gameId);
+      const difficultyWeight = gameConfig ? (0.85 + gameConfig.difficulty * 0.12) : 1.0;
+
+      // Normalize score impact (e.g., 0 - 1500+ mapped to a 0-100 performance target)
+      const normalizedPerformance = Math.min(100, Math.max(35, Math.round((rawScore / 10) * difficultyWeight)));
+
+      const primaryAxis = ['math', 'spatial', 'logic', 'puzzle', 'memory', 'reaction'].includes(category)
+        ? category
+        : (gameConfig?.category || 'puzzle');
+
+      // Primary cognitive axis receives 30% EMA step or boost
+      const currentPrimary = profile[primaryAxis] ?? 50;
+      const deltaPrimary = Math.max(2, Math.round((normalizedPerformance - currentPrimary) * 0.32));
+      profile[primaryAxis] = Math.min(100, Math.max(10, currentPrimary + (normalizedPerformance >= currentPrimary ? deltaPrimary : 1)));
+
+      // Coupled secondary axes: Working Memory & Processing Speed co-activate during cognitive drills
+      const memoryBoost = Math.max(1, Math.round(deltaPrimary * 0.45));
+      const reactionBoost = Math.max(1, Math.round(deltaPrimary * 0.4));
+
+      profile.memory = Math.min(100, (profile.memory ?? 50) + memoryBoost);
+      profile.reaction = Math.min(100, (profile.reaction ?? 50) + reactionBoost);
+
+      saveUserProfile(profile);
+      renderHexagonRadar();
+      return profile;
+    }
+
+    /* ============================================================================
+       3. BENTO GRID RENDERING
+       ============================================================================ */
+    function renderBentoGrid() {
+      const grid = document.getElementById('gamesBentoGrid');
+      const moduleCountEl = document.getElementById('statModuleCount');
+      if (moduleCountEl) moduleCountEl.textContent = GAMES_CONFIG.length;
+
+      const scores = getGameScores();
+      const filtered = activeCategory === 'all'
+        ? GAMES_CONFIG
+        : GAMES_CONFIG.filter(g => g.category === activeCategory);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-grid-state">
+            No cognitive training modules registered under this discipline yet.
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map((game, idx) => {
+        const meta = CATEGORY_META[game.category] || {
+          label: game.category.toUpperCase(),
+          description: 'Modular cognitive training simulation.'
+        };
+        const record = scores[game.id];
+        const bestText = record ? `${record.bestScore.toLocaleString()} pts` : 'Unranked';
+        const isFeatured = activeCategory === 'all' && idx === 0;
+
+        let dotsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+          dotsHtml += `<span class="diff-dot ${i <= game.difficulty ? 'filled' : ''}"></span>`;
+        }
+
+        return `
+          <article class="game-card ${isFeatured ? 'bento-featured' : ''}" data-game-id="${game.id}" tabindex="0" role="button" aria-label="Launch ${game.title}">
+            <div class="card-top">
+              <div class="game-icon-wrap" aria-hidden="true">${game.icon}</div>
+              <div class="card-badges">
+                <span class="category-badge" data-cat="${game.category}">${meta.label}</span>
+                <div class="difficulty-dots" title="Difficulty Tier ${game.difficulty}/5">
+                  <span>Tier</span>
+                  ${dotsHtml}
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <h2>${game.title}</h2>
+              <p class="card-desc">${game.description || meta.description}</p>
+            </div>
+
+            <div class="card-footer">
+              <div class="best-score-tag">
+                <span>Personal Best:</span>
+                <strong>${bestText}</strong>
+              </div>
+              <span class="launch-pill">Launch Sandbox →</span>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      grid.querySelectorAll('.game-card').forEach(card => {
+        const triggerLaunch = () => {
+          const gameId = card.getAttribute('data-game-id');
+          const game = GAMES_CONFIG.find(g => g.id === gameId);
+          if (game) openTheaterModal(game);
+        };
+        card.addEventListener('click', triggerLaunch);
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            triggerLaunch();
+          }
+        });
+      });
+    }
+
+    /* ============================================================================
+       4. THEATER VIEWPORT MODAL & IFRAME LIFECYCLE
+       ============================================================================ */
+    const theaterModal = document.getElementById('theaterModal');
+    const gameViewer = document.getElementById('gameViewer');
+    const theaterIcon = document.getElementById('theaterIcon');
+    const theaterTitle = document.getElementById('theaterTitle');
+    const theaterUrl = document.getElementById('theaterUrl');
+    const theaterStage = document.getElementById('theaterStage');
+
+    function openTheaterModal(game) {
+      currentMountedGame = game;
+      theaterIcon.textContent = game.icon;
+      theaterTitle.textContent = game.title;
+      theaterUrl.textContent = game.url;
+
+      gameViewer.src = game.url;
+      theaterModal.classList.add('open');
+      theaterModal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeTheaterModal() {
+      theaterModal.classList.remove('open');
+      theaterModal.setAttribute('aria-hidden', 'true');
+      // Immediately terminate animation loops and audio threads
+      gameViewer.src = 'about:blank';
+      theaterUrl.textContent = 'about:blank';
+      currentMountedGame = null;
+
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    function restartCurrentGame() {
+      if (!currentMountedGame) return;
+      const targetUrl = currentMountedGame.url;
+      gameViewer.src = 'about:blank';
+      setTimeout(() => {
+        if (currentMountedGame) {
+          gameViewer.src = targetUrl;
+        }
+      }, 40);
+      showToast(`Restarted ${currentMountedGame.title} environment.`);
+    }
+
+    function toggleTheaterFullscreen() {
+      const target = theaterStage || theaterModal;
+      if (!document.fullscreenElement) {
+        if (target.requestFullscreen) {
+          target.requestFullscreen().catch(() => {});
+        }
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    /* ============================================================================
+       5. NATIVE HTML5 CANVAS BRAIN HEXAGON RADAR
+       ============================================================================ */
+    function renderHexagonRadar() {
+      const canvas = document.getElementById('brainRadarCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const profile = getUserProfile();
+
+      const dpr = window.devicePixelRatio || 1;
+      const logicalSize = 340;
+      canvas.width = logicalSize * dpr;
+      canvas.height = logicalSize * dpr;
+      ctx.save();
+      ctx.scale(dpr, dpr);
+
+      const cx = logicalSize / 2;
+      const cy = logicalSize / 2;
+      const maxRadius = 112;
+      const levels = [0.25, 0.5, 0.75, 1.0];
+      const count = COGNITIVE_AXES.length; // 6
+
+      ctx.clearRect(0, 0, logicalSize, logicalSize);
+
+      const getVertex = (index, normalizedRadius) => {
+        const angle = (Math.PI * 2 * index) / count - Math.PI / 2;
+        return {
+          x: cx + Math.cos(angle) * (maxRadius * normalizedRadius),
+          y: cy + Math.sin(angle) * (maxRadius * normalizedRadius)
+        };
+      };
+
+      // Draw concentric hexagonal grid rings
+      levels.forEach((lvl, idx) => {
+        ctx.beginPath();
+        for (let i = 0; i < count; i++) {
+          const pt = getVertex(i, lvl);
+          if (i === 0) ctx.moveTo(pt.x, pt.y);
+          else ctx.lineTo(pt.x, pt.y);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = idx === levels.length - 1
+          ? 'rgba(56, 189, 248, 0.35)'
+          : 'rgba(148, 163, 184, 0.16)';
+        ctx.lineWidth = idx === levels.length - 1 ? 1.5 : 1;
+        ctx.stroke();
+      });
+
+      // Draw radial spokes
+      for (let i = 0; i < count; i++) {
+        const outer = getVertex(i, 1.0);
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(outer.x, outer.y);
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      // Draw user's cognitive polygon
+      ctx.beginPath();
+      const dataPoints = COGNITIVE_AXES.map((axis, i) => {
+        const val = Math.max(5, Math.min(100, profile[axis.key] ?? 50));
+        return getVertex(i, val / 100);
+      });
+
+      dataPoints.forEach((pt, i) => {
+        if (i === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
+      });
+      ctx.closePath();
+
+      const polyGrad = ctx.createLinearGradient(cx - maxRadius, cy - maxRadius, cx + maxRadius, cy + maxRadius);
+      polyGrad.addColorStop(0, 'rgba(34, 211, 238, 0.42)');
+      polyGrad.addColorStop(1, 'rgba(139, 92, 246, 0.45)');
+
+      ctx.fillStyle = polyGrad;
+      ctx.shadowColor = 'rgba(34, 211, 238, 0.55)';
+      ctx.shadowBlur = 16;
+      ctx.fill();
+
+      ctx.lineWidth = 2.4;
+      ctx.strokeStyle = '#22d3ee';
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Draw glowing nodes & outer axis labels
+      COGNITIVE_AXES.forEach((axis, i) => {
+        const pt = dataPoints[i];
+        const val = profile[axis.key] ?? 50;
+
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 4.2, 0, Math.PI * 2);
+        ctx.fillStyle = '#f8fafc';
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#22d3ee';
+        ctx.stroke();
+
+        // Axis label + Index value
+        const labelPos = getVertex(i, 1.24);
+        ctx.font = '700 11px Inter, system-ui, sans-serif';
+        ctx.fillStyle = '#e2e8f0';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${axis.shortLabel}: ${val}`, labelPos.x, labelPos.y);
+      });
+
+      ctx.restore();
+
+      // Update numerical index readouts below canvas (e.g. "Spatial: 78 Index")
+      const readoutsEl = document.getElementById('dimensionReadouts');
+      if (readoutsEl) {
+        readoutsEl.innerHTML = COGNITIVE_AXES.map(axis => {
+          const val = profile[axis.key] ?? 50;
+          return `
+            <div class="readout-item">
+              <div class="readout-header">
+                <span class="readout-label" title="${axis.fullLabel}">${axis.shortLabel}: ${val} Index</span>
+                <span class="readout-val">${val}%</span>
+              </div>
+              <div class="readout-bar">
+                <div class="readout-bar-fill" style="width: ${val}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    /* ============================================================================
+       6. GLOBAL LEADERBOARDS MODAL (TOUNOW GLOBAL ARENA)
+       ============================================================================ */
+    /* --- TODO: Connect Supabase / Firebase leaderboard endpoint for tounow.com --- */
+    const BASELINE_LEADERBOARD_DATA = {
+      'quantum-core-collapse': [
+        { player: 'SingularityArch', score: 28450, date: '2026-10-18' },
+        { player: 'ChronoSiphon_X', score: 24900, date: '2026-10-17' },
+        { player: 'QuantumPulse9', score: 21600, date: '2026-10-17' },
+        { player: 'FractionApex', score: 19250, date: '2026-10-16' },
+        { player: 'StroopZero', score: 17800, date: '2026-10-15' },
+        { player: 'FeverOverdrive', score: 15400, date: '2026-10-15' },
+        { player: 'CyanCore_01', score: 13950, date: '2026-10-14' },
+        { player: 'VectorCollapse', score: 12100, date: '2026-10-13' },
+        { player: 'SubZero_Math', score: 10850, date: '2026-10-12' },
+        { player: 'CadetOperator', score: 9400, date: '2026-10-11' }
+      ],
+      'math-balloon': [
+        { player: 'AeroQuant_99', score: 1480, date: '2026-10-16' },
+        { player: 'PrimeSlicerX', score: 1425, date: '2026-10-15' },
+        { player: 'EulerPulse', score: 1390, date: '2026-10-14' },
+        { player: 'NovaVector', score: 1310, date: '2026-10-14' },
+        { player: 'Kestrel_07', score: 1265, date: '2026-10-13' },
+        { player: 'CipherMinds', score: 1210, date: '2026-10-12' },
+        { player: 'TensorFlowZ', score: 1180, date: '2026-10-11' },
+        { player: 'SynapseDrift', score: 1120, date: '2026-10-10' },
+        { player: 'ZeroLatency', score: 1085, date: '2026-10-09' },
+        { player: 'ModuloNine', score: 1020, date: '2026-10-08' }
+      ],
+      'spatial-cube': [
+        { player: 'VoxelArchitect', score: 1640, date: '2026-10-17' },
+        { player: 'HyperCube_3D', score: 1575, date: '2026-10-16' },
+        { player: 'Quaternions', score: 1490, date: '2026-10-15' },
+        { player: 'IsoMetricPro', score: 1430, date: '2026-10-14' },
+        { player: 'VertexRunner', score: 1385, date: '2026-10-13' },
+        { player: 'OrbitalFold', score: 1320, date: '2026-10-12' },
+        { player: 'AxisShift', score: 1270, date: '2026-10-11' },
+        { player: 'PolyhedronX', score: 1215, date: '2026-10-10' },
+        { player: 'ParallaxView', score: 1160, date: '2026-10-09' },
+        { player: 'Tesseract_88', score: 1105, date: '2026-10-08' }
+      ],
+      'logic-scale': [
+        { player: 'AxiomSolver', score: 1520, date: '2026-10-16' },
+        { player: 'FulcrumMind', score: 1460, date: '2026-10-15' },
+        { player: 'DeductionZen', score: 1410, date: '2026-10-14' },
+        { player: 'SyllogismX', score: 1355, date: '2026-10-13' },
+        { player: 'Equilibrium7', score: 1300, date: '2026-10-12' },
+        { player: 'BayesTheorem', score: 1250, date: '2026-10-11' },
+        { player: 'LogicGate_IO', score: 1195, date: '2026-10-10' },
+        { player: 'TruthTable', score: 1140, date: '2026-10-09' },
+        { player: 'ParityCheck', score: 1090, date: '2026-10-08' },
+        { player: 'OccamRazor', score: 1040, date: '2026-10-07' }
+      ],
+      'puzzle-tessellation': [
+        { player: 'PenroseTile', score: 1590, date: '2026-10-17' },
+        { player: 'EscherGrid', score: 1510, date: '2026-10-16' },
+        { player: 'VoronoiCell', score: 1445, date: '2026-10-15' },
+        { player: 'HexLattice', score: 1390, date: '2026-10-14' },
+        { player: 'FractalMosaic', score: 1335, date: '2026-10-13' },
+        { player: 'SymmetryCore', score: 1280, date: '2026-10-12' },
+        { player: 'PolygonWeave', score: 1225, date: '2026-10-11' },
+        { player: 'PrismShift', score: 1170, date: '2026-10-10' },
+        { player: 'CipherTess', score: 1115, date: '2026-10-09' },
+        { player: 'VertexLock', score: 1060, date: '2026-10-08' }
+      ]
+    };
+
+    function populateLeaderboardDropdown() {
+      const select = document.getElementById('leaderboardGameSelect');
+      if (!select) return;
+      const currentVal = select.value;
+      select.innerHTML = GAMES_CONFIG.map(g =>
+        `<option value="${g.id}">${g.icon} ${g.title}</option>`
+      ).join('');
+      if (currentVal && GAMES_CONFIG.some(g => g.id === currentVal)) {
+        select.value = currentVal;
+      }
+      renderLeaderboardTable(select.value || GAMES_CONFIG[0]?.id);
+    }
+
+    function renderLeaderboardTable(gameId) {
+      const tbody = document.getElementById('leaderboardTableBody');
+      if (!tbody) return;
+
+      const baseRows = (BASELINE_LEADERBOARD_DATA[gameId] || BASELINE_LEADERBOARD_DATA['math-balloon']).map(r => ({ ...r, isUser: false }));
+      const userScores = getGameScores();
+      const userEntry = userScores[gameId];
+
+      if (userEntry && userEntry.bestScore > 0) {
+        baseRows.push({
+          player: 'Guest Operator',
+          score: userEntry.bestScore,
+          date: userEntry.updatedAt || new Date().toISOString().slice(0, 10),
+          isUser: true
+        });
+      }
+
+      const top10 = baseRows
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
+
+      tbody.innerHTML = top10.map((row, idx) => {
+        const rank = idx + 1;
+        const badgeClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+        const medalPrefix = rank === 1 ? '🥇 ' : rank === 2 ? '🥈 ' : rank === 3 ? '🥉 ' : '#';
+
+        return `
+          <tr>
+            <td><span class="rank-badge ${badgeClass}">${medalPrefix}${rank}</span></td>
+            <td>
+              <span class="player-tag">
+                ${row.player}
+                ${row.isUser ? '<span class="player-you-pill">YOU</span>' : ''}
+              </span>
+            </td>
+            <td class="brain-score-cell">${row.score.toLocaleString()}</td>
+            <td class="date-cell">${row.date}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    /* ============================================================================
+       7. CROSS-ORIGIN RUNTIME CONTRACT (postMessage Listener)
+       ============================================================================ */
+    window.addEventListener('message', (event) => {
+      const payload = event.data;
+      if (!payload || typeof payload !== 'object') return;
+
+      if (payload.type === 'GAME_OVER') {
+        const { gameId, category, score } = payload;
+        if (!gameId || typeof score !== 'number') return;
+
+        const { isNewBest, bestScore, numericScore } = saveGameScore(gameId, category, score);
+        const updatedProfile = recalibrateCognitiveProfile(gameId, category, numericScore);
+
+        renderBentoGrid();
+        const lbSelect = document.getElementById('leaderboardGameSelect');
+        if (lbSelect && lbSelect.value === gameId) {
+          renderLeaderboardTable(gameId);
+        }
+
+        const axisKey = category && updatedProfile[category] !== undefined ? category : 'puzzle';
+        showToast(
+          `Telemetry Synced: ${numericScore.toLocaleString()} pts (${isNewBest ? 'New Personal Best!' : `Best: ${bestScore.toLocaleString()}`}) — ${axisKey.toUpperCase()} Index calibrated to ${updatedProfile[axisKey]}.`
+        );
+      }
+    });
+
+    /* ============================================================================
+       8. UI EVENT BINDINGS & TOAST HELPER
+       ============================================================================ */
+    function showToast(message) {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast-msg';
+      toast.textContent = message;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        toast.style.transition = '220ms ease';
+        setTimeout(() => toast.remove(), 230);
+      }, 4200);
+    }
+
+    function initHubInteractions() {
+      // Category Filter Tabs
+      const tabsContainer = document.getElementById('categoryTabs');
+      tabsContainer.addEventListener('click', (e) => {
+        const btn = e.target.closest('.tab-btn');
+        if (!btn) return;
+        tabsContainer.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategory = btn.getAttribute('data-category') || 'all';
+        renderBentoGrid();
+      });
+
+      // Brand click resets filter to All Disciplines
+      document.getElementById('brandHomeTrigger').addEventListener('click', () => {
+        activeCategory = 'all';
+        tabsContainer.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-category') === 'all');
+        });
+        renderBentoGrid();
+      });
+
+      // Profile Drawer Open/Close
+      const profileDrawer = document.getElementById('profileDrawer');
+      const drawerBackdrop = document.getElementById('drawerBackdrop');
+
+      const openProfileDrawer = () => {
+        renderHexagonRadar();
+        profileDrawer.classList.add('open');
+        drawerBackdrop.classList.add('open');
+        profileDrawer.setAttribute('aria-hidden', 'false');
+      };
+
+      const closeProfileDrawer = () => {
+        profileDrawer.classList.remove('open');
+        drawerBackdrop.classList.remove('open');
+        profileDrawer.setAttribute('aria-hidden', 'true');
+      };
+
+      document.getElementById('openProfileBtn').addEventListener('click', openProfileDrawer);
+      document.getElementById('closeProfileBtn').addEventListener('click', closeProfileDrawer);
+      drawerBackdrop.addEventListener('click', closeProfileDrawer);
+
+      // Account Tier Sign In / Register Toast
+      document.getElementById('signInRegisterBtn').addEventListener('click', () => {
+        showToast('Cloud synchronization and persistent global ranks on Tounow coming in the next release.');
+      });
+
+      // Global Leaderboard Modal Open/Close
+      const leaderboardModal = document.getElementById('leaderboardModal');
+      const lbSelect = document.getElementById('leaderboardGameSelect');
+
+      document.getElementById('openLeaderboardBtn').addEventListener('click', () => {
+        populateLeaderboardDropdown();
+        leaderboardModal.classList.add('open');
+        leaderboardModal.setAttribute('aria-hidden', 'false');
+      });
+
+      document.getElementById('closeLeaderboardBtn').addEventListener('click', () => {
+        leaderboardModal.classList.remove('open');
+        leaderboardModal.setAttribute('aria-hidden', 'true');
+      });
+
+      leaderboardModal.addEventListener('click', (e) => {
+        if (e.target === leaderboardModal) {
+          leaderboardModal.classList.remove('open');
+          leaderboardModal.setAttribute('aria-hidden', 'true');
+        }
+      });
+
+      lbSelect.addEventListener('change', () => {
+        renderLeaderboardTable(lbSelect.value);
+      });
+
+      // Theater Viewport Controls
+      document.getElementById('closeTheaterBtn').addEventListener('click', closeTheaterModal);
+      document.getElementById('restartGameBtn').addEventListener('click', restartCurrentGame);
+      document.getElementById('fullscreenGameBtn').addEventListener('click', toggleTheaterFullscreen);
+
+      // Simulate Telemetry Score button (dispatches valid GAME_OVER message for quick testing)
+      document.getElementById('simulateScoreBtn').addEventListener('click', () => {
+        if (!currentMountedGame) return;
+        const simulatedScore = Math.floor(850 + Math.random() * 750);
+        window.postMessage({
+          type: 'GAME_OVER',
+          gameId: currentMountedGame.id,
+          category: currentMountedGame.category,
+          score: simulatedScore
+        }, '*');
+      });
+
+      // Global Escape key handler
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (theaterModal.classList.contains('open')) closeTheaterModal();
+          if (profileDrawer.classList.contains('open')) closeProfileDrawer();
+          if (leaderboardModal.classList.contains('open')) {
+            leaderboardModal.classList.remove('open');
+            leaderboardModal.setAttribute('aria-hidden', 'true');
+          }
+        }
+      });
+    }
+
+    // Boot Tounow Hub
+    (function bootstrapTounow() {
+      const profile = getUserProfile();
+      updateCompositeStat(profile);
+      renderBentoGrid();
+      renderHexagonRadar();
+      populateLeaderboardDropdown();
+      initHubInteractions();
+      discoverAdditionalGames();
+    })();
+  </script>
+</body>
+</html>

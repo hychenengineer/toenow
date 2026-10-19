@@ -1,0 +1,3623 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Quantum Core Collapse</title>
+    <meta name="description" content="Cyberpunk magnitude-ordering arcade game with Sandwich wave pacing, intuitive fraction gauges, Stroop size inversion, roguelite perks, and procedural Web Audio synthesis." />
+    <meta property="og:title" content="Quantum Core Collapse" />
+    <meta property="og:description" content="Cyberpunk magnitude-ordering arcade game with Sandwich wave pacing, intuitive fraction gauges, Stroop size inversion, roguelite perks, and procedural Web Audio synthesis." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg-deep: #0a0b10;
+        --panel-bg: rgba(12, 14, 24, 0.94);
+        --panel-border: rgba(56, 189, 248, 0.3);
+        --primary-glow: #22d3ee;
+        --secondary-glow: #e879f9;
+        --emerald-glow: #34d399;
+        --amber-glow: #fbbf24;
+        --crimson-glow: #fb7185;
+        --accent-btn: #0891b2;
+        --accent-btn-hover: #06b6d4;
+        --text-primary: #f8fafc;
+        --text-muted: #94a3b8;
+        --font-display: 'Outfit', system-ui, -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      body.theme-amber {
+        --primary-glow: #fbbf24;
+        --secondary-glow: #f43f5e;
+        --panel-border: rgba(251, 191, 36, 0.32);
+        --accent-btn: #d97706;
+        --accent-btn-hover: #f59e0b;
+      }
+
+      body.theme-emerald {
+        --primary-glow: #34d399;
+        --secondary-glow: #38bdf8;
+        --panel-border: rgba(52, 211, 153, 0.32);
+        --accent-btn: #059669;
+        --accent-btn-hover: #10b981;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+      }
+
+      html,
+      body {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        height: 100dvh;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        overscroll-behavior: none;
+        background-color: var(--bg-deep);
+        color: var(--text-primary);
+        font-family: var(--font-display);
+        touch-action: none;
+      }
+
+      #game-canvas {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        cursor: crosshair;
+        touch-action: none;
+        z-index: 1;
+      }
+
+      /* Top-anchored HUD Layer (Does not cover playable arena) */
+      #hud-layer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: auto;
+        pointer-events: none;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 10px 0 0;
+        transition: opacity 0.18s ease;
+      }
+
+      body[data-state='title'] #hud-layer {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      /* Fluid Top HUD Container (Never clips or overflows on mobile) */
+      .hud-top-container {
+        width: 95vw;
+        max-width: 500px;
+        margin: 0 auto;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .hud-top-bar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+          'left right'
+          'center center';
+        align-items: stretch;
+        gap: 6px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .hud-cluster {
+        background: var(--panel-bg);
+        border: 1px solid var(--panel-border);
+        border-radius: 10px;
+        padding: 8px 14px;
+        box-sizing: border-box;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      }
+
+      .hud-left {
+        grid-area: left;
+        min-width: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.35fr);
+        align-items: center;
+        gap: 12px;
+        overflow: hidden;
+      }
+
+      .hud-stat-block {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 2px;
+        min-width: 0;
+      }
+
+      .hud-kicker {
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        white-space: nowrap;
+        line-height: 1.1;
+      }
+
+      .hud-hero-num {
+        font-family: var(--font-mono);
+        font-size: 20px;
+        font-weight: 800;
+        line-height: 1.05;
+        font-variant-numeric: tabular-nums;
+        color: var(--text-primary);
+        text-shadow: 0 0 12px rgba(34, 211, 238, 0.35);
+        white-space: nowrap;
+      }
+
+      .combo-value-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .hud-divider {
+        width: 1px;
+        height: 28px;
+        flex-shrink: 0;
+        background: rgba(148, 163, 184, 0.2);
+      }
+
+      .combo-pips-row {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+
+      .combo-pip {
+        width: 8px;
+        height: 5px;
+        border-radius: 2px;
+        background: rgba(148, 163, 184, 0.18);
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        transition: transform 0.12s ease, background-color 0.12s ease;
+      }
+
+      .combo-pip.active {
+        background: var(--primary-glow);
+        border-color: #a5f3fc;
+        box-shadow: 0 0 8px rgba(34, 211, 238, 0.7);
+      }
+
+      .combo-pip.fever {
+        background: var(--secondary-glow);
+        border-color: #f5d0fe;
+        box-shadow: 0 0 10px rgba(232, 121, 249, 0.85);
+      }
+
+      .perks-badge-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 2px;
+        font-size: 10px;
+      }
+
+      .perk-mini-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        padding: 1px 5px;
+        border-radius: 4px;
+        background: rgba(30, 41, 59, 0.85);
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: var(--primary-glow);
+        white-space: nowrap;
+      }
+
+      /* Tier 2: Wave & Timer Bar Cluster */
+      .hud-center {
+        grid-area: center;
+        width: 100%;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 7px 12px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .hud-center.breather-mode {
+        border-color: var(--emerald-glow);
+        box-shadow: 0 0 24px rgba(52, 211, 153, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      }
+
+      .hud-center-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .wave-title-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .wave-num-label {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 800;
+        color: var(--primary-glow);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .wave-tier-label {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-muted);
+        letter-spacing: 0.03em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .hud-center.breather-mode .wave-tier-label {
+        color: var(--emerald-glow);
+        text-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
+      }
+
+      .timer-readout {
+        font-family: var(--font-mono);
+        font-size: 19px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        color: var(--text-primary);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .timer-readout.warning {
+        color: var(--amber-glow);
+      }
+
+      .timer-readout.critical {
+        color: var(--crimson-glow);
+        text-shadow: 0 0 14px rgba(251, 113, 133, 0.7);
+      }
+
+      .timer-bar-track {
+        width: 100%;
+        height: 6px;
+        background: rgba(15, 23, 42, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 4px;
+        position: relative;
+      }
+
+      .timer-bar-fill {
+        width: 100%;
+        height: 100%;
+        background: var(--primary-glow);
+        transform-origin: left center;
+        transform: scaleX(1);
+        transition: background-color 0.2s ease;
+      }
+
+      .order-directive {
+        margin-top: 3px;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: #cbd5e1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        white-space: nowrap;
+      }
+
+      /* Top Right Cluster */
+      .hud-right {
+        grid-area: right;
+        display: flex;
+        align-items: stretch;
+        gap: 6px;
+        pointer-events: auto;
+        flex-shrink: 0;
+      }
+
+      .icon-btn {
+        width: 46px;
+        min-height: 46px;
+        height: 100%;
+        border-radius: 10px;
+        background: var(--panel-bg);
+        border: 1px solid var(--panel-border);
+        color: var(--text-primary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex-shrink: 0;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        transition: transform 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        .icon-btn:hover,
+        .icon-btn:focus-visible {
+          border-color: var(--primary-glow);
+          color: var(--primary-glow);
+          transform: translateY(-1px);
+          outline: none;
+        }
+      }
+
+      .icon-btn:active {
+        border-color: var(--primary-glow);
+        color: var(--primary-glow);
+        transform: scale(0.96);
+      }
+
+      /* Fever Banner Indicator */
+      #fever-hud-banner {
+        align-self: center;
+        width: 100%;
+        text-align: center;
+        padding: 4px 10px;
+        border-radius: 6px;
+        background: rgba(24, 10, 34, 0.94);
+        border: 1px solid var(--secondary-glow);
+        color: #f5d0fe;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        box-shadow: 0 0 16px rgba(232, 121, 249, 0.45);
+        display: none;
+      }
+
+      #fever-hud-banner.active {
+        display: block;
+      }
+
+      /* Critical Singularity Alarm Banner */
+      #singularity-warning-banner {
+        align-self: center;
+        width: 100%;
+        text-align: center;
+        padding: 4px 10px;
+        border-radius: 6px;
+        background: rgba(35, 10, 18, 0.96);
+        border: 1px solid var(--crimson-glow);
+        color: #fecdd3;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        box-shadow: 0 0 20px rgba(244, 63, 94, 0.65);
+        display: none;
+        animation: pulseWarning 0.85s infinite alternate ease-in-out;
+      }
+
+      #singularity-warning-banner.active {
+        display: block;
+      }
+
+      @keyframes pulseWarning {
+        0% {
+          box-shadow: 0 0 12px rgba(244, 63, 94, 0.35);
+          border-color: #fb7185;
+        }
+        100% {
+          box-shadow: 0 0 28px rgba(244, 63, 94, 0.95);
+          border-color: #f43f5e;
+          transform: scale(1.01);
+        }
+      }
+
+      /* Emergency Screen Vignette Border in Stage 4 */
+      body[data-critical='true']::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 8;
+        box-shadow: inset 0 0 85px rgba(225, 29, 72, 0.55);
+        border: 2px solid rgba(244, 63, 94, 0.6);
+        animation: pulseEmergencyBorder 1.2s infinite alternate ease-in-out;
+      }
+
+      @keyframes pulseEmergencyBorder {
+        0% {
+          box-shadow: inset 0 0 55px rgba(225, 29, 72, 0.35);
+          border-color: rgba(244, 63, 94, 0.4);
+        }
+        100% {
+          box-shadow: inset 0 0 110px rgba(225, 29, 72, 0.75);
+          border-color: rgba(244, 63, 94, 0.9);
+        }
+      }
+
+      .hud-sub-status {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 6px;
+        margin-top: 5px;
+        font-size: 9.5px;
+        font-family: var(--font-mono);
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+      }
+
+      .hud-sub-status-tag {
+        font-weight: 700;
+        color: var(--primary-glow);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: left;
+      }
+
+      /* Modal Overlay Screens */
+      .screen-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: rgba(7, 8, 13, 0.78);
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
+        transition: opacity 0.18s ease;
+      }
+
+      .screen-overlay.visible {
+        opacity: 1;
+        pointer-events: auto;
+        visibility: visible;
+      }
+
+      .modal-card {
+        width: 100%;
+        max-width: 620px;
+        background: rgba(11, 13, 22, 0.96);
+        border: 1px solid var(--panel-border);
+        border-radius: 14px;
+        padding: 30px 30px 26px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85), 0 0 40px rgba(34, 211, 238, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .emblem-wrap {
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .game-title {
+        font-size: clamp(26px, 4vw, 38px);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.08;
+        color: var(--text-primary);
+        text-shadow: 0 0 24px rgba(34, 211, 238, 0.35);
+        text-wrap: balance;
+      }
+
+      .game-subtitle {
+        margin-top: 8px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #cbd5e1;
+        max-width: 48ch;
+      }
+
+      .shards-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: 9999px;
+        background: rgba(34, 211, 238, 0.12);
+        border: 1px solid rgba(34, 211, 238, 0.35);
+        color: var(--primary-glow);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        font-weight: 700;
+        margin: 12px 0 6px;
+      }
+
+      .rules-grid {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px 14px;
+        margin: 18px 0;
+        padding: 14px;
+        border-radius: 10px;
+        background: rgba(15, 20, 34, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        text-align: left;
+      }
+
+      .rule-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .rule-stage {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--primary-glow);
+      }
+
+      .rule-desc {
+        font-size: 12px;
+        color: #e2e8f0;
+        font-weight: 500;
+      }
+
+      .records-strip {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 18px;
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      .records-strip strong {
+        font-family: var(--font-mono);
+        color: var(--text-primary);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .primary-cta-btn {
+        width: 100%;
+        padding: 15px 20px;
+        border-radius: 10px;
+        border: 1px solid #67e8f9;
+        background: var(--accent-btn);
+        color: #ffffff;
+        font-family: var(--font-display);
+        font-size: clamp(14px, 3.6vw, 17px);
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        cursor: pointer;
+        box-shadow: 0 0 28px rgba(34, 211, 238, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        transition: transform 0.14s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.14s ease, box-shadow 0.14s ease;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        .primary-cta-btn:hover,
+        .primary-cta-btn:focus-visible {
+          background: var(--accent-btn-hover);
+          transform: translateY(-2px) scale(1.01);
+          box-shadow: 0 0 36px rgba(34, 211, 238, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+          outline: none;
+        }
+      }
+
+      .primary-cta-btn:active {
+        background: var(--accent-btn-hover);
+        transform: translateY(0) scale(0.99);
+      }
+
+      @keyframes pulseCta {
+        0%, 100% {
+          transform: scale(1);
+          box-shadow: 0 0 26px rgba(34, 211, 238, 0.45);
+        }
+        50% {
+          transform: scale(1.02);
+          box-shadow: 0 0 42px rgba(34, 211, 238, 0.82);
+        }
+      }
+
+      .pulsing-cta {
+        animation: pulseCta 1.6s infinite ease-in-out;
+      }
+
+      .secondary-btn-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        width: 100%;
+        margin-top: 12px;
+      }
+
+      .secondary-btn {
+        flex: 1;
+        padding: 12px 18px;
+        border-radius: 8px;
+        background: rgba(30, 41, 59, 0.85);
+        border: 1px solid rgba(148, 163, 184, 0.28);
+        color: var(--text-primary);
+        font-family: var(--font-display);
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: border-color 0.14s ease, background-color 0.14s ease;
+        white-space: nowrap;
+      }
+
+      .secondary-btn:hover,
+      .secondary-btn:focus-visible {
+        border-color: var(--primary-glow);
+        background: rgba(30, 41, 59, 1);
+        outline: none;
+      }
+
+      .control-hint-footer {
+        margin-top: 16px;
+        font-size: 12px;
+        color: var(--text-muted);
+        letter-spacing: 0.02em;
+      }
+
+      /* Game Over Stats Grid */
+      .stats-grid-3 {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin: 20px 0 16px;
+      }
+
+      .stat-tile {
+        background: rgba(15, 21, 36, 0.92);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 10px;
+        padding: 14px 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .stat-tile-value {
+        font-family: var(--font-mono);
+        font-size: 26px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        color: var(--text-primary);
+      }
+
+      .stat-tile-sub {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--primary-glow);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .near-miss-banner {
+        width: 100%;
+        padding: 11px 16px;
+        border-radius: 8px;
+        background: rgba(34, 211, 238, 0.1);
+        border: 1px solid rgba(34, 211, 238, 0.35);
+        color: #a5f3fc;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 20px;
+      }
+
+      .near-miss-banner.new-best {
+        background: rgba(52, 211, 153, 0.14);
+        border-color: rgba(52, 211, 153, 0.45);
+        color: #6ee7b7;
+      }
+
+      /* Roguelite Perks Grid */
+      .perks-select-grid {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin: 20px 0 24px;
+      }
+
+      .perk-card {
+        background: rgba(15, 22, 38, 0.95);
+        border: 1px solid rgba(56, 189, 248, 0.28);
+        border-radius: 12px;
+        padding: 18px 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+      }
+
+      .perk-card:hover,
+      .perk-card:focus-visible {
+        border-color: var(--primary-glow);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 24px rgba(34, 211, 238, 0.25);
+        outline: none;
+      }
+
+      .perk-hotkey {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--primary-glow);
+        background: rgba(34, 211, 238, 0.15);
+        border-radius: 4px;
+        padding: 2px 6px;
+        margin-bottom: 8px;
+      }
+
+      .perk-icon {
+        font-size: 28px;
+        margin-bottom: 8px;
+      }
+
+      .perk-name {
+        font-family: var(--font-display);
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin-bottom: 6px;
+      }
+
+      .perk-desc {
+        font-size: 12px;
+        line-height: 1.45;
+        color: var(--text-muted);
+        flex: 1;
+      }
+
+      .perk-select-btn {
+        width: 100%;
+        margin-top: 14px;
+        padding: 8px 12px;
+        border-radius: 6px;
+        background: rgba(30, 41, 59, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        color: var(--text-primary);
+        font-family: var(--font-display);
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 0.14s ease, border-color 0.14s ease;
+      }
+
+      .perk-card:hover .perk-select-btn {
+        background: var(--accent-btn);
+        border-color: var(--primary-glow);
+      }
+
+      /* Themes Drawer / Modal */
+      .themes-grid {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin: 18px 0;
+      }
+
+      .theme-card {
+        background: rgba(15, 21, 36, 0.95);
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 10px;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .theme-card.active {
+        border-color: var(--primary-glow);
+        box-shadow: 0 0 16px rgba(34, 211, 238, 0.3);
+      }
+
+      .theme-preview-orb {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid #ffffff;
+        box-shadow: 0 0 14px currentColor;
+      }
+
+      .theme-name {
+        font-family: var(--font-display);
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--text-primary);
+      }
+
+      .theme-cost {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .theme-btn {
+        width: 100%;
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        background: rgba(30, 41, 59, 0.85);
+        color: var(--text-primary);
+        font-family: var(--font-display);
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 0.14s ease, border-color 0.14s ease;
+      }
+
+      .theme-btn:hover:not(:disabled) {
+        border-color: var(--primary-glow);
+        background: var(--accent-btn);
+      }
+
+      .theme-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* Responsive Mobile Layout */
+      @media (max-width: 720px) {
+        .modal-card {
+          padding: 20px 14px;
+        }
+
+        .rules-grid {
+          grid-template-columns: 1fr;
+          gap: 8px;
+          margin: 12px 0;
+          padding: 12px;
+        }
+
+        .stats-grid-3 {
+          gap: 8px;
+        }
+
+        .stat-tile-value {
+          font-size: 20px;
+        }
+
+        .perks-select-grid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .themes-grid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .primary-cta-btn {
+          font-size: 14px;
+          padding: 14px 12px;
+          letter-spacing: 0.02em;
+        }
+      }
+
+      /* Narrow Mobile Viewports (<450px width) */
+      @media (max-width: 450px) {
+        #hud-layer {
+          padding: 6px 0 0;
+        }
+
+        .hud-top-container {
+          width: 95vw;
+          max-width: 480px;
+          margin: 0 auto;
+          gap: 5px;
+        }
+
+        .hud-top-bar {
+          gap: 5px;
+        }
+
+        .hud-cluster {
+          padding: 6px 10px;
+          border-radius: 8px;
+        }
+
+        .hud-left {
+          gap: 8px;
+        }
+
+        .hud-kicker {
+          font-size: 8px;
+          letter-spacing: 0.05em;
+        }
+
+        .hud-hero-num {
+          font-size: 16px;
+        }
+
+        .hud-divider {
+          height: 22px;
+        }
+
+        .combo-pip {
+          width: 6.5px;
+          height: 4px;
+        }
+
+        .hud-right {
+          gap: 4px;
+        }
+
+        .icon-btn {
+          width: 38px;
+          min-height: 38px;
+          border-radius: 8px;
+        }
+
+        .icon-btn svg {
+          width: 16px;
+          height: 16px;
+        }
+
+        .hud-center {
+          padding: 6px 10px;
+        }
+
+        .wave-num-label {
+          font-size: 12px;
+        }
+
+        .wave-tier-label {
+          font-size: 9px;
+        }
+
+        .timer-readout {
+          font-size: 16px;
+        }
+
+        .timer-bar-track {
+          height: 5px;
+          margin-top: 3px;
+        }
+
+        .hud-sub-status {
+          font-size: 8.5px;
+          margin-top: 4px;
+        }
+
+        .order-directive {
+          font-size: 9px;
+          margin-top: 3px;
+        }
+
+        #fever-hud-banner,
+        #singularity-warning-banner {
+          font-size: 9px;
+          padding: 3px 8px;
+        }
+      }
+    </style>
+  </head>
+  <body data-state="title" data-wave="1" data-score="0" data-combo="0" data-fever="false">
+    <!-- Interactive Canvas Arena -->
+    <canvas id="game-canvas" data-testid="quantum-canvas" aria-label="Quantum Core Collapse Game Arena"></canvas>
+
+    <!-- Live Playing HUD -->
+    <div id="hud-layer">
+      <div id="hud-top-container" class="hud-top-container">
+        <div class="hud-top-bar">
+          <!-- Tier 1 Left: Score & Combo -->
+          <div class="hud-cluster hud-left">
+            <div class="hud-stat-block">
+              <span class="hud-kicker">SCORE</span>
+              <span id="hud-score" class="hud-hero-num">0</span>
+            </div>
+            <div class="hud-divider"></div>
+            <div class="hud-stat-block">
+              <span id="hud-combo-label" class="hud-kicker">COMBO · 1X</span>
+              <div class="combo-value-row">
+                <span id="hud-combo" class="hud-hero-num">0x</span>
+                <div class="combo-pips-row" id="hud-combo-pips" aria-hidden="true">
+                  <span class="combo-pip"></span>
+                  <span class="combo-pip"></span>
+                  <span class="combo-pip"></span>
+                  <span class="combo-pip"></span>
+                  <span class="combo-pip"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tier 1 Right: Utility Controls -->
+          <div class="hud-right">
+            <button
+              type="button"
+              id="btn-mute"
+              class="icon-btn"
+              aria-label="Toggle Audio Mute"
+              title="Mute / Unmute Audio (M)"
+              tabindex="-1"
+            >
+              <svg id="svg-unmuted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+              </svg>
+              <svg id="svg-muted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+              </svg>
+            </button>
+            <button
+              type="button"
+              id="btn-pause"
+              class="icon-btn"
+              aria-label="Pause Game"
+              title="Pause Game (P / Esc)"
+              tabindex="-1"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+                <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+              </svg>
+            </button>
+            <button
+              type="button"
+              id="btn-restart-hud"
+              class="icon-btn"
+              aria-label="Restart Run"
+              title="Instant Restart (R)"
+              tabindex="-1"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Tier 2 Full-Width: Wave & Countdown Timer -->
+          <div id="hud-center-cluster" class="hud-cluster hud-center">
+            <div class="hud-center-top">
+              <div class="wave-title-group">
+                <span id="hud-wave" class="wave-num-label">WAVE 1</span>
+                <span aria-hidden="true" style="color: #475569;">·</span>
+                <span id="hud-wave-tier" class="wave-tier-label">SINGLE-DIGIT INTEGERS</span>
+              </div>
+              <span id="hud-timer" class="timer-readout">60.0s</span>
+            </div>
+            <div class="timer-bar-track">
+              <div id="hud-timer-bar" class="timer-bar-fill"></div>
+            </div>
+            <div class="hud-sub-status">
+              <span id="hud-stage-label" class="hud-sub-status-tag">STAGE 1 · 1.0x DECAY</span>
+              <span id="hud-survival-timer" style="color: #cbd5e1; font-weight: 600; text-align: center;">RUN: 00m 00s</span>
+              <span id="hud-cap-label" style="color: var(--amber-glow); font-weight: 700; text-align: right;">CAP: 60s</span>
+            </div>
+            <div class="order-directive">
+              <span>ORDER: <strong style="color: var(--primary-glow); font-family: var(--font-mono);">LOWEST TO HIGHEST</strong></span>
+              <span id="hud-remaining">4 CORES LEFT</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Critical Overload Singularity Warning Banner -->
+        <div id="singularity-warning-banner">WARNING: QUANTUM SINGULARITY DETECTED · CRITICAL 2.8X TIME DRAIN</div>
+      </div>
+    </div>
+
+    <!-- TITLE SCREEN OVERLAY (Clean & Minimal: No Instructions Popup or Theme Switcher) -->
+    <section id="title-screen" class="screen-overlay visible" aria-label="Title Screen">
+      <div class="modal-card" style="max-width: 480px;">
+        <div class="emblem-wrap" aria-hidden="true">
+          <svg width="76" height="76" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="40,4 72,22 72,58 40,76 8,58 8,22" stroke="var(--primary-glow)" stroke-width="2.5" fill="rgba(34,211,238,0.08)" />
+            <polygon points="40,14 62,27 62,53 40,66 18,53 18,27" stroke="var(--secondary-glow)" stroke-width="1.8" stroke-dasharray="6 4" fill="rgba(232,121,249,0.08)" />
+            <circle cx="40" cy="40" r="12" fill="var(--primary-glow)" />
+            <circle cx="40" cy="40" r="6" fill="#f8fafc" />
+            <circle cx="40" cy="4" r="3" fill="#67e8f9" />
+            <circle cx="72" cy="22" r="3" fill="#67e8f9" />
+            <circle cx="72" cy="58" r="3" fill="#67e8f9" />
+            <circle cx="40" cy="76" r="3" fill="#67e8f9" />
+            <circle cx="8" cy="58" r="3" fill="#67e8f9" />
+            <circle cx="8" cy="22" r="3" fill="#67e8f9" />
+          </svg>
+        </div>
+
+        <h1 class="game-title">QUANTUM CORE COLLAPSE</h1>
+
+        <div class="records-strip" style="margin: 18px 0 22px;">
+          <span>BEST: <strong id="title-best-score">0</strong></span>
+          <span aria-hidden="true">·</span>
+          <span>WAVE: <strong id="title-best-wave">1</strong></span>
+          <span aria-hidden="true">·</span>
+          <span>TIME: <strong id="title-best-survival">00m 00s</strong></span>
+        </div>
+
+        <button type="button" id="btn-start" class="primary-cta-btn" data-start="true">
+          START COLLAPSE (SPACE OR TAP)
+        </button>
+      </div>
+    </section>
+
+    <!-- PAUSE MODAL OVERLAY -->
+    <section id="pause-screen" class="screen-overlay" aria-label="Pause Menu">
+      <div class="modal-card" style="max-width: 460px;">
+        <h2 class="game-title" style="font-size: 30px;">CONTAINMENT PAUSED</h2>
+        <p class="game-subtitle">Quantum core drift suspended.</p>
+
+        <div class="stats-grid-3" style="margin: 22px 0;">
+          <div class="stat-tile">
+            <span class="hud-kicker">SCORE</span>
+            <span id="pause-score" class="stat-tile-value">0</span>
+          </div>
+          <div class="stat-tile">
+            <span class="hud-kicker">WAVE</span>
+            <span id="pause-wave" class="stat-tile-value">1</span>
+          </div>
+          <div class="stat-tile">
+            <span class="hud-kicker">TIME LEFT</span>
+            <span id="pause-time" class="stat-tile-value">60.0s</span>
+          </div>
+        </div>
+
+        <button type="button" id="btn-resume" class="primary-cta-btn">
+          RESUME GAME (P / ESC)
+        </button>
+
+        <div class="secondary-btn-row">
+          <button type="button" id="btn-pause-restart" class="secondary-btn">
+            Restart Run (R)
+          </button>
+          <button type="button" id="btn-pause-title" class="secondary-btn">
+            Title Screen
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAME OVER MODAL OVERLAY -->
+    <section id="gameover-screen" class="screen-overlay" aria-label="Game Over Screen">
+      <div class="modal-card">
+        <span class="hud-kicker" style="color: var(--crimson-glow); margin-bottom: 6px;">CONTAINMENT BREACH · TIME EXPIRED</span>
+        <h2 class="game-title">QUANTUM COLLAPSE</h2>
+
+        <div class="stats-grid-3">
+          <div class="stat-tile">
+            <span class="hud-kicker">FINAL SCORE</span>
+            <span id="go-score" class="stat-tile-value">0</span>
+            <span id="go-best-score" class="stat-tile-sub">BEST: 0</span>
+          </div>
+          <div class="stat-tile">
+            <span class="hud-kicker">MAX COMBO</span>
+            <span id="go-combo" class="stat-tile-value">0x</span>
+            <span id="go-mistakes" class="stat-tile-sub">0 MISTAKES</span>
+          </div>
+          <div class="stat-tile">
+            <span class="hud-kicker">WAVE REACHED</span>
+            <span id="go-wave" class="stat-tile-value">1</span>
+            <span id="go-best-wave" class="stat-tile-sub">RECORD: 1</span>
+          </div>
+        </div>
+
+        <!-- Prominent Survival Duration & Operator Ranking -->
+        <div class="survival-status-card" style="width: 100%; margin: 0 0 16px; padding: 12px 18px; border-radius: 10px; background: rgba(30, 16, 28, 0.9); border: 1px solid rgba(244, 63, 94, 0.35); display: flex; justify-content: space-between; align-items: center;">
+          <div style="text-align: left;">
+            <span class="hud-kicker" style="color: var(--crimson-glow); font-size: 10px;">TOTAL SURVIVAL DURATION</span>
+            <div id="go-survival-time" style="font-family: var(--font-mono); font-size: 24px; font-weight: 800; color: #fff;">00m 00s</div>
+          </div>
+          <div style="text-align: right;">
+            <span id="go-survival-rank" style="display: inline-block; padding: 4px 10px; border-radius: 6px; font-family: var(--font-mono); font-size: 11px; font-weight: 800; background: rgba(244, 63, 94, 0.25); color: #fecdd3; border: 1px solid rgba(244, 63, 94, 0.55); letter-spacing: 0.04em;">NOVICE RECRUIT</span>
+            <div id="go-best-survival" style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-top: 3px;">RECORD: 00m 00s</div>
+          </div>
+        </div>
+
+        <div id="go-near-miss" class="near-miss-banner">
+          NEW PERSONAL BEST RECORD!
+        </div>
+
+        <button type="button" id="btn-retry" class="primary-cta-btn pulsing-cta" data-start="true">
+          RETRY NOW (Press Space or Tap)
+        </button>
+
+        <div class="secondary-btn-row">
+          <button type="button" id="btn-go-title" class="secondary-btn">
+            Title Screen
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      (function () {
+        'use strict';
+
+        const IS_HEADLESS = Boolean(
+          navigator.webdriver || /HeadlessChrome/i.test(navigator.userAgent)
+        );
+
+        // LocalStorage Keys
+        const STORAGE_HIGH_SCORE = 'qcc_high_score_v1';
+        const STORAGE_BEST_WAVE = 'qcc_best_wave_v1';
+        const STORAGE_SHARDS = 'qcc_quantum_shards_v1';
+        const STORAGE_THEME = 'qcc_selected_theme_v1';
+        const STORAGE_BEST_SURVIVAL = 'qcc_best_survival_v1';
+
+        function loadHighScore() {
+          try {
+            return parseInt(localStorage.getItem(STORAGE_HIGH_SCORE) || '0', 10) || 0;
+          } catch (_) {
+            return 0;
+          }
+        }
+
+        function loadBestWave() {
+          try {
+            return parseInt(localStorage.getItem(STORAGE_BEST_WAVE) || '1', 10) || 1;
+          } catch (_) {
+            return 1;
+          }
+        }
+
+        function loadBestSurvival() {
+          try {
+            return parseFloat(localStorage.getItem(STORAGE_BEST_SURVIVAL) || '0') || 0;
+          } catch (_) {
+            return 0;
+          }
+        }
+
+        function saveBestSurvival(duration) {
+          try {
+            const prev = loadBestSurvival();
+            if (duration > prev) {
+              localStorage.setItem(STORAGE_BEST_SURVIVAL, String(duration));
+            }
+          } catch (_) {}
+        }
+
+        function loadTotalShards() {
+          try {
+            return parseInt(localStorage.getItem(STORAGE_SHARDS) || '0', 10) || 0;
+          } catch (_) {
+            return 0;
+          }
+        }
+
+        function saveTotalShards(shards) {
+          try {
+            localStorage.setItem(STORAGE_SHARDS, String(shards));
+          } catch (_) {}
+        }
+
+        function loadSelectedTheme() {
+          try {
+            return localStorage.getItem(STORAGE_THEME) || 'cyan';
+          } catch (_) {
+            return 'cyan';
+          }
+        }
+
+        function saveSelectedTheme(themeId) {
+          try {
+            localStorage.setItem(STORAGE_THEME, themeId);
+          } catch (_) {}
+        }
+
+        function saveRecords(score, wave) {
+          try {
+            const prevScore = loadHighScore();
+            const prevWave = loadBestWave();
+            if (score > prevScore) {
+              localStorage.setItem(STORAGE_HIGH_SCORE, String(score));
+            }
+            if (wave > prevWave) {
+              localStorage.setItem(STORAGE_BEST_WAVE, String(wave));
+            }
+          } catch (_) {}
+        }
+
+        // ============================================================================
+        // PROCEDURAL WEB AUDIO SYNTHESIZER
+        // ============================================================================
+        class SoundSynth {
+          constructor() {
+            this.ctx = null;
+            this.muted = false;
+            this.droneOsc = null;
+            this.droneGain = null;
+            this.droneLfo = null;
+            // Pentatonic ascending frequencies: C4 -> D4 -> E4 -> G4 -> A4 -> C5 -> D5 -> E5 -> G5 -> A5
+            this.pentatonic = [
+              261.63, 293.66, 329.63, 392.0, 440.0,
+              523.25, 587.33, 659.25, 783.99, 880.0
+            ];
+          }
+
+          ensureContext() {
+            if (this.muted) return null;
+            if (!this.ctx) {
+              const AudioCtx = window.AudioContext || window.webkitAudioContext;
+              if (AudioCtx) {
+                try {
+                  this.ctx = new AudioCtx();
+                } catch (_) {
+                  return null;
+                }
+              }
+            }
+            if (this.ctx && this.ctx.state === 'suspended') {
+              this.ctx.resume().catch(() => {});
+            }
+            return this.ctx;
+          }
+
+          playPop(pitchIndex, isFever, themeId) {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const themeMultiplier = themeId === 'amber' ? 0.94 : themeId === 'emerald' ? 1.08 : 1.0;
+            const freq = this.pentatonic[pitchIndex % this.pentatonic.length] * (isFever ? 1.25 : 1.0) * themeMultiplier;
+
+            // Primary chime oscillator (clean sine/triangle, no harsh sawtooth buzz)
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = themeId === 'emerald' ? 'sine' : 'triangle';
+            osc.frequency.setValueAtTime(freq, now);
+            osc.frequency.exponentialRampToValueAtTime(freq * 1.03, now + 0.14);
+
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.24, now + 0.012);
+            gain.gain.exponentialRampToValueAtTime(0.0008, now + 0.28);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.29);
+
+            // Harmonic overtone
+            const subOsc = ctx.createOscillator();
+            const subGain = ctx.createGain();
+            subOsc.type = 'sine';
+            subOsc.frequency.setValueAtTime(freq * 2, now);
+            subGain.gain.setValueAtTime(0.001, now);
+            subGain.gain.linearRampToValueAtTime(0.12, now + 0.01);
+            subGain.gain.exponentialRampToValueAtTime(0.0008, now + 0.19);
+
+            subOsc.connect(subGain);
+            subGain.connect(ctx.destination);
+            subOsc.start(now);
+            subOsc.stop(now + 0.2);
+          }
+
+          playWaveClear(flawless) {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const notes = flawless
+              ? [261.63, 329.63, 392.0, 523.25, 659.25]
+              : [261.63, 329.63, 392.0, 523.25];
+
+            notes.forEach((freq, idx) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'triangle';
+              const start = now + idx * 0.055;
+              osc.frequency.setValueAtTime(freq, start);
+              osc.frequency.exponentialRampToValueAtTime(freq * 1.015, start + 0.35);
+
+              gain.gain.setValueAtTime(0.001, start);
+              gain.gain.linearRampToValueAtTime(0.16, start + 0.02);
+              gain.gain.exponentialRampToValueAtTime(0.0008, start + 0.42);
+
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(start);
+              osc.stop(start + 0.44);
+            });
+          }
+
+          playFeverTrigger() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(261.63, now);
+            osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.24);
+
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.16, now + 0.025);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.29);
+          }
+
+          playEmpBlast() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+
+            const bass = ctx.createOscillator();
+            const bassGain = ctx.createGain();
+            bass.type = 'sine';
+            bass.frequency.setValueAtTime(140, now);
+            bass.frequency.exponentialRampToValueAtTime(32, now + 0.48);
+
+            bassGain.gain.setValueAtTime(0.32, now);
+            bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+            bass.connect(bassGain);
+            bassGain.connect(ctx.destination);
+            bass.start(now);
+            bass.stop(now + 0.52);
+
+            const sweep = ctx.createOscillator();
+            const sweepGain = ctx.createGain();
+            sweep.type = 'triangle';
+            sweep.frequency.setValueAtTime(440, now);
+            sweep.frequency.exponentialRampToValueAtTime(880, now + 0.18);
+            sweep.frequency.exponentialRampToValueAtTime(220, now + 0.42);
+
+            sweepGain.gain.setValueAtTime(0.001, now);
+            sweepGain.gain.linearRampToValueAtTime(0.16, now + 0.025);
+            sweepGain.gain.exponentialRampToValueAtTime(0.001, now + 0.44);
+
+            sweep.connect(sweepGain);
+            sweepGain.connect(ctx.destination);
+            sweep.start(now);
+            sweep.stop(now + 0.46);
+          }
+
+          playPerkSelect() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            [392.0, 523.25, 659.25, 783.99].forEach((freq, idx) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'triangle';
+              const t = now + idx * 0.045;
+              osc.frequency.setValueAtTime(freq, t);
+              gain.gain.setValueAtTime(0.12, t);
+              gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(t);
+              osc.stop(t + 0.26);
+            });
+          }
+
+          playMistakeGlitch() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+
+            // Soft low-pitched damped tap instead of harsh sawtooth buzz
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(180, now);
+            osc.frequency.exponentialRampToValueAtTime(95, now + 0.14);
+
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.16, now + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.16);
+          }
+
+          playGameOver() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const freqs = [392.0, 349.23, 311.13, 261.63];
+            freqs.forEach((f, i) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'triangle';
+              const t = now + i * 0.11;
+              osc.frequency.setValueAtTime(f, t);
+              osc.frequency.linearRampToValueAtTime(f * 0.96, t + 0.22);
+
+              gain.gain.setValueAtTime(0.12, t);
+              gain.gain.exponentialRampToValueAtTime(0.001, t + 0.24);
+
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(t);
+              osc.stop(t + 0.25);
+            });
+          }
+
+          startDrone() {
+            // Continuous background drone disabled to prevent buzzing noise
+          }
+
+          updateDrone() {
+            // Continuous background drone disabled
+          }
+
+          stopDrone() {
+            if (this.droneOsc) {
+              try {
+                this.droneOsc.stop();
+                this.droneOsc.disconnect();
+              } catch (_) {}
+              this.droneOsc = null;
+            }
+            if (this.droneLfo) {
+              try {
+                this.droneLfo.stop();
+                this.droneLfo.disconnect();
+              } catch (_) {}
+              this.droneLfo = null;
+            }
+          }
+        }
+
+        const sound = new SoundSynth();
+
+        // ============================================================================
+        // PERKS & THEMES CONFIGURATION
+        // ============================================================================
+        const ALL_PERKS = [
+          {
+            id: 'chrono_siphon',
+            name: 'Chrono Siphon',
+            desc: 'Correct clicks add +0.2s to timer.',
+            icon: '⏳',
+          },
+          {
+            id: 'quantum_radar',
+            name: 'Quantum Radar',
+            desc: 'Next target pulses with a scanner ring for 0.4s upon each pop.',
+            icon: '📡',
+          },
+          {
+            id: 'fever_overflow',
+            name: 'Fever Overflow',
+            desc: 'Max combo cap increases from 5x to 10x; drift speed +20%.',
+            icon: '⚡',
+          },
+          {
+            id: 'stabilizer_field',
+            name: 'Stabilizer Field',
+            desc: 'Reduces core floating speed by 30%.',
+            icon: '🛡️',
+          },
+          {
+            id: 'chain_reactor',
+            name: 'Chain Reactor',
+            desc: 'Every 3rd consecutive correct pop emits a shockwave (+150 score).',
+            icon: '💥',
+          },
+        ];
+
+        const THEMES = [
+          {
+            id: 'cyan',
+            name: 'Default Cyan',
+            cost: 0,
+            primaryGlow: '#22d3ee',
+            secondaryGlow: '#e879f9',
+            accentBg: '#0891b2',
+            desc: 'Classic neon cyan reactor matrix with plasma harmonics.',
+          },
+          {
+            id: 'amber',
+            name: 'Amber Overdrive',
+            cost: 60,
+            primaryGlow: '#fbbf24',
+            secondaryGlow: '#f43f5e',
+            accentBg: '#d97706',
+            desc: 'Solar flare golden hues with heavy sub-bass resonance.',
+          },
+          {
+            id: 'emerald',
+            name: 'Emerald Singularity',
+            cost: 150,
+            primaryGlow: '#34d399',
+            secondaryGlow: '#38bdf8',
+            accentBg: '#059669',
+            desc: 'Radioactive quantum green with high-frequency chime timbre.',
+          },
+        ];
+
+        // ============================================================================
+        // STRUCTURED PROGRESSIVE WAVE SEQUENCE (STRICT NUMERICAL CURRICULUM)
+        // ============================================================================
+        function shouldTriggerPerkDraft() {
+          return false;
+        }
+
+        function getWaveType(wave) {
+          if (wave <= 3) return 'SINGLE_DIGIT';
+          if (wave <= 6) return 'DOUBLE_DIGIT';
+          if (wave <= 9) return 'TRIPLE_DIGIT';
+          if (wave <= 12) return 'POS_NEG_INT';
+          if (wave <= 15) return 'DECIMALS_INT';
+          if (wave <= 18) return 'FRACTIONS_SAME_NUMERATOR';
+          if (wave <= 21) return 'FRACTIONS_SAME_DENOMINATOR';
+          if (wave <= 24) return 'PURE_FRACTIONS';
+          if (wave <= 27) return 'TRI_SYSTEM_POS';
+          return 'ULTIMATE_SINGULARITY';
+        }
+
+        function isBreatherWave() {
+          return false;
+        }
+
+        // 1. Dynamic Time Decay Multiplier (Accelerated Countdown)
+        function getTimerDecayMultiplier(runDuration) {
+          if (runDuration < 180) return 1.0;  // 00:00 - 03:00 (Stage 1 - Normal)
+          if (runDuration < 360) return 1.35; // 03:00 - 06:00 (Stage 2 - Accelerated)
+          if (runDuration < 480) return 1.8;  // 06:00 - 08:00 (Stage 3 - Overheat)
+          return 2.8;                         // 08:00 - 10:00+ (Stage 4 - CRITICAL OVERLOAD)
+        }
+
+        // 2. Shrinking Time Bank Ceiling
+        function getMaxBankableTime(runDuration) {
+          if (runDuration < 300) return 60.0; // Minute 0-5: Max 60s
+          if (runDuration < 360) return 45.0; // Minute 6: Max 45s
+          if (runDuration < 420) return 35.0; // Minute 7: Max 35s
+          if (runDuration < 480) return 25.0; // Minute 8: Max 25s
+          return 15.0;                        // Minute 9+: Max 15s (High-stress emergency state)
+        }
+
+        function getTimerStageInfo(runDuration) {
+          const maxBank = getMaxBankableTime(runDuration);
+          if (runDuration < 180) {
+            return {
+              stage: 1,
+              name: 'STAGE 1 · STABLE (1.0x)',
+              multiplier: 1.0,
+              isCritical: false,
+              maxBank,
+            };
+          }
+          if (runDuration < 360) {
+            return {
+              stage: 2,
+              name: 'STAGE 2 · ACCELERATED (1.35x)',
+              multiplier: 1.35,
+              isCritical: false,
+              maxBank,
+            };
+          }
+          if (runDuration < 480) {
+            return {
+              stage: 3,
+              name: 'STAGE 3 · OVERHEAT (1.8x)',
+              multiplier: 1.8,
+              isCritical: false,
+              maxBank,
+            };
+          }
+          return {
+            stage: 4,
+            name: 'STAGE 4 · CRITICAL OVERLOAD (2.8x)',
+            multiplier: 2.8,
+            isCritical: true,
+            maxBank,
+          };
+        }
+
+        function formatSurvivalTime(seconds) {
+          const totalSec = Math.max(0, Math.floor(seconds));
+          const m = Math.floor(totalSec / 60);
+          const s = totalSec % 60;
+          return (m < 10 ? '0' : '') + m + 'm ' + (s < 10 ? '0' : '') + s + 's';
+        }
+
+        function getSurvivalRank(seconds) {
+          if (seconds < 180) return 'CADET OPERATOR';
+          if (seconds < 360) return 'QUANTUM SURVIVOR';
+          if (seconds < 480) return 'VETERAN CONTROLLER';
+          if (seconds < 600) return 'LEGENDARY OPERATOR';
+          return 'SINGULARITY ARCHITECT';
+        }
+
+        // 3. Deep Late-Game Board Entropy: 8 to 9 floating cores at 8+ minutes
+        function getCoreCountForWave(wave, runDuration = 0) {
+          if (runDuration >= 480) {
+            // Stage 4 Deep Late-Game Board Entropy: Spawn 8 to 9 floating cores simultaneously
+            return 8 + (wave % 2);
+          }
+          if (wave <= 3) return 4;
+          if (wave <= 6) return 5;
+          if (wave <= 12) return 5 + (wave % 2);
+          if (wave <= 24) return 6;
+          return 7;
+        }
+
+        function getWaveTierName(wave, runDuration = 0) {
+          const type = getWaveType(wave);
+          const prefix = runDuration >= 480 ? 'OVERLOAD · ' : '';
+          switch (type) {
+            case 'SINGLE_DIGIT':
+              return prefix + 'SINGLE-DIGIT INTEGERS';
+            case 'DOUBLE_DIGIT':
+              return prefix + 'DOUBLE-DIGIT INTEGERS';
+            case 'TRIPLE_DIGIT':
+              return prefix + 'TRIPLE-DIGIT SCALE';
+            case 'POS_NEG_INT':
+              return prefix + 'POSITIVE & NEGATIVE INTEGERS';
+            case 'DECIMALS_INT':
+              return prefix + 'DECIMALS & INTEGERS';
+            case 'FRACTIONS_SAME_NUMERATOR':
+              return prefix + 'FRACTIONS · SAME NUMERATOR';
+            case 'FRACTIONS_SAME_DENOMINATOR':
+              return prefix + 'FRACTIONS · SAME DENOMINATOR';
+            case 'PURE_FRACTIONS':
+              return prefix + 'FRACTIONS · MIXED';
+            case 'TRI_SYSTEM_POS':
+              return prefix + 'FRACTIONS + DECIMALS + INTEGERS';
+            case 'ULTIMATE_SINGULARITY':
+              return prefix + 'ULTIMATE SINGULARITY';
+          }
+        }
+
+        function parseFractionLabel(label) {
+          if (!label || typeof label !== 'string' || !label.includes('/')) return null;
+          const trimmed = label.trim();
+          const isSignedNegative = trimmed.startsWith('-');
+          const unsigned = isSignedNegative ? trimmed.slice(1) : trimmed;
+          const parts = unsigned.split('/');
+          if (parts.length !== 2 || !parts[0] || !parts[1]) return null;
+          return {
+            isSignedNegative,
+            numerator: parts[0],
+            denominator: parts[1],
+          };
+        }
+
+        const FRACTIONS_POOL = [
+          { label: '1/10', value: 0.1, fill: 0.1 },
+          { label: '1/8', value: 0.125, fill: 0.125 },
+          { label: '1/5', value: 0.2, fill: 0.2 },
+          { label: '1/4', value: 0.25, fill: 0.25 },
+          { label: '1/3', value: 1 / 3, fill: 1 / 3 },
+          { label: '2/5', value: 0.4, fill: 0.4 },
+          { label: '1/2', value: 0.5, fill: 0.5 },
+          { label: '3/5', value: 0.6, fill: 0.6 },
+          { label: '2/3', value: 2 / 3, fill: 2 / 3 },
+          { label: '3/4', value: 0.75, fill: 0.75 },
+          { label: '4/5', value: 0.8, fill: 0.8 },
+          { label: '9/10', value: 0.9, fill: 0.9 },
+        ];
+
+        const NEGATIVE_FRACTIONS_POOL = [
+          { label: '-3/4', value: -0.75, fill: 0.75 },
+          { label: '-2/3', value: -2 / 3, fill: 2 / 3 },
+          { label: '-1/2', value: -0.5, fill: 0.5 },
+          { label: '-2/5', value: -0.4, fill: 0.4 },
+          { label: '-1/3', value: -1 / 3, fill: 1 / 3 },
+          { label: '-1/4', value: -0.25, fill: 0.25 },
+        ];
+
+        const DECIMALS_POOL = [
+          0.1, 0.2, 0.25, 0.35, 0.4, 0.5, 0.6, 0.75, 0.85, 1.2, 1.5, 2.5, 3.5, 4.5,
+        ];
+
+        const NEGATIVE_DECIMALS_POOL = [
+          -3.5, -2.5, -1.5, -1.2, -0.75, -0.5, -0.35, -0.25, -0.2, -0.1,
+        ];
+
+        function hasValueCollision(usedValues, candidate) {
+          let collision = false;
+          usedValues.forEach((v) => {
+            if (Math.abs(v - candidate) < 1e-4) collision = true;
+          });
+          return collision;
+        }
+
+        function pickUniqueFromList(list, getValue, usedValues) {
+          const start = Math.floor(Math.random() * list.length);
+          for (let i = 0; i < list.length; i++) {
+            const item = list[(start + i) % list.length];
+            if (!hasValueCollision(usedValues, getValue(item))) {
+              return item;
+            }
+          }
+          return null;
+        }
+
+        function generateWaveItem(wave, index, usedValues, _runDuration = 0) {
+          const waveType = getWaveType(wave);
+
+          for (let attempt = 0; attempt < 250; attempt++) {
+            if (waveType === 'SINGLE_DIGIT') {
+              // Waves 1-3: Clean positive single-digit numbers (1 to 9)
+              const candidates = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+              const picked = pickUniqueFromList(candidates, (n) => n, usedValues);
+              if (picked !== null) {
+                return { value: picked, label: String(picked) };
+              }
+            } else if (waveType === 'DOUBLE_DIGIT') {
+              // Waves 4-6: Mix of single and double digits (e.g., 6, 23, 58, 89)
+              const wantSingle = index === 0 || (index > 2 && Math.random() < 0.3);
+              const val = wantSingle
+                ? Math.floor(Math.random() * 9) + 1
+                : Math.floor(Math.random() * 90) + 10;
+              if (!hasValueCollision(usedValues, val)) {
+                return { value: val, label: String(val) };
+              }
+            } else if (waveType === 'TRIPLE_DIGIT') {
+              // Waves 7-9: Incorporate three-digit integers alongside double-digit integers
+              const wantTriple = index <= 1 || (index > 2 && Math.random() < 0.65);
+              const val = wantTriple
+                ? Math.floor(Math.random() * 900) + 100
+                : Math.floor(Math.random() * 90) + 10;
+              if (!hasValueCollision(usedValues, val)) {
+                return { value: val, label: String(val) };
+              }
+            } else if (waveType === 'POS_NEG_INT') {
+              // Waves 10-12: Introduce negative integers alongside positive numbers (e.g., -45, -12, 0, 18, 150)
+              const wantNeg = index <= 1 || (index >= 4 && Math.random() < 0.5);
+              const val = wantNeg
+                ? -(Math.floor(Math.random() * 95) + 1)
+                : Math.floor(Math.random() * 180);
+              if (!hasValueCollision(usedValues, val)) {
+                return { value: val, label: String(val) };
+              }
+            } else if (waveType === 'DECIMALS_INT') {
+              // Waves 13-15: Incorporate simple decimals alongside integers (e.g., -6, 0.25, 0.75, 2, 4.5)
+              const wantDecimal = index <= 1 || (index >= 4 && Math.random() < 0.5);
+              if (wantDecimal) {
+                const d = pickUniqueFromList(DECIMALS_POOL, (n) => n, usedValues);
+                if (d !== null) {
+                  return { value: d, label: String(d) };
+                }
+              } else {
+                const isNeg = index === 2 || (index > 3 && Math.random() < 0.45);
+                const val = isNeg
+                  ? -(Math.floor(Math.random() * 15) + 1)
+                  : Math.floor(Math.random() * 20) + 1;
+                if (!hasValueCollision(usedValues, val)) {
+                  return { value: val, label: String(val) };
+                }
+              }
+            } else if (waveType === 'FRACTIONS_SAME_NUMERATOR') {
+              // Waves 16-18: Same Numerator, Different Denominators
+              const fixedNumerator = ((wave - 16) % 3) + 1; // Wave 16 -> 1, Wave 17 -> 2, Wave 18 -> 3
+              const denominators = [
+                fixedNumerator + 1,
+                fixedNumerator + 2,
+                fixedNumerator + 3,
+                fixedNumerator + 4,
+                fixedNumerator + 5,
+                fixedNumerator + 6,
+                fixedNumerator + 7,
+                fixedNumerator + 8,
+                fixedNumerator + 9,
+              ];
+              const den = pickUniqueFromList(
+                denominators,
+                (d) => fixedNumerator / d,
+                usedValues
+              );
+              if (den !== null) {
+                const val = fixedNumerator / den;
+                return {
+                  value: val,
+                  label: fixedNumerator + '/' + den,
+                  fractionGauge: val,
+                };
+              }
+            } else if (waveType === 'FRACTIONS_SAME_DENOMINATOR') {
+              // Waves 19-21: Same Denominator, Different Numerators
+              const fixedDenominator = 10 + ((wave - 19) % 3); // Wave 19 -> 10, Wave 20 -> 11, Wave 21 -> 12
+              const numerators = [];
+              for (let n = 1; n < fixedDenominator; n++) {
+                numerators.push(n);
+              }
+              const num = pickUniqueFromList(
+                numerators,
+                (n) => n / fixedDenominator,
+                usedValues
+              );
+              if (num !== null) {
+                const val = num / fixedDenominator;
+                return {
+                  value: val,
+                  label: num + '/' + fixedDenominator,
+                  fractionGauge: val,
+                };
+              }
+            } else if (waveType === 'PURE_FRACTIONS') {
+              // Waves 22-24: Mixed Numerators & Denominators with radial pie-slice indicator
+              const f = pickUniqueFromList(FRACTIONS_POOL, (item) => item.value, usedValues);
+              if (f !== null) {
+                return { value: f.value, label: f.label, fractionGauge: f.fill };
+              }
+            } else if (waveType === 'TRI_SYSTEM_POS') {
+              // Waves 25-27: Fractions + Decimals + Integers without negative values
+              const category = index < 3 ? index : Math.floor(Math.random() * 3);
+              if (category === 0) {
+                const f = pickUniqueFromList(FRACTIONS_POOL, (item) => item.value, usedValues);
+                if (f !== null) {
+                  return { value: f.value, label: f.label, fractionGauge: f.fill };
+                }
+              } else if (category === 1) {
+                const d = pickUniqueFromList(DECIMALS_POOL, (n) => n, usedValues);
+                if (d !== null) {
+                  return { value: d, label: String(d) };
+                }
+              } else {
+                const val = Math.floor(Math.random() * 18) + 1;
+                if (!hasValueCollision(usedValues, val)) {
+                  return { value: val, label: String(val) };
+                }
+              }
+            } else {
+              // Waves 28+: The Ultimate Singularity - All Systems + Negatives
+              const bucket = index < 6 ? index : Math.floor(Math.random() * 6);
+              if (bucket === 0) {
+                const nf = pickUniqueFromList(NEGATIVE_FRACTIONS_POOL, (item) => item.value, usedValues);
+                if (nf !== null) {
+                  return { value: nf.value, label: nf.label, fractionGauge: nf.fill };
+                }
+              } else if (bucket === 1) {
+                const nd = pickUniqueFromList(NEGATIVE_DECIMALS_POOL, (n) => n, usedValues);
+                if (nd !== null) {
+                  return { value: nd, label: String(nd) };
+                }
+              } else if (bucket === 2) {
+                const nInt = -(Math.floor(Math.random() * 20) + 1);
+                if (!hasValueCollision(usedValues, nInt)) {
+                  return { value: nInt, label: String(nInt) };
+                }
+              } else if (bucket === 3) {
+                const pf = pickUniqueFromList(FRACTIONS_POOL, (item) => item.value, usedValues);
+                if (pf !== null) {
+                  return { value: pf.value, label: pf.label, fractionGauge: pf.fill };
+                }
+              } else if (bucket === 4) {
+                const pd = pickUniqueFromList(DECIMALS_POOL, (n) => n, usedValues);
+                if (pd !== null) {
+                  return { value: pd, label: String(pd) };
+                }
+              } else {
+                const pInt = Math.floor(Math.random() * 24);
+                if (!hasValueCollision(usedValues, pInt)) {
+                  return { value: pInt, label: String(pInt) };
+                }
+              }
+            }
+          }
+
+          let fallback = index + 1;
+          while (hasValueCollision(usedValues, fallback)) fallback += 1;
+          return { value: fallback, label: String(fallback) };
+        }
+
+        function formatNearMissMessage(score, previousBest) {
+          if (score > previousBest || previousBest <= 0) {
+            return 'NEW PERSONAL BEST RECORD!';
+          }
+          if (score === previousBest) {
+            return 'TIED YOUR PERSONAL BEST RECORD!';
+          }
+          const diff = previousBest - score;
+          return 'Only ' + diff.toLocaleString() + ' pts away from your Personal Best!';
+        }
+
+        // ============================================================================
+        // ZERO-GC POOLED PARTICLE & FLOATING TEXT MANAGERS
+        // ============================================================================
+        const MAX_PARTICLES = 400;
+        const particlePool = Array.from({ length: MAX_PARTICLES }, () => ({
+          active: false,
+          x: 0,
+          y: 0,
+          vx: 0,
+          vy: 0,
+          size: 3,
+          alpha: 1,
+          decay: 1.5,
+          hue: 190,
+          isShockwave: false,
+          radius: 0,
+          maxRadius: 0,
+        }));
+        let particleCursor = 0;
+
+        function spawnParticle(x, y, vx, vy, size, hue, decay) {
+          const p = particlePool[particleCursor];
+          particleCursor = (particleCursor + 1) % MAX_PARTICLES;
+          p.active = true;
+          p.x = x;
+          p.y = y;
+          p.vx = vx;
+          p.vy = vy;
+          p.size = size;
+          p.alpha = 1;
+          p.hue = hue;
+          p.decay = decay;
+          p.isShockwave = false;
+        }
+
+        function spawnShockwave(x, y, maxRadius, hue) {
+          const p = particlePool[particleCursor];
+          particleCursor = (particleCursor + 1) % MAX_PARTICLES;
+          p.active = true;
+          p.x = x;
+          p.y = y;
+          p.vx = 0;
+          p.vy = 0;
+          p.size = 2;
+          p.alpha = 1;
+          p.hue = hue;
+          p.decay = 2.4;
+          p.isShockwave = true;
+          p.radius = 10;
+          p.maxRadius = maxRadius;
+        }
+
+        function spawnShatterBurst(x, y, baseHue, count, isFever) {
+          const total = IS_HEADLESS ? Math.min(8, count) : count;
+          for (let i = 0; i < total; i++) {
+            const angle = (Math.PI * 2 * i) / total + (Math.random() - 0.5) * 0.4;
+            const speed = 90 + Math.random() * 240;
+            const hue = isFever ? (i * 45) % 360 : baseHue + (Math.random() - 0.5) * 30;
+            spawnParticle(
+              x,
+              y,
+              Math.cos(angle) * speed,
+              Math.sin(angle) * speed,
+              3 + Math.random() * 4,
+              hue,
+              1.4 + Math.random() * 0.9
+            );
+          }
+        }
+
+        const MAX_FLOATING_TEXTS = 32;
+        const floatingTexts = Array.from({ length: MAX_FLOATING_TEXTS }, () => ({
+          active: false,
+          x: 0,
+          y: 0,
+          vy: -55,
+          text: '',
+          subtext: '',
+          color: '#22d3ee',
+          alpha: 1,
+          scale: 1,
+        }));
+        let floatCursor = 0;
+
+        function spawnFloatingText(x, y, text, subtext, color) {
+          const ft = floatingTexts[floatCursor];
+          floatCursor = (floatCursor + 1) % MAX_FLOATING_TEXTS;
+          ft.active = true;
+          ft.x = x;
+          ft.y = y;
+          ft.vy = -64;
+          ft.text = text;
+          ft.subtext = subtext || '';
+          ft.color = color || '#22d3ee';
+          ft.alpha = 1;
+          ft.scale = 1.15;
+        }
+
+        const DUST_COUNT = IS_HEADLESS ? 18 : 48;
+        const ambientDust = Array.from({ length: DUST_COUNT }, () => ({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          vx: (Math.random() - 0.5) * 18,
+          vy: -10 - Math.random() * 18,
+          size: 1.2 + Math.random() * 2,
+          hue: Math.random() < 0.5 ? 190 : 285,
+          alpha: 0.2 + Math.random() * 0.45,
+        }));
+
+        // ============================================================================
+        // GAME STATE & DOM REFERENCES
+        // ============================================================================
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+
+        const hudScore = document.getElementById('hud-score');
+        const hudCombo = document.getElementById('hud-combo');
+        const hudComboLabel = document.getElementById('hud-combo-label');
+        const hudComboPips = Array.from(document.querySelectorAll('#hud-combo-pips .combo-pip'));
+        const hudShardsBadge = document.getElementById('hud-shards-badge');
+        const hudPerksRow = document.getElementById('hud-perks-row');
+        const hudCenterCluster = document.getElementById('hud-center-cluster');
+        const hudWave = document.getElementById('hud-wave');
+        const hudWaveTier = document.getElementById('hud-wave-tier');
+        const hudTimer = document.getElementById('hud-timer');
+        const hudTimerBar = document.getElementById('hud-timer-bar');
+        const hudRemaining = document.getElementById('hud-remaining');
+        const feverBanner = document.getElementById('fever-hud-banner');
+
+        const hudStageLabel = document.getElementById('hud-stage-label');
+        const hudSurvivalTimer = document.getElementById('hud-survival-timer');
+        const hudCapLabel = document.getElementById('hud-cap-label');
+        const singularityWarningBanner = document.getElementById('singularity-warning-banner');
+
+        const titleScreen = document.getElementById('title-screen');
+        const perkScreen = document.getElementById('perk-screen');
+        const themesScreen = document.getElementById('themes-screen');
+        const pauseScreen = document.getElementById('pause-screen');
+        const gameoverScreen = document.getElementById('gameover-screen');
+
+        const titleBestScore = document.getElementById('title-best-score');
+        const titleBestWave = document.getElementById('title-best-wave');
+        const titleBestSurvival = document.getElementById('title-best-survival');
+        const titleTotalShards = document.getElementById('title-total-shards');
+
+        const pauseScore = document.getElementById('pause-score');
+        const pauseWave = document.getElementById('pause-wave');
+        const pauseTime = document.getElementById('pause-time');
+
+        const goScore = document.getElementById('go-score');
+        const goBestScore = document.getElementById('go-best-score');
+        const goCombo = document.getElementById('go-combo');
+        const goMistakes = document.getElementById('go-mistakes');
+        const goWave = document.getElementById('go-wave');
+        const goBestWave = document.getElementById('go-best-wave');
+        const goSurvivalTime = document.getElementById('go-survival-time');
+        const goSurvivalRank = document.getElementById('go-survival-rank');
+        const goBestSurvival = document.getElementById('go-best-survival');
+        const goNearMiss = document.getElementById('go-near-miss');
+        const goShardsEarned = document.getElementById('go-shards-earned');
+        const goShardsTotal = document.getElementById('go-shards-total');
+
+        const btnEmp = document.getElementById('btn-emp');
+        const empBtnText = document.getElementById('emp-btn-text');
+        const perksContainer = document.getElementById('perks-container');
+        const themesContainer = document.getElementById('themes-container');
+        const themeModalShards = document.getElementById('theme-modal-shards');
+
+        const hudTopContainer = document.getElementById('hud-top-container');
+        const TOUCH_HITBOX_EXPANSION = 20;
+
+        let viewportW = Math.max(1, window.innerWidth || 360);
+        let viewportH = Math.max(1, window.innerHeight || 640);
+
+        function getHudBottom() {
+          if (hudTopContainer) {
+            const rect = hudTopContainer.getBoundingClientRect();
+            if (rect && rect.bottom > 0) {
+              return Math.min(viewportH * 0.45, Math.ceil(rect.bottom + 20));
+            }
+          }
+          return (viewportW < 450 ? 128 : 142) + 20;
+        }
+
+        function getArenaBounds() {
+          const hudBottom = getHudBottom();
+          return {
+            left: 15,
+            right: Math.max(60, viewportW - 15),
+            top: hudBottom,
+            bottom: Math.max(hudBottom + 80, viewportH - 15),
+          };
+        }
+
+        function computeCoreScaleFactor(vw, count) {
+          const isNarrowMobile = vw < 450;
+          const isMobile = vw < 640;
+          if (isNarrowMobile) return count >= 7 ? 0.72 : 0.78;
+          if (isMobile) return count >= 8 ? 0.76 : 0.84;
+          return count >= 8 ? 0.88 : 1.0;
+        }
+
+        function clampCoreToSafeArena(c, bounds) {
+          const minX = c.radius + 15;
+          const maxX = Math.max(minX, viewportW - c.radius - 15);
+          const minY = bounds.top + c.radius;
+          const maxY = Math.max(minY, viewportH - c.radius - 15);
+
+          if (c.x < minX) {
+            c.x = minX;
+            c.vx = Math.abs(c.vx);
+          } else if (c.x > maxX) {
+            c.x = maxX;
+            c.vx = -Math.abs(c.vx);
+          }
+
+          if (c.y < minY) {
+            c.y = minY;
+            c.vy = Math.abs(c.vy);
+          } else if (c.y > maxY) {
+            c.y = maxY;
+            c.vy = -Math.abs(c.vy);
+          }
+        }
+
+        const BASE_GAME_TIME = 60.0;
+
+        const game = {
+          state: 'title', // 'title' | 'playing' | 'perk' | 'paused' | 'gameover'
+          wave: 1,
+          score: 0,
+          combo: 0,
+          maxCombo: 0,
+          timeLeft: BASE_GAME_TIME,
+          feverTimeLeft: 0,
+          waveMistakes: 0,
+          totalMistakes: 0,
+          poppedInWave: 0,
+          shardsEarnedThisRun: 0,
+          empAvailable: true,
+          perks: {},
+          offeredPerks: [],
+          currentTheme: loadSelectedTheme(),
+          totalShards: loadTotalShards(),
+          cores: [],
+          shakeTrauma: 0,
+          glitchTimer: 0,
+          hitstopTimer: 0,
+          waveTransitionTimer: 0,
+          radarPulseTimer: 0,
+          hoveredCoreId: null,
+          pointerX: viewportW * 0.5,
+          pointerY: viewportH * 0.5,
+          timeElapsed: 0,
+          runDuration: 0,
+          highScoreBeforeRun: loadHighScore(),
+          bestWaveBeforeRun: loadBestWave(),
+        };
+
+        function resizeCanvas() {
+          const rect = canvas.getBoundingClientRect();
+          const prevW = viewportW;
+          const prevH = viewportH;
+          const prevBounds = getArenaBounds();
+
+          const measuredW = rect && rect.width > 0 ? Math.round(rect.width) : window.innerWidth;
+          const measuredH = rect && rect.height > 0 ? Math.round(rect.height) : window.innerHeight;
+          viewportW = Math.max(1, measuredW || 360);
+          viewportH = Math.max(1, measuredH || 640);
+
+          const dpr = IS_HEADLESS ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.max(1, Math.round(viewportW * dpr));
+          canvas.height = Math.max(1, Math.round(viewportH * dpr));
+          ctx.setTransform(canvas.width / viewportW, 0, 0, canvas.height / viewportH, 0, 0);
+
+          if (Array.isArray(game.cores) && game.cores.length > 0) {
+            const bounds = getArenaBounds();
+            const scaleFactor = computeCoreScaleFactor(viewportW, game.cores.length);
+            const sizeChanged = Math.abs(viewportW - prevW) > 4 || Math.abs(viewportH - prevH) > 4;
+
+            for (let i = 0; i < game.cores.length; i++) {
+              const c = game.cores[i];
+              const baseRadius = 46 + ((c.id - 1) % 2) * 6;
+              c.radius = Math.round(baseRadius * scaleFactor);
+
+              if (sizeChanged && prevW > 0 && prevH > 0) {
+                const prevMinX = c.radius + 15;
+                const prevMaxX = Math.max(prevMinX + 1, prevW - c.radius - 15);
+                const prevMinY = prevBounds.top + c.radius;
+                const prevMaxY = Math.max(prevMinY + 1, prevH - c.radius - 15);
+
+                const normX = Math.max(0, Math.min(1, (c.x - prevMinX) / (prevMaxX - prevMinX)));
+                const normY = Math.max(0, Math.min(1, (c.y - prevMinY) / (prevMaxY - prevMinY)));
+
+                const newMinX = c.radius + 15;
+                const newMaxX = Math.max(newMinX, viewportW - c.radius - 15);
+                const newMinY = bounds.top + c.radius;
+                const newMaxY = Math.max(newMinY, viewportH - c.radius - 15);
+
+                c.x = newMinX + normX * (newMaxX - newMinX);
+                c.y = newMinY + normY * (newMaxY - newMinY);
+              }
+              if (!c.popped) clampCoreToSafeArena(c, bounds);
+            }
+          }
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 50));
+        if (window.visualViewport) {
+          window.visualViewport.addEventListener('resize', resizeCanvas);
+          window.visualViewport.addEventListener('scroll', resizeCanvas);
+        }
+        if (typeof ResizeObserver !== 'undefined') {
+          const ro = new ResizeObserver(() => resizeCanvas());
+          ro.observe(canvas);
+        }
+        resizeCanvas();
+
+        function applyTheme(themeId) {
+          game.currentTheme = themeId || 'cyan';
+          document.body.classList.remove('theme-cyan', 'theme-amber', 'theme-emerald');
+        }
+
+        applyTheme(game.currentTheme);
+
+        function spawnWave(waveNum) {
+          game.wave = waveNum;
+          game.waveMistakes = 0;
+          game.poppedInWave = 0;
+          game.radarPulseTimer = game.perks.quantum_radar ? 0.4 : 0;
+
+          // Update HUD text/banners first so getHudBottom() measures exact active HUD height
+          syncHud();
+          resizeCanvas();
+
+          const count = getCoreCountForWave(waveNum, game.runDuration);
+          const usedValues = new Set();
+          const rawItems = [];
+
+          while (rawItems.length < count) {
+            const item = generateWaveItem(waveNum, rawItems.length, usedValues, game.runDuration);
+            usedValues.add(item.value);
+            rawItems.push(item);
+          }
+
+          const sortedByValue = [...rawItems].sort((a, b) => a.value - b.value);
+          const scaleFactor = computeCoreScaleFactor(viewportW, count);
+
+          const bounds = getArenaBounds();
+
+          const themeHues = game.currentTheme === 'amber'
+            ? [38, 48, 22, 12, 54, 30, 42, 18, 5]
+            : game.currentTheme === 'emerald'
+            ? [155, 170, 140, 180, 130, 162, 148, 175, 120]
+            : [188, 285, 325, 160, 210, 42, 265, 195, 345];
+
+          const newCores = [];
+
+          sortedByValue.forEach((item, rankIndex) => {
+            const radius = Math.round((46 + (rankIndex % 2) * 6) * scaleFactor);
+
+            const minX = radius + 15;
+            const maxX = Math.max(minX, viewportW - radius - 15);
+            const minY = bounds.top + radius + 6;
+            const maxY = Math.max(minY, viewportH - radius - 18);
+
+            // Keep initial spawn centered within a comfortable visual field on wide desktop monitors
+            const halfSpanX = Math.min((maxX - minX) * 0.5, 380);
+            const centerX = (minX + maxX) * 0.5;
+            const spawnMinX = Math.max(minX, centerX - halfSpanX);
+            const spawnMaxX = Math.min(maxX, centerX + halfSpanX);
+
+            const halfSpanY = Math.min((maxY - minY) * 0.5, 310);
+            const centerY = (minY + maxY) * 0.5;
+            const spawnMinY = Math.max(minY, centerY - halfSpanY);
+            const spawnMaxY = Math.min(maxY, centerY + halfSpanY);
+
+            let x = centerX;
+            let y = centerY;
+            for (let attempt = 0; attempt < 110; attempt++) {
+              const cx = spawnMinX + Math.random() * Math.max(0, spawnMaxX - spawnMinX);
+              const cy = spawnMinY + Math.random() * Math.max(0, spawnMaxY - spawnMinY);
+              let overlaps = false;
+              for (let k = 0; k < newCores.length; k++) {
+                const other = newCores[k];
+                const dx = cx - other.x;
+                const dy = cy - other.y;
+                const minDist = radius + other.radius + 18;
+                if (dx * dx + dy * dy < minDist * minDist) {
+                  overlaps = true;
+                  break;
+                }
+              }
+              if (!overlaps) {
+                x = cx;
+                y = cy;
+                break;
+              }
+            }
+
+            x = Math.min(maxX, Math.max(minX, x));
+            y = Math.min(maxY, Math.max(minY, y));
+
+            const angle = Math.random() * Math.PI * 2;
+            let speed = 46 + Math.min(waveNum * 3.8, 50);
+            // Deep Late-Game Board Entropy: +35% core speed at 8+ minutes
+            if (game.runDuration >= 480) {
+              speed *= 1.35;
+            }
+            if (game.perks.stabilizer_field) {
+              speed *= 0.7; // -30% speed
+            }
+            if (game.perks.fever_overflow) {
+              speed *= 1.2; // +20% speed
+            }
+
+            newCores.push({
+              id: rankIndex + 1,
+              value: item.value,
+              label: item.label,
+              fractionGauge: item.fractionGauge,
+              radius,
+              x,
+              y,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed,
+              popped: false,
+              hue: themeHues[rankIndex % themeHues.length],
+              sides: rankIndex % 2 === 0 ? 6 : 8,
+              rotation: Math.random() * Math.PI * 2,
+              rotSpeed: (rankIndex % 2 === 0 ? 1 : -1) * (0.45 + Math.random() * 0.4),
+              pulsePhase: Math.random() * Math.PI * 2,
+              errorFlash: 0,
+              freezeTimer: 0,
+              spawnScale: 0.65,
+            });
+          });
+
+          game.cores = newCores;
+          syncHud();
+        }
+
+        function syncBodyAttributes() {
+          document.body.dataset.state = game.state;
+          document.body.dataset.wave = String(game.wave);
+          document.body.dataset.score = String(game.score);
+          document.body.dataset.combo = String(game.combo);
+          document.body.dataset.fever = String(game.feverTimeLeft > 0);
+          document.body.dataset.emp = String(game.empAvailable);
+          document.body.dataset.duration = String(Math.floor(game.runDuration || 0));
+          document.body.dataset.critical = String((game.runDuration || 0) >= 480 && game.state === 'playing');
+        }
+
+        function syncHud() {
+          hudScore.textContent = game.score.toLocaleString();
+          hudCombo.textContent = game.combo + 'x';
+
+          const isHighCombo = game.combo >= 5;
+          const effectiveCombo = Math.min(game.combo, 5);
+          const comboMult = (1 + effectiveCombo * 0.15) * (isHighCombo ? 1.5 : 1);
+          const multStr = comboMult.toFixed(1).replace(/\.0$/, '') + 'X';
+          hudComboLabel.textContent = 'COMBO · ' + multStr;
+          hudComboLabel.style.color = isHighCombo ? 'var(--secondary-glow)' : '';
+
+          hudComboPips.forEach((pip, i) => {
+            pip.classList.toggle('active', game.combo > i);
+            pip.classList.toggle('fever', isHighCombo);
+          });
+
+          const runDur = game.runDuration || 0;
+          const stageInfo = getTimerStageInfo(runDur);
+          hudStageLabel.textContent = stageInfo.name;
+          hudStageLabel.style.color = stageInfo.isCritical
+            ? 'var(--crimson-glow)'
+            : stageInfo.stage === 3
+            ? 'var(--amber-glow)'
+            : 'var(--primary-glow)';
+          hudCapLabel.textContent = 'CAP: ' + stageInfo.maxBank.toFixed(0) + 's';
+          hudSurvivalTimer.textContent = 'RUN: ' + formatSurvivalTime(runDur);
+
+          singularityWarningBanner.classList.toggle('active', stageInfo.isCritical && game.state === 'playing');
+
+          hudWave.textContent = 'WAVE ' + game.wave;
+          hudWaveTier.textContent = getWaveTierName(game.wave, runDur);
+          hudCenterCluster.classList.toggle('breather-mode', isBreatherWave(game.wave));
+
+          const clampedTime = Math.max(0, game.timeLeft);
+          hudTimer.textContent = clampedTime.toFixed(1) + 's';
+          hudTimer.classList.toggle('warning', clampedTime <= 20 && clampedTime > 10);
+          hudTimer.classList.toggle('critical', clampedTime <= 10 || stageInfo.isCritical);
+
+          const maxCap = stageInfo.maxBank;
+          const fillRatio = Math.max(0, Math.min(1, clampedTime / maxCap));
+          hudTimerBar.style.transform = 'scaleX(' + fillRatio.toFixed(4) + ')';
+          if (stageInfo.isCritical || clampedTime <= 10) {
+            hudTimerBar.style.backgroundColor = 'var(--crimson-glow)';
+          } else if (clampedTime <= 20) {
+            hudTimerBar.style.backgroundColor = 'var(--amber-glow)';
+          } else if (isHighCombo) {
+            hudTimerBar.style.backgroundColor = 'var(--secondary-glow)';
+          } else {
+            hudTimerBar.style.backgroundColor = 'var(--primary-glow)';
+          }
+
+          const rem = game.cores.filter((c) => !c.popped).length;
+          hudRemaining.textContent = rem + (rem === 1 ? ' CORE LEFT' : ' CORES LEFT');
+
+          syncBodyAttributes();
+        }
+
+        function setScreenState(nextState) {
+          game.state = nextState;
+          titleScreen.classList.toggle('visible', nextState === 'title');
+          pauseScreen.classList.toggle('visible', nextState === 'paused');
+          gameoverScreen.classList.toggle('visible', nextState === 'gameover');
+
+          if (nextState === 'title') {
+            titleBestScore.textContent = loadHighScore().toLocaleString();
+            titleBestWave.textContent = String(loadBestWave());
+            titleBestSurvival.textContent = formatSurvivalTime(loadBestSurvival());
+          }
+          syncBodyAttributes();
+        }
+
+        function startGame() {
+          if (document.activeElement && typeof document.activeElement.blur === 'function') {
+            document.activeElement.blur();
+          }
+          sound.ensureContext();
+          sound.startDrone();
+
+          game.highScoreBeforeRun = loadHighScore();
+          game.bestWaveBeforeRun = loadBestWave();
+          game.score = 0;
+          game.combo = 0;
+          game.maxCombo = 0;
+          game.timeLeft = BASE_GAME_TIME;
+          game.runDuration = 0;
+          game.feverTimeLeft = 0;
+          game.waveMistakes = 0;
+          game.totalMistakes = 0;
+          game.poppedInWave = 0;
+          game.shardsEarnedThisRun = 0;
+          game.empAvailable = false;
+          game.perks = {};
+          game.shakeTrauma = 0;
+          game.glitchTimer = 0;
+          game.hitstopTimer = 0;
+          game.waveTransitionTimer = 0;
+          game.radarPulseTimer = 0;
+
+          setScreenState('playing');
+          syncHud();
+          spawnWave(1);
+        }
+
+        function triggerGameOver() {
+          if (game.state === 'gameover') return;
+          game.timeLeft = 0;
+          sound.stopDrone();
+          sound.playGameOver();
+
+          const prevBest = game.highScoreBeforeRun;
+          const prevWaveRecord = game.bestWaveBeforeRun;
+          const prevBestSurvival = loadBestSurvival();
+
+          saveRecords(game.score, game.wave);
+          saveBestSurvival(game.runDuration);
+
+          game.totalShards += game.shardsEarnedThisRun;
+          saveTotalShards(game.totalShards);
+
+          const newBestScore = Math.max(prevBest, game.score);
+          const newBestWave = Math.max(prevWaveRecord, game.wave);
+          const newBestSurvival = Math.max(prevBestSurvival, game.runDuration);
+
+          goScore.textContent = game.score.toLocaleString();
+          goBestScore.textContent = 'BEST: ' + newBestScore.toLocaleString();
+          goCombo.textContent = game.maxCombo + 'x';
+          goMistakes.textContent =
+            game.totalMistakes + (game.totalMistakes === 1 ? ' MISTAKE' : ' MISTAKES');
+          goWave.textContent = String(game.wave);
+          goBestWave.textContent = 'RECORD: WAVE ' + newBestWave;
+
+          // Prominent Survival Duration & Operator Ranking
+          goSurvivalTime.textContent = formatSurvivalTime(game.runDuration);
+          goSurvivalRank.textContent = getSurvivalRank(game.runDuration);
+          goBestSurvival.textContent = 'BEST RECORD: ' + formatSurvivalTime(newBestSurvival);
+
+          const msg = formatNearMissMessage(game.score, prevBest);
+          goNearMiss.textContent = msg;
+          goNearMiss.classList.toggle('new-best', game.score >= prevBest);
+
+          setScreenState('gameover');
+          syncHud();
+
+          // Tounow Hub Cross-Origin Runtime Contract
+          try {
+            if (window.parent && window.parent !== window) {
+              window.parent.postMessage(
+                {
+                  type: 'GAME_OVER',
+                  gameId: 'quantum-core-collapse',
+                  category: 'math',
+                  score: game.score,
+                  wave: game.wave,
+                  runDuration: game.runDuration,
+                },
+                '*'
+              );
+            }
+          } catch (_) {}
+        }
+
+        function togglePause() {
+          if (game.state === 'playing') {
+            sound.stopDrone();
+            pauseScore.textContent = game.score.toLocaleString();
+            pauseWave.textContent = String(game.wave);
+            pauseTime.textContent = game.timeLeft.toFixed(1) + 's';
+            setScreenState('paused');
+          } else if (game.state === 'paused') {
+            if (document.activeElement && typeof document.activeElement.blur === 'function') {
+              document.activeElement.blur();
+            }
+            sound.startDrone();
+            setScreenState('playing');
+          }
+        }
+
+        function openPerkSelection() {}
+        function selectPerk() {}
+        function openThemesTerminal() {}
+        function closeThemesTerminal() {}
+        function renderThemesList() {}
+        function activateEmpPurge() {}
+
+        // ============================================================================
+        // CORE SELECTION & HIT HANDLING
+        // ============================================================================
+        function getLowestUnpoppedCore() {
+          let lowest = null;
+          for (let i = 0; i < game.cores.length; i++) {
+            const c = game.cores[i];
+            if (!c.popped) {
+              if (!lowest || c.value < lowest.value) {
+                lowest = c;
+              }
+            }
+          }
+          return lowest;
+        }
+
+        function handleCoreSelection(core) {
+          if (!core || core.popped || game.state !== 'playing') return;
+
+          const lowestCore = getLowestUnpoppedCore();
+          if (!lowestCore) return;
+
+          if (Math.abs(core.value - lowestCore.value) < 1e-6) {
+            // CORRECT ASCENDING CLICK (Musical chime + combo bonus, NO screen shake!)
+            // Always allow popping the target lowest core immediately even if it had freezeTimer from an earlier misclick
+            core.freezeTimer = 0;
+            core.errorFlash = 0;
+            core.popped = true;
+            game.combo += 1;
+            game.shardsEarnedThisRun += 1;
+
+            if (game.combo > game.maxCombo) {
+              game.maxCombo = game.combo;
+            }
+
+            const isHighCombo = game.combo >= 5;
+            if (isHighCombo) {
+              game.feverTimeLeft = 5.0;
+            }
+
+            const effectiveCombo = Math.min(game.combo, 5);
+            const highComboBonus = isHighCombo ? 1.5 : 1.0;
+            const comboFactor = 1 + effectiveCombo * 0.15;
+
+            let pointsAdded = Math.round((100 + game.wave * 25) * comboFactor * highComboBonus);
+            game.score += pointsAdded;
+
+            sound.playPop(game.poppedInWave, false, 'cyan');
+            game.poppedInWave += 1;
+
+            // Explicitly NO screen shake and NO hitstop on correct clicks
+            game.shakeTrauma = 0;
+            game.hitstopTimer = 0;
+
+            spawnShatterBurst(core.x, core.y, core.hue, 20, false);
+
+            const comboTag = game.combo > 1 ? 'COMBO ' + game.combo + 'x' : '';
+            spawnFloatingText(
+              core.x,
+              core.y - 10,
+              '+' + pointsAdded,
+              comboTag,
+              isHighCombo ? 'var(--secondary-glow)' : 'var(--primary-glow)'
+            );
+
+            // Check Wave Clear
+            const remaining = game.cores.filter((c) => !c.popped).length;
+            if (remaining === 0) {
+              const flawless = game.waveMistakes === 0;
+              sound.playWaveClear(flawless);
+              if (flawless) {
+                const maxBank = getMaxBankableTime(game.runDuration);
+                const addedBonus = 2.5;
+                if (game.timeLeft + addedBonus > maxBank) {
+                  const surplus = (game.timeLeft + addedBonus) - maxBank;
+                  game.timeLeft = maxBank;
+                  const surplusPts = Math.round(surplus * 250);
+                  game.score += surplusPts;
+                  spawnFloatingText(
+                    viewportW * 0.5,
+                    viewportH * 0.42,
+                    `+${surplusPts} FLAWLESS SURPLUS PTS!`,
+                    `TIME AT MAX CAP ${maxBank}s`,
+                    'var(--emerald-glow)'
+                  );
+                } else {
+                  game.timeLeft += addedBonus;
+                  spawnFloatingText(
+                    viewportW * 0.5,
+                    viewportH * 0.42,
+                    '+2.5s FLAWLESS WAVE!',
+                    'WAVE ' + game.wave + ' CLEARED',
+                    'var(--emerald-glow)'
+                  );
+                }
+              } else {
+                spawnFloatingText(
+                  viewportW * 0.5,
+                  viewportH * 0.42,
+                  'WAVE ' + game.wave + ' CLEARED',
+                  '',
+                  'var(--primary-glow)'
+                );
+              }
+
+              game.waveTransitionTimer = 0.1;
+            }
+
+            syncHud();
+          } else {
+            // If core is currently frozen from a recent misclick, ignore extra mistake spam
+            if (core.freezeTimer > 0) return;
+
+            // MISTAKE: Slight screen shake + mistake sound
+            game.combo = 0;
+            game.feverTimeLeft = 0;
+            game.waveMistakes += 1;
+            game.totalMistakes += 1;
+
+            core.errorFlash = 0.4;
+            core.freezeTimer = 0.35;
+
+            game.glitchTimer = 0.22;
+            game.shakeTrauma = 0.35;
+            sound.playMistakeGlitch();
+
+            spawnFloatingText(
+              core.x,
+              core.y - 12,
+              'COMBO BROKEN!',
+              'NOT LOWEST CORE',
+              'var(--crimson-glow)'
+            );
+
+            syncHud();
+          }
+        }
+
+        function getPointerCanvasPos(clientX, clientY) {
+          const rect = canvas.getBoundingClientRect();
+          const scaleX = rect && rect.width > 0 ? viewportW / rect.width : 1;
+          const scaleY = rect && rect.height > 0 ? viewportH / rect.height : 1;
+          return {
+            x: (clientX - (rect ? rect.left : 0)) * scaleX,
+            y: (clientY - (rect ? rect.top : 0)) * scaleY,
+          };
+        }
+
+        function findHitCoreAt(px, py) {
+          const lowestCore = getLowestUnpoppedCore();
+          let bestCore = null;
+          let minDistSq = Infinity;
+          let lowestCoreMatched = false;
+
+          for (let i = 0; i < game.cores.length; i++) {
+            const c = game.cores[i];
+            if (c.popped) continue;
+
+            // Check both current position and 45ms lag-compensated position for moving targets
+            const dxNow = px - c.x;
+            const dyNow = py - c.y;
+            const dSqNow = dxNow * dxNow + dyNow * dyNow;
+
+            const prevX = c.x - c.vx * 0.045;
+            const prevY = c.y - c.vy * 0.045;
+            const dxPrev = px - prevX;
+            const dyPrev = py - prevY;
+            const dSqPrev = dxPrev * dxPrev + dyPrev * dyPrev;
+
+            const dSq = Math.min(dSqNow, dSqPrev);
+            const hitR = c.radius + TOUCH_HITBOX_EXPANSION;
+
+            if (dSq <= hitR * hitR) {
+              if (lowestCore && c.id === lowestCore.id) {
+                lowestCoreMatched = true;
+              }
+              if (dSq < minDistSq) {
+                minDistSq = dSq;
+                bestCore = c;
+              }
+            }
+          }
+
+          // If the tap landed within the target lowest core's hitbox and isn't deep inside another core's center, favor the target core
+          if (
+            lowestCoreMatched &&
+            lowestCore &&
+            bestCore &&
+            bestCore.id !== lowestCore.id &&
+            minDistSq > bestCore.radius * bestCore.radius * 0.45
+          ) {
+            return lowestCore;
+          }
+
+          return bestCore;
+        }
+
+        // Pointer Down (with exact CSS-to-canvas coordinate scaling + 20px touch hitbox expansion)
+        canvas.addEventListener('pointerdown', (e) => {
+          if (game.state === 'playing' && game.waveTransitionTimer > 0) {
+            // Complete transition immediately if player taps eagerly
+            game.waveTransitionTimer = 0;
+            spawnWave(game.wave + 1);
+          }
+          if (game.state !== 'playing') return;
+          e.preventDefault();
+
+          const pt = getPointerCanvasPos(e.clientX, e.clientY);
+          game.pointerX = pt.x;
+          game.pointerY = pt.y;
+
+          const hitCore = findHitCoreAt(pt.x, pt.y);
+          if (hitCore) {
+            handleCoreSelection(hitCore);
+          }
+        });
+
+        canvas.addEventListener('pointermove', (e) => {
+          const pt = getPointerCanvasPos(e.clientX, e.clientY);
+          game.pointerX = pt.x;
+          game.pointerY = pt.y;
+
+          const hoveredCore = findHitCoreAt(pt.x, pt.y);
+          game.hoveredCoreId = hoveredCore ? hoveredCore.id : null;
+          canvas.style.cursor = hoveredCore ? 'pointer' : 'crosshair';
+        });
+
+        // Keyboard Shortcuts
+        window.addEventListener('keydown', (e) => {
+          if (e.repeat) return;
+
+          if (e.code === 'Space' || e.code === 'Enter') {
+            if (game.state === 'title' || game.state === 'gameover') {
+              e.preventDefault();
+              startGame();
+              return;
+            } else if (game.state === 'paused' && e.code === 'Space') {
+              e.preventDefault();
+              togglePause();
+              return;
+            }
+          }
+
+          if (e.code === 'KeyP' || e.code === 'Escape') {
+            if (game.state === 'playing' || game.state === 'paused') {
+              e.preventDefault();
+              togglePause();
+              return;
+            }
+          }
+
+          if (e.code === 'KeyR') {
+            if (game.state === 'playing' || game.state === 'paused' || game.state === 'gameover') {
+              e.preventDefault();
+              startGame();
+              return;
+            }
+          }
+
+          if (e.code === 'KeyM') {
+            e.preventDefault();
+            toggleMute();
+            return;
+          }
+        });
+
+        // Zero-latency UI Button Handler helper (responds immediately on pointerdown + click fallback)
+        function bindFastButton(id, handler) {
+          const el = document.getElementById(id);
+          if (!el) return;
+          let lastTriggered = 0;
+          const invoke = (e) => {
+            const now = performance.now();
+            if (now - lastTriggered < 250) return;
+            lastTriggered = now;
+            if (e.type === 'pointerdown') {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+            if (typeof el.blur === 'function') el.blur();
+            handler(e);
+          };
+          el.addEventListener('pointerdown', invoke);
+          el.addEventListener('click', invoke);
+        }
+
+        bindFastButton('btn-start', () => startGame());
+        bindFastButton('btn-retry', () => startGame());
+        bindFastButton('btn-resume', () => togglePause());
+        bindFastButton('btn-pause-restart', () => startGame());
+        bindFastButton('btn-pause-title', () => setScreenState('title'));
+        bindFastButton('btn-go-title', () => setScreenState('title'));
+        bindFastButton('btn-pause', () => togglePause());
+        bindFastButton('btn-restart-hud', () => startGame());
+
+        function toggleMute() {
+          sound.muted = !sound.muted;
+          document.getElementById('svg-unmuted').style.display = sound.muted ? 'none' : 'block';
+          document.getElementById('svg-muted').style.display = sound.muted ? 'block' : 'none';
+        }
+
+        bindFastButton('btn-mute', () => toggleMute());
+
+        // ============================================================================
+        // SIMULATION UPDATE & RENDER LOOP
+        // ============================================================================
+        function updatePhysicsAndParticles(dt, simDt) {
+          // Ambient dust
+          for (let i = 0; i < ambientDust.length; i++) {
+            const d = ambientDust[i];
+            d.x += d.vx * dt;
+            d.y += d.vy * dt;
+            if (d.y < -10) d.y = viewportH + 10;
+            if (d.x < -10) d.x = viewportW + 10;
+            if (d.x > viewportW + 10) d.x = -10;
+          }
+
+          // Pooled particles & shockwaves
+          for (let i = 0; i < MAX_PARTICLES; i++) {
+            const p = particlePool[i];
+            if (!p.active) continue;
+            if (p.isShockwave) {
+              p.radius += (p.maxRadius - p.radius) * dt * 8;
+              p.alpha -= p.decay * dt;
+              if (p.alpha <= 0 || p.radius >= p.maxRadius * 0.98) {
+                p.active = false;
+              }
+            } else {
+              p.x += p.vx * dt;
+              p.y += p.vy * dt;
+              p.vx *= 0.96;
+              p.vy *= 0.96;
+              p.alpha -= p.decay * dt;
+              if (p.alpha <= 0) {
+                p.active = false;
+              }
+            }
+          }
+
+          // Floating combat texts
+          for (let i = 0; i < MAX_FLOATING_TEXTS; i++) {
+            const ft = floatingTexts[i];
+            if (!ft.active) continue;
+            ft.y += ft.vy * dt;
+            ft.scale = Math.max(1.0, ft.scale - dt * 1.2);
+            ft.alpha -= dt * 1.15;
+            if (ft.alpha <= 0) {
+              ft.active = false;
+            }
+          }
+
+          const bounds = getArenaBounds();
+          const active = [];
+          for (let i = 0; i < game.cores.length; i++) {
+            const c = game.cores[i];
+            if (!c.popped) active.push(c);
+          }
+
+          const isFever = game.feverTimeLeft > 0;
+
+          // Update cores position, border bounce, and rotation
+          for (let i = 0; i < active.length; i++) {
+            const c = active[i];
+
+            // If core is frozen from misclick, decrement freeze timer and apply subtle vibration
+            if (c.freezeTimer > 0) {
+              c.freezeTimer = Math.max(0, c.freezeTimer - dt);
+              c.errorFlash = Math.max(0, c.errorFlash - dt);
+              c.rotation += (Math.random() - 0.5) * 0.1;
+              clampCoreToSafeArena(c, bounds);
+              continue; // Don't advance coordinates while frozen
+            }
+
+            c.x += c.vx * simDt;
+            c.y += c.vy * simDt;
+            c.rotation += c.rotSpeed * simDt;
+            c.pulsePhase += dt * 3.8;
+            if (c.spawnScale < 1) {
+              c.spawnScale = Math.min(1, c.spawnScale + dt * 5.5);
+            }
+            if (c.errorFlash > 0) {
+              c.errorFlash = Math.max(0, c.errorFlash - dt);
+            }
+
+            clampCoreToSafeArena(c, bounds);
+
+            if (isFever && !IS_HEADLESS && Math.random() < 0.35) {
+              spawnParticle(
+                c.x + (Math.random() - 0.5) * c.radius * 0.8,
+                c.y + (Math.random() - 0.5) * c.radius * 0.8,
+                -c.vx * 0.25,
+                -c.vy * 0.25,
+                2.6,
+                (game.timeElapsed * 260 + c.id * 50) % 360,
+                2.4
+              );
+            }
+          }
+
+          // Soft-body mutual repulsion
+          for (let i = 0; i < active.length; i++) {
+            for (let j = i + 1; j < active.length; j++) {
+              const a = active[i];
+              const b = active[j];
+              const dx = b.x - a.x;
+              const dy = b.y - a.y;
+              const distSq = dx * dx + dy * dy;
+              const minDist = a.radius + b.radius + 14;
+
+              if (distSq < minDist * minDist && distSq > 0.0001) {
+                const dist = Math.sqrt(distSq);
+                const nx = dx / dist;
+                const ny = dy / dist;
+                const overlap = minDist - dist;
+
+                const push = overlap * 0.5;
+                a.x -= nx * push;
+                a.y -= ny * push;
+                b.x += nx * push;
+                b.y += ny * push;
+
+                const rvx = b.vx - a.vx;
+                const rvy = b.vy - a.vy;
+                const velAlongNormal = rvx * nx + rvy * ny;
+                if (velAlongNormal < 0) {
+                  const impulse = -velAlongNormal * 0.92;
+                  a.vx -= impulse * nx;
+                  a.vy -= impulse * ny;
+                  b.vx += impulse * nx;
+                  b.vy += impulse * ny;
+                }
+              }
+            }
+          }
+
+          // Re-clamp strictly inside safe arena boundaries after mutual repulsion so no core ever enters HUD
+          for (let i = 0; i < active.length; i++) {
+            clampCoreToSafeArena(active[i], bounds);
+          }
+        }
+
+        function drawPolygon(ctx, cx, cy, radius, sides, rotation) {
+          ctx.beginPath();
+          for (let i = 0; i < sides; i++) {
+            const theta = rotation + (i * Math.PI * 2) / sides;
+            const px = cx + Math.cos(theta) * radius;
+            const py = cy + Math.sin(theta) * radius;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+        }
+
+        function drawCoreValueLabel(ctx, c, drawX, drawY, r) {
+          const parsedFraction = parseFractionLabel(c.label);
+          if (parsedFraction) {
+            // Render stacked fraction: Numerator on top, Horizontal Fraction Bar in middle, Denominator on bottom
+            const maxDigits = Math.max(
+              parsedFraction.numerator.length,
+              parsedFraction.denominator.length
+            );
+            const isCompact = parsedFraction.isSignedNegative || maxDigits >= 2;
+            const fontSize = Math.max(11, Math.round(r * (isCompact ? 0.34 : 0.38)));
+            ctx.font = '800 ' + fontSize + "px 'JetBrains Mono', monospace";
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Optical vertical adjustment for uppercase/numeric glyphs in Canvas textBaseline='middle'
+            const opticalY = Math.round(fontSize * 0.06);
+            const vOffset = Math.max(8, Math.round(r * 0.24));
+            const barHalfW = Math.max(
+              Math.round(r * 0.21),
+              Math.round(maxDigits * fontSize * 0.34)
+            );
+
+            let fracX = drawX;
+            if (parsedFraction.isSignedNegative) {
+              const minusWidth = Math.round(fontSize * 0.5);
+              const gap = Math.round(fontSize * 0.16);
+              const shift = Math.round((minusWidth + gap) * 0.5);
+              fracX = drawX + shift;
+              const minusX = fracX - barHalfW - gap - Math.round(minusWidth * 0.5);
+              ctx.lineWidth = 4;
+              ctx.strokeStyle = 'rgba(6, 8, 15, 0.92)';
+              ctx.strokeText('-', minusX, drawY + opticalY);
+              ctx.fillStyle = '#f8fafc';
+              ctx.fillText('-', minusX, drawY + opticalY);
+            }
+
+            // 1. Numerator (Top)
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = 'rgba(6, 8, 15, 0.92)';
+            ctx.strokeText(parsedFraction.numerator, fracX, drawY - vOffset + opticalY);
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillText(parsedFraction.numerator, fracX, drawY - vOffset + opticalY);
+
+            // 2. Horizontal Fraction Bar (Middle "—")
+            ctx.save();
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(fracX - barHalfW, drawY);
+            ctx.lineTo(fracX + barHalfW, drawY);
+            ctx.lineWidth = 4.6;
+            ctx.strokeStyle = 'rgba(6, 8, 15, 0.92)';
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(fracX - barHalfW, drawY);
+            ctx.lineTo(fracX + barHalfW, drawY);
+            ctx.lineWidth = 2.4;
+            ctx.strokeStyle = '#f8fafc';
+            ctx.stroke();
+            ctx.restore();
+
+            // 3. Denominator (Bottom)
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = 'rgba(6, 8, 15, 0.92)';
+            ctx.strokeText(parsedFraction.denominator, fracX, drawY + vOffset + opticalY);
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillText(parsedFraction.denominator, fracX, drawY + vOffset + opticalY);
+          } else {
+            // Standard Integer or Decimal Label
+            const labelLen = c.label.length;
+            const fontSize = Math.max(
+              15,
+              Math.round(r * (labelLen >= 5 ? 0.44 : labelLen >= 4 ? 0.5 : 0.58))
+            );
+            const opticalY = Math.round(fontSize * 0.06);
+            ctx.font = '800 ' + fontSize + "px 'JetBrains Mono', monospace";
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = 'rgba(6, 8, 15, 0.92)';
+            ctx.strokeText(c.label, drawX, drawY + opticalY);
+
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillText(c.label, drawX, drawY + opticalY);
+          }
+        }
+
+        function renderArena() {
+          const cw = canvas.clientWidth;
+          const ch = canvas.clientHeight;
+          if (cw > 0 && ch > 0 && (Math.abs(cw - viewportW) > 1 || Math.abs(ch - viewportH) > 1)) {
+            resizeCanvas();
+          }
+
+          ctx.setTransform(canvas.width / viewportW, 0, 0, canvas.height / viewportH, 0, 0);
+          ctx.save();
+
+          ctx.fillStyle = '#0a0b10';
+          ctx.fillRect(0, 0, viewportW, viewportH);
+
+          // Apply Subtle Screen Shake (Triggered ONLY on Mistake, never on correct click or combo)
+          if (game.shakeTrauma > 0.001) {
+            const shakeMag = game.shakeTrauma * game.shakeTrauma * 14;
+            const ox = (Math.random() * 2 - 1) * shakeMag;
+            const oy = (Math.random() * 2 - 1) * shakeMag;
+            ctx.translate(ox, oy);
+          }
+
+          const isHighCombo = game.combo >= 5;
+
+          // Perspective Cyber Grid (Subtly shifts hue on high combo without shaking)
+          const gridSpacing = 64;
+          const scrollOffset = (game.timeElapsed * 18) % gridSpacing;
+          ctx.lineWidth = 1;
+          const gridColor = isHighCombo
+            ? 'rgba(232, 121, 249, 0.095)'
+            : 'rgba(34, 211, 238, 0.055)';
+          ctx.strokeStyle = gridColor;
+
+          ctx.beginPath();
+          for (let x = scrollOffset; x < viewportW; x += gridSpacing) {
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, viewportH);
+          }
+          for (let y = scrollOffset; y < viewportH; y += gridSpacing) {
+            ctx.moveTo(0, y);
+            ctx.lineTo(viewportW, y);
+          }
+          ctx.stroke();
+
+          // Ambient Quantum Dust
+          for (let i = 0; i < ambientDust.length; i++) {
+            const d = ambientDust[i];
+            ctx.fillStyle = 'hsla(' + d.hue + ', 90%, 70%, ' + d.alpha + ')';
+            ctx.beginPath();
+            ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Render Active Quantum Cores
+          for (let i = 0; i < game.cores.length; i++) {
+            const c = game.cores[i];
+            if (c.popped) continue;
+
+            const pulse = 1 + Math.sin(c.pulsePhase) * 0.035;
+            const r = c.radius * pulse * c.spawnScale;
+            const isHovered = game.hoveredCoreId === c.id;
+            const coreHue = c.errorFlash > 0 ? 350 : c.hue;
+
+            ctx.save();
+
+            // Glitch vibration offset if frozen from mistake
+            let drawX = c.x;
+            let drawY = c.y;
+            if (c.freezeTimer > 0) {
+              drawX += (Math.random() - 0.5) * 4;
+              drawY += (Math.random() - 0.5) * 4;
+            }
+
+            // Outer Energy Aura
+            const grad = ctx.createRadialGradient(drawX, drawY, r * 0.12, drawX, drawY, r * 1.18);
+            grad.addColorStop(0, 'hsla(' + coreHue + ', 95%, 62%, 0.36)');
+            grad.addColorStop(0.7, 'hsla(' + coreHue + ', 90%, 45%, 0.14)');
+            grad.addColorStop(1, 'hsla(' + coreHue + ', 90%, 40%, 0)');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(drawX, drawY, r * 1.18, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Outer Rotating Containment Shell
+            drawPolygon(ctx, drawX, drawY, r, c.sides, c.rotation);
+            ctx.fillStyle = c.errorFlash > 0
+              ? 'rgba(159, 18, 57, 0.78)'
+              : 'rgba(13, 18, 32, 0.88)';
+            ctx.fill();
+
+            ctx.lineWidth = isHovered ? 3.2 : 2.2;
+            ctx.strokeStyle = c.errorFlash > 0
+              ? '#fb7185'
+              : 'hsla(' + coreHue + ', 95%, ' + (isHovered ? '75%' : '62%') + ', 0.95)';
+            if (!IS_HEADLESS) {
+              ctx.shadowColor = 'hsla(' + coreHue + ', 95%, 60%, 0.7)';
+              ctx.shadowBlur = isHovered ? 18 : 10;
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Intuitive Fraction Rim Gauge (Visual Pie Arc along outer rim)
+            if (c.fractionGauge !== undefined && c.fractionGauge > 0) {
+              ctx.save();
+              const gaugeRadius = r * 0.96;
+              const startAngle = -Math.PI / 2;
+              const endAngle = startAngle + Math.PI * 2 * c.fractionGauge;
+
+              // Glowing pie wedge fill
+              ctx.beginPath();
+              ctx.moveTo(drawX, drawY);
+              ctx.arc(drawX, drawY, gaugeRadius, startAngle, endAngle);
+              ctx.closePath();
+              ctx.fillStyle = 'hsla(' + coreHue + ', 95%, 65%, 0.16)';
+              ctx.fill();
+
+              // Glowing outer arc stroke
+              ctx.beginPath();
+              ctx.arc(drawX, drawY, gaugeRadius, startAngle, endAngle);
+              ctx.lineWidth = 3.2;
+              ctx.strokeStyle = 'hsla(' + coreHue + ', 95%, 78%, 0.85)';
+              ctx.stroke();
+              ctx.restore();
+            }
+
+            // Inner Counter-Rotating Ring
+            drawPolygon(ctx, drawX, drawY, r * 0.76, c.sides, -c.rotation * 0.8);
+            ctx.lineWidth = 1.2;
+            ctx.strokeStyle = 'hsla(' + coreHue + ', 90%, 75%, 0.42)';
+            ctx.stroke();
+
+            // Vertex Nodes
+            ctx.fillStyle = 'hsla(' + coreHue + ', 100%, 82%, 0.9)';
+            for (let v = 0; v < c.sides; v++) {
+              const theta = c.rotation + (v * Math.PI * 2) / c.sides;
+              const vx = drawX + Math.cos(theta) * r;
+              const vy = drawY + Math.sin(theta) * r;
+              ctx.beginPath();
+              ctx.arc(vx, vy, 2.4, 0, Math.PI * 2);
+              ctx.fill();
+            }
+
+            // Typographic Value Label (Vertical Stacked Fraction or Number)
+            drawCoreValueLabel(ctx, c, drawX, drawY, r);
+
+            ctx.restore();
+          }
+
+          // Render Pooled Particles & Shockwaves
+          for (let i = 0; i < MAX_PARTICLES; i++) {
+            const p = particlePool[i];
+            if (!p.active) continue;
+            if (p.isShockwave) {
+              ctx.save();
+              ctx.strokeStyle = 'hsla(' + p.hue + ', 95%, 68%, ' + p.alpha.toFixed(2) + ')';
+              ctx.lineWidth = 3.5;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+              ctx.stroke();
+              ctx.restore();
+            } else {
+              ctx.fillStyle = 'hsla(' + p.hue + ', 95%, 68%, ' + p.alpha.toFixed(2) + ')';
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+
+          // Render Floating Text Popups
+          for (let i = 0; i < MAX_FLOATING_TEXTS; i++) {
+            const ft = floatingTexts[i];
+            if (!ft.active) continue;
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, ft.alpha);
+            ctx.translate(ft.x, ft.y);
+            ctx.scale(ft.scale, ft.scale);
+
+            ctx.font = "800 20px 'JetBrains Mono', monospace";
+            ctx.textAlign = 'center';
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = 'rgba(6, 8, 15, 0.92)';
+            ctx.strokeText(ft.text, 0, 0);
+            ctx.fillStyle = ft.color;
+            ctx.fillText(ft.text, 0, 0);
+
+            if (ft.subtext) {
+              ctx.font = "700 12px 'Outfit', sans-serif";
+              ctx.strokeText(ft.subtext, 0, 18);
+              ctx.fillStyle = '#f8fafc';
+              ctx.fillText(ft.subtext, 0, 18);
+            }
+            ctx.restore();
+          }
+
+          // Subtle High-Combo Calm Border Tint (No Shake)
+          if (isHighCombo) {
+            ctx.strokeStyle = 'rgba(232, 121, 249, 0.35)';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(2, 2, viewportW - 4, viewportH - 4);
+          }
+
+          // Red Mistake Glitch Overlay
+          if (game.glitchTimer > 0) {
+            const gAlpha = Math.min(0.24, game.glitchTimer);
+            ctx.fillStyle = 'rgba(244, 63, 94, ' + gAlpha.toFixed(3) + ')';
+            ctx.fillRect(0, 0, viewportW, viewportH);
+          }
+
+          // Critical Overload Emergency Dark-Red Vignette Border (8+ Minutes)
+          if (game.runDuration >= 480) {
+            const pulse = 0.5 + 0.5 * Math.sin(game.timeElapsed * 7);
+            const vGrad = ctx.createRadialGradient(
+              viewportW * 0.5,
+              viewportH * 0.5,
+              Math.min(viewportW, viewportH) * 0.38,
+              viewportW * 0.5,
+              viewportH * 0.5,
+              Math.max(viewportW, viewportH) * 0.72
+            );
+            vGrad.addColorStop(0, 'rgba(159, 18, 57, 0)');
+            vGrad.addColorStop(1, 'rgba(225, 29, 72, ' + (0.22 + pulse * 0.18).toFixed(3) + ')');
+            ctx.fillStyle = vGrad;
+            ctx.fillRect(0, 0, viewportW, viewportH);
+
+            ctx.strokeStyle = 'rgba(244, 63, 94, ' + (0.5 + pulse * 0.45).toFixed(3) + ')';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(2, 2, viewportW - 4, viewportH - 4);
+          }
+
+          ctx.restore();
+        }
+
+        // Main Animation Loop
+        let lastFrameTime = performance.now();
+        let lastHeadlessRender = 0;
+
+        function frameLoop(now) {
+          requestAnimationFrame(frameLoop);
+
+          if (IS_HEADLESS && now - lastHeadlessRender < 48) {
+            return;
+          }
+          lastHeadlessRender = now;
+
+          const rawDt = (now - lastFrameTime) / 1000;
+          lastFrameTime = now;
+          const dt = Math.min(Math.max(rawDt, 0.001), 0.05);
+          game.timeElapsed += dt;
+
+          if (game.shakeTrauma > 0) {
+            game.shakeTrauma = Math.max(0, game.shakeTrauma - dt * 2.2);
+          }
+          if (game.glitchTimer > 0) {
+            game.glitchTimer = Math.max(0, game.glitchTimer - dt);
+          }
+          if (game.radarPulseTimer > 0) {
+            game.radarPulseTimer = Math.max(0, game.radarPulseTimer - dt);
+          }
+
+          let simDt = dt;
+          if (game.hitstopTimer > 0) {
+            game.hitstopTimer = Math.max(0, game.hitstopTimer - dt);
+            simDt = 0;
+          }
+
+          if (game.state === 'playing') {
+            if (game.waveTransitionTimer > 0) {
+              game.waveTransitionTimer -= dt;
+              if (game.waveTransitionTimer <= 0) {
+                spawnWave(game.wave + 1);
+              }
+            } else {
+              game.runDuration += dt;
+              const decayMultiplier = getTimerDecayMultiplier(game.runDuration);
+              game.timeLeft = Math.max(0, game.timeLeft - dt * decayMultiplier);
+
+              // Shrinking time bank ceiling check & overflow
+              const maxBank = getMaxBankableTime(game.runDuration);
+              if (game.timeLeft > maxBank) {
+                const surplus = game.timeLeft - maxBank;
+                game.timeLeft = maxBank;
+                game.score += Math.round(surplus * 250);
+              }
+
+              if (game.feverTimeLeft > 0) {
+                game.feverTimeLeft = Math.max(0, game.feverTimeLeft - dt);
+              }
+              sound.updateDrone(game.runDuration, game.runDuration >= 480);
+              syncHud();
+
+              if (game.timeLeft <= 0) {
+                triggerGameOver();
+              }
+            }
+            updatePhysicsAndParticles(dt, simDt);
+          } else if (game.state === 'title' || game.state === 'perk') {
+            updatePhysicsAndParticles(dt, dt * 0.55);
+          }
+
+          renderArena();
+        }
+
+        // Expose inspection & testing methods
+        window.__QUANTUM_GAME__ = {
+          getState: () => ({
+            state: game.state,
+            wave: game.wave,
+            waveType: getWaveType(game.wave),
+            score: game.score,
+            combo: game.combo,
+            maxCombo: game.maxCombo,
+            timeLeft: game.timeLeft,
+            runDuration: game.runDuration,
+            decayMultiplier: getTimerDecayMultiplier(game.runDuration),
+            maxBank: getMaxBankableTime(game.runDuration),
+            shakeTrauma: game.shakeTrauma,
+            hudBottom: getHudBottom(),
+            arenaBounds: getArenaBounds(),
+            touchHitboxExpansion: TOUCH_HITBOX_EXPANSION,
+            cores: game.cores.map((c) => ({
+              id: c.id,
+              value: c.value,
+              label: c.label,
+              parsedFraction: parseFractionLabel(c.label),
+              fractionGauge: c.fractionGauge,
+              radius: c.radius,
+              hitRadius: c.radius + TOUCH_HITBOX_EXPANSION,
+              x: c.x,
+              y: c.y,
+              popped: c.popped,
+              freezeTimer: c.freezeTimer,
+            })),
+          }),
+          setRunDuration: (seconds) => {
+            game.runDuration = seconds;
+            syncHud();
+          },
+          getRunDuration: () => game.runDuration,
+          popLowestCore: () => {
+            const lowest = getLowestUnpoppedCore();
+            if (lowest) handleCoreSelection(lowest);
+            return lowest ? lowest.value : null;
+          },
+          clickHighestCoreForMistake: () => {
+            const unpopped = game.cores
+              .filter((c) => !c.popped)
+              .sort((a, b) => b.value - a.value);
+            if (unpopped.length > 1) {
+              handleCoreSelection(unpopped[0]);
+              return unpopped[0].value;
+            }
+            return null;
+          },
+          setWave: (w) => {
+            spawnWave(w);
+          },
+          forceGameOver: () => {
+            triggerGameOver();
+          },
+        };
+        window.__TEST_HOOKS__ = window.__QUANTUM_GAME__;
+
+        // Initial Boot
+        titleBestScore.textContent = loadHighScore().toLocaleString();
+        titleBestWave.textContent = String(loadBestWave());
+        titleBestSurvival.textContent = formatSurvivalTime(loadBestSurvival());
+        spawnWave(1);
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('autostart') === '1') {
+          startGame();
+        } else {
+          setScreenState('title');
+        }
+
+        requestAnimationFrame(frameLoop);
+      })();
+    </script>
+  </body>
+</html>

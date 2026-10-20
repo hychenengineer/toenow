@@ -8,6 +8,8 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
+  <!-- Supabase JS Client (v2 CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg-primary: #0b0f19;
@@ -1259,6 +1261,179 @@
       }
     }
 
+    /* ==========================================
+       AUTH MODAL STYLES
+       ========================================== */
+    .auth-dialog {
+      background: rgba(15, 23, 42, 0.94);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 440px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 35px rgba(34, 211, 238, 0.18);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      transform: scale(0.96) translateY(12px);
+      transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), opacity 220ms ease;
+    }
+
+    .modal-overlay.open .auth-dialog {
+      transform: scale(1) translateY(0);
+    }
+
+    .auth-header {
+      padding: 1.5rem 1.6rem 1rem;
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .auth-title-group h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      background: linear-gradient(90deg, #ffffff, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.25rem;
+    }
+
+    .auth-title-group p {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    .auth-body {
+      padding: 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .btn-oauth-google {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      background: #ffffff;
+      color: #1e293b;
+      font-size: 0.88rem;
+      font-weight: 700;
+      border: 1px solid #cbd5e1;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-oauth-google:hover {
+      background: #f8fafc;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(255, 255, 255, 0.15);
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border-glass);
+    }
+
+    .auth-divider span {
+      padding: 0 0.8rem;
+    }
+
+    .auth-email-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .auth-input-wrap label {
+      display: block;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 0.35rem;
+    }
+
+    .auth-input {
+      width: 100%;
+      background: rgba(20, 29, 47, 0.8);
+      border: 1px solid var(--border-glass);
+      border-radius: 10px;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.86rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: var(--transition-fast);
+    }
+
+    .auth-input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 12px rgba(34, 211, 238, 0.25);
+    }
+
+    .auth-status-msg {
+      font-size: 0.78rem;
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      display: none;
+    }
+
+    .auth-status-msg.error {
+      display: block;
+      background: rgba(244, 63, 94, 0.12);
+      border: 1px solid rgba(244, 63, 94, 0.35);
+      color: #fda4af;
+    }
+
+    .auth-status-msg.success {
+      display: block;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #6ee7b7;
+    }
+
+    .user-avatar-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid var(--accent-cyan);
+    }
+
+    .btn-signout {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.35);
+      color: #fda4af;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      margin-top: 0.5rem;
+    }
+
+    .btn-signout:hover {
+      background: rgba(244, 63, 94, 0.25);
+    }
+
     @media (max-width: 768px) {
       .header-inner {
         padding: 0.8rem 1rem;
@@ -1408,13 +1583,16 @@
       <div class="account-tier-card">
         <div class="tier-status-row">
           <strong>Account Telemetry Tier</strong>
-          <span class="tier-badge">Cloud Sync Disabled (Guest Mode)</span>
+          <span class="tier-badge" id="accountTierBadge">Cloud Sync Disabled (Guest Mode)</span>
         </div>
-        <p class="tier-desc">
+        <p class="tier-desc" id="accountTierDesc">
           Your cognitive vectors and personal records are currently persisted in local browser storage (<code>toenow.com</code> sandbox).
         </p>
         <button type="button" class="btn-primary-gradient" id="signInRegisterBtn">
           Sign In / Register
+        </button>
+        <button type="button" class="btn-signout" id="signOutBtn" style="display: none;">
+          Sign Out of Toenow
         </button>
       </div>
     </div>
@@ -1463,9 +1641,71 @@
   <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
   <!-- ==========================================
+       AUTHENTICATION MODAL
+       ========================================== -->
+  <div class="modal-overlay" id="authModal" aria-hidden="true" role="dialog" aria-label="Sign In or Register">
+    <div class="auth-dialog">
+      <div class="auth-header">
+        <div class="auth-title-group">
+          <h2>Access Toenow Matrix</h2>
+          <p>Sync your cognitive radar stats and claim high score rankings</p>
+        </div>
+        <button type="button" class="icon-close-btn" id="closeAuthBtn" aria-label="Close Auth Modal">✕</button>
+      </div>
+
+      <div class="auth-body">
+        <!-- 1-Click Google OAuth -->
+        <button type="button" class="btn-oauth-google" id="googleLoginBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.35 24 12 24z"/>
+            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+          </svg>
+          Continue with Google
+        </button>
+
+        <div class="auth-divider">
+          <span>or sign in with email</span>
+        </div>
+
+        <!-- Pure Email OTP / Magic Link Form -->
+        <form class="auth-email-form" id="emailAuthForm">
+          <div class="auth-input-wrap">
+            <label for="authEmailInput">Your Email Address</label>
+            <input type="email" id="authEmailInput" class="auth-input" placeholder="e.g. operator@toenow.com" required />
+          </div>
+
+          <div id="authStatusMsg" class="auth-status-msg"></div>
+
+          <button type="submit" class="btn-primary-gradient" id="emailSubmitBtn" style="padding: 0.75rem 1rem;">
+            Send Magic Login Link
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
        APPLICATION LOGIC
        ========================================== -->
   <script>
+    /* ============================================================================
+       0. SUPABASE CLIENT & CLOUD AUTH SUBSYSTEM
+       ============================================================================ */
+    const SUPABASE_CONFIG = {
+      url: 'https://kmlmikysqyflvwnkfxdh.supabase.co',
+      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImttbG1pa3lzcXlmbHZ3bmtmeGRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MjA1MDQsImV4cCI6MjEwODA5NjUwNH0.m5l0JDhc7o8fur0FNVF1DXs89VtnVD0NRG4tLTfHtp4'
+    };
+
+    let supabaseClient = null;
+    let currentAuthUser = null;
+    let currentCloudProfile = null;
+
+    if (window.supabase) {
+      supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+    }
+
     /* ============================================================================
        1. UNIVERSAL GAME MOUNTING & RESOLUTION
        ============================================================================ */
@@ -2228,9 +2468,9 @@
     }
 
     /* ============================================================================
-       7. CROSS-ORIGIN RUNTIME CONTRACT (postMessage Listener)
+       7. CROSS-ORIGIN RUNTIME CONTRACT (postMessage Listener & Cloud Score Sync)
        ============================================================================ */
-    window.addEventListener('message', (event) => {
+    window.addEventListener('message', async (event) => {
       const payload = event.data;
       if (!payload || typeof payload !== 'object') return;
 
@@ -2251,6 +2491,36 @@
         showToast(
           `Telemetry Synced: ${numericScore.toLocaleString()} pts (${isNewBest ? 'New Personal Best!' : `Best: ${bestScore.toLocaleString()}`}) — ${axisKey.toUpperCase()} Index calibrated to ${updatedProfile[axisKey]}.`
         );
+
+        // If authenticated with Supabase, sync score to cloud
+        if (supabaseClient && currentAuthUser) {
+          try {
+            // Create a session nonce
+            const { data: sessionData, error: sessionErr } = await supabaseClient
+              .from('game_sessions')
+              .insert({
+                user_id: currentAuthUser.id,
+                game_id: gameId
+              })
+              .select()
+              .single();
+
+            if (!sessionErr && sessionData) {
+              const { data: scoreData, error: scoreErr } = await supabaseClient.rpc('submit_verified_score', {
+                p_session_id: sessionData.id,
+                p_game_id: gameId,
+                p_score: numericScore,
+                p_duration_ms: Math.max(5000, payload.duration || 15000)
+              });
+
+              if (!scoreErr) {
+                console.log('[Toenow Matrix] Verified score persisted to cloud:', scoreData);
+              }
+            }
+          } catch (cloudErr) {
+            console.warn('[Toenow Matrix] Cloud sync notice:', cloudErr);
+          }
+        }
       }
     });
 
@@ -2315,9 +2585,94 @@
       document.getElementById('closeProfileBtn').addEventListener('click', closeProfileDrawer);
       drawerBackdrop.addEventListener('click', closeProfileDrawer);
 
-      // Account Tier Sign In / Register Toast
+      // Account Tier Sign In / Register / Sign Out Bindings
+      const authModal = document.getElementById('authModal');
+      const closeAuthBtn = document.getElementById('closeAuthBtn');
+      const googleLoginBtn = document.getElementById('googleLoginBtn');
+      const emailAuthForm = document.getElementById('emailAuthForm');
+      const authStatusMsg = document.getElementById('authStatusMsg');
+      const signOutBtn = document.getElementById('signOutBtn');
+
+      const openAuthModal = () => {
+        authStatusMsg.className = 'auth-status-msg';
+        authStatusMsg.style.display = 'none';
+        authModal.classList.add('open');
+        authModal.setAttribute('aria-hidden', 'false');
+      };
+
+      const closeAuthModal = () => {
+        authModal.classList.remove('open');
+        authModal.setAttribute('aria-hidden', 'true');
+      };
+
       document.getElementById('signInRegisterBtn').addEventListener('click', () => {
-        showToast('Cloud synchronization and persistent global ranks on Toenow coming in the next release.');
+        if (profileDrawer.classList.contains('open')) closeProfileDrawer();
+        openAuthModal();
+      });
+
+      closeAuthBtn.addEventListener('click', closeAuthModal);
+      authModal.addEventListener('click', (e) => {
+        if (e.target === authModal) closeAuthModal();
+      });
+
+      // 1-Click Google Sign In
+      googleLoginBtn.addEventListener('click', async () => {
+        if (!supabaseClient) {
+          showToast('Authentication engine unavailable.');
+          return;
+        }
+        try {
+          const { error } = await supabaseClient.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+              redirectTo: window.location.origin
+            }
+          });
+          if (error) throw error;
+        } catch (err) {
+          authStatusMsg.className = 'auth-status-msg error';
+          authStatusMsg.textContent = err.message || 'Failed to initialize Google login.';
+        }
+      });
+
+      // Pure Email Magic Link / OTP Sign In
+      emailAuthForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('authEmailInput').value.trim();
+        if (!email || !supabaseClient) return;
+
+        const submitBtn = document.getElementById('emailSubmitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Transmitting Link...';
+        authStatusMsg.style.display = 'none';
+
+        try {
+          const { error } = await supabaseClient.auth.signInWithOtp({
+            email: email,
+            options: {
+              emailRedirectTo: window.location.origin
+            }
+          });
+          if (error) throw error;
+
+          authStatusMsg.className = 'auth-status-msg success';
+          authStatusMsg.textContent = `Magic login link dispatched to ${email}! Check your inbox.`;
+          document.getElementById('authEmailInput').value = '';
+        } catch (err) {
+          authStatusMsg.className = 'auth-status-msg error';
+          authStatusMsg.textContent = err.message || 'Failed to dispatch magic link.';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Magic Login Link';
+        }
+      });
+
+      // Sign Out
+      signOutBtn.addEventListener('click', async () => {
+        if (!supabaseClient) return;
+        await supabaseClient.auth.signOut();
+        showToast('Signed out of Toenow Matrix. Operating in Guest mode.');
+        if (profileDrawer.classList.contains('open')) closeProfileDrawer();
       });
 
       // Global Leaderboard Modal Open/Close
@@ -2376,6 +2731,109 @@
       });
     }
 
+    /* ============================================================================
+       0.1 SUPABASE AUTH STATE & PROFILE SYNCHRONIZATION
+       ============================================================================ */
+    async function initAuthListener() {
+      if (!supabaseClient) return;
+
+      const updateUIWithUser = (user, profile) => {
+        currentAuthUser = user;
+        currentCloudProfile = profile;
+
+        const openProfileBtn = document.getElementById('openProfileBtn');
+        const accountTierBadge = document.getElementById('accountTierBadge');
+        const accountTierDesc = document.getElementById('accountTierDesc');
+        const signInRegisterBtn = document.getElementById('signInRegisterBtn');
+        const signOutBtn = document.getElementById('signOutBtn');
+
+        if (user) {
+          const displayName = profile?.display_name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Operator';
+          const avatarUrl = profile?.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture;
+
+          if (openProfileBtn) {
+            openProfileBtn.innerHTML = `
+              ${avatarUrl ? `<img src="${avatarUrl}" class="user-avatar-img" alt="${displayName}" />` : `<div class="guest-avatar">${displayName.slice(0, 2).toUpperCase()}</div>`}
+              <div class="profile-meta">
+                <span class="profile-name">${displayName}</span>
+                <span class="profile-status" style="color: #6ee7b7;"><span class="status-dot" style="background:#10b981;box-shadow:0 0 8px #10b981;"></span> Cloud Synced</span>
+              </div>
+            `;
+          }
+
+          if (accountTierBadge) {
+            accountTierBadge.textContent = 'Active Operator (Cloud Verified)';
+            accountTierBadge.style.color = '#38bdf8';
+            accountTierBadge.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+          }
+
+          if (accountTierDesc) {
+            accountTierDesc.innerHTML = `Connected as <strong>${user.email}</strong>. High scores and cognitive hexagon indices are synchronized to Supabase Cloud.`;
+          }
+
+          if (signInRegisterBtn) signInRegisterBtn.style.display = 'none';
+          if (signOutBtn) signOutBtn.style.display = 'block';
+        } else {
+          if (openProfileBtn) {
+            openProfileBtn.innerHTML = `
+              <div class="guest-avatar">GO</div>
+              <div class="profile-meta">
+                <span class="profile-name">Guest Operator</span>
+                <span class="profile-status"><span class="status-dot"></span> Matrix Active</span>
+              </div>
+            `;
+          }
+
+          if (accountTierBadge) {
+            accountTierBadge.textContent = 'Cloud Sync Disabled (Guest Mode)';
+            accountTierBadge.style.color = '';
+            accountTierBadge.style.borderColor = '';
+          }
+
+          if (accountTierDesc) {
+            accountTierDesc.innerHTML = `Your cognitive vectors and personal records are currently persisted in local browser storage (<code>toenow.com</code> sandbox).`;
+          }
+
+          if (signInRegisterBtn) signInRegisterBtn.style.display = 'block';
+          if (signOutBtn) signOutBtn.style.display = 'none';
+        }
+      };
+
+      const fetchCloudProfile = async (userId) => {
+        try {
+          const { data, error } = await supabaseClient
+            .from('user_profiles')
+            .select('*')
+            .eq('id', userId)
+            .single();
+          if (!error && data) {
+            return data;
+          }
+        } catch (_) {}
+        return null;
+      };
+
+      // Check current session
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session?.user) {
+        const profile = await fetchCloudProfile(session.user.id);
+        updateUIWithUser(session.user, profile);
+      } else {
+        updateUIWithUser(null, null);
+      }
+
+      // Realtime Auth State Listener
+      supabaseClient.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN' && session?.user) {
+          const profile = await fetchCloudProfile(session.user.id);
+          updateUIWithUser(session.user, profile);
+          showToast(`Welcome to Toenow Matrix, ${session.user.email}!`);
+        } else if (event === 'SIGNED_OUT') {
+          updateUIWithUser(null, null);
+        }
+      });
+    }
+
     // Boot Toenow Hub
     (function bootstrapToenow() {
       const profile = getUserProfile();
@@ -2385,6 +2843,7 @@
       populateLeaderboardDropdown();
       initHubInteractions();
       discoverAdditionalGames();
+      initAuthListener();
     })();
   </script>
 </body>

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TOUNOW — Cognitive Training Sandbox | tounow.com</title>
-  <meta name="description" content="Tounow (tounow.com) — High-performance modular Brain Training & Puzzle Game Hub." />
+  <title>TOENOW — Cognitive Training Sandbox | toenow.com</title>
+  <meta name="description" content="Toenow (toenow.com) — High-performance modular Brain Training & Puzzle Game Hub." />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
@@ -1280,7 +1280,7 @@
        ========================================== -->
   <header class="site-header">
     <div class="header-inner">
-      <div class="brand-group" id="brandHomeTrigger" title="Tounow Cognitive Hub">
+      <div class="brand-group" id="brandHomeTrigger" title="Toenow Cognitive Hub">
         <div class="brand-mark" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 21 7 21 17 12 22 3 17 3 7 12 2"></polygon>
@@ -1292,8 +1292,8 @@
         </div>
         <div class="brand-text">
           <div class="brand-title-row">
-            <span class="brand-title">TOUNOW</span>
-            <span class="brand-domain">tounow.com</span>
+            <span class="brand-title">TOENOW</span>
+            <span class="brand-domain">toenow.com</span>
           </div>
           <span class="brand-subtitle">Cognitive Training Sandbox</span>
         </div>
@@ -1315,7 +1315,7 @@
           <span>Leaderboard</span>
         </button>
 
-        <button type="button" class="profile-trigger" id="openProfileBtn" aria-label="Open Tounow Brain Matrix Profile">
+        <button type="button" class="profile-trigger" id="openProfileBtn" aria-label="Open Toenow Brain Matrix Profile">
           <div class="guest-avatar">GO</div>
           <div class="profile-meta">
             <span class="profile-name">Guest Operator</span>
@@ -1333,7 +1333,7 @@
     <section class="hub-intro">
       <div class="hub-intro-left">
         <h1>Neural Simulation Modules</h1>
-        <p>Select a cognitive discipline below to launch an isolated telemetry sandbox. High scores dynamically recalibrate your Tounow Brain Matrix.</p>
+        <p>Select a cognitive discipline below to launch an isolated telemetry sandbox. High scores dynamically recalibrate your Toenow Brain Matrix.</p>
       </div>
       <div class="hub-stats-strip">
         <div class="stat-pill">
@@ -1380,7 +1380,7 @@
       </div>
     </div>
     <div class="theater-stage" id="theaterStage">
-      <iframe id="gameViewer" src="about:blank" title="Tounow Game Sandbox" allow="fullscreen; autoplay"></iframe>
+      <iframe id="gameViewer" src="about:blank" title="Toenow Game Sandbox" allow="fullscreen; autoplay"></iframe>
     </div>
   </section>
 
@@ -1388,10 +1388,10 @@
        USER PROFILE DRAWER & BRAIN HEXAGON RADAR
        ========================================== -->
   <div class="drawer-backdrop" id="drawerBackdrop"></div>
-  <aside class="profile-drawer" id="profileDrawer" aria-hidden="true" aria-label="Tounow Brain Matrix Drawer">
+  <aside class="profile-drawer" id="profileDrawer" aria-hidden="true" aria-label="Toenow Brain Matrix Drawer">
     <div class="drawer-header">
       <div class="drawer-title-group">
-        <h2>Tounow Brain Matrix</h2>
+        <h2>Toenow Brain Matrix</h2>
         <p>Operator Telemetry &amp; 6-Axis Cognitive Hexagon</p>
       </div>
       <button type="button" class="icon-close-btn" id="closeProfileBtn" aria-label="Close Profile Drawer">✕</button>
@@ -1411,7 +1411,7 @@
           <span class="tier-badge">Cloud Sync Disabled (Guest Mode)</span>
         </div>
         <p class="tier-desc">
-          Your cognitive vectors and personal records are currently persisted in local browser storage (<code>tounow.com</code> sandbox).
+          Your cognitive vectors and personal records are currently persisted in local browser storage (<code>toenow.com</code> sandbox).
         </p>
         <button type="button" class="btn-primary-gradient" id="signInRegisterBtn">
           Sign In / Register
@@ -1423,14 +1423,14 @@
   <!-- ==========================================
        GLOBAL LEADERBOARDS MODAL
        ========================================== -->
-  <div class="modal-overlay" id="leaderboardModal" aria-hidden="true" role="dialog" aria-label="Tounow Global Arena">
+  <div class="modal-overlay" id="leaderboardModal" aria-hidden="true" role="dialog" aria-label="Toenow Global Arena">
     <div class="leaderboard-dialog">
       <div class="lb-header">
         <div class="lb-title-wrap">
           <span class="lb-trophy">🏆</span>
           <div>
-            <h2>Tounow Global Arena</h2>
-            <p>Verified Top 10 Operator Rankings across tounow.com</p>
+            <h2>Toenow Global Arena</h2>
+            <p>Verified Top 10 Operator Rankings across toenow.com</p>
           </div>
         </div>
         <button type="button" class="icon-close-btn" id="closeLeaderboardBtn" aria-label="Close Leaderboard">✕</button>
@@ -1555,8 +1555,8 @@
     };
 
     const STORAGE_KEYS = {
-      USER_PROFILE: 'tounow_user_profile',
-      GAME_SCORES: 'tounow_game_scores'
+      USER_PROFILE: 'toenow_user_profile',
+      GAME_SCORES: 'toenow_game_scores'
     };
 
     const COGNITIVE_AXES = [
@@ -1720,7 +1720,7 @@
 
     /**
      * Computes weighted progression from a completed game session and recalibrates
-     * the 6-axis Tounow Brain Matrix.
+     * the 6-axis Toenow Brain Matrix.
      */
     function recalibrateCognitiveProfile(gameId, category, rawScore) {
       const profile = getUserProfile();
@@ -2082,9 +2082,9 @@
     }
 
     /* ============================================================================
-       6. GLOBAL LEADERBOARDS MODAL (TOUNOW GLOBAL ARENA)
+       6. GLOBAL LEADERBOARDS MODAL (TOENOW Global Arena)
        ============================================================================ */
-    /* --- TODO: Connect Supabase / Firebase leaderboard endpoint for tounow.com --- */
+    /* --- TODO: Connect Supabase / Firebase leaderboard endpoint for toenow.com --- */
     const BASELINE_LEADERBOARD_DATA = {
       'quantum-shell': [
         { player: 'OrbitalTracker', score: 34200, date: '2026-10-18' },
@@ -2317,7 +2317,7 @@
 
       // Account Tier Sign In / Register Toast
       document.getElementById('signInRegisterBtn').addEventListener('click', () => {
-        showToast('Cloud synchronization and persistent global ranks on Tounow coming in the next release.');
+        showToast('Cloud synchronization and persistent global ranks on Toenow coming in the next release.');
       });
 
       // Global Leaderboard Modal Open/Close
@@ -2376,8 +2376,8 @@
       });
     }
 
-    // Boot Tounow Hub
-    (function bootstrapTounow() {
+    // Boot Toenow Hub
+    (function bootstrapToenow() {
       const profile = getUserProfile();
       updateCompositeStat(profile);
       renderBentoGrid();

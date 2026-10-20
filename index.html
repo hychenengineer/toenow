@@ -2425,28 +2425,61 @@
       renderLeaderboardTable(select.value || GAMES_CONFIG[0]?.id);
     }
 
-    function renderLeaderboardTable(gameId) {
+    async function renderLeaderboardTable(gameId) {
       const tbody = document.getElementById('leaderboardTableBody');
       if (!tbody) return;
 
-      const baseRows = (BASELINE_LEADERBOARD_DATA[gameId] || BASELINE_LEADERBOARD_DATA['math-balloon']).map(r => ({ ...r, isUser: false }));
-      const userScores = getGameScores();
-      const userEntry = userScores[gameId];
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+            Querying Toenow Global Matrix...
+          </td>
+        </tr>
+      `;
 
-      if (userEntry && userEntry.bestScore > 0) {
-        baseRows.push({
-          player: 'Guest Operator',
-          score: userEntry.bestScore,
-          date: userEntry.updatedAt || new Date().toISOString().slice(0, 10),
-          isUser: true
-        });
+      let cloudRows = [];
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('leaderboard_view')
+            .select('player_name, score, created_at, user_id')
+            .eq('game_id', gameId)
+            .order('score', { ascending: false })
+            .limit(10);
+
+          if (!error && data && data.length > 0) {
+            cloudRows = data.map(d => ({
+              player: d.player_name || 'Operator',
+              score: d.score,
+              date: (d.created_at || '').slice(0, 10),
+              isUser: currentAuthUser && d.user_id === currentAuthUser.id
+            }));
+          }
+        } catch (_) {}
       }
 
-      const top10 = baseRows
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 10);
+      // If cloud has scores, display verified cloud scores; otherwise merge with baseline mock
+      let rowsToDisplay = [];
+      if (cloudRows.length > 0) {
+        rowsToDisplay = cloudRows;
+      } else {
+        const baseRows = (BASELINE_LEADERBOARD_DATA[gameId] || BASELINE_LEADERBOARD_DATA['math-balloon']).map(r => ({ ...r, isUser: false }));
+        const userScores = getGameScores();
+        const userEntry = userScores[gameId];
 
-      tbody.innerHTML = top10.map((row, idx) => {
+        if (userEntry && userEntry.bestScore > 0) {
+          const playerName = currentCloudProfile?.display_name || currentAuthUser?.user_metadata?.full_name || 'Guest Operator';
+          baseRows.push({
+            player: playerName,
+            score: userEntry.bestScore,
+            date: userEntry.updatedAt || new Date().toISOString().slice(0, 10),
+            isUser: true
+          });
+        }
+        rowsToDisplay = baseRows.sort((a, b) => b.score - a.score).slice(0, 10);
+      }
+
+      tbody.innerHTML = rowsToDisplay.map((row, idx) => {
         const rank = idx + 1;
         const badgeClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
         const medalPrefix = rank === 1 ? '🥇 ' : rank === 2 ? '🥈 ' : rank === 3 ? '🥉 ' : '#';

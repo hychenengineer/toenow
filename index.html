@@ -1891,32 +1891,162 @@
     }
 
     /* ============================================================================
-       2. STORAGE & COGNITIVE RADAR PROFILE MANAGEMENT
+       2. COGNITIVE BENCHMARKS & DYNAMIC NORM MATRIX (Cold Start & Rolling Percentile)
        ============================================================================ */
+    /**
+     * Cache for dynamic cloud benchmarks fetched from Supabase / Leaderboards
+     */
+    let DYNAMIC_LEADERBOARD_CACHE = {};
+
+    /**
+     * Resolves the Elite (Leaderboard #1) and Baseline (Average / Normal player)
+     * completely dynamically without hardcoded constants.
+     *
+     * Rules:
+     * 1. Elite (95 Index): The highest score in the active Leaderboard (Cloud or local pilot user).
+     * 2. Baseline (60 Index):
+     *    - If there are enough players (>= MIN_PLAYERS_FOR_DYNAMIC_AVG), calculate true statistical average.
+     *    - During cold-start, dynamically anchor baseline at 38% of the #1 score.
+     */
+    function getDynamicGameBenchmark(gameId) {
+      const MIN_PLAYERS_FOR_DYNAMIC_AVG = 5;
+
+      // 1. Check dynamic cloud leaderboard cache
+      let topScore = 0;
+      let scoresList = [];
+
+      if (DYNAMIC_LEADERBOARD_CACHE[gameId] && DYNAMIC_LEADERBOARD_CACHE[gameId].length > 0) {
+        scoresList = DYNAMIC_LEADERBOARD_CACHE[gameId].map(r => Number(r.score) || 0).filter(s => s > 0);
+      }
+
+      // 2. Also check player's local personal best record
+      const localScores = getGameScores();
+      const localBest = Number(localScores[gameId]?.bestScore) || 0;
+      if (localBest > 0) {
+        scoresList.push(localBest);
+      }
+
+      // 3. Fallback to baseline leaderboard data if no dynamic entries exist yet
+      if (scoresList.length === 0 && BASELINE_LEADERBOARD_DATA[gameId]) {
+        scoresList = BASELINE_LEADERBOARD_DATA[gameId].map(r => r.score);
+      }
+
+      // Sort descending
+      scoresList.sort((a, b) => b - a);
+      topScore = scoresList[0] || 15000;
+
+      let baselineScore = 0;
+      if (scoresList.length >= MIN_PLAYERS_FOR_DYNAMIC_AVG) {
+        // Dynamic Average of real players (determines the 60 Index normal threshold)
+        const sum = scoresList.reduce((acc, s) => acc + s, 0);
+        baselineScore = Math.round(sum / scoresList.length);
+      } else {
+        // Cold start gap: normal person threshold is dynamically set to ~38% of top leaderboard score
+        baselineScore = Math.round(topScore * 0.38);
+      }
+
+      // Ensure a reasonable non-zero span
+      baselineScore = Math.max(100, Math.min(baselineScore, Math.round(topScore * 0.85)));
+
+      return {
+        elite: topScore,
+        baseline: baselineScore,
+        sampleCount: scoresList.length
+      };
+    }
+
+    /**
+     * Maps an in-game raw score to an objective cognitive performance target (0 - 100)
+     * based entirely on the dynamic gap between the #1 Leaderboard record and player average.
+     */
+    function calculatePerformanceIndex(gameId, rawScore) {
+      const { elite, baseline } = getDynamicGameBenchmark(gameId);
+      const score = Math.max(0, Number(rawScore) || 0);
+
+      if (score === 0) return 0;
+
+      // Below average: 0 -> 60 Index based on distance to baseline
+      if (score <= baseline) {
+        return Math.round((score / baseline) * 60);
+      }
+
+      // Between Average (60) and Leaderboard #1 (95)
+      if (score <= elite) {
+        const gap = elite - baseline;
+        const progress = (score - baseline) / Math.max(1, gap);
+        return Math.round(60 + progress * 35);
+      }
+
+      // Surpassed Current Leaderboard #1 (New World Record): 96 -> 100 Index
+      const bonus = Math.min(5, Math.round(((score - elite) / elite) * 20));
+      return Math.min(100, 95 + bonus);
+    }
+
+    /**
+     * Applies inactivity decay: If a cognitive discipline has not been trained
+     * for > 3 days, it slowly decays 1 point/day down to uncalibrated (0).
+     */
+    function applyCognitiveInactivityDecay(profile) {
+      if (!profile || typeof profile !== 'object') return profile;
+      const lastTrained = profile._lastTrained || {};
+      const now = Date.now();
+      let changed = false;
+
+      COGNITIVE_AXES.forEach(axis => {
+        const val = profile[axis.key];
+        if (typeof val === 'number' && val > 0) {
+          const timestamp = lastTrained[axis.key];
+          if (timestamp) {
+            const daysInactive = Math.floor((now - timestamp) / (1000 * 60 * 60 * 24));
+            if (daysInactive >= 3) {
+              const decayPoints = Math.min(val, daysInactive - 2);
+              if (decayPoints > 0) {
+                profile[axis.key] = Math.max(0, val - decayPoints);
+                changed = true;
+              }
+            }
+          }
+        }
+      });
+
+      return { profile, changed };
+    }
+
     function getUserProfile() {
       try {
         const raw = localStorage.getItem(STORAGE_KEYS.USER_PROFILE);
         if (raw) {
           const parsed = JSON.parse(raw);
-          const profile = {};
+          const profile = { _lastTrained: parsed._lastTrained || {} };
           COGNITIVE_AXES.forEach(axis => {
-            const val = Number(parsed[axis.key]);
-            profile[axis.key] = Number.isFinite(val) ? Math.max(0, Math.min(100, Math.round(val))) : 50;
+            const val = parsed[axis.key];
+            // Uncalibrated dimensions default to 0
+            profile[axis.key] = (typeof val === 'number' && Number.isFinite(val))
+              ? Math.max(0, Math.min(100, Math.round(val)))
+              : 0;
           });
-          return profile;
+
+          // Check for daily decay
+          const { profile: decayedProfile, changed } = applyCognitiveInactivityDecay(profile);
+          if (changed) {
+            localStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(decayedProfile));
+          }
+          return decayedProfile;
         }
       } catch (_) {}
 
-      const defaultProfile = {
-        math: 50,
-        spatial: 50,
-        logic: 50,
-        puzzle: 50,
-        memory: 50,
-        reaction: 50
+      // Fresh operator: all uncalibrated (0)
+      const freshProfile = {
+        math: 0,
+        spatial: 0,
+        logic: 0,
+        puzzle: 0,
+        memory: 0,
+        reaction: 0,
+        _lastTrained: {}
       };
-      localStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(defaultProfile));
-      return defaultProfile;
+      localStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(freshProfile));
+      return freshProfile;
     }
 
     function saveUserProfile(profile) {
@@ -1952,39 +2082,64 @@
     }
 
     function updateCompositeStat(profile) {
-      const values = COGNITIVE_AXES.map(a => profile[a.key] ?? 50);
-      const avg = Math.round(values.reduce((acc, v) => acc + v, 0) / values.length);
+      // Only average active calibrated dimensions (> 0)
+      const activeValues = COGNITIVE_AXES
+        .map(a => profile[a.key] || 0)
+        .filter(v => v > 0);
+
+      const avg = activeValues.length > 0
+        ? Math.round(activeValues.reduce((acc, v) => acc + v, 0) / activeValues.length)
+        : 0;
+
       const el = document.getElementById('statCompositeIndex');
       if (el) el.textContent = avg;
     }
 
     /**
-     * Computes weighted progression from a completed game session and recalibrates
-     * the 6-axis Toenow Brain Matrix.
+     * Recalibrates the 6-axis Toenow Brain Matrix using true 2-way EMA (Rise on High, Fall on Low)
+     * and dynamic cold-start benchmark anchoring.
      */
     function recalibrateCognitiveProfile(gameId, category, rawScore) {
       const profile = getUserProfile();
+      profile._lastTrained = profile._lastTrained || {};
+      const now = Date.now();
+
       const gameConfig = GAMES_CONFIG.find(g => g.id === gameId);
-      const difficultyWeight = gameConfig ? (0.85 + gameConfig.difficulty * 0.12) : 1.0;
-
-      // Normalize score impact (e.g., 0 - 1500+ mapped to a 0-100 performance target)
-      const normalizedPerformance = Math.min(100, Math.max(35, Math.round((rawScore / 10) * difficultyWeight)));
-
       const primaryAxis = ['math', 'spatial', 'logic', 'puzzle', 'memory', 'reaction'].includes(category)
         ? category
         : (gameConfig?.category || 'puzzle');
 
-      // Primary cognitive axis receives 30% EMA step or boost
-      const currentPrimary = profile[primaryAxis] ?? 50;
-      const deltaPrimary = Math.max(2, Math.round((normalizedPerformance - currentPrimary) * 0.32));
-      profile[primaryAxis] = Math.min(100, Math.max(10, currentPrimary + (normalizedPerformance >= currentPrimary ? deltaPrimary : 1)));
+      // 1. Calculate objective performance against pilot benchmark (0-100)
+      const performance = calculatePerformanceIndex(gameId, rawScore);
+      const currentPrimary = profile[primaryAxis] || 0;
 
-      // Coupled secondary axes: Working Memory & Processing Speed co-activate during cognitive drills
-      const memoryBoost = Math.max(1, Math.round(deltaPrimary * 0.45));
-      const reactionBoost = Math.max(1, Math.round(deltaPrimary * 0.4));
+      // 2. Cold-start placement vs Smooth EMA Update
+      if (currentPrimary === 0) {
+        // Placement drill: First time playing this axis initializes directly
+        profile[primaryAxis] = performance;
+      } else {
+        // True EMA: 75% historical rolling average + 25% current performance
+        // High score pulls up; low score penalizes and pulls down
+        const updated = Math.round(currentPrimary * 0.72 + performance * 0.28);
+        profile[primaryAxis] = Math.max(1, Math.min(100, updated));
+      }
+      profile._lastTrained[primaryAxis] = now;
 
-      profile.memory = Math.min(100, (profile.memory ?? 50) + memoryBoost);
-      profile.reaction = Math.min(100, (profile.reaction ?? 50) + reactionBoost);
+      // 3. Associated Secondary Axes (Memory & Reaction) co-adapt based on actual session performance
+      const updateSecondaryAxis = (axisKey, weightRatio) => {
+        const currentVal = profile[axisKey] || 0;
+        const secondaryTarget = Math.round(performance * weightRatio);
+        if (currentVal === 0) {
+          profile[axisKey] = secondaryTarget;
+        } else {
+          // Subtle coupling step (85% previous + 15% session impact)
+          profile[axisKey] = Math.max(1, Math.min(100, Math.round(currentVal * 0.85 + secondaryTarget * 0.15)));
+        }
+        profile._lastTrained[axisKey] = now;
+      };
+
+      updateSecondaryAxis('memory', 0.88);
+      updateSecondaryAxis('reaction', 0.92);
 
       saveUserProfile(profile);
       renderHexagonRadar();
@@ -2251,52 +2406,60 @@
       }
 
       // Draw user's cognitive polygon
-      ctx.beginPath();
+      const activeAxesCount = COGNITIVE_AXES.filter(a => (profile[a.key] || 0) > 0).length;
+
       const dataPoints = COGNITIVE_AXES.map((axis, i) => {
-        const val = Math.max(5, Math.min(100, profile[axis.key] ?? 50));
-        return getVertex(i, val / 100);
+        const val = Math.max(0, Math.min(100, profile[axis.key] || 0));
+        // If uncalibrated (0), collapse vertex to center (radius 0.04 for clean origin mark)
+        const radiusRatio = val > 0 ? (val / 100) : 0.04;
+        return getVertex(i, radiusRatio);
       });
 
-      dataPoints.forEach((pt, i) => {
-        if (i === 0) ctx.moveTo(pt.x, pt.y);
-        else ctx.lineTo(pt.x, pt.y);
-      });
-      ctx.closePath();
+      if (activeAxesCount >= 2) {
+        ctx.beginPath();
+        dataPoints.forEach((pt, i) => {
+          if (i === 0) ctx.moveTo(pt.x, pt.y);
+          else ctx.lineTo(pt.x, pt.y);
+        });
+        ctx.closePath();
 
-      const polyGrad = ctx.createLinearGradient(cx - maxRadius, cy - maxRadius, cx + maxRadius, cy + maxRadius);
-      polyGrad.addColorStop(0, 'rgba(34, 211, 238, 0.42)');
-      polyGrad.addColorStop(1, 'rgba(139, 92, 246, 0.45)');
+        const polyGrad = ctx.createLinearGradient(cx - maxRadius, cy - maxRadius, cx + maxRadius, cy + maxRadius);
+        polyGrad.addColorStop(0, 'rgba(34, 211, 238, 0.42)');
+        polyGrad.addColorStop(1, 'rgba(139, 92, 246, 0.45)');
 
-      ctx.fillStyle = polyGrad;
-      ctx.shadowColor = 'rgba(34, 211, 238, 0.55)';
-      ctx.shadowBlur = 16;
-      ctx.fill();
+        ctx.fillStyle = polyGrad;
+        ctx.shadowColor = 'rgba(34, 211, 238, 0.55)';
+        ctx.shadowBlur = 16;
+        ctx.fill();
 
-      ctx.lineWidth = 2.4;
-      ctx.strokeStyle = '#22d3ee';
-      ctx.stroke();
-      ctx.shadowBlur = 0;
+        ctx.lineWidth = 2.4;
+        ctx.strokeStyle = '#22d3ee';
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
 
       // Draw glowing nodes & outer axis labels
       COGNITIVE_AXES.forEach((axis, i) => {
         const pt = dataPoints[i];
-        const val = profile[axis.key] ?? 50;
+        const val = profile[axis.key] || 0;
+        const isCalibrated = val > 0;
 
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 4.2, 0, Math.PI * 2);
-        ctx.fillStyle = '#f8fafc';
+        ctx.arc(pt.x, pt.y, isCalibrated ? 4.2 : 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = isCalibrated ? '#f8fafc' : 'rgba(148, 163, 184, 0.4)';
         ctx.fill();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = '#22d3ee';
+        ctx.lineWidth = isCalibrated ? 2 : 1;
+        ctx.strokeStyle = isCalibrated ? '#22d3ee' : 'rgba(148, 163, 184, 0.3)';
         ctx.stroke();
 
         // Axis label + Index value
         const labelPos = getVertex(i, 1.24);
         ctx.font = '700 11px Inter, system-ui, sans-serif';
-        ctx.fillStyle = '#e2e8f0';
+        ctx.fillStyle = isCalibrated ? '#e2e8f0' : 'rgba(148, 163, 184, 0.5)';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(`${axis.shortLabel}: ${val}`, labelPos.x, labelPos.y);
+        const labelText = isCalibrated ? `${axis.shortLabel}: ${val}` : `${axis.shortLabel}: 0`;
+        ctx.fillText(labelText, labelPos.x, labelPos.y);
       });
 
       ctx.restore();
@@ -2305,12 +2468,13 @@
       const readoutsEl = document.getElementById('dimensionReadouts');
       if (readoutsEl) {
         readoutsEl.innerHTML = COGNITIVE_AXES.map(axis => {
-          const val = profile[axis.key] ?? 50;
+          const val = profile[axis.key] || 0;
+          const isCalibrated = val > 0;
           return `
             <div class="readout-item">
               <div class="readout-header">
                 <span class="readout-label" title="${axis.fullLabel}">${axis.shortLabel}: ${val} Index</span>
-                <span class="readout-val">${val}%</span>
+                <span class="readout-val" style="color: ${isCalibrated ? 'var(--accent-cyan)' : 'var(--text-muted)'}">${isCalibrated ? `${val}%` : 'Uncalibrated'}</span>
               </div>
               <div class="readout-bar">
                 <div class="readout-bar-fill" style="width: ${val}%"></div>
@@ -2462,6 +2626,8 @@
       let rowsToDisplay = [];
       if (cloudRows.length > 0) {
         rowsToDisplay = cloudRows;
+        // Keep dynamic leaderboard cache updated so Brain Matrix calculation uses true live data
+        DYNAMIC_LEADERBOARD_CACHE[gameId] = cloudRows;
       } else {
         const baseRows = (BASELINE_LEADERBOARD_DATA[gameId] || BASELINE_LEADERBOARD_DATA['math-balloon']).map(r => ({ ...r, isUser: false }));
         const userScores = getGameScores();
@@ -2477,6 +2643,7 @@
           });
         }
         rowsToDisplay = baseRows.sort((a, b) => b.score - a.score).slice(0, 10);
+        DYNAMIC_LEADERBOARD_CACHE[gameId] = rowsToDisplay;
       }
 
       tbody.innerHTML = rowsToDisplay.map((row, idx) => {

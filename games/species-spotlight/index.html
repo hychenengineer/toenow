@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Species Spotlight</title>
+    <title>Fast Focus</title>
     <meta name="description" content="Mobile-first HTML5 Canvas arcade game featuring procedural vector silhouettes and real-time optical aperture de-blurring." />
-    <meta property="og:title" content="Species Spotlight" />
+    <meta property="og:title" content="Fast Focus" />
     <meta property="og:description" content="Mobile-first HTML5 Canvas arcade game featuring procedural vector silhouettes and real-time optical aperture de-blurring." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -342,7 +342,7 @@
 
       <!-- Main Canvas & Synchronized Hit Layer -->
       <main class="canvas-stage" id="canvasStage">
-        <canvas id="gameCanvas" aria-label="Species Spotlight Viewport"></canvas>
+        <canvas id="gameCanvas" aria-label="Fast Focus Viewport"></canvas>
         <div class="candidate-dom-layer" id="candidateDomLayer">
           <button type="button" class="candidate-hit-btn" id="candBtn0" data-index="0" aria-label="Option 1"></button>
           <button type="button" class="candidate-hit-btn" id="candBtn1" data-index="1" aria-label="Option 2"></button>
@@ -353,7 +353,7 @@
         <!-- Briefing Modal with 5 Tiers & 10 Categories -->
         <div class="modal-backdrop" id="briefingModal" role="dialog" aria-modal="true" aria-labelledby="briefingTitle">
           <div class="modal-card">
-            <h1 class="modal-title" id="briefingTitle">SPECIES SPOTLIGHT</h1>
+            <h1 class="modal-title" id="briefingTitle">FAST FOCUS</h1>
             <p class="modal-brief">
               Max 60s total time (capped) · Correct: +2.0s · Wrong: -1.5s
             </p>
@@ -5450,17 +5450,7 @@
             ctx.textBaseline = "middle";
             ctx.fillText(label, cx, cy + 1);
           } else if (state.mode === "LOCKED_CORRECT") {
-            ctx.fillStyle = "rgba(7, 10, 14, 0.88)";
-            ctx.fillRect(cx - 94, cy - 22, 188, 44);
-            ctx.strokeStyle = PALETTE.lime;
-            ctx.lineWidth = 1.5;
-            ctx.strokeRect(cx - 94, cy - 22, 188, 44);
-
-            ctx.fillStyle = PALETTE.lime;
-            ctx.font = "700 15px 'JetBrains Mono', monospace";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText("+" + state.lastAwardedPts + " PTS  +2.0s", cx, cy + 1);
+            // Keep center clear so the user can see the actual, clear revealed specimen image
           }
         }
 

@@ -1466,10 +1466,11 @@
       <!-- Category Filter Tabs -->
       <nav class="category-tabs" aria-label="Cognitive Discipline Filters" id="categoryTabs">
         <button type="button" class="tab-btn active" data-category="all">All Disciplines</button>
-        <button type="button" class="tab-btn" data-category="math">Arithmetic &amp; Numbers</button>
-        <button type="button" class="tab-btn" data-category="spatial">Spatial &amp; 3D</button>
-        <button type="button" class="tab-btn" data-category="logic">Deductive Logic</button>
-        <button type="button" class="tab-btn" data-category="puzzle">Pattern &amp; Puzzle</button>
+        <button type="button" class="tab-btn" data-category="puzzle">Pattern</button>
+        <button type="button" class="tab-btn" data-category="spatial">Space</button>
+        <button type="button" class="tab-btn" data-category="math">Numbers</button>
+        <button type="button" class="tab-btn" data-category="logic">Logic</button>
+        <button type="button" class="tab-btn" data-category="memory" style="opacity: 0.6;" title="Coming soon">Memory (Soon)</button>
       </nav>
 
       <!-- Action Bar -->
@@ -1741,21 +1742,25 @@
     ];
 
     const CATEGORY_META = {
-      math: {
-        label: 'Arithmetic & Numbers',
-        description: 'High-velocity quantitative decomposition, prime factorization, and numerical fluency drills.'
+      puzzle: {
+        label: 'Pattern',
+        description: 'Pattern recognition, non-verbal geometric synthesis, and visual lattice solving.'
       },
       spatial: {
-        label: 'Spatial & 3D',
-        description: 'Mental rotation, orthographic projection, and volumetric perspective reconstruction.'
+        label: 'Space',
+        description: 'Mental spatial tracking, rotation, and volumetric perspective reconstruction.'
+      },
+      math: {
+        label: 'Numbers',
+        description: 'High-velocity quantitative processing, arithmetic synthesis, and numerical fluency.'
       },
       logic: {
-        label: 'Deductive Logic',
+        label: 'Logic',
         description: 'Multi-variable constraint balancing, relational inference, and symbolic deduction.'
       },
-      puzzle: {
-        label: 'Pattern & Puzzle',
-        description: 'Non-verbal geometric synthesis, symmetry completion, and tessellation lattice solving.'
+      memory: {
+        label: 'Memory',
+        description: 'Working memory buffer, sequential recall, and working memory load retention.'
       }
     };
 

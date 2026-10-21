@@ -273,6 +273,76 @@
         margin: 0 auto 22px;
       }
 
+      .eyebrow-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: system-ui, -apple-system, sans-serif;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #00f0ff;
+        background: rgba(0, 240, 255, 0.1);
+        border: 1px solid rgba(0, 240, 255, 0.3);
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-bottom: 12px;
+      }
+
+      .rules-grid {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 16px;
+        text-align: left;
+      }
+
+      .rule-item {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .rule-stage {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #38bdf8;
+      }
+
+      .rule-desc {
+        font-size: 12px;
+        line-height: 1.35;
+        color: #cbd5e1;
+      }
+
+      .records-strip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 8px 16px;
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid rgba(0, 240, 255, 0.2);
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: #94a3b8;
+        margin-bottom: 18px;
+      }
+
+      .records-strip strong {
+        color: #00f0ff;
+      }
+
       .primary-btn {
         display: inline-flex;
         align-items: center;
@@ -424,10 +494,24 @@
     <!-- Title Screen Overlay -->
     <section id="title-screen" class="overlay-screen" aria-label="Title Screen">
       <div class="modal-card">
+        <div class="eyebrow-tag"><span>🖲️</span> PATTERN</div>
         <h1 class="game-title">BLOCK MATCH</h1>
         <p class="game-subtitle">
           Tap excess blocks to match the target blueprint.
         </p>
+        <div class="rules-grid">
+          <div class="rule-item">
+            <span class="rule-stage">HOW TO PLAY</span>
+            <span class="rule-desc">Compare the active board to the target blueprint and tap away extra blocks.</span>
+          </div>
+          <div class="rule-item">
+            <span class="rule-stage">WATCH OUT</span>
+            <span class="rule-desc">Watch for flip modifiers in later waves. Don't tap essential core blocks!</span>
+          </div>
+        </div>
+        <div class="records-strip">
+          <span>BEST: <strong id="title-best-score">0</strong></span>
+        </div>
         <button type="button" class="primary-btn" id="btn-start" data-start="true">
           Start Game
         </button>
@@ -942,6 +1026,10 @@
         var elFinalBest = document.getElementById('final-best');
         var elFinalWaves = document.getElementById('final-waves');
         var elFinalCombo = document.getElementById('final-combo');
+        var elTitleBest = document.getElementById('title-best-score');
+        if (elTitleBest) {
+          elTitleBest.textContent = String(Math.round(state.highScore || 0));
+        }
 
         // Dynamic Visual Feedback Timers
         var shakeTrauma = 0;
@@ -1023,6 +1111,9 @@
           gameMode = next;
           document.body.dataset.state = next;
           elTitleScreen.hidden = next !== 'title';
+          if (next === 'title' && elTitleBest) {
+            elTitleBest.textContent = String(Math.round(state.highScore || 0));
+          }
           elBriefingScreen.hidden = next !== 'briefing';
           elGameOverScreen.hidden = next !== 'gameover';
         }

@@ -541,6 +541,23 @@
         justify-content: center;
       }
 
+      .eyebrow-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--primary-glow);
+        background: rgba(34, 211, 238, 0.1);
+        border: 1px solid rgba(34, 211, 238, 0.28);
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-bottom: 12px;
+      }
+
       .game-title {
         font-size: clamp(26px, 4vw, 38px);
         font-weight: 800;
@@ -1162,20 +1179,7 @@
     <!-- TITLE SCREEN OVERLAY (Clean & Minimal: No Instructions Popup or Theme Switcher) -->
     <section id="title-screen" class="screen-overlay visible" aria-label="Title Screen">
       <div class="modal-card" style="max-width: 480px;">
-        <div class="emblem-wrap" aria-hidden="true">
-          <svg width="76" height="76" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polygon points="40,4 72,22 72,58 40,76 8,58 8,22" stroke="var(--primary-glow)" stroke-width="2.5" fill="rgba(34,211,238,0.08)" />
-            <polygon points="40,14 62,27 62,53 40,66 18,53 18,27" stroke="var(--secondary-glow)" stroke-width="1.8" stroke-dasharray="6 4" fill="rgba(232,121,249,0.08)" />
-            <circle cx="40" cy="40" r="12" fill="var(--primary-glow)" />
-            <circle cx="40" cy="40" r="6" fill="#f8fafc" />
-            <circle cx="40" cy="4" r="3" fill="#67e8f9" />
-            <circle cx="72" cy="22" r="3" fill="#67e8f9" />
-            <circle cx="72" cy="58" r="3" fill="#67e8f9" />
-            <circle cx="40" cy="76" r="3" fill="#67e8f9" />
-            <circle cx="8" cy="58" r="3" fill="#67e8f9" />
-            <circle cx="8" cy="22" r="3" fill="#67e8f9" />
-          </svg>
-        </div>
+        <div class="eyebrow-tag"><span>🔢</span> NUMBERS</div>
 
         <h1 class="game-title">NUMBER POP</h1>
         <p class="game-subtitle">Tap numbers from smallest to largest before time runs out!</p>

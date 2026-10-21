@@ -182,6 +182,23 @@
         border-color: var(--accent-magenta);
       }
 
+      .eyebrow-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent-cyan);
+        background: rgba(34, 211, 238, 0.1);
+        border: 1px solid rgba(34, 211, 238, 0.28);
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-bottom: 12px;
+      }
+
       .modal-kicker {
         font-size: 11px;
         font-weight: 600;
@@ -353,13 +370,24 @@
         <!-- Briefing Modal -->
         <div class="modal-backdrop" id="briefingModal" role="dialog" aria-modal="true" aria-labelledby="briefingTitle">
           <div class="modal-card">
+            <div class="eyebrow-tag"><span>🔬</span> PATTERN</div>
             <h1 class="modal-title" id="briefingTitle">FAST FOCUS</h1>
             <p class="modal-brief">
-              Identify the focused specimen before time runs out.
+              Identify the focused biological specimen before time runs out.
             </p>
-            <div class="modal-tier-list" style="margin-bottom: 16px;">
-              <div>• <strong>Correct:</strong> +2.0s · <strong>Wrong:</strong> -1.5s</div>
-              <div>• <strong>Max Time:</strong> 60s (capped)</div>
+            <div class="modal-tier-list" style="margin-bottom: 12px; font-size: 11.5px; line-height: 1.6;">
+              <div>• <strong>How to Play:</strong> Watch the optical aperture resolve and tap the matching silhouette.</div>
+              <div>• <strong>Score &amp; Time:</strong> Correct (+2.0s) · Wrong (-1.5s) · Max Time 60s.</div>
+            </div>
+            <div class="stats-grid" style="margin-bottom: 16px; border: 1px solid var(--hull-border); padding: 8px 10px; background: rgba(5, 7, 10, 0.65);">
+              <div class="stat-item">
+                <span class="stat-label">BEST SCORE</span>
+                <span id="titleBestScore" class="stat-value" style="color: var(--accent-cyan);">0</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">MAX WAVE</span>
+                <span id="titleBestWave" class="stat-value">1</span>
+              </div>
             </div>
             <button type="button" class="action-btn" id="startAnalysisBtn">[START ANALYSIS]</button>
           </div>
@@ -4758,6 +4786,33 @@
 
         const briefingModal = document.getElementById("briefingModal");
         const gameOverModal = document.getElementById("gameOverModal");
+        const STORAGE_KEY_SCORE = "fast_focus_high_score_v1";
+        const STORAGE_KEY_WAVE = "fast_focus_best_wave_v1";
+
+        function loadBestFocusScore() {
+          try {
+            return parseInt(localStorage.getItem(STORAGE_KEY_SCORE) || "0", 10) || 0;
+          } catch (_) { return 0; }
+        }
+        function loadBestFocusWave() {
+          try {
+            return parseInt(localStorage.getItem(STORAGE_KEY_WAVE) || "1", 10) || 1;
+          } catch (_) { return 1; }
+        }
+        function saveBestFocusRecords(score, wave) {
+          try {
+            const curScore = loadBestFocusScore();
+            const curWave = loadBestFocusWave();
+            if (score > curScore) localStorage.setItem(STORAGE_KEY_SCORE, String(Math.round(score)));
+            if (wave > curWave) localStorage.setItem(STORAGE_KEY_WAVE, String(wave));
+          } catch (_) {}
+        }
+
+        const titleBestScoreEl = document.getElementById("titleBestScore");
+        const titleBestWaveEl = document.getElementById("titleBestWave");
+        if (titleBestScoreEl) titleBestScoreEl.textContent = loadBestFocusScore().toLocaleString();
+        if (titleBestWaveEl) titleBestWaveEl.textContent = String(loadBestFocusWave());
+
         const startAnalysisBtn = document.getElementById("startAnalysisBtn");
         const retryBtn = document.getElementById("retryBtn");
 
@@ -5097,6 +5152,10 @@
             const tier = state.currentTier || getTierForWave(state.wave);
             finalTierVal.textContent = "L" + tier.level + " " + tier.name;
           }
+          saveBestFocusRecords(state.score, state.wave);
+          if (titleBestScoreEl) titleBestScoreEl.textContent = loadBestFocusScore().toLocaleString();
+          if (titleBestWaveEl) titleBestWaveEl.textContent = String(loadBestFocusWave());
+
           gameOverModal.classList.remove("hidden");
           updateHudDOM();
 

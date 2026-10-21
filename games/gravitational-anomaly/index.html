@@ -15,6 +15,7 @@
     />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
     <style>
       :root {
         --bg-void: #05070e;
@@ -1067,53 +1068,42 @@
     </div>
 
     <!-- Title Screen Overlay -->
-    <section id="title-screen" class="overlay-screen" aria-label="Title Screen">
-      <div></div>
-      <div class="title-layout">
-        <div class="eyebrow-tag"><span>⚖️</span> LOGIC</div>
-        <!-- Custom Inline SVG Title Lockup -->
-        <div class="title-svg-wrap" aria-hidden="true">
-          <svg viewBox="0 0 420 68" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="34" cy="34" r="26" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.65" />
-            <circle cx="34" cy="34" r="16" stroke="#fbbf24" stroke-width="1.5" opacity="0.85" />
-            <circle cx="34" cy="34" r="6" fill="#38bdf8" />
-            <path d="M8 34 H60" stroke="#38bdf8" stroke-width="1.2" opacity="0.5" />
-            <text x="74" y="28" fill="#38bdf8" font-family="monospace" font-size="11" font-weight="700" letter-spacing="3">
-              GRAVITY PUZZLE
-            </text>
-            <text x="74" y="54" fill="#f8fafc" font-family="sans-serif" font-size="24" font-weight="800" letter-spacing="1">
-              SPACE SCALE
-            </text>
-          </svg>
-        </div>
-
-        <h1 class="title-headline">Read the Scales. Tap the Target Planet.</h1>
-        <p class="title-sub">
-          Watch how the scales tilt and tap the <strong>Heaviest</strong>, <strong>Lightest</strong>, or <strong>Middle</strong> planet before time runs out.
+    <section id="title-screen" class="overlay-screen unified-title-screen" aria-label="Title Screen">
+      <div class="unified-title-card">
+        <div class="unified-category-pill"><span class="unified-category-icon">⚖️</span> LOGIC</div>
+        <h1 class="unified-game-title">SPACE SCALE</h1>
+        <p class="unified-game-desc">
+          Watch how scales tilt and deduce target celestial masses before time runs out.
         </p>
 
-        <div class="stroop-callout">
-          <strong>⚠️ SIZE ≠ WEIGHT:</strong> A tiny Black Hole can be super heavy, while a huge Gas Cloud can be super light. Always trust the scales!
+        <div class="unified-rules-box">
+          <div class="unified-rule-item">
+            <span class="unified-rule-kicker">HOW TO PLAY</span>
+            <span class="unified-rule-text">Analyze lever tilts to find Heaviest, Lightest, or Middle planet.</span>
+          </div>
+          <div class="unified-rule-item">
+            <span class="unified-rule-kicker">REMEMBER</span>
+            <span class="unified-rule-text">Size &ne; Weight! A small Black Hole can be far heavier than a Gas Cloud.</span>
+          </div>
         </div>
 
-        <div class="title-stats-row">
-          <span>BEST: <strong id="title-best-score">0</strong></span>
-          <span aria-hidden="true">·</span>
-          <span>RANK: <strong id="title-best-rank">Cadet Analyst</strong></span>
-          <span aria-hidden="true">·</span>
-          <span>SHIELDS: <strong>3</strong></span>
+        <div class="unified-records-strip">
+          <div class="unified-record-item">
+            <span class="unified-record-label">BEST SCORE</span>
+            <span id="title-best-score" class="unified-record-val">0</span>
+          </div>
+          <span class="unified-record-sep" aria-hidden="true">·</span>
+          <div class="unified-record-item">
+            <span class="unified-record-label">RANK</span>
+            <span id="title-best-rank" class="unified-record-val">Cadet</span>
+          </div>
         </div>
 
-        <div>
-          <button id="btn-start" type="button" class="primary-cta" data-start="true">
-            <span>Play Now</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
-        </div>
+        <button id="btn-start" type="button" class="unified-start-btn" data-start="true">
+          START GAME
+        </button>
       </div>
+    </section>
 
       <div class="control-hint-bar">
         Tap Directly on Any Planet · P Pause · R Restart

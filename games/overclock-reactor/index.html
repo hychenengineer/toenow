@@ -21,6 +21,7 @@
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+SC:wght@400;600;700;800&family=Outfit:wght@400;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
     <style>
       :root {
         --bg-deep: #080b10;
@@ -796,103 +797,35 @@
       </div>
 
       <!-- Simple & Clean Title Screen Overlay -->
-      <section id="title-screen" class="overlay-screen" aria-label="Add Up Title Screen">
-        <div class="title-layout">
-          <div class="title-card">
-            <div class="eyebrow-tag"><span>⚡</span> NUMBERS</div>
-            <svg class="title-emblem-svg" viewBox="0 0 420 96" role="img" aria-label="Add Up">
-              <defs>
-                <linearGradient id="coreGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#67e8f9" />
-                  <stop offset="100%" stop-color="#06b6d4" />
-                </linearGradient>
-                <linearGradient id="amberAccent" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#f59e0b" />
-                  <stop offset="100%" stop-color="#fbbf24" />
-                </linearGradient>
-              </defs>
-              <g transform="translate(42, 48)">
-                <circle r="34" fill="#06101a" stroke="#22d3ee" stroke-width="2" stroke-dasharray="16 6" />
-                <polygon
-                  points="0,-24 21,-12 21,12 0,24 -21,12 -21,-12"
-                  fill="rgba(34, 211, 238, 0.12)"
-                  stroke="url(#coreGlow)"
-                  stroke-width="2.5"
-                />
-                <circle r="11" fill="url(#coreGlow)" />
-                <circle r="4.5" fill="#f8fafc" />
-              </g>
-              <text
-                x="92"
-                y="42"
-                fill="#f8fafc"
-                font-family="Outfit, Plus Jakarta Sans, sans-serif"
-                font-size="34"
-                font-weight="800"
-                letter-spacing="2"
-              >
-                ADD
-              </text>
-              <text
-                x="92"
-                y="74"
-                fill="url(#coreGlow)"
-                font-family="Outfit, Plus Jakarta Sans, sans-serif"
-                font-size="28"
-                font-weight="700"
-                letter-spacing="4"
-              >
-                UP
-              </text>
-              <rect x="92" y="84" width="220" height="3" fill="url(#amberAccent)" rx="1.5" />
-            </svg>
+      <section id="title-screen" class="overlay-screen unified-title-screen" aria-label="Add Up Title Screen">
+        <div class="unified-title-card">
+          <div class="unified-category-pill"><span class="unified-category-icon">⚡</span> NUMBERS</div>
+          <h1 class="unified-game-title">ADD UP</h1>
+          <p class="unified-game-desc">
+            Tap floating number balls to add up and match the target sum!
+          </p>
 
-            <p class="title-lead">
-              Tap number balls to match the target sum.<br />
-              <strong>Solve with 2, 3, or 4 balls each wave:</strong>
-            </p>
-
-            <div class="title-rules-card" role="region" aria-label="Solution rules and time bonus">
-              <div class="title-rules-header">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                <span>Solution Rules &amp; Time Bonuses</span>
-              </div>
-              <ul class="title-rules-list">
-                <li class="title-rule-item">
-                  <span class="rule-label">
-                    <span class="rule-tag">2 Balls</span>
-                    <span>No time added</span>
-                  </span>
-                  <span class="rule-bonus" data-tier="none">+0s (1x Score)</span>
-                </li>
-                <li class="title-rule-item">
-                  <span class="rule-label">
-                    <span class="rule-tag">3 Balls</span>
-                    <span>Adds 5 seconds</span>
-                  </span>
-                  <span class="rule-bonus" data-tier="positive">+5s (2x Score)</span>
-                </li>
-                <li class="title-rule-item">
-                  <span class="rule-label">
-                    <span class="rule-tag">4 Balls</span>
-                    <span>Adds 10 seconds</span>
-                  </span>
-                  <span class="rule-bonus" data-tier="mega">+10s (3x Score)</span>
-                </li>
-              </ul>
+          <div class="unified-rules-box">
+            <div class="unified-rule-item">
+              <span class="unified-rule-kicker">HOW TO PLAY</span>
+              <span class="unified-rule-text">Tap 2, 3, or 4 balls that sum to the core target number.</span>
             </div>
-
-            <div class="title-meta-row">
-              <span class="meta-box-label">BEST SCORE</span>
-              <span id="title-best-score" class="meta-box-val">0</span>
-            </div>
-
-            <div class="title-actions-row">
-              <button type="button" id="btn-start-game" class="primary-cta-btn" data-start="true">
-                Start
-              </button>
+            <div class="unified-rule-item">
+              <span class="unified-rule-kicker">BONUS</span>
+              <span class="unified-rule-text">3-ball match adds +5s (2x Pts). 4-ball match adds +10s (3x Pts).</span>
             </div>
           </div>
+
+          <div class="unified-records-strip">
+            <div class="unified-record-item">
+              <span class="unified-record-label">BEST SCORE</span>
+              <span id="title-best-score" class="unified-record-val">0</span>
+            </div>
+          </div>
+
+          <button type="button" id="btn-start-game" class="unified-start-btn" data-start="true">
+            START GAME
+          </button>
         </div>
       </section>
 

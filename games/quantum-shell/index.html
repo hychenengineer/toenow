@@ -19,6 +19,7 @@
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Outfit:wght@700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
     <style>
       :root {
         --bg-void: #0a0a12;
@@ -971,51 +972,38 @@
       </div>
 
       <!-- Title Overlay -->
-      <section class="overlay-screen active" id="screen-title" aria-labelledby="title-heading">
-        <div class="modal-card">
-          <div class="eyebrow-tag"><span class="eyebrow-icon">🔮</span> SPACE</div>
-          <h1 class="game-title" id="title-heading">BALL TRACK</h1>
-          <p class="modal-subtitle">
-            Watch the glowing balls as they run around the orbit circle, then tap where they stop!
+      <section class="overlay-screen unified-title-screen active" id="screen-title" aria-labelledby="title-heading">
+        <div class="unified-title-card">
+          <div class="unified-category-pill"><span class="unified-category-icon">🔮</span> SPACE</div>
+          <h1 class="unified-game-title" id="title-heading">BALL TRACK</h1>
+          <p class="unified-game-desc">
+            Watch the glowing balls run around the orbit circle, then tap where they stop!
           </p>
 
-          <div class="steps-box">
-            <div class="step-row">
-              <span class="step-num">1</span>
-              <span>Memorize the glowing targets in the top-right <strong>TARGET</strong> queue.</span>
+          <div class="unified-rules-box">
+            <div class="unified-rule-item">
+              <span class="unified-rule-kicker">HOW TO PLAY</span>
+              <span class="unified-rule-text">Memorize target balls in the queue and track them during circular shuffle.</span>
             </div>
-            <div class="step-row">
-              <span class="step-num">2</span>
-              <span>Wait for <strong>READY &rarr; GO!</strong> and follow the circular orbit shuffle.</span>
-            </div>
-            <div class="step-row">
-              <span class="step-num">3</span>
-              <span>Tap every target capsule before the timer runs out.</span>
+            <div class="unified-rule-item">
+              <span class="unified-rule-kicker">TIP</span>
+              <span class="unified-rule-text">Hold Overdrive during shuffle to accelerate balls and boost score up to 3.5x.</span>
             </div>
           </div>
 
-          <div class="tip-banner">
-            <strong>Tip:</strong> Hold <strong>OVERDRIVE</strong> during shuffle to speed up movement and multiply your score up to <strong>3.5x</strong>.
-          </div>
-
-          <div class="stats-grid">
-            <div class="stat-box">
-              <span class="stat-box-label">Best Score</span>
-              <span class="stat-box-val highlight" id="title-best-score">0</span>
+          <div class="unified-records-strip">
+            <div class="unified-record-item">
+              <span class="unified-record-label">BEST SCORE</span>
+              <span id="title-best-score" class="unified-record-val">0</span>
             </div>
-            <div class="stat-box">
-              <span class="stat-box-label">Max Wave</span>
-              <span class="stat-box-val" id="title-best-wave">1</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-box-label">Shields</span>
-              <span class="stat-box-val">3</span>
+            <span class="unified-record-sep" aria-hidden="true">·</span>
+            <div class="unified-record-item">
+              <span class="unified-record-label">MAX WAVE</span>
+              <span id="title-best-wave" class="unified-record-val">1</span>
             </div>
           </div>
 
-          <div class="btn-row">
-            <button class="btn-primary" id="btn-start-game" type="button">START GAME</button>
-          </div>
+          <button class="unified-start-btn" id="btn-start-game" type="button">START GAME</button>
         </div>
       </section>
 

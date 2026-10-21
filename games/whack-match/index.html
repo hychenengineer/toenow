@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
     <style>
       :root {
         --bg-void: #070a0e;
@@ -417,36 +418,35 @@
         <canvas id="game-canvas"></canvas>
 
         <!-- Ultra-Concise Start Menu -->
-        <div id="modal-start" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="start-title">
-          <div class="modal-card">
-            <div class="eyebrow-tag"><span>🎯</span> SPACE</div>
-            <h1 id="start-title" class="modal-title">WHACK MATCH</h1>
-            <p class="modal-desc">
-              Tap nodes matching the wave target before they fade. 20+ hits per wave.
+        <div id="modal-start" class="modal-backdrop unified-title-screen" role="dialog" aria-modal="true" aria-labelledby="start-title">
+          <div class="unified-title-card">
+            <div class="unified-category-pill"><span class="unified-category-icon">🎯</span> SPACE</div>
+            <h1 id="start-title" class="unified-game-title">WHACK MATCH</h1>
+            <p class="unified-game-desc">
+              Tap nodes matching the wave target shape before they fade away.
             </p>
-            <div class="spec-list">
-              <div class="spec-row">
-                <span class="spec-label">HOW TO PLAY</span>
-                <span class="spec-val">Watch the wave target shape and tap matching glyphs before they vanish.</span>
+            <div class="unified-rules-box">
+              <div class="unified-rule-item">
+                <span class="unified-rule-kicker">HOW TO PLAY</span>
+                <span class="unified-rule-text">Check target glyph in HUD and tap matching nodes across the grid.</span>
               </div>
-              <div class="spec-row">
-                <span class="spec-label">ESCALATION</span>
-                <span class="spec-val">3x3 (Waves 1-3) &rarr; 4x4 (Waves 4-6) &rarr; 5x5 Matrix (Waves 7+)</span>
-              </div>
-            </div>
-            <div class="spec-list" style="margin-top: -6px;">
-              <div class="spec-row">
-                <span class="spec-label">BEST SCORE</span>
-                <span id="title-best-score" class="spec-val" style="color: var(--accent-cyan); font-weight: 800;">0</span>
-              </div>
-              <div class="spec-row">
-                <span class="spec-label">MAX WAVE</span>
-                <span id="title-best-wave" class="spec-val">1</span>
+              <div class="unified-rule-item">
+                <span class="unified-rule-kicker">ESCALATION</span>
+                <span class="unified-rule-text">3x3 (Waves 1-3) &rarr; 4x4 (Waves 4-6) &rarr; 5x5 Matrix (Waves 7+).</span>
               </div>
             </div>
-            <div class="action-row">
-              <button type="button" id="btn-start-run" class="action-btn">[START RUN]</button>
+            <div class="unified-records-strip">
+              <div class="unified-record-item">
+                <span class="unified-record-label">BEST SCORE</span>
+                <span id="title-best-score" class="unified-record-val">0</span>
+              </div>
+              <span class="unified-record-sep" aria-hidden="true">·</span>
+              <div class="unified-record-item">
+                <span class="unified-record-label">MAX WAVE</span>
+                <span id="title-best-wave" class="unified-record-val">1</span>
+              </div>
             </div>
+            <button type="button" id="btn-start-run" class="unified-start-btn">START RUN</button>
           </div>
         </div>
 

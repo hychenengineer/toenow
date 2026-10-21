@@ -9,6 +9,7 @@
     <meta property="og:description" content="Fast-paced spatial deconstruction game. Tap excess silicon blocks across a 60-wave multi-phase curriculum." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
     <style>
       *, *::before, *::after {
         box-sizing: border-box;
@@ -492,28 +493,31 @@
     </div>
 
     <!-- Title Screen Overlay -->
-    <section id="title-screen" class="overlay-screen" aria-label="Title Screen">
-      <div class="modal-card">
-        <div class="eyebrow-tag"><span>🖲️</span> PATTERN</div>
-        <h1 class="game-title">BLOCK MATCH</h1>
-        <p class="game-subtitle">
+    <section id="title-screen" class="unified-title-screen" aria-label="Title Screen">
+      <div class="unified-title-card">
+        <div class="unified-category-pill"><span class="unified-category-icon">🖲️</span> PATTERN</div>
+        <h1 class="unified-game-title">BLOCK MATCH</h1>
+        <p class="unified-game-desc">
           Tap excess blocks to match the target blueprint.
         </p>
-        <div class="rules-grid">
-          <div class="rule-item">
-            <span class="rule-stage">HOW TO PLAY</span>
-            <span class="rule-desc">Compare the active board to the target blueprint and tap away extra blocks.</span>
+        <div class="unified-rules-box">
+          <div class="unified-rule-item">
+            <span class="unified-rule-kicker">HOW TO PLAY</span>
+            <span class="unified-rule-text">Compare active board to target blueprint and tap away extra blocks.</span>
           </div>
-          <div class="rule-item">
-            <span class="rule-stage">WATCH OUT</span>
-            <span class="rule-desc">Watch for flip modifiers in later waves. Don't tap essential core blocks!</span>
+          <div class="unified-rule-item">
+            <span class="unified-rule-kicker">WATCH OUT</span>
+            <span class="unified-rule-text">Watch for flip modifiers in later waves. Don't tap essential core blocks!</span>
           </div>
         </div>
-        <div class="records-strip">
-          <span>BEST: <strong id="title-best-score">0</strong></span>
+        <div class="unified-records-strip">
+          <div class="unified-record-item">
+            <span class="unified-record-label">BEST SCORE</span>
+            <span id="title-best-score" class="unified-record-val">0</span>
+          </div>
         </div>
-        <button type="button" class="primary-btn" id="btn-start" data-start="true">
-          Start Game
+        <button type="button" class="unified-start-btn" id="btn-start" data-start="true">
+          START GAME
         </button>
       </div>
     </section>

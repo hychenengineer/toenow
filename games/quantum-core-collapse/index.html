@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
     <style>
       :root {
         --bg-deep: #0a0b10;
@@ -1176,35 +1177,44 @@
       </div>
     </div>
 
-    <!-- TITLE SCREEN OVERLAY (Clean & Minimal: No Instructions Popup or Theme Switcher) -->
-    <section id="title-screen" class="screen-overlay visible" aria-label="Title Screen">
-      <div class="modal-card" style="max-width: 480px;">
-        <div class="eyebrow-tag"><span>🔢</span> NUMBERS</div>
+    <!-- TITLE SCREEN OVERLAY (Unified Universal Design) -->
+    <section id="title-screen" class="screen-overlay unified-title-screen visible" aria-label="Title Screen">
+      <div class="unified-title-card">
+        <div class="unified-category-pill"><span class="unified-category-icon">🔢</span> NUMBERS</div>
 
-        <h1 class="game-title">NUMBER POP</h1>
-        <p class="game-subtitle">Tap numbers from smallest to largest before time runs out!</p>
+        <h1 class="unified-game-title">NUMBER POP</h1>
+        <p class="unified-game-desc">Tap numbers from smallest to largest before time runs out!</p>
 
-        <div class="rules-grid">
-          <div class="rule-item">
-            <span class="rule-stage">HOW TO PLAY</span>
-            <span class="rule-desc">Find the smallest number and click it (Lowest &rarr; Highest).</span>
+        <div class="unified-rules-box">
+          <div class="unified-rule-item">
+            <span class="unified-rule-kicker">HOW TO PLAY</span>
+            <span class="unified-rule-text">Find smallest value and tap it (Lowest &rarr; Highest sequence).</span>
           </div>
-          <div class="rule-item">
-            <span class="rule-stage">WATCH OUT</span>
-            <span class="rule-desc">Look at the actual value, not bubble size! Keep combo high.</span>
+          <div class="unified-rule-item">
+            <span class="unified-rule-kicker">WATCH OUT</span>
+            <span class="unified-rule-text">Look at actual values, not bubble sizes! Keep combo meter high.</span>
           </div>
         </div>
 
-        <div class="records-strip" style="margin: 14px 0 20px;">
-          <span>BEST: <strong id="title-best-score">0</strong></span>
-          <span aria-hidden="true">·</span>
-          <span>WAVE: <strong id="title-best-wave">1</strong></span>
-          <span aria-hidden="true">·</span>
-          <span>TIME: <strong id="title-best-survival">00m 00s</strong></span>
+        <div class="unified-records-strip">
+          <div class="unified-record-item">
+            <span class="unified-record-label">BEST</span>
+            <span id="title-best-score" class="unified-record-val">0</span>
+          </div>
+          <span class="unified-record-sep" aria-hidden="true">·</span>
+          <div class="unified-record-item">
+            <span class="unified-record-label">WAVE</span>
+            <span id="title-best-wave" class="unified-record-val">1</span>
+          </div>
+          <span class="unified-record-sep" aria-hidden="true">·</span>
+          <div class="unified-record-item">
+            <span class="unified-record-label">TIME</span>
+            <span id="title-best-survival" class="unified-record-val">00m 00s</span>
+          </div>
         </div>
 
-        <button type="button" id="btn-start" class="primary-cta-btn" data-start="true">
-          START GAME (SPACE OR TAP)
+        <button type="button" id="btn-start" class="unified-start-btn" data-start="true">
+          START GAME
         </button>
       </div>
     </section>

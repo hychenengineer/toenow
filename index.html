@@ -2275,6 +2275,31 @@
       theaterTitle.textContent = game.title;
       theaterUrl.textContent = game.url;
 
+      // Before loading iframe, sync Hub's verified bestScore into the game's internal localStorage
+      // so the title menu records strip immediately displays the user's synced best record!
+      try {
+        const scores = getGameScores();
+        const record = scores[game.id];
+        if (record && record.bestScore > 0) {
+          const gameStorageKeyMap = {
+            'quantum-core-collapse': 'qcc_high_score_v1',
+            'quantum-shell': 'quantum_shell_best_score_v5',
+            'chip-defrag': 'chip_defrag_high_score_v5',
+            'overclock-reactor': 'overclock_reactor_best_v2',
+            'gravitational-anomaly': 'grav_anomaly_best_score_v2',
+            'whack-match': 'whack_match_high_score_v1',
+            'fast-focus': 'fast_focus_high_score_v1'
+          };
+          const key = gameStorageKeyMap[game.id];
+          if (key) {
+            const currentInStorage = parseInt(localStorage.getItem(key) || '0', 10) || 0;
+            if (record.bestScore > currentInStorage) {
+              localStorage.setItem(key, String(record.bestScore));
+            }
+          }
+        }
+      } catch (_) {}
+
       gameViewer.src = game.url;
       theaterModal.classList.add('open');
       theaterModal.setAttribute('aria-hidden', 'false');

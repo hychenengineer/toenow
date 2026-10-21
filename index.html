@@ -2700,9 +2700,15 @@
                 p_duration_ms: Math.max(5000, payload.duration || payload.runDuration * 1000 || 15000)
               });
 
-              if (!scoreErr) {
+              if (scoreErr) {
+                console.error('[Toenow Matrix] Error persisting score to cloud:', scoreErr);
+                showToast(`Cloud Sync Notice: ${scoreErr.message || 'Score rejected by server'}`);
+              } else {
                 console.log('[Toenow Matrix] Verified score persisted to cloud:', scoreData);
               }
+            } else if (sessionErr) {
+              console.error('[Toenow Matrix] Could not create game session:', sessionErr);
+              showToast(`Session Error: ${sessionErr.message}`);
             }
           } catch (cloudErr) {
             console.warn('[Toenow Matrix] Cloud sync notice:', cloudErr);

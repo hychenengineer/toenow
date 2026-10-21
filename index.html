@@ -2988,11 +2988,61 @@
         return null;
       };
 
+      /**
+       * Pulls all verified user scores from Supabase cloud and updates local
+       * game scores and cognitive profile radar so data persists across devices and pushes.
+       */
+      const syncUserScoresFromCloud = async (userId) => {
+        if (!supabaseClient || !userId) return;
+        try {
+          const { data, error } = await supabaseClient
+            .from('leaderboard_view')
+            .select('game_id, score, created_at')
+            .eq('user_id', userId);
+
+          if (!error && data && data.length > 0) {
+            const localScores = getGameScores();
+            let hasNewCloudData = false;
+
+            data.forEach(item => {
+              const gameId = item.game_id;
+              const numericScore = Math.round(Number(item.score) || 0);
+              const currentLocalBest = localScores[gameId]?.bestScore || 0;
+
+              if (numericScore > currentLocalBest) {
+                const gameCfg = GAMES_CONFIG.find(g => g.id === gameId);
+                const category = gameCfg?.category || 'puzzle';
+                localScores[gameId] = {
+                  bestScore: numericScore,
+                  lastScore: numericScore,
+                  category: category,
+                  updatedAt: (item.created_at || '').slice(0, 10) || new Date().toISOString().slice(0, 10)
+                };
+                hasNewCloudData = true;
+                // Recalibrate radar / profile vectors
+                recalibrateCognitiveProfile(gameId, category, numericScore);
+              }
+            });
+
+            if (hasNewCloudData) {
+              localStorage.setItem(STORAGE_KEYS.GAME_SCORES, JSON.stringify(localScores));
+              renderBentoGrid();
+              renderHexagonRadar();
+              const activeProfile = getUserProfile();
+              updateCompositeStat(activeProfile);
+            }
+          }
+        } catch (err) {
+          console.warn('[Toenow Matrix] Could not sync user scores from cloud:', err);
+        }
+      };
+
       // Check current session
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (session?.user) {
         const profile = await fetchCloudProfile(session.user.id);
         updateUIWithUser(session.user, profile);
+        await syncUserScoresFromCloud(session.user.id);
       } else {
         updateUIWithUser(null, null);
       }
@@ -3002,7 +3052,8 @@
         if (event === 'SIGNED_IN' && session?.user) {
           const profile = await fetchCloudProfile(session.user.id);
           updateUIWithUser(session.user, profile);
-          showToast(`Welcome to Toenow Matrix, ${session.user.email}!`);
+          await syncUserScoresFromCloud(session.user.id);
+          showToast(`Welcome to Toenow Matrix, ${session.user.email}! Records synced.`);
         } else if (event === 'SIGNED_OUT') {
           updateUIWithUser(null, null);
         }

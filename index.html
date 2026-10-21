@@ -2990,7 +2990,8 @@
 
       /**
        * Pulls all verified user scores from Supabase cloud and updates local
-       * game scores and cognitive profile radar so data persists across devices and pushes.
+       * game scores and cognitive profile radar. Also uploads any higher local
+       * scores to the cloud so scores match everywhere.
        */
       const syncUserScoresFromCloud = async (userId) => {
         if (!supabaseClient || !userId) return;
@@ -3000,15 +3001,17 @@
             .select('game_id, score, created_at')
             .eq('user_id', userId);
 
-          if (!error && data && data.length > 0) {
-            const localScores = getGameScores();
-            let hasNewCloudData = false;
+          const localScores = getGameScores();
+          let hasNewCloudData = false;
+          const cloudScoresMap = {};
 
+          if (!error && data && data.length > 0) {
             data.forEach(item => {
               const gameId = item.game_id;
               const numericScore = Math.round(Number(item.score) || 0);
-              const currentLocalBest = localScores[gameId]?.bestScore || 0;
+              cloudScoresMap[gameId] = Math.max(cloudScoresMap[gameId] || 0, numericScore);
 
+              const currentLocalBest = localScores[gameId]?.bestScore || 0;
               if (numericScore > currentLocalBest) {
                 const gameCfg = GAMES_CONFIG.find(g => g.id === gameId);
                 const category = gameCfg?.category || 'puzzle';
@@ -3019,19 +3022,43 @@
                   updatedAt: (item.created_at || '').slice(0, 10) || new Date().toISOString().slice(0, 10)
                 };
                 hasNewCloudData = true;
-                // Recalibrate radar / profile vectors
                 recalibrateCognitiveProfile(gameId, category, numericScore);
               }
             });
+          }
 
-            if (hasNewCloudData) {
-              localStorage.setItem(STORAGE_KEYS.GAME_SCORES, JSON.stringify(localScores));
-              renderBentoGrid();
-              renderHexagonRadar();
-              const activeProfile = getUserProfile();
-              updateCompositeStat(activeProfile);
+          // If user has local scores higher than cloud, upload them to Supabase
+          for (const [gameId, entry] of Object.entries(localScores)) {
+            const localBest = entry?.bestScore || 0;
+            const cloudBest = cloudScoresMap[gameId] || 0;
+            if (localBest > cloudBest) {
+              try {
+                const { data: sessionData } = await supabaseClient
+                  .from('game_sessions')
+                  .insert({ user_id: userId, game_id: gameId })
+                  .select()
+                  .single();
+                if (sessionData) {
+                  await supabaseClient.rpc('submit_verified_score', {
+                    p_session_id: sessionData.id,
+                    p_game_id: gameId,
+                    p_score: localBest,
+                    p_duration_ms: 15000
+                  });
+                }
+              } catch (_) {}
             }
           }
+
+          if (hasNewCloudData) {
+            localStorage.setItem(STORAGE_KEYS.GAME_SCORES, JSON.stringify(localScores));
+          }
+
+          // Always refresh UI with the unified scores
+          renderBentoGrid();
+          renderHexagonRadar();
+          const activeProfile = getUserProfile();
+          updateCompositeStat(activeProfile);
         } catch (err) {
           console.warn('[Toenow Matrix] Could not sync user scores from cloud:', err);
         }

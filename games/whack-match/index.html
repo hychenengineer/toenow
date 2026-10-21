@@ -1791,12 +1791,16 @@
           if (state.phase === 'PLAYING' || state.phase === 'STAGING') {
             state.previousPhase = state.phase;
             state.phase = 'PAUSED';
+            document.body.dataset.paused = 'true';
             if (pauseScoreVal) pauseScoreVal.textContent = state.score.toLocaleString();
             if (pauseWaveVal) pauseWaveVal.textContent = String(state.wave);
             if (pauseTimeVal) pauseTimeVal.textContent = Math.ceil(state.timeLeft) + 's';
             modalPause.classList.remove('hidden');
+            modalPause.classList.add('active');
           } else if (state.phase === 'PAUSED') {
             state.phase = state.previousPhase || 'PLAYING';
+            document.body.dataset.paused = 'false';
+            modalPause.classList.remove('active');
             modalPause.classList.add('hidden');
           }
         }
@@ -1809,12 +1813,16 @@
         }
         if (btnRestartWhack) {
           btnRestartWhack.addEventListener('click', () => {
+            document.body.dataset.paused = 'false';
+            modalPause.classList.remove('active');
             modalPause.classList.add('hidden');
             startNewRun();
           });
         }
         if (btnTitleWhack) {
           btnTitleWhack.addEventListener('click', () => {
+            document.body.dataset.paused = 'false';
+            modalPause.classList.remove('active');
             modalPause.classList.add('hidden');
             state.phase = 'MENU';
             modalStart.classList.remove('hidden');

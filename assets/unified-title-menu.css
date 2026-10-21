@@ -229,19 +229,38 @@
 
 /* ============================================================================
    ANTI-CHEAT BLACKOUT SCREEN WHEN PAUSED
+   Default: Hidden until explicitly activated by game state
    ============================================================================ */
 
 .unified-pause-screen {
   position: fixed !important;
   inset: 0 !important;
   z-index: 1000 !important;
-  display: flex !important;
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
   align-items: center !important;
   justify-content: center !important;
   padding: 16px !important;
   box-sizing: border-box !important;
   /* 100% Solid Pitch Black background to completely hide puzzle/game canvas */
   background: #000000 !important;
+}
+
+/* Active states across the games:
+   - quantum-shell: .active
+   - quantum-core-collapse: .visible
+   - fast-focus: #pauseModal.active, body[data-paused='true'] #pauseModal
+   - whack-match: #modal-pause.active, body[data-paused='true'] #modal-pause
+   - chip-defrag, overclock-reactor, gravitational-anomaly: body[data-state='paused']
+*/
+.unified-pause-screen.active,
+.unified-pause-screen.visible,
+body[data-paused='true'] .unified-pause-screen:not(.hidden):not([hidden]),
+body[data-state='paused'] .unified-pause-screen:not(.hidden):not([hidden]),
+body[data-mode='paused'] .unified-pause-screen:not(.hidden):not([hidden]) {
+  display: flex !important;
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;

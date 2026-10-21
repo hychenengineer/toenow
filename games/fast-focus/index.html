@@ -5334,15 +5334,19 @@
           if (state.mode === "ACTIVE" || state.mode === "STAGING") {
             state.previousMode = state.mode;
             state.mode = "PAUSED";
+            document.body.dataset.paused = "true";
             pauseScoreVal.textContent = String(Math.round(state.score));
             pauseWaveVal.textContent = String(state.wave);
             pauseTimeVal.textContent = state.timeRemaining.toFixed(1) + "s";
             pauseModal.classList.remove("hidden");
+            pauseModal.classList.add("active");
             for (let i = 0; i < domCandBtns.length; i++) {
               domCandBtns[i].disabled = true;
             }
           } else if (state.mode === "PAUSED") {
             state.mode = state.previousMode || "ACTIVE";
+            document.body.dataset.paused = "false";
+            pauseModal.classList.remove("active");
             pauseModal.classList.add("hidden");
             if (state.mode === "ACTIVE") {
               for (let i = 0; i < domCandBtns.length; i++) {

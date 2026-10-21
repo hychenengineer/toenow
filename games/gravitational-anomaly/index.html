@@ -1110,32 +1110,32 @@
       </div>
     </section>
 
-    <!-- Pause Modal Overlay -->
-    <section id="pause-screen" class="overlay-screen" aria-label="Pause Menu" role="dialog" aria-modal="true">
-      <div class="modal-card">
-        <div class="modal-kicker">ASTROMETRY SUSPENDED</div>
-        <h2 class="modal-title">Simulation Paused</h2>
-        <p class="modal-subtitle">Kinetic balance torque telemetry holding at current wave coordinates.</p>
+    <!-- Pause Modal Overlay (Anti-cheat blackout) -->
+    <section id="pause-screen" class="overlay-screen unified-pause-screen" aria-label="Pause Menu" role="dialog" aria-modal="true">
+      <div class="unified-pause-card">
+        <div class="unified-pause-kicker">ASTROMETRY SUSPENDED</div>
+        <h2 class="unified-pause-title">PAUSED</h2>
+        <p class="unified-pause-notice">Celestial scales hidden while paused.</p>
 
-        <div class="stat-grid">
-          <div class="stat-tile">
-            <div class="stat-tile-label">SCORE</div>
-            <div id="pause-score" class="stat-tile-val">0</div>
+        <div class="unified-pause-stats-grid">
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">SCORE</span>
+            <span id="pause-score" class="unified-pause-stat-val">0</span>
           </div>
-          <div class="stat-tile">
-            <div class="stat-tile-label">WAVE</div>
-            <div id="pause-wave" class="stat-tile-val">1</div>
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">WAVE</span>
+            <span id="pause-wave" class="unified-pause-stat-val">1</span>
           </div>
-          <div class="stat-tile">
-            <div class="stat-tile-label">SHIELDS</div>
-            <div id="pause-shields" class="stat-tile-val">3 / 3</div>
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">SHIELDS</span>
+            <span id="pause-shields" class="unified-pause-stat-val">3/3</span>
           </div>
         </div>
 
-        <div class="modal-actions">
-          <button id="btn-resume" type="button" class="primary-cta">Resume</button>
-          <button id="btn-restart-pause" type="button" class="secondary-cta">Restart</button>
-          <button id="btn-title-pause" type="button" class="secondary-cta">Title</button>
+        <div class="unified-pause-btn-row">
+          <button id="btn-resume" type="button" class="unified-pause-resume-btn">RESUME</button>
+          <button id="btn-restart-pause" type="button" class="unified-pause-action-btn">RESTART</button>
+          <button id="btn-title-pause" type="button" class="unified-pause-action-btn">TITLE</button>
         </div>
       </div>
     </section>

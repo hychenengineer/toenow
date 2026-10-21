@@ -355,6 +355,7 @@
           <span>SCORE: <strong class="hud-score-val" id="hudScoreText">0</strong></span>
           <span>TIER: <strong class="hud-cat-val" id="hudCatText">L1 NOVICE</strong></span>
           <span class="hud-tier-val" id="hudTierText">+100 PTS · +2.0s</span>
+          <button id="btnPauseHud" type="button" aria-label="Pause Game (P)" title="Pause Game (P)" style="margin-left: auto; background: rgba(34, 211, 238, 0.15); border: 1px solid rgba(34, 211, 238, 0.4); color: var(--accent-cyan); border-radius: 4px; padding: 2px 7px; font-size: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase;">PAUSE</button>
         </div>
       </header>
 
@@ -398,6 +399,36 @@
               </div>
             </div>
             <button type="button" class="unified-start-btn" id="startAnalysisBtn">START ANALYSIS</button>
+          </div>
+        </div>
+
+        <!-- Pause Modal (Anti-cheat blackout) -->
+        <div class="modal-backdrop unified-pause-screen hidden" id="pauseModal" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+          <div class="unified-pause-card">
+            <div class="unified-pause-kicker">ANALYSIS SUSPENDED</div>
+            <h2 class="unified-pause-title" id="pauseTitle">PAUSED</h2>
+            <p class="unified-pause-notice">Specimen and candidate silhouettes hidden while paused.</p>
+
+            <div class="unified-pause-stats-grid">
+              <div class="unified-pause-stat-box">
+                <span class="unified-pause-stat-label">SCORE</span>
+                <span id="pauseScoreVal" class="unified-pause-stat-val">0</span>
+              </div>
+              <div class="unified-pause-stat-box">
+                <span class="unified-pause-stat-label">WAVE</span>
+                <span id="pauseWaveVal" class="unified-pause-stat-val">1</span>
+              </div>
+              <div class="unified-pause-stat-box">
+                <span class="unified-pause-stat-label">TIME</span>
+                <span id="pauseTimeVal" class="unified-pause-stat-val">60.0s</span>
+              </div>
+            </div>
+
+            <div class="unified-pause-btn-row">
+              <button id="btnResumeFocus" type="button" class="unified-pause-resume-btn">RESUME</button>
+              <button id="btnRestartFocus" type="button" class="unified-pause-action-btn">RESTART</button>
+              <button id="btnTitleFocus" type="button" class="unified-pause-action-btn">TITLE</button>
+            </div>
           </div>
         </div>
 
@@ -4794,6 +4825,14 @@
 
         const briefingModal = document.getElementById("briefingModal");
         const gameOverModal = document.getElementById("gameOverModal");
+        const pauseModal = document.getElementById("pauseModal");
+        const pauseScoreVal = document.getElementById("pauseScoreVal");
+        const pauseWaveVal = document.getElementById("pauseWaveVal");
+        const pauseTimeVal = document.getElementById("pauseTimeVal");
+        const btnResumeFocus = document.getElementById("btnResumeFocus");
+        const btnRestartFocus = document.getElementById("btnRestartFocus");
+        const btnTitleFocus = document.getElementById("btnTitleFocus");
+        const btnPauseHud = document.getElementById("btnPauseHud");
         const STORAGE_KEY_SCORE = "fast_focus_high_score_v1";
         const STORAGE_KEY_WAVE = "fast_focus_best_wave_v1";
 
@@ -5291,7 +5330,70 @@
           }
         });
 
+        function togglePause() {
+          if (state.mode === "ACTIVE" || state.mode === "STAGING") {
+            state.previousMode = state.mode;
+            state.mode = "PAUSED";
+            pauseScoreVal.textContent = String(Math.round(state.score));
+            pauseWaveVal.textContent = String(state.wave);
+            pauseTimeVal.textContent = state.timeRemaining.toFixed(1) + "s";
+            pauseModal.classList.remove("hidden");
+            for (let i = 0; i < domCandBtns.length; i++) {
+              domCandBtns[i].disabled = true;
+            }
+          } else if (state.mode === "PAUSED") {
+            state.mode = state.previousMode || "ACTIVE";
+            pauseModal.classList.add("hidden");
+            if (state.mode === "ACTIVE") {
+              for (let i = 0; i < domCandBtns.length; i++) {
+                domCandBtns[i].disabled = state.candidates[i] ? state.candidates[i].depleted : false;
+              }
+            }
+          }
+        }
+
+        if (btnPauseHud) {
+          btnPauseHud.addEventListener("click", function (e) {
+            e.currentTarget.blur();
+            togglePause();
+          });
+        }
+        if (btnResumeFocus) {
+          btnResumeFocus.addEventListener("click", function (e) {
+            e.currentTarget.blur();
+            togglePause();
+          });
+        }
+        if (btnRestartFocus) {
+          btnRestartFocus.addEventListener("click", function (e) {
+            e.currentTarget.blur();
+            pauseModal.classList.add("hidden");
+            startGame();
+          });
+        }
+        if (btnTitleFocus) {
+          btnTitleFocus.addEventListener("click", function (e) {
+            e.currentTarget.blur();
+            pauseModal.classList.add("hidden");
+            state.mode = "BRIEFING";
+            briefingModal.classList.remove("hidden");
+            updateHudDOM();
+          });
+        }
+
         window.addEventListener("keydown", function (e) {
+          if (e.key === "p" || e.key === "P" || e.key === "Escape") {
+            if (state.mode === "ACTIVE" || state.mode === "STAGING" || state.mode === "PAUSED") {
+              e.preventDefault();
+              togglePause();
+              return;
+            }
+          }
+          if (state.mode === "PAUSED" && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            togglePause();
+            return;
+          }
           if (state.mode === "BRIEFING" && (e.key === "Enter" || e.key === " ")) {
             e.preventDefault();
             startGame();

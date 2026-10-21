@@ -408,6 +408,7 @@
           </div>
           <div class="hud-controls">
             <button type="button" id="btn-audio" class="hud-btn" aria-label="Toggle Audio">SFX: ON</button>
+            <button type="button" id="btn-pause-hud" class="hud-btn" aria-label="Pause Game (P)">PAUSE</button>
             <button type="button" id="btn-reset" class="hud-btn" aria-label="Restart Run">RESET</button>
           </div>
         </div>
@@ -447,6 +448,36 @@
               </div>
             </div>
             <button type="button" id="btn-start-run" class="unified-start-btn">START RUN</button>
+          </div>
+        </div>
+
+        <!-- Pause Modal (Anti-cheat blackout) -->
+        <div id="modal-pause" class="modal-backdrop unified-pause-screen hidden" role="dialog" aria-modal="true" aria-labelledby="pause-title">
+          <div class="unified-pause-card">
+            <div class="unified-pause-kicker">MATRIX SUSPENDED</div>
+            <h2 id="pause-title" class="unified-pause-title">PAUSED</h2>
+            <p class="unified-pause-notice">Target node matrix hidden while paused.</p>
+
+            <div class="unified-pause-stats-grid">
+              <div class="unified-pause-stat-box">
+                <span class="unified-pause-stat-label">SCORE</span>
+                <span id="pause-score-val" class="unified-pause-stat-val">0</span>
+              </div>
+              <div class="unified-pause-stat-box">
+                <span class="unified-pause-stat-label">WAVE</span>
+                <span id="pause-wave-val" class="unified-pause-stat-val">1</span>
+              </div>
+              <div class="unified-pause-stat-box">
+                <span class="unified-pause-stat-label">TIME</span>
+                <span id="pause-time-val" class="unified-pause-stat-val">65s</span>
+              </div>
+            </div>
+
+            <div class="unified-pause-btn-row">
+              <button id="btn-resume-whack" type="button" class="unified-pause-resume-btn">RESUME</button>
+              <button id="btn-restart-whack" type="button" class="unified-pause-action-btn">RESTART</button>
+              <button id="btn-title-whack" type="button" class="unified-pause-action-btn">TITLE</button>
+            </div>
           </div>
         </div>
 
@@ -704,6 +735,14 @@
         const modalStart = document.getElementById('modal-start');
         const modalWaveBrief = document.getElementById('modal-wave-brief');
         const modalGameOver = document.getElementById('modal-gameover');
+        const modalPause = document.getElementById('modal-pause');
+        const pauseScoreVal = document.getElementById('pause-score-val');
+        const pauseWaveVal = document.getElementById('pause-wave-val');
+        const pauseTimeVal = document.getElementById('pause-time-val');
+        const btnResumeWhack = document.getElementById('btn-resume-whack');
+        const btnRestartWhack = document.getElementById('btn-restart-whack');
+        const btnTitleWhack = document.getElementById('btn-title-whack');
+        const btnPauseHud = document.getElementById('btn-pause-hud');
 
         const elBriefKicker = document.getElementById('brief-kicker');
         const elBriefTargetName = document.getElementById('brief-target-name');
@@ -1747,6 +1786,70 @@
           },
           { passive: false }
         );
+
+        function togglePause() {
+          if (state.phase === 'PLAYING' || state.phase === 'STAGING') {
+            state.previousPhase = state.phase;
+            state.phase = 'PAUSED';
+            if (pauseScoreVal) pauseScoreVal.textContent = state.score.toLocaleString();
+            if (pauseWaveVal) pauseWaveVal.textContent = String(state.wave);
+            if (pauseTimeVal) pauseTimeVal.textContent = Math.ceil(state.timeLeft) + 's';
+            modalPause.classList.remove('hidden');
+          } else if (state.phase === 'PAUSED') {
+            state.phase = state.previousPhase || 'PLAYING';
+            modalPause.classList.add('hidden');
+          }
+        }
+
+        if (btnPauseHud) {
+          btnPauseHud.addEventListener('click', () => togglePause());
+        }
+        if (btnResumeWhack) {
+          btnResumeWhack.addEventListener('click', () => togglePause());
+        }
+        if (btnRestartWhack) {
+          btnRestartWhack.addEventListener('click', () => {
+            modalPause.classList.add('hidden');
+            startNewRun();
+          });
+        }
+        if (btnTitleWhack) {
+          btnTitleWhack.addEventListener('click', () => {
+            modalPause.classList.add('hidden');
+            state.phase = 'MENU';
+            modalStart.classList.remove('hidden');
+          });
+        }
+
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
+            if (state.phase === 'PLAYING' || state.phase === 'STAGING' || state.phase === 'PAUSED') {
+              e.preventDefault();
+              togglePause();
+              return;
+            }
+          }
+          if (state.phase === 'PAUSED' && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            togglePause();
+            return;
+          }
+          if (state.phase === 'MENU' && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            startNewRun();
+            return;
+          }
+          if (state.phase === 'BRIEFING' && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            launchCurrentWaveFromBriefing();
+            return;
+          }
+          if (state.phase === 'GAMEOVER' && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            startNewRun();
+            return;
+          }
+        });
 
         btnStartRun.addEventListener('click', () => {
           startNewRun();

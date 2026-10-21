@@ -60,7 +60,7 @@
 
       .hud-bar {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(5, 1fr) auto;
         align-items: center;
         gap: 4px;
         background: rgba(8, 11, 18, 0.92);
@@ -489,6 +489,11 @@
           <span class="hud-kicker">Timer</span>
           <span class="hud-value" id="hud-timer">100.0s</span>
         </div>
+        <div class="hud-stat" style="pointer-events: auto;">
+          <button id="btn-pause-hud" type="button" aria-label="Pause Game (P)" title="Pause Game (P)" style="background: rgba(34, 211, 238, 0.15); border: 1px solid rgba(34, 211, 238, 0.4); color: #00f0ff; border-radius: 4px; padding: 3px 6px; font-size: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase;">
+            PAUSE
+          </button>
+        </div>
       </div>
     </div>
 
@@ -519,6 +524,36 @@
         <button type="button" class="unified-start-btn" id="btn-start" data-start="true">
           START GAME
         </button>
+      </div>
+    </section>
+
+    <!-- Pause Screen Overlay (Anti-cheat blackout) -->
+    <section id="pause-screen" class="overlay-screen unified-pause-screen" aria-label="Pause Screen" hidden>
+      <div class="unified-pause-card">
+        <div class="unified-pause-kicker">GAME PAUSED</div>
+        <h2 class="unified-pause-title">PAUSED</h2>
+        <p class="unified-pause-notice">Deconstruction board is hidden while paused.</p>
+
+        <div class="unified-pause-stats-grid">
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">SCORE</span>
+            <span id="pause-score" class="unified-pause-stat-val">0</span>
+          </div>
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">WAVE</span>
+            <span id="pause-wave" class="unified-pause-stat-val">1/60</span>
+          </div>
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">TIME</span>
+            <span id="pause-timer" class="unified-pause-stat-val">100.0s</span>
+          </div>
+        </div>
+
+        <div class="unified-pause-btn-row">
+          <button id="btn-resume" type="button" class="unified-pause-resume-btn">RESUME</button>
+          <button id="btn-restart-pause" type="button" class="unified-pause-action-btn">RESTART</button>
+          <button id="btn-title-pause" type="button" class="unified-pause-action-btn">TITLE</button>
+        </div>
       </div>
     </section>
 
@@ -1018,6 +1053,14 @@
         var elHudTimer = document.getElementById('hud-timer');
 
         var elTitleScreen = document.getElementById('title-screen');
+        var elPauseScreen = document.getElementById('pause-screen');
+        var elPauseScore = document.getElementById('pause-score');
+        var elPauseWave = document.getElementById('pause-wave');
+        var elPauseTimer = document.getElementById('pause-timer');
+        var elBtnResume = document.getElementById('btn-resume');
+        var elBtnRestartPause = document.getElementById('btn-restart-pause');
+        var elBtnTitlePause = document.getElementById('btn-title-pause');
+
         var elBriefingScreen = document.getElementById('briefing-screen');
         var elBriefingTitle = document.getElementById('briefing-title');
         var elBriefingBadge = document.getElementById('briefing-badge');
@@ -1118,8 +1161,24 @@
           if (next === 'title' && elTitleBest) {
             elTitleBest.textContent = String(Math.round(state.highScore || 0));
           }
+          if (elPauseScreen) {
+            elPauseScreen.hidden = next !== 'paused';
+            if (next === 'paused') {
+              if (elPauseScore) elPauseScore.textContent = String(Math.round(state.score));
+              if (elPauseWave) elPauseWave.textContent = state.wave + '/60';
+              if (elPauseTimer) elPauseTimer.textContent = state.timeLeft.toFixed(1) + 's';
+            }
+          }
           elBriefingScreen.hidden = next !== 'briefing';
           elGameOverScreen.hidden = next !== 'gameover';
+        }
+
+        function togglePause() {
+          if (gameMode === 'playing') {
+            setGameMode('paused');
+          } else if (gameMode === 'paused') {
+            setGameMode('playing');
+          }
         }
 
         function syncHud() {
@@ -1365,8 +1424,45 @@
           setGameMode('title');
         });
 
+        var elBtnPauseHud = document.getElementById('btn-pause-hud');
+        if (elBtnPauseHud) {
+          elBtnPauseHud.addEventListener('click', function (e) {
+            e.currentTarget.blur();
+            togglePause();
+          });
+        }
+
+        if (elBtnResume) {
+          elBtnResume.addEventListener('click', function (e) {
+            e.currentTarget.blur();
+            setGameMode('playing');
+          });
+        }
+        if (elBtnRestartPause) {
+          elBtnRestartPause.addEventListener('click', function (e) {
+            e.currentTarget.blur();
+            startNewGame();
+          });
+        }
+        if (elBtnTitlePause) {
+          elBtnTitlePause.addEventListener('click', function (e) {
+            e.currentTarget.blur();
+            setGameMode('title');
+          });
+        }
+
         window.addEventListener('keydown', function (e) {
+          if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
+            e.preventDefault();
+            togglePause();
+            return;
+          }
           if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter') {
+            if (gameMode === 'paused') {
+              e.preventDefault();
+              setGameMode('playing');
+              return;
+            }
             if (gameMode === 'briefing') {
               e.preventDefault();
               resumeFromPhaseBriefing();

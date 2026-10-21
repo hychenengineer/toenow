@@ -1219,37 +1219,37 @@
       </div>
     </section>
 
-    <!-- PAUSE MODAL OVERLAY -->
-    <section id="pause-screen" class="screen-overlay" aria-label="Pause Menu">
-      <div class="modal-card" style="max-width: 460px;">
-        <h2 class="game-title" style="font-size: 30px;">CONTAINMENT PAUSED</h2>
-        <p class="game-subtitle">Quantum core drift suspended.</p>
+    <!-- PAUSE MODAL OVERLAY (Anti-cheat blackout) -->
+    <section id="pause-screen" class="screen-overlay unified-pause-screen" aria-label="Pause Menu">
+      <div class="unified-pause-card">
+        <div class="unified-pause-kicker">GAME PAUSED</div>
+        <h2 class="unified-pause-title">PAUSED</h2>
+        <p class="unified-pause-notice">Numbers and screen are hidden while paused.</p>
 
-        <div class="stats-grid-3" style="margin: 22px 0;">
-          <div class="stat-tile">
-            <span class="hud-kicker">SCORE</span>
-            <span id="pause-score" class="stat-tile-value">0</span>
+        <div class="unified-pause-stats-grid">
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">SCORE</span>
+            <span id="pause-score" class="unified-pause-stat-val">0</span>
           </div>
-          <div class="stat-tile">
-            <span class="hud-kicker">WAVE</span>
-            <span id="pause-wave" class="stat-tile-value">1</span>
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">WAVE</span>
+            <span id="pause-wave" class="unified-pause-stat-val">1</span>
           </div>
-          <div class="stat-tile">
-            <span class="hud-kicker">TIME LEFT</span>
-            <span id="pause-time" class="stat-tile-value">60.0s</span>
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">TIME LEFT</span>
+            <span id="pause-time" class="unified-pause-stat-val">60.0s</span>
           </div>
         </div>
 
-        <button type="button" id="btn-resume" class="primary-cta-btn">
-          RESUME GAME (P / ESC)
-        </button>
-
-        <div class="secondary-btn-row">
-          <button type="button" id="btn-pause-restart" class="secondary-btn">
-            Restart Run (R)
+        <div class="unified-pause-btn-row">
+          <button type="button" id="btn-resume" class="unified-pause-resume-btn">
+            RESUME (ESC)
           </button>
-          <button type="button" id="btn-pause-title" class="secondary-btn">
-            Title Screen
+          <button type="button" id="btn-pause-restart" class="unified-pause-action-btn">
+            RESTART (R)
+          </button>
+          <button type="button" id="btn-pause-title" class="unified-pause-action-btn">
+            TITLE
           </button>
         </div>
       </div>

@@ -1044,34 +1044,34 @@
         </div>
       </section>
 
-      <!-- Pause Overlay -->
-      <section class="overlay-screen" id="screen-pause" aria-labelledby="pause-title">
-        <div class="modal-card">
-          <div class="eyebrow-tag">GAME PAUSED</div>
-          <h2 class="modal-title" id="pause-title">PAUSED</h2>
-          <p class="modal-subtitle">
-            Capsules and timers are paused. Ready to continue?
+      <!-- Pause Overlay (Anti-cheat blackout) -->
+      <section class="overlay-screen unified-pause-screen" id="screen-pause" aria-labelledby="pause-title">
+        <div class="unified-pause-card">
+          <div class="unified-pause-kicker">GAME PAUSED</div>
+          <h2 class="unified-pause-title" id="pause-title">PAUSED</h2>
+          <p class="unified-pause-notice">
+            Game board is hidden while paused. Ready to continue?
           </p>
 
-          <div class="stats-grid">
-            <div class="stat-box">
-              <span class="stat-box-label">Score</span>
-              <span class="stat-box-val highlight" id="pause-stat-score">0</span>
+          <div class="unified-pause-stats-grid">
+            <div class="unified-pause-stat-box">
+              <span class="unified-pause-stat-label">Score</span>
+              <span class="unified-pause-stat-val" id="pause-stat-score">0</span>
             </div>
-            <div class="stat-box">
-              <span class="stat-box-label">Wave</span>
-              <span class="stat-box-val" id="pause-stat-wave">1</span>
+            <div class="unified-pause-stat-box">
+              <span class="unified-pause-stat-label">Wave</span>
+              <span class="unified-pause-stat-val" id="pause-stat-wave">1</span>
             </div>
-            <div class="stat-box">
-              <span class="stat-box-label">Shields</span>
-              <span class="stat-box-val" id="pause-stat-shields">3</span>
+            <div class="unified-pause-stat-box">
+              <span class="unified-pause-stat-label">Shields</span>
+              <span class="unified-pause-stat-val" id="pause-stat-shields">3</span>
             </div>
           </div>
 
-          <div class="btn-row">
-            <button class="btn-primary" id="btn-resume-game" type="button">RESUME</button>
-            <button class="btn-secondary" id="btn-restart-pause" type="button">RESTART</button>
-            <button class="btn-secondary" id="btn-title-pause" type="button">TITLE</button>
+          <div class="unified-pause-btn-row">
+            <button class="unified-pause-resume-btn" id="btn-resume-game" type="button">RESUME</button>
+            <button class="unified-pause-action-btn" id="btn-restart-pause" type="button">RESTART</button>
+            <button class="unified-pause-action-btn" id="btn-title-pause" type="button">TITLE</button>
           </div>
         </div>
       </section>

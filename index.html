@@ -754,16 +754,6 @@
       background: rgba(51, 65, 85, 0.85);
     }
 
-    .theater-btn.btn-simulate {
-      border-color: rgba(16, 185, 129, 0.4);
-      color: #6ee7b7;
-      background: rgba(16, 185, 129, 0.12);
-    }
-
-    .theater-btn.btn-simulate:hover {
-      background: rgba(16, 185, 129, 0.24);
-    }
-
     .theater-btn.btn-danger {
       background: rgba(239, 68, 68, 0.15);
       border-color: rgba(239, 68, 68, 0.4);
@@ -1470,7 +1460,6 @@
             <span class="brand-title">TOENOW</span>
             <span class="brand-domain">toenow.com</span>
           </div>
-          <span class="brand-subtitle">Cognitive Training Sandbox</span>
         </div>
       </div>
 
@@ -1505,27 +1494,6 @@
        MAIN BENTO HUB
        ========================================== -->
   <main class="main-container">
-    <section class="hub-intro">
-      <div class="hub-intro-left">
-        <h1>Neural Simulation Modules</h1>
-        <p>Select a cognitive discipline below to launch an isolated telemetry sandbox. High scores dynamically recalibrate your Toenow Brain Matrix.</p>
-      </div>
-      <div class="hub-stats-strip">
-        <div class="stat-pill">
-          <div>
-            <div class="stat-pill-label">Mounted Modules</div>
-            <div class="stat-pill-value" id="statModuleCount">4</div>
-          </div>
-        </div>
-        <div class="stat-pill">
-          <div>
-            <div class="stat-pill-label">Composite Index</div>
-            <div class="stat-pill-value" id="statCompositeIndex">50</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="bento-grid" id="gamesBentoGrid" aria-live="polite"></section>
   </main>
 
@@ -1540,9 +1508,6 @@
         <span class="theater-game-url" id="theaterUrl">about:blank</span>
       </div>
       <div class="theater-controls">
-        <button type="button" class="theater-btn btn-simulate" id="simulateScoreBtn" title="Dispatch a test GAME_OVER postMessage payload">
-          ⚡ Simulate Telemetry Score
-        </button>
         <button type="button" class="theater-btn" id="restartGameBtn">
           ↺ Restart
         </button>
@@ -1712,43 +1677,43 @@
     const GAMES_CONFIG = [
       {
         id: 'quantum-core-collapse',
-        title: 'Quantum Core Collapse',
+        title: 'Number Pop',
         category: 'math',
-        icon: '⚛️',
+        icon: '🔢',
         url: 'games/quantum-core-collapse/index.html',
         difficulty: 4,
-        description: 'Cyberpunk magnitude-ordering arcade simulation with integers, decimals, intuitive fraction gauges, and Fever overdrive.'
+        description: 'Fast-paced number sorting challenge. Click or tap floating numbers from smallest to largest before time runs out!'
       },
       {
         id: 'quantum-shell',
-        title: 'Quantum Shell',
+        title: 'Ball Track',
         category: 'spatial',
-        icon: '🛸',
+        icon: '🔮',
         url: 'games/quantum-shell/index.html',
         difficulty: 4,
-        description: 'High-velocity spatial tracking simulation. Track quantum cores inside rapidly shuffling shielded drone capsules.'
+        description: 'Track the glowing balls running around the circle. Keep your eyes on them and tap the right spots!'
       },
       {
         id: 'chip-defrag',
-        title: 'Chip Defrag',
+        title: 'Block Match',
         category: 'puzzle',
         icon: '🖲️',
         url: 'games/chip-defrag/index.html',
         difficulty: 3,
-        description: 'Cyberpunk semiconductor deconstruction. Shatter excess blocks from the active die matrix to match target circuit blueprints.'
+        description: 'Shatter excess blocks from the active board to match the target blueprint pattern.'
       },
       {
         id: 'overclock-reactor',
-        title: 'Overclock Reactor',
+        title: 'Add Up',
         category: 'math',
         icon: '⚡',
         url: 'games/overclock-reactor/index.html',
-        difficulty: 4,
-        description: 'High-speed mental arithmetic reflex drill. Stabilize the fission core by linking floating plasma battery nodes to match target energy sums.'
+        difficulty: 3,
+        description: 'Fast-paced mental math reflex drill. Tap floating number balls to add up and match the target sum.'
       },
       {
         id: 'gravitational-anomaly',
-        title: 'Gravitational Anomaly',
+        title: 'Space Scale',
         category: 'logic',
         icon: '⚖️',
         url: 'games/gravitational-anomaly/index.html',
@@ -2187,7 +2152,7 @@
         `,
         'chip-defrag': `
           <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/chip-defrag-preview.png" alt="Chip Defrag In-Game Arena" loading="lazy" />
+            <img class="card-preview-img" src="assets/chip-defrag-preview.png" alt="Block Match In-Game Arena" loading="lazy" />
             <div class="preview-badge-overlay">
               <span class="preview-category-pill" data-cat="puzzle"><span class="preview-cat-dot"></span> Pattern &amp; Puzzle</span>
             </div>
@@ -2624,14 +2589,31 @@
 
       // If cloud has scores, display verified cloud scores; otherwise merge with baseline mock
       let rowsToDisplay = [];
+      const userScores = getGameScores();
+      const userEntry = userScores[gameId];
+
       if (cloudRows.length > 0) {
-        rowsToDisplay = cloudRows;
+        // If the user has a higher local verified score not yet synced or newer than cloud, include it
+        if (userEntry && userEntry.bestScore > 0) {
+          const playerName = currentCloudProfile?.display_name || currentAuthUser?.user_metadata?.full_name || 'Guest Operator';
+          const existingUserRow = cloudRows.find(r => r.isUser);
+          if (!existingUserRow) {
+            cloudRows.push({
+              player: playerName,
+              score: userEntry.bestScore,
+              date: userEntry.updatedAt || new Date().toISOString().slice(0, 10),
+              isUser: true
+            });
+          } else if (userEntry.bestScore > existingUserRow.score) {
+            existingUserRow.score = userEntry.bestScore;
+            existingUserRow.date = userEntry.updatedAt || existingUserRow.date;
+          }
+        }
+        rowsToDisplay = cloudRows.sort((a, b) => b.score - a.score).slice(0, 10);
         // Keep dynamic leaderboard cache updated so Brain Matrix calculation uses true live data
-        DYNAMIC_LEADERBOARD_CACHE[gameId] = cloudRows;
+        DYNAMIC_LEADERBOARD_CACHE[gameId] = rowsToDisplay;
       } else {
         const baseRows = (BASELINE_LEADERBOARD_DATA[gameId] || BASELINE_LEADERBOARD_DATA['math-balloon']).map(r => ({ ...r, isUser: false }));
-        const userScores = getGameScores();
-        const userEntry = userScores[gameId];
 
         if (userEntry && userEntry.bestScore > 0) {
           const playerName = currentCloudProfile?.display_name || currentAuthUser?.user_metadata?.full_name || 'Guest Operator';
@@ -2710,7 +2692,7 @@
                 p_session_id: sessionData.id,
                 p_game_id: gameId,
                 p_score: numericScore,
-                p_duration_ms: Math.max(5000, payload.duration || 15000)
+                p_duration_ms: Math.max(5000, payload.duration || payload.runDuration * 1000 || 15000)
               });
 
               if (!scoreErr) {
@@ -2905,18 +2887,6 @@
       document.getElementById('closeTheaterBtn').addEventListener('click', closeTheaterModal);
       document.getElementById('restartGameBtn').addEventListener('click', restartCurrentGame);
       document.getElementById('fullscreenGameBtn').addEventListener('click', toggleTheaterFullscreen);
-
-      // Simulate Telemetry Score button (dispatches valid GAME_OVER message for quick testing)
-      document.getElementById('simulateScoreBtn').addEventListener('click', () => {
-        if (!currentMountedGame) return;
-        const simulatedScore = Math.floor(850 + Math.random() * 750);
-        window.postMessage({
-          type: 'GAME_OVER',
-          gameId: currentMountedGame.id,
-          category: currentMountedGame.category,
-          score: simulatedScore
-        }, '*');
-      });
 
       // Global Escape key handler
       window.addEventListener('keydown', (e) => {

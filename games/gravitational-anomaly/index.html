@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Gravitational Anomaly - Celestial Weight Deductions</title>
+    <title>Space Scale - Celestial Weight Deductions</title>
     <meta
       name="description"
       content="A rapid-fire deep-space astrophysics deduction game. Analyze kinetic scales, lever arm moments, and counterweight cancellations to identify target celestial masses before time runs out."
     />
-    <meta property="og:title" content="Gravitational Anomaly - Celestial Weight Deductions" />
+    <meta property="og:title" content="Space Scale - Celestial Weight Deductions" />
     <meta
       property="og:description"
       content="A rapid-fire deep-space astrophysics deduction game. Analyze kinetic scales, lever arm moments, and counterweight cancellations."
@@ -615,7 +615,7 @@
         flex-direction: column;
         justify-content: center;
         max-width: 560px;
-        margin: auto 0 auto 6vw;
+        margin: auto;
         background: rgba(5, 7, 14, 0.88);
         border: 1px solid rgba(56, 189, 248, 0.25);
         padding: 32px;
@@ -930,7 +930,7 @@
   </head>
   <body data-state="title" data-wave="1" data-score="0" data-shields="3">
     <!-- Full-Viewport Astrophysics Simulation Canvas -->
-    <canvas id="game-canvas" data-testid="game-canvas" aria-label="Gravitational Anomaly kinetic balance simulation"></canvas>
+    <canvas id="game-canvas" data-testid="game-canvas" aria-label="Space Scale kinetic balance simulation"></canvas>
 
     <!-- Synapse EXP Level Up Banner -->
     <div id="level-up-banner">
@@ -1063,7 +1063,7 @@
               GRAVITY PUZZLE
             </text>
             <text x="74" y="54" fill="#f8fafc" font-family="sans-serif" font-size="24" font-weight="800" letter-spacing="1">
-              GRAVITATIONAL ANOMALY
+              SPACE SCALE
             </text>
           </svg>
         </div>
@@ -3099,22 +3099,7 @@
           }
 
           if (gameState === 'title') {
-            const demoCx =
-              canvasWidth > 900 ? canvasWidth * 0.68 + pointerNormX * 14 : canvasWidth * 0.5;
-            const demoCy =
-              canvasWidth > 900 ? canvasHeight * 0.48 + pointerNormY * 10 : canvasHeight * 0.26;
-            drawScale(
-              ctx,
-              titleDemoScale,
-              demoCx,
-              demoCy,
-              Math.min(160, canvasWidth * 0.2),
-              titleDemoBodies,
-              timeSec,
-              false,
-              undefined,
-              1.0
-            );
+            // Title background demo scale hidden as requested
           } else if (currentPuzzle) {
             renderedBodyTargets = [];
             const bodiesById = {};

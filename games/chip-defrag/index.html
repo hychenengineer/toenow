@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Chip Defrag</title>
+    <title>Block Match</title>
     <meta name="description" content="Fast-paced spatial deconstruction game. Tap excess silicon blocks across a 60-wave multi-phase curriculum." />
-    <meta property="og:title" content="Chip Defrag" />
+    <meta property="og:title" content="Block Match" />
     <meta property="og:description" content="Fast-paced spatial deconstruction game. Tap excess silicon blocks across a 60-wave multi-phase curriculum." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -393,7 +393,7 @@
     </style>
   </head>
   <body data-state="title">
-    <canvas id="game-canvas" data-testid="game-canvas" aria-label="Chip Defrag Workboard"></canvas>
+    <canvas id="game-canvas" data-testid="game-canvas" aria-label="Block Match Workboard"></canvas>
 
     <!-- Top HUD: ONLY SCORE, WAVE [X]/60, GRID [NxN], COMBO, and TIMER -->
     <div id="hud-layer">
@@ -424,7 +424,7 @@
     <!-- Title Screen Overlay -->
     <section id="title-screen" class="overlay-screen" aria-label="Title Screen">
       <div class="modal-card">
-        <h1 class="game-title">CHIP DEFRAG</h1>
+        <h1 class="game-title">BLOCK MATCH</h1>
         <p class="game-subtitle">
           Tap excess blocks to match the target blueprint.
         </p>
@@ -975,48 +975,48 @@
           var n = board ? board.config.gridSize : 3;
 
           if (vw >= 768 && availH >= 360) {
-            var maxLeft = Math.min(availH * 0.82, availW * 0.54, 420);
-            var leftSize = Math.max(220, Math.floor(maxLeft));
-            var rightSize = Math.max(165, Math.floor(leftSize * 0.74));
             var gap = Math.min(48, Math.max(24, Math.floor(availW * 0.05)));
-            var totalW = leftSize + gap + rightSize;
+            // Both boards have equal size: leftSize === rightSize
+            var maxBoardSize = Math.min(availH * 0.82, (availW - gap) * 0.48, 420);
+            var boardSize = Math.max(180, Math.floor(maxBoardSize));
+            var totalW = boardSize * 2 + gap;
             var startX = Math.floor((vw - totalW) * 0.5);
             var centerY = topSafe + Math.floor(availH * 0.52);
 
-            layout.leftBox.size = leftSize;
+            layout.leftBox.size = boardSize;
             layout.leftBox.x = startX;
-            layout.leftBox.y = Math.floor(centerY - leftSize * 0.5);
+            layout.leftBox.y = Math.floor(centerY - boardSize * 0.5);
 
-            layout.rightBox.size = rightSize;
-            layout.rightBox.x = startX + leftSize + gap;
-            layout.rightBox.y = Math.floor(centerY - rightSize * 0.5);
+            layout.rightBox.size = boardSize;
+            layout.rightBox.x = startX + boardSize + gap;
+            layout.rightBox.y = Math.floor(centerY - boardSize * 0.5);
           } else {
-            var gapY = 44;
-            var rightMobileSize = Math.min(Math.floor((availH - gapY) * 0.37), Math.floor(availW * 0.56), 175);
-            var leftMobileSize = Math.min(Math.floor(availH - rightMobileSize - gapY), Math.floor(availW * 0.94), 330);
-            var totalH = rightMobileSize + gapY + leftMobileSize;
-            var startY = topSafe + Math.max(16, Math.floor((availH - totalH) * 0.5));
+            var gapY = 32;
+            // Both boards have equal size in mobile/portrait vertical stack
+            var maxMobileSize = Math.min(Math.floor((availH - gapY) * 0.48), Math.floor(availW * 0.94), 330);
+            var boardMobileSize = Math.max(140, maxMobileSize);
+            var totalH = boardMobileSize * 2 + gapY;
+            var startY = topSafe + Math.max(12, Math.floor((availH - totalH) * 0.5));
 
-            layout.rightBox.size = rightMobileSize;
-            layout.rightBox.x = Math.floor((vw - rightMobileSize) * 0.5);
+            layout.rightBox.size = boardMobileSize;
+            layout.rightBox.x = Math.floor((vw - boardMobileSize) * 0.5);
             layout.rightBox.y = startY;
 
-            layout.leftBox.size = leftMobileSize;
-            layout.leftBox.x = Math.floor((vw - leftMobileSize) * 0.5);
-            layout.leftBox.y = startY + rightMobileSize + gapY;
+            layout.leftBox.size = boardMobileSize;
+            layout.leftBox.x = Math.floor((vw - boardMobileSize) * 0.5);
+            layout.leftBox.y = startY + boardMobileSize + gapY;
           }
 
-          var lPad = Math.max(8, Math.floor(layout.leftBox.size * 0.045));
-          var lGap = Math.max(3, Math.floor(layout.leftBox.size * (n >= 6 ? 0.014 : 0.02)));
-          layout.leftBox.pad = lPad;
-          layout.leftBox.gap = lGap;
-          layout.leftBox.cellSize = (layout.leftBox.size - lPad * 2 - lGap * (n - 1)) / n;
+          var pad = Math.max(8, Math.floor(layout.leftBox.size * 0.045));
+          var cellGap = Math.max(3, Math.floor(layout.leftBox.size * (n >= 6 ? 0.014 : 0.02)));
 
-          var rPad = Math.max(7, Math.floor(layout.rightBox.size * 0.05));
-          var rGap = Math.max(2, Math.floor(layout.rightBox.size * (n >= 6 ? 0.014 : 0.02)));
-          layout.rightBox.pad = rPad;
-          layout.rightBox.gap = rGap;
-          layout.rightBox.cellSize = (layout.rightBox.size - rPad * 2 - rGap * (n - 1)) / n;
+          layout.leftBox.pad = pad;
+          layout.leftBox.gap = cellGap;
+          layout.leftBox.cellSize = (layout.leftBox.size - pad * 2 - cellGap * (n - 1)) / n;
+
+          layout.rightBox.pad = pad;
+          layout.rightBox.gap = cellGap;
+          layout.rightBox.cellSize = (layout.rightBox.size - pad * 2 - cellGap * (n - 1)) / n;
         }
 
         function setGameMode(next) {

@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Quantum Shell</title>
+    <title>Ball Track</title>
     <meta
       name="description"
-      content="Quantum Shell — High-velocity spatial memory game. Memorize the glowing targets, follow the circular orbit shuffle, and tap the matching capsules."
+      content="Ball Track — Fun & fast tracking memory game. Watch the glowing balls run around the circle and tap the right ones!"
     />
-    <meta property="og:title" content="Quantum Shell" />
+    <meta property="og:title" content="Ball Track" />
     <meta
       property="og:description"
       content="Memorize the glowing targets in the top-right lineup, follow the circular orbit shuffle, and tap the matching capsules."
@@ -353,10 +353,10 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
         pointer-events: none;
         width: 94vw;
-        max-width: 420px;
+        max-width: 620px;
         transition: opacity 180ms ease, transform 180ms ease;
       }
 
@@ -373,23 +373,23 @@
         pointer-events: auto;
         position: relative;
         width: 100%;
-        max-width: 340px;
-        padding: 10px 18px;
-        border-radius: 10px;
+        max-width: 580px;
+        padding: 20px 36px;
+        border-radius: 18px;
         background: rgba(20, 24, 38, 0.92);
-        border: 1.5px solid rgba(255, 120, 73, 0.48);
+        border: 2.5px solid rgba(255, 120, 73, 0.6);
         color: var(--text-primary);
         font-family: 'Outfit', sans-serif;
-        font-size: 13px;
+        font-size: 22px;
         font-weight: 800;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.09em;
         text-transform: uppercase;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 14px rgba(255, 120, 73, 0.14);
+        gap: 12px;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 24px rgba(255, 120, 73, 0.25);
         transition: all 140ms ease;
         touch-action: none;
       }
@@ -407,9 +407,9 @@
 
       .overdrive-bet-readout {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 11px;
+        font-size: 15px;
         font-weight: 700;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.07em;
         color: #fdba74;
         text-transform: uppercase;
         text-shadow: 0 0 10px rgba(255, 120, 73, 0.3);
@@ -864,16 +864,18 @@
         .bottom-hud {
           bottom: 8px;
           width: 94vw;
-          gap: 4px;
+          max-width: 94vw;
+          gap: 6px;
         }
 
         .overdrive-btn {
-          padding: 8px 12px;
-          font-size: 11px;
+          padding: 16px 20px;
+          font-size: 16px;
+          border-radius: 14px;
         }
 
         .overdrive-bet-readout {
-          font-size: 10px;
+          font-size: 12px;
         }
 
         .modal-card {
@@ -884,7 +886,7 @@
   </head>
   <body data-mode="title" data-phase="idle">
     <div id="app-shell">
-      <canvas id="game-canvas" aria-label="Quantum Shell Game Board"></canvas>
+      <canvas id="game-canvas" aria-label="Ball Track Game Board"></canvas>
 
       <!-- Responsive Top HUD -->
       <header class="hud-wrapper" id="hud-top">
@@ -972,9 +974,9 @@
       <section class="overlay-screen active" id="screen-title" aria-labelledby="title-heading">
         <div class="modal-card">
           <div class="eyebrow-tag">SPATIAL MEMORY ARCADE</div>
-          <h1 class="game-title" id="title-heading">QUANTUM SHELL</h1>
+          <h1 class="game-title" id="title-heading">BALL TRACK</h1>
           <p class="modal-subtitle">
-            Track the glowing targets from the top-right queue as they lock into the circular orbit and shuffle.
+            Watch the glowing balls as they run around the orbit circle, then tap where they stop!
           </p>
 
           <div class="steps-box">

@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Quantum Core Collapse</title>
+    <title>Number Pop</title>
     <meta name="description" content="Cyberpunk magnitude-ordering arcade game with Sandwich wave pacing, intuitive fraction gauges, Stroop size inversion, roguelite perks, and procedural Web Audio synthesis." />
-    <meta property="og:title" content="Quantum Core Collapse" />
+    <meta property="og:title" content="Number Pop" />
     <meta property="og:description" content="Cyberpunk magnitude-ordering arcade game with Sandwich wave pacing, intuitive fraction gauges, Stroop size inversion, roguelite perks, and procedural Web Audio synthesis." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -1052,7 +1052,7 @@
   </head>
   <body data-state="title" data-wave="1" data-score="0" data-combo="0" data-fever="false">
     <!-- Interactive Canvas Arena -->
-    <canvas id="game-canvas" data-testid="quantum-canvas" aria-label="Quantum Core Collapse Game Arena"></canvas>
+    <canvas id="game-canvas" data-testid="quantum-canvas" aria-label="Number Pop Game Arena"></canvas>
 
     <!-- Live Playing HUD -->
     <div id="hud-layer">
@@ -1177,9 +1177,21 @@
           </svg>
         </div>
 
-        <h1 class="game-title">QUANTUM CORE COLLAPSE</h1>
+        <h1 class="game-title">NUMBER POP</h1>
+        <p class="game-subtitle">Tap numbers from smallest to largest before time runs out!</p>
 
-        <div class="records-strip" style="margin: 18px 0 22px;">
+        <div class="rules-grid">
+          <div class="rule-item">
+            <span class="rule-stage">HOW TO PLAY</span>
+            <span class="rule-desc">Find the smallest number and click it (Lowest &rarr; Highest).</span>
+          </div>
+          <div class="rule-item">
+            <span class="rule-stage">WATCH OUT</span>
+            <span class="rule-desc">Look at the actual value, not bubble size! Keep combo high.</span>
+          </div>
+        </div>
+
+        <div class="records-strip" style="margin: 14px 0 20px;">
           <span>BEST: <strong id="title-best-score">0</strong></span>
           <span aria-hidden="true">·</span>
           <span>WAVE: <strong id="title-best-wave">1</strong></span>
@@ -1188,7 +1200,7 @@
         </div>
 
         <button type="button" id="btn-start" class="primary-cta-btn" data-start="true">
-          START COLLAPSE (SPACE OR TAP)
+          START GAME (SPACE OR TAP)
         </button>
       </div>
     </section>
@@ -2620,6 +2632,25 @@
           spawnWave(1);
         }
 
+        function reportScoreToHub(score, wave, runDuration) {
+          try {
+            if (window.parent && window.parent !== window) {
+              window.parent.postMessage(
+                {
+                  type: 'GAME_OVER',
+                  gameId: 'quantum-core-collapse',
+                  category: 'math',
+                  score: Math.round(Number(score) || 0),
+                  wave: Number(wave) || 1,
+                  runDuration: Number(runDuration) || 0,
+                  duration: Math.round((Number(runDuration) || 0) * 1000),
+                },
+                '*'
+              );
+            }
+          } catch (_) {}
+        }
+
         function triggerGameOver() {
           if (game.state === 'gameover') return;
           game.timeLeft = 0;
@@ -2661,21 +2692,7 @@
           syncHud();
 
           // Toenow Hub Cross-Origin Runtime Contract
-          try {
-            if (window.parent && window.parent !== window) {
-              window.parent.postMessage(
-                {
-                  type: 'GAME_OVER',
-                  gameId: 'quantum-core-collapse',
-                  category: 'math',
-                  score: game.score,
-                  wave: game.wave,
-                  runDuration: game.runDuration,
-                },
-                '*'
-              );
-            }
-          } catch (_) {}
+          reportScoreToHub(game.score, game.wave, game.runDuration);
         }
 
         function togglePause() {
@@ -2987,14 +3004,32 @@
           el.addEventListener('click', invoke);
         }
 
+        function handleQuitOrRestartRun(nextAction) {
+          if (game.score > 0) {
+            saveRecords(game.score, game.wave);
+            saveBestSurvival(game.runDuration);
+            reportScoreToHub(game.score, game.wave, game.runDuration);
+          }
+          nextAction();
+        }
+
         bindFastButton('btn-start', () => startGame());
         bindFastButton('btn-retry', () => startGame());
         bindFastButton('btn-resume', () => togglePause());
-        bindFastButton('btn-pause-restart', () => startGame());
-        bindFastButton('btn-pause-title', () => setScreenState('title'));
+        bindFastButton('btn-pause-restart', () => handleQuitOrRestartRun(() => startGame()));
+        bindFastButton('btn-pause-title', () => handleQuitOrRestartRun(() => setScreenState('title')));
         bindFastButton('btn-go-title', () => setScreenState('title'));
         bindFastButton('btn-pause', () => togglePause());
-        bindFastButton('btn-restart-hud', () => startGame());
+        bindFastButton('btn-restart-hud', () => handleQuitOrRestartRun(() => startGame()));
+
+        // Also report score if browser tab / iframe unloads during an active run
+        window.addEventListener('pagehide', () => {
+          if (game.score > 0) {
+            saveRecords(game.score, game.wave);
+            saveBestSurvival(game.runDuration);
+            reportScoreToHub(game.score, game.wave, game.runDuration);
+          }
+        });
 
         function toggleMute() {
           sound.muted = !sound.muted;

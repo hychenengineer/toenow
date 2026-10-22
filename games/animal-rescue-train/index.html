@@ -12,6 +12,10 @@
   <script src="../../shared/toenow-security.js"></script>
   <script src="../../shared/toenow-platform.js"></script>
   <script src="../../shared/toenow-sdk.js"></script>
+  <script src="../../shared/toenow-i18n-core.js"></script>
+  <script src="../../shared/toenow-i18n-games-a.js"></script>
+  <script src="../../shared/toenow-i18n-games-b.js"></script>
+  <script src="../../shared/toenow-i18n.js"></script>
   <script src="engine.js" defer></script>
   <script src="levels.js" defer></script>
   <script src="puzzles.js" defer></script>
@@ -52,6 +56,14 @@
         <p id="record-notice" class="fineprint" role="status"></p>
       </section>
     </section>
+    <dialog id="last-animal-dialog" aria-labelledby="last-animal-title" aria-describedby="last-animal-rule last-animal-detail">
+      <p class="eyebrow">LEVEL 5 · SPECIAL RULE</p>
+      <h2 id="last-animal-title">Save this animal for last</h2>
+      <div id="last-animal-picture" class="last-animal-picture" aria-hidden="true"></div>
+      <p id="last-animal-rule" class="last-animal-rule"></p>
+      <p id="last-animal-detail">Rescue all the other animals first. Let this animal’s final carriage leave last.</p>
+      <button id="acknowledge-last-animal" class="primary">Got it — Start</button>
+    </dialog>
     <dialog id="help-dialog" aria-labelledby="help-title"><h2 id="help-title">How to play</h2><div id="help-content"></div><button id="close-help" class="primary">Back to puzzle</button></dialog>
     <dialog id="pause-dialog" aria-labelledby="pause-title"><h2 id="pause-title">Paused</h2><button id="resume" class="primary">Resume puzzle</button></dialog>
   </main>

@@ -950,6 +950,12 @@ dialog::backdrop { background:#030811c9; backdrop-filter:blur(7px); }
 dialog h2 { font-size:20px; margin:0 0 16px; }
 dialog .rules { font-size:13px; color:var(--muted); padding-left:20px; }
 dialog .primary { min-height:44px; border-radius:8px; padding:10px 16px; }
+#last-animal-dialog { text-align:center; }
+.last-animal-picture { width:120px; height:120px; margin:20px auto; padding:12px; border-radius:50%; background:#f59e0b18; border:1px solid #f59e0b66; }
+.last-animal-picture svg { display:block; width:100%; height:100%; }
+.last-animal-rule { color:var(--text); font-size:20px; font-weight:700; line-height:1.5; }
+#last-animal-detail { color:var(--muted); font-size:14px; line-height:1.6; margin-bottom:24px; }
+#acknowledge-last-animal { width:100%; }
 @media(max-width:850px) {
   body[data-tier='5'] .queues { grid-template-columns:repeat(3,minmax(0,1fr)); }
   body[data-tier='5'] .cars { grid-template-columns:repeat(2,minmax(0,1fr)); row-gap:18px; }

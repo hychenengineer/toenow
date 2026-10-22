@@ -57,7 +57,7 @@
     hasWaves: false, maxLevels: 5,
     onStart: begin, onRestart: retry,
     onPause: () => { if (document.body.dataset.screen === 'play' && !paused) { paused = true; $('pause-dialog').showModal(); } },
-    onResume: () => { if ($('pause-dialog').open) $('pause-dialog').close(); if ($('help-dialog').open) $('help-dialog').close(); paused = false; }
+    onResume: () => { if ($('pause-dialog').open) $('pause-dialog').close(); if ($('help-dialog').open) $('help-dialog').close(); paused = $('last-animal-dialog').open; }
   });
   sdk.setPracticeMode(isPractice);
 
@@ -79,6 +79,14 @@
     document.body.dataset.screen = 'play'; document.body.dataset.state = 'playing';
     paused = false; render();
     window.scrollTo(0, 0);
+    if (game.state.status === 'playing' && game.level.requiredLastAnimal) {
+      const animal = game.level.requiredLastAnimal;
+      $('last-animal-picture').innerHTML = face(animal);
+      $('last-animal-rule').textContent = `${animals[animal].name} must be the last animal to depart.`;
+      paused = true;
+      if (!$('last-animal-dialog').open) $('last-animal-dialog').showModal();
+      $('acknowledge-last-animal').focus();
+    }
   }
   function begin(options) {
     wave = Math.max(1, Math.floor(options.wave || 1));
@@ -87,6 +95,7 @@
     loadRound();
   }
   function loadRound() {
+    if ($('last-animal-dialog').open) $('last-animal-dialog').close();
     sdk.resume();
     levelIndex = ToenowLevels.getLevelInfo(wave).level - 1;
     game = new RescueTrain.Game(roundForWave(wave));
@@ -218,7 +227,13 @@
   $('help').addEventListener('click', () => { paused = true; $('help-dialog').showModal(); });
   $('close-help').addEventListener('click', () => sdk.resume());
   $('resume').addEventListener('click', () => sdk.resume());
-  ['help-dialog', 'pause-dialog'].forEach(id => $(id).addEventListener('close', () => { paused = Boolean($('help-dialog').open || $('pause-dialog').open); }));
+  $('acknowledge-last-animal').addEventListener('click', () => {
+    $('last-animal-dialog').close();
+    paused = Boolean($('help-dialog').open || $('pause-dialog').open);
+    document.querySelector('.head:not(:disabled)')?.focus({ preventScroll: true });
+  });
+  $('last-animal-dialog').addEventListener('cancel', event => event.preventDefault());
+  ['help-dialog', 'pause-dialog', 'last-animal-dialog'].forEach(id => $(id).addEventListener('close', () => { paused = Boolean($('help-dialog').open || $('pause-dialog').open || $('last-animal-dialog').open); }));
   $('exit-title').addEventListener('click', () => sdk.exitToHub());
   window.addEventListener('message', event => {
     if (event.source !== window.parent || event.origin !== window.location.origin) return;

@@ -501,6 +501,9 @@ var GAME_STORAGE_KEYS = {
       : 'https://toenow.matrix.io/?play=' + encodeURIComponent(gameId) + '&challenge=' + score;
 
     var shareText = '🧠 I scored ' + score.toLocaleString() + ' pts (' + info.badgeText + ' · Wave ' + wave + ') in ' + gameTitle + ' on Toenow Matrix! Can you beat my record? ' + shareUrl;
+    if (typeof globalThis !== 'undefined' && globalThis.ToenowI18n?.language === 'zh-Hant') {
+      shareText = '🧠 我在 Toenow 的「' + globalThis.ToenowI18n.t(gameTitle) + '」獲得 ' + score.toLocaleString() + ' 分（第 ' + info.level + ' 級 · 第 ' + wave + ' 波）！你能打破我的紀錄嗎？ ' + shareUrl;
+    }
 
     function showShareToast(msg) {
       if (typeof document === 'undefined') return;
@@ -520,7 +523,7 @@ var GAME_STORAGE_KEYS = {
     function doShare(file) {
       if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
         var shareData = {
-          title: 'Toenow Matrix — ' + gameTitle + ' Challenge',
+          title: typeof globalThis !== 'undefined' && globalThis.ToenowI18n?.language === 'zh-Hant' ? 'Toenow — ' + globalThis.ToenowI18n.t(gameTitle) + ' 挑戰' : 'Toenow Matrix — ' + gameTitle + ' Challenge',
           text: shareText,
           url: shareUrl
         };

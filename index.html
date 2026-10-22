@@ -15,6 +15,10 @@
   <script src="shared/toenow-security.js"></script>
   <script src="shared/toenow-platform.js"></script>
   <script src="shared/toenow-sdk.js"></script>
+  <script src="shared/toenow-i18n-core.js"></script>
+  <script src="shared/toenow-i18n-games-a.js"></script>
+  <script src="shared/toenow-i18n-games-b.js"></script>
+  <script src="shared/toenow-i18n.js"></script>
   <style>
     :root {
       --bg-primary: #0b0f19;
@@ -2281,7 +2285,7 @@
           <div class="card-preview-banner">
             <img class="card-preview-img" src="assets/animal-rescue-train-preview.svg" alt="Animal passengers aboard the rescue train" loading="lazy" />
             <div class="preview-badge-overlay">
-              <span class="preview-category-pill" data-cat="logic"><span class="preview-cat-dot"></span> Logic · Local prototype</span>
+              <span class="preview-category-pill" data-cat="logic"><span class="preview-cat-dot"></span> Logic</span>
             </div>
           </div>
         `,
@@ -2913,7 +2917,7 @@
             <td><span class="rank-badge ${badgeClass}">${medalPrefix}${rank}</span></td>
             <td>
               <span class="player-tag">
-                ${row.player}
+                <span data-i18n-ignore>${row.player}</span>
                 ${row.isUser ? '<span class="player-you-pill">YOU</span>' : ''}
               </span>
             </td>
@@ -3264,7 +3268,7 @@
             openProfileBtn.innerHTML = `
               ${avatarUrl ? `<img src="${avatarUrl}" class="user-avatar-img" alt="${displayName}" />` : `<div class="guest-avatar">${displayName.slice(0, 2).toUpperCase()}</div>`}
               <div class="profile-meta">
-                <span class="profile-name">${displayName}</span>
+                <span class="profile-name" data-i18n-ignore>${displayName}</span>
                 <span class="profile-status" style="color: #6ee7b7;"><span class="status-dot" style="background:#10b981;box-shadow:0 0 8px #10b981;"></span> Cloud Synced</span>
               </div>
             `;

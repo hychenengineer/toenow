@@ -2110,7 +2110,6 @@
 
       localStorage.setItem(STORAGE_KEYS.GAME_SCORES, JSON.stringify(scores));
       return { isNewBest, bestScore: scores[gameId].bestScore, maxLevel: scores[gameId].maxLevel, levelName: scores[gameId].levelName, numericScore };
-    };
     }
 
     function updateCompositeStat(profile) {

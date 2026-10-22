@@ -1677,6 +1677,16 @@
        ============================================================================ */
     const GAMES_CONFIG = [
       {
+        id: 'animal-rescue-train',
+        title: '動物救援列車',
+        category: 'logic',
+        icon: '🚂',
+        url: 'games/animal-rescue-train/index.html',
+        difficulty: 3,
+        leaderboard: false,
+        description: '觀察三條動物隊伍，安排三節救援車廂。五個由易到難的小關卡，沒有倒數，慢慢想。'
+      },
+      {
         id: 'quantum-core-collapse',
         title: 'Number Pop',
         category: 'math',
@@ -2139,6 +2149,14 @@
       }
 
       const GAME_PREVIEWS = {
+        'animal-rescue-train': `
+          <div class="card-preview-banner">
+            <img class="card-preview-img" src="assets/animal-rescue-train-preview.svg" alt="深色森林月台上的貓咪、小狗與救援列車" loading="lazy" />
+            <div class="preview-badge-overlay">
+              <span class="preview-category-pill" data-cat="logic"><span class="preview-cat-dot"></span> Logic · Prototype</span>
+            </div>
+          </div>
+        `,
         'quantum-core-collapse': `
           <div class="card-preview-banner">
             <img class="card-preview-img" src="assets/quantum-core-collapse-preview.png" alt="Quantum Core Collapse In-Game Arena" loading="lazy" />
@@ -2203,7 +2221,7 @@
           description: 'Modular cognitive training simulation.'
         };
         const record = scores[game.id];
-        const bestText = record ? `${record.bestScore.toLocaleString()} pts` : 'Unranked';
+        const bestText = game.leaderboard === false ? 'Prototype' : record ? `${record.bestScore.toLocaleString()} pts` : 'Unranked';
 
         let dotsHtml = '';
         for (let i = 1; i <= 5; i++) {
@@ -2233,7 +2251,7 @@
 
               <div class="card-footer">
                 <div class="best-score-tag">
-                  <span>Personal Best:</span>
+                  <span>${game.leaderboard === false ? 'Mode:' : 'Personal Best:'}</span>
                   <strong>${bestText}</strong>
                 </div>
                 <span class="launch-pill">Play →</span>
@@ -2575,7 +2593,7 @@
       const select = document.getElementById('leaderboardGameSelect');
       if (!select) return;
       const currentVal = select.value;
-      select.innerHTML = GAMES_CONFIG.map(g =>
+      select.innerHTML = GAMES_CONFIG.filter(g => g.leaderboard !== false).map(g =>
         `<option value="${g.id}">${g.icon} ${g.title}</option>`
       ).join('');
       if (currentVal && GAMES_CONFIG.some(g => g.id === currentVal)) {
@@ -2587,6 +2605,11 @@
     async function renderLeaderboardTable(gameId) {
       const tbody = document.getElementById('leaderboardTableBody');
       if (!tbody) return;
+
+      if (GAMES_CONFIG.find(game => game.id === gameId)?.leaderboard === false) {
+        tbody.innerHTML = '<tr><td colspan="4">Prototype — no leaderboard.</td></tr>';
+        return;
+      }
 
       tbody.innerHTML = `
         <tr>
@@ -2689,6 +2712,7 @@
       if (payload.type === 'GAME_OVER') {
         const { gameId, category, score } = payload;
         if (!gameId || typeof score !== 'number') return;
+        if (GAMES_CONFIG.find(game => game.id === gameId)?.leaderboard === false) return;
 
         const { isNewBest, bestScore, numericScore } = saveGameScore(gameId, category, score);
         const updatedProfile = recalibrateCognitiveProfile(gameId, category, numericScore);

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0f19">
+  <title>動物救援列車 · TOENOW</title>
+  <meta name="description" content="觀察三條隊伍，安排三節車廂，帶動物們平安回家。五關無倒數益智遊戲。">
+  <link rel="stylesheet" href="style.css">
+  <script src="engine.js" defer></script>
+  <script src="levels.js" defer></script>
+  <script src="game.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <a class="brand" href="../../index.html" target="_top" aria-label="回 TOENOW 遊戲大廳">TOENOW<span>PLAY / THINK / UNWIND</span></a>
+      <span class="prototype"><i></i> 遊戲原型</span>
+    </header>
+    <div class="heading"><div><p class="eyebrow">THE LITTLE RESCUE LINE</p><h1>動物救援列車</h1><p class="intro">讓每一趟出發，都載著剛剛好的陪伴。</p></div><div class="no-rush"><span aria-hidden="true">☾</span> 沒有倒數，慢慢想。</div></div>
+    <div class="layout">
+      <aside class="sidebar">
+        <section class="mission panel">
+          <p class="eyebrow">YOUR ROUTE / 救援路線</p>
+          <nav id="levels" aria-label="選擇關卡"></nav>
+          <p id="level-tip" class="tip"></p>
+        </section>
+        <details class="tutorial panel" open>
+          <summary>三步，準備出發 <span>遊戲教學</span></summary>
+          <ol><li><strong>看看隊伍</strong><br>只能點選隊首；每隊可預覽後面三隻。</li><li><strong>安排座位</strong><br>再點一節車廂上車，每節最多三隻。</li><li><strong>三隻同類就出發</strong><br>救援數 +3，立即補上空車廂。</li></ol>
+          <p class="warning">可以混乘，但混乘車廂不會出發，也不能換位。請保留空位！</p>
+          <p class="fineprint">目標按「隻」計算。無法再上車且目標未完成就失敗；可以撤銷最後一步。</p>
+        </details>
+      </aside>
+      <section class="station panel" aria-label="救援月台">
+        <div class="station-header"><div><p class="eyebrow" id="level-number"></p><h2 id="level-name"></h2><p id="level-subtitle"></p></div><div class="step-counter"><strong id="moves">0</strong><span>已走步數</span></div></div>
+        <div class="goals-header"><h3>本關救援目標</h3><span id="total"></span></div>
+        <div id="goals" class="goals"></div>
+        <div class="section-label"><h3><span>01</span> 選一隻隊首</h3><span>後方三隻僅供預覽</span></div>
+        <div id="queues" class="queues"></div>
+        <p id="instruction" class="instruction" role="status" aria-live="polite" aria-atomic="true"></p>
+        <div class="section-label"><h3><span>02</span> 安排車廂</h3><span>每節 3 個座位</span></div>
+        <div class="rail-yard"><div class="rail" aria-hidden="true"></div><div id="cars" class="cars"></div></div>
+        <section id="result" class="result" aria-live="polite" hidden></section>
+        <footer class="controls"><button id="undo" class="secondary" disabled>↶ 一步撤銷</button><button id="restart" class="secondary">↻ 重新開始</button><button id="next" class="primary" hidden>下一站 →</button><button id="replay" class="primary" hidden>再玩一輪 →</button></footer>
+        <p class="station-note">先結算發車，再判斷是否無路可走。每一次選擇，都有時間想清楚。</p>
+      </section>
+    </div>
+    <footer class="page-footer"><span>TOENOW / ANIMAL RESCUE TRAIN</span><span>5 個小關卡 · 無倒數 · 點選遊玩</span></footer>
+  </main>
+</body>
+</html>

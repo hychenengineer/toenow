@@ -1988,8 +1988,8 @@
                 }
               }
             } else if (waveType === 'FRACTIONS_SAME_NUMERATOR') {
-              // Waves 16-18: Same Numerator, Different Denominators
-              const fixedNumerator = ((wave - 16) % 3) + 1; // Wave 16 -> 1, Wave 17 -> 2, Wave 18 -> 3
+              // Same Numerator, Different Denominators (e.g. Wave 14 -> 1, Wave 15 -> 2)
+              const fixedNumerator = Math.max(1, ((wave - 14 + 100) % 3) + 1);
               const denominators = [
                 fixedNumerator + 1,
                 fixedNumerator + 2,
@@ -2015,8 +2015,8 @@
                 };
               }
             } else if (waveType === 'FRACTIONS_SAME_DENOMINATOR') {
-              // Waves 19-21: Same Denominator, Different Numerators
-              const fixedDenominator = 10 + ((wave - 19) % 3); // Wave 19 -> 10, Wave 20 -> 11, Wave 21 -> 12
+              // Same Denominator, Different Numerators (e.g. Wave 16 -> 10, Wave 17 -> 11)
+              const fixedDenominator = Math.max(2, 10 + ((wave - 16 + 100) % 3));
               const numerators = [];
               for (let n = 1; n < fixedDenominator; n++) {
                 numerators.push(n);

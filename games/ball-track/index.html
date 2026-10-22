@@ -2159,7 +2159,7 @@
             const lvl = bestWave <= 5 ? 'LVL 1 · BEGINNER' : bestWave <= 10 ? 'LVL 2 · INTERMEDIATE' : bestWave <= 15 ? 'LVL 3 · ADVANCED' : bestWave <= 20 ? 'LVL 4 · EXPERT' : 'LVL 5 · MASTER';
             elTitleLvl.textContent = lvl;
           }
-          titleBestWaveEl.textContent = String(bestWave);
+          if (titleBestWaveEl) titleBestWaveEl.textContent = String(bestWave);
           // Exact required indicator format: "WAVE [X] | TARGET: [Y]"
           hudWaveTargetEl.textContent = `WAVE ${state.wave} | TARGET: ${state.config.targetCount}`;
           renderShieldIcons(state.shields, state.maxShields);

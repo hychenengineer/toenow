@@ -1,4 +1,4 @@
-<!doct<div style="font-size:12px;font-weight:700;color:#22d3ee;margin-top:4px;" id="over-level-badge">LVL 1 · BEGINNER</div>ype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -1876,7 +1876,7 @@
             const lvlNames = ['', 'BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT', 'MASTER'];
             elTitleLvl.textContent = 'LVL ' + lvl + ' · ' + lvlNames[lvl];
           }
-          titleBestRankEl.textContent = r.title;
+          if (titleBestRankEl) titleBestRankEl.textContent = r.title;
           hudBestEl.textContent = String(Math.round(bestScore));
         }
         syncPersistentStatsUI();

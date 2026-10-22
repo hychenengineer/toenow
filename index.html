@@ -369,7 +369,7 @@
        ========================================== */
     .bento-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 1.5rem;
       justify-content: flex-start;
     }
@@ -628,50 +628,79 @@
 
     .card-footer {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 0.75rem;
-      border-top: 1px solid rgba(148, 163, 184, 0.1);
+      flex-direction: column;
       gap: 0.75rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.12);
     }
 
-    .best-score-tag {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
+    .card-score-row {
       display: flex;
       align-items: center;
-      gap: 0.35rem;
-      min-width: 0;
+      justify-content: space-between;
+      gap: 0.5rem;
+      width: 100%;
+      font-size: 0.78rem;
     }
 
-    .best-score-tag strong {
-      color: var(--text-primary);
-      font-weight: 700;
+    .card-score-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--text-secondary);
       white-space: nowrap;
+    }
+
+    .card-score-left strong {
+      color: #f8fafc;
+      font-weight: 800;
+      font-size: 0.86rem;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+    }
+
+    .card-level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(34, 211, 238, 0.1);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .launch-pill {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--accent-cyan);
-      display: inline-flex;
+      width: 100%;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #ffffff;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.35rem;
-      padding: 0.35rem 0.85rem;
-      border-radius: var(--radius-pill);
-      background: rgba(34, 211, 238, 0.1);
-      border: 1px solid rgba(34, 211, 238, 0.25);
+      gap: 0.4rem;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(8, 145, 178, 0.8) 0%, rgba(6, 182, 212, 0.9) 100%);
+      border: 1px solid rgba(34, 211, 238, 0.4);
       white-space: nowrap;
-      flex-shrink: 0;
       line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
       transition: var(--transition-fast);
     }
 
     .game-card:hover .launch-pill {
-      background: var(--accent-cyan);
+      background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
       color: #0b0f19;
-      box-shadow: 0 0 10px rgba(34, 211, 238, 0.45);
+      border-color: #67e8f9;
+      box-shadow: 0 0 16px rgba(34, 211, 238, 0.5);
     }
 
     .empty-grid-state {
@@ -2290,11 +2319,14 @@
         };
         const record = scores[game.id];
         const lvlInfo = record && record.maxWave ? getLevelInfoFromWave(record.maxWave) : { level: 1, name: 'Beginner' };
-        const bestText = game.leaderboard === false 
-          ? 'Local prototype' 
-          : record 
-            ? `${record.bestScore.toLocaleString()} pts <span style="display:inline-block;margin-left:6px;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:0.04em;background:rgba(34,211,238,0.12);color:#22d3ee;border:1px solid rgba(34,211,238,0.25);">LVL ${record.maxLevel || lvlInfo.level} · ${record.levelName || lvlInfo.name}</span>` 
-            : 'Unranked';
+        const scoreText = game.leaderboard === false 
+          ? 'Prototype' 
+          : record && record.bestScore > 0 
+            ? `${record.bestScore.toLocaleString()} pts` 
+            : '0 pts';
+        const levelBadgeText = game.leaderboard === false
+          ? 'TIER 1–5'
+          : `LVL ${record ? (record.maxLevel || lvlInfo.level) : 1} · ${record ? (record.levelName || lvlInfo.name) : 'BEGINNER'}`;
 
         let dotsHtml = '';
         for (let i = 1; i <= 5; i++) {
@@ -2324,11 +2356,14 @@
               </div>
 
               <div class="card-footer">
-                <div class="best-score-tag">
-                  <span>${game.leaderboard === false ? 'Mode:' : 'Personal Best:'}</span>
-                  <strong>${bestText}</strong>
+                <div class="card-score-row">
+                  <div class="card-score-left">
+                    <span>${game.leaderboard === false ? 'Mode:' : 'Personal Best:'}</span>
+                    <strong>${scoreText}</strong>
+                  </div>
+                  <span class="card-level-badge">${levelBadgeText}</span>
                 </div>
-                <span class="launch-pill">Play →</span>
+                <button type="button" class="launch-pill" tabindex="-1">Play Now →</button>
               </div>
             </div>
           </article>

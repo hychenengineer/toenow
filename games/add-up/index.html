@@ -2521,7 +2521,7 @@
         const params = new URLSearchParams(window.location.search);
         if (typeof ToenowLevels !== 'undefined' && ToenowLevels.setupPracticeMode) {
           ToenowLevels.setupPracticeMode({
-            container: '#screen-title .unified-title-card',
+            container: '#title-screen .unified-title-card',
             onStartGame: (startWave, isPractice) => {
               startNewGame(startWave, isPractice);
             }

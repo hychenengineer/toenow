@@ -2257,6 +2257,15 @@
           document.getElementById('icon-sound-off').style.display = sound.muted ? 'block' : 'none';
         }
 
+        if (typeof ToenowLevels !== 'undefined' && ToenowLevels.setupPracticeMode) {
+          ToenowLevels.setupPracticeMode({
+            container: '#title-screen .unified-title-card',
+            onStartGame: (startWave, isPractice) => {
+              startNewGame(startWave, isPractice);
+            }
+          });
+        }
+
         document.getElementById('btn-start').addEventListener('click', (e) => {
           e.currentTarget.blur();
           startNewGame();

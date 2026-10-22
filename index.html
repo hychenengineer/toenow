@@ -12,6 +12,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- Toenow Shared Levels Module -->
   <script src="shared/toenow-levels.js"></script>
+  <script src="shared/toenow-security.js"></script>
+  <script src="shared/toenow-platform.js"></script>
+  <script src="shared/toenow-sdk.js"></script>
   <style>
     :root {
       --bg-primary: #0b0f19;
@@ -2936,6 +2939,23 @@
         if (GAMES_CONFIG.find(game => game.id === gameId)?.leaderboard === false) return;
 
         const wave = payload.wave || (typeof payload.level === 'number' ? (payload.level - 1) * 5 + 1 : 1);
+        const durationSec = Math.max(0.5, (Number(payload.duration) ? Number(payload.duration) / 1000 : Number(payload.runDuration) || 10));
+
+        // Anti-Cheat Plausibility Verification (Dynamic Physics Guard - No Hard Ceiling!)
+        if (typeof ToenowSecurity !== 'undefined') {
+          const plausibility = ToenowSecurity.verifyScorePlausibility({
+            gameId: gameId,
+            score: score,
+            wave: wave,
+            durationSec: durationSec
+          });
+          if (!plausibility.isValid) {
+            console.warn(`[Security Alert] Implausible game telemetry flagged for ${gameId}:`, plausibility);
+            showToast(`Telemetry Warning: Score verification anomaly detected (${plausibility.reason})`);
+            return;
+          }
+        }
+
         const { isNewBest, bestScore, numericScore } = saveGameScore(gameId, category, score, wave);
 
         // Also ensure game's internal localStorage reflects the highest score and wave

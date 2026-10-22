@@ -3,11 +3,15 @@
 
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('./toenow-levels.js'));
+    module.exports = factory(
+      require('./toenow-levels.js'),
+      require('./toenow-security.js'),
+      require('./toenow-platform.js')
+    );
   } else {
-    root.ToenowGameSDK = factory(root.ToenowLevels);
+    root.ToenowGameSDK = factory(root.ToenowLevels, root.ToenowSecurity, root.ToenowPlatform);
   }
-})(typeof self !== 'undefined' ? self : this, function (ToenowLevels) {
+})(typeof self !== 'undefined' ? self : this, function (ToenowLevels, ToenowSecurity, ToenowPlatform) {
   'use strict';
 
   var LEVELS = ToenowLevels ? ToenowLevels.LEVELS : [
@@ -55,6 +59,8 @@
       wave: this.gameId.replace(/-/g, '_') + '_best_wave'
     };
     this.isPractice = false;
+    this.runStartTime = Date.now();
+    this.platform = ToenowPlatform ? new ToenowPlatform(this.config) : null;
   }
 
   ToenowGameSDK.prototype.loadBestScore = function () {
@@ -224,6 +230,45 @@
 
   ToenowGameSDK.prototype.setPracticeMode = function (isPractice) {
     this.isPractice = Boolean(isPractice);
+  };
+
+  ToenowGameSDK.prototype.startRun = function () {
+    this.runStartTime = Date.now();
+  };
+
+  /**
+   * Ad Integration: Show a rewarded ad (e.g. for player revive or double score)
+   */
+  ToenowGameSDK.prototype.showRewardedAd = function (options) {
+    if (this.platform) {
+      this.platform.showRewardedAd(options);
+    } else if (options && typeof options.onReward === 'function') {
+      options.onReward({ verified: true });
+    }
+  };
+
+  /**
+   * Ad Integration: Show an interstitial ad (e.g. on game over)
+   */
+  ToenowGameSDK.prototype.showInterstitialAd = function (options) {
+    if (this.platform) {
+      this.platform.showInterstitialAd(options);
+    } else if (options && typeof options.onComplete === 'function') {
+      options.onComplete();
+    }
+  };
+
+  /**
+   * Anti-Cheat Plausibility Check
+   */
+  ToenowGameSDK.prototype.verifyScorePlausibility = function (score, wave, durationSec) {
+    if (!ToenowSecurity) return { isValid: true };
+    return ToenowSecurity.verifyScorePlausibility({
+      gameId: this.gameId,
+      score: score,
+      wave: wave,
+      durationSec: durationSec
+    });
   };
 
   return ToenowGameSDK;

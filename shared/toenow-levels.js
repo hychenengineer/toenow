@@ -42,19 +42,41 @@ var GAME_STORAGE_KEYS = {
 
   function syncTitleRecords(options) {
     if (typeof document === 'undefined') return;
+    if (typeof options === 'string') {
+      options = { gameId: options };
+    }
     options = options || {};
 
-    var bestScore = Number(options.bestScore) || 0;
-    var maxWave = Number(options.maxWave) || 1;
+    var gameId = options.gameId;
+    var keys = gameId && GAME_STORAGE_KEYS ? GAME_STORAGE_KEYS[gameId] : null;
 
-    var scoreEl = options.scoreElement || document.getElementById('title-best-score');
+    var bestScore = 0;
+    if (options.bestScore !== undefined) {
+      bestScore = Number(options.bestScore) || 0;
+    } else if (keys && typeof localStorage !== 'undefined') {
+      bestScore = Number(localStorage.getItem(keys.score) || 0) || 0;
+    }
+
+    var maxWave = 1;
+    if (options.maxWave !== undefined) {
+      maxWave = Number(options.maxWave) || 1;
+    } else if (keys && typeof localStorage !== 'undefined') {
+      maxWave = Number(localStorage.getItem(keys.wave) || 1) || 1;
+    }
+
+    var scoreEl = options.scoreElement || document.getElementById('title-best-score') || document.getElementById('titleBestScore');
     if (scoreEl) {
       scoreEl.textContent = bestScore > 0 ? bestScore.toLocaleString() : '0';
     }
 
-    var levelEl = options.levelElement || document.getElementById('title-best-level');
+    var waveEl = options.waveElement || document.getElementById('title-best-wave') || document.getElementById('titleBestWave');
+    if (waveEl) {
+      waveEl.textContent = String(Math.max(1, maxWave));
+    }
+
+    var levelEl = options.levelElement || document.getElementById('title-best-level') || document.getElementById('titleBestLvl');
     if (levelEl) {
-      if (bestScore <= 0 && (!options.maxWave || options.maxWave <= 1)) {
+      if (bestScore <= 0 && (!options.maxWave || options.maxWave <= 1) && maxWave <= 1) {
         levelEl.textContent = 'LVL 1 · BEGINNER';
       } else {
         var info = getLevelInfo(maxWave);
@@ -193,6 +215,12 @@ var GAME_STORAGE_KEYS = {
       e.preventDefault();
       openPracticeModal(onStart);
     };
+
+    if (options.gameId) {
+      try {
+        syncTitleRecords(options.gameId);
+      } catch (_) {}
+    }
   }
 
   

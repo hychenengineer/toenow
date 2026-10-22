@@ -1187,8 +1187,16 @@
           gameMode = next;
           document.body.dataset.state = next;
           elTitleScreen.hidden = next !== 'title';
-          if (next === 'title' && elTitleBest) {
-            elTitleBest.textContent = String(Math.round(state.highScore || 0));
+          if (next === 'title') {
+            if (elTitleBest) {
+              elTitleBest.textContent = String(Math.round(state.highScore || 0));
+            }
+            var elTitleBestLvl = document.getElementById('title-best-level');
+            if (elTitleBestLvl) {
+              var maxW = parseInt(localStorage.getItem('block_match_best_wave') || '1', 10) || 1;
+              var pInfo = getPhaseForWave(maxW);
+              elTitleBestLvl.textContent = 'LVL ' + pInfo.phase + ' · ' + pInfo.name;
+            }
           }
           if (elPauseScreen) {
             elPauseScreen.hidden = next !== 'paused';

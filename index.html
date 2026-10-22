@@ -2935,7 +2935,37 @@
         }
         if (GAMES_CONFIG.find(game => game.id === gameId)?.leaderboard === false) return;
 
-        const { isNewBest, bestScore, numericScore } = saveGameScore(gameId, category, score);
+        const wave = payload.wave || (typeof payload.level === 'number' ? (payload.level - 1) * 5 + 1 : 1);
+        const { isNewBest, bestScore, numericScore } = saveGameScore(gameId, category, score, wave);
+
+        // Also ensure game's internal localStorage reflects the highest score and wave
+        try {
+          const keyMap = (typeof ToenowLevels !== 'undefined' && ToenowLevels.GAME_STORAGE_KEYS) || {
+            'number-pop': { score: 'qcc_high_score_v1', wave: 'qcc_best_wave_v1' },
+            'ball-track': { score: 'quantum_shell_best_score_v5', wave: 'quantum_shell_best_wave_v5' },
+            'block-match': { score: 'chip_defrag_high_score_v5', wave: 'block_match_best_wave' },
+            'add-up': { score: 'overclock_reactor_best_v2', wave: 'add_up_best_wave' },
+            'space-scale': { score: 'grav_anomaly_best_score_v2', wave: 'space_scale_best_wave' },
+            'tap-match': { score: 'whack_match_high_score_v1', wave: 'whack_match_best_wave_v1' },
+            'spot-quick': { score: 'fast_focus_high_score_v1', wave: 'fast_focus_best_wave_v1' },
+            'shadow-match': { score: 'shadow_match_best_score_v1', wave: 'shadow_match_best_wave_v1' },
+            'flash-brain': { score: 'flash_brain_best_score_v1', wave: 'flash_brain_best_wave_v1' }
+          };
+          const keys = keyMap[gameId];
+          if (keys) {
+            const curScore = parseInt(localStorage.getItem(keys.score) || '0', 10) || 0;
+            if (numericScore > curScore) {
+              localStorage.setItem(keys.score, String(numericScore));
+            }
+            if (keys.wave) {
+              const curWave = parseInt(localStorage.getItem(keys.wave) || '1', 10) || 1;
+              if (wave > curWave) {
+                localStorage.setItem(keys.wave, String(wave));
+              }
+            }
+          }
+        } catch (_) {}
+
         const updatedProfile = recalibrateCognitiveProfile(gameId, category, numericScore);
 
         renderBentoGrid();

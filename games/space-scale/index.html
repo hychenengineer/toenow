@@ -2033,6 +2033,22 @@
 
         function triggerGameOver(reasonText) {
           const finalScore = Math.round(score);
+          if (!isPracticeMode) {
+            const clearedWave = Math.max(1, wave - 1);
+            const curBestWave = parseInt(localStorage.getItem('space_scale_best_wave') || '1', 10) || 1;
+            if (clearedWave > curBestWave) {
+              try {
+                localStorage.setItem('space_scale_best_wave', String(clearedWave));
+              } catch (_) {}
+            }
+            if (finalScore > bestScore) {
+              bestScore = finalScore;
+              try {
+                localStorage.setItem(STORAGE_BEST_SCORE, String(bestScore));
+              } catch (_) {}
+            }
+            syncPersistentStatsUI();
+          }
           overScoreEl.textContent = String(finalScore);
           const r = getSynapseRank(totalExp);
           overRankEl.textContent = r.title;

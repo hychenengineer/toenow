@@ -127,3 +127,30 @@ test('Hub postMessage GAME_OVER listener ignores practice mode runs and never ov
     'Hub message handler must display toast and return early on practice runs'
   );
 });
+
+test('Hub and games immediately update maxLevel and best wave on game over without delay', () => {
+  const indexHtml = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+  assert.ok(
+    indexHtml.includes('saveGameScore(gameId, category, score, wave)'),
+    'Hub must pass wave directly into saveGameScore on GAME_OVER message'
+  );
+
+  // Check subgames update title-best-level on run completion
+  const addUp = fs.readFileSync(path.join(__dirname, '..', 'games/add-up/index.html'), 'utf8');
+  assert.ok(addUp.includes('add_up_best_wave'), 'Add Up must persist best wave on game over');
+
+  const spaceScale = fs.readFileSync(path.join(__dirname, '..', 'games/space-scale/index.html'), 'utf8');
+  assert.ok(spaceScale.includes('space_scale_best_wave') && spaceScale.includes('syncPersistentStatsUI()'), 'Space Scale must sync best level on game over');
+
+  const blockMatch = fs.readFileSync(path.join(__dirname, '..', 'games/block-match/index.html'), 'utf8');
+  assert.ok(blockMatch.includes('title-best-level'), 'Block Match must sync title-best-level when returning to title');
+
+  const tapMatch = fs.readFileSync(path.join(__dirname, '..', 'games/tap-match/index.html'), 'utf8');
+  assert.ok(tapMatch.includes('elTitleBestLvl.textContent ='), 'Tap Match must immediately sync elTitleBestLvl on game over');
+
+  const spotQuick = fs.readFileSync(path.join(__dirname, '..', 'games/spot-quick/index.html'), 'utf8');
+  assert.ok(spotQuick.includes('tier.level') && spotQuick.includes('title-best-level'), 'Spot Quick must immediately sync title-best-level on game over');
+
+  const shadowMatch = fs.readFileSync(path.join(__dirname, '..', 'games/shadow-match/index.html'), 'utf8');
+  assert.ok(shadowMatch.includes('getLevelSpecForWave(rec.bestWave)'), 'Shadow Match must immediately sync level on updateTitleScreenRecords');
+});

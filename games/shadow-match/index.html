@@ -1811,6 +1811,11 @@
           const rec = loadBestRecords();
           if (titleBestScoreEl) titleBestScoreEl.textContent = rec.bestScore.toLocaleString();
           if (titleBestWaveEl) titleBestWaveEl.textContent = String(rec.bestWave);
+          const elTitleLvl = document.getElementById('title-best-level');
+          if (elTitleLvl) {
+            const lInfo = getLevelSpecForWave(rec.bestWave);
+            elTitleLvl.textContent = 'LVL ' + lInfo.level + ' · ' + lInfo.levelName;
+          }
         }
 
         // ============================================================================

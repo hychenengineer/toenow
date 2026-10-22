@@ -1351,6 +1351,11 @@
           saveBestWhackRecords(state.score, state.wave);
           if (elTitleBestScore) elTitleBestScore.textContent = loadBestWhackScore().toLocaleString();
           if (elTitleBestWave) elTitleBestWave.textContent = String(loadBestWhackWave());
+          if (elTitleBestLvl) {
+            const bw = loadBestWhackWave();
+            const cfg = getWaveConfig(bw);
+            elTitleBestLvl.textContent = 'LVL ' + cfg.level + ' · ' + cfg.levelName;
+          }
 
           modalGameOver.classList.remove('hidden');
 

@@ -6,6 +6,7 @@ const ToenowLevels = require('../shared/toenow-levels.js');
 
 test('ToenowLevels exports shareScore API and formats share text with deep link in English', () => {
   assert.equal(typeof ToenowLevels.shareScore, 'function', 'shareScore must be exported');
+  assert.equal(typeof ToenowLevels.generateScorePoster, 'function', 'generateScorePoster must be exported');
 
   // Test clipboard fallback capture
   let capturedClipboardText = null;
@@ -60,6 +61,7 @@ test('ToenowLevels exports shareScore API and formats share text with deep link 
 
 test('All game over screens provide unified SHARE SCORE button', () => {
   const games = [
+    'animal-rescue-train',
     'number-pop',
     'ball-track',
     'spot-quick',

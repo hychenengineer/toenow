@@ -5,14 +5,28 @@
   'use strict';
   const copy = value => JSON.parse(JSON.stringify(value));
 
-  function evaluate(state, goals) {
-    if (Object.entries(goals).every(([animal, count]) => (state.rescued[animal] || 0) >= count)) return 'won';
-    return state.queues.some(queue => queue.length) && state.cars.some(car => car.length < 3) ? 'playing' : 'lost';
+  function canBoard(state, queueIndex, carIndex) {
+    const queue = state.queues[queueIndex], car = state.cars[carIndex];
+    return state.status === 'playing' && Number.isInteger(queueIndex) && Number.isInteger(carIndex) &&
+      Boolean(queue?.length && car && car.length < 3 && car.every(animal => animal === queue[0]));
   }
 
-  function advance(state, goals, queueIndex, carIndex) {
-    if (state.status !== 'playing' || !Number.isInteger(queueIndex) || !Number.isInteger(carIndex) ||
-        !state.queues[queueIndex]?.length || !state.cars[carIndex] || state.cars[carIndex].length >= 3) return null;
+  function evaluate(state, goals, requiredLastAnimal) {
+    const allRescued = Object.entries(goals).every(([animal, count]) => (state.rescued[animal] || 0) >= count);
+    if (requiredLastAnimal) {
+      const targetGoal = goals[requiredLastAnimal] || 0;
+      const targetRescued = state.rescued[requiredLastAnimal] || 0;
+      // If the required last animal reached its goal before all other animals were rescued, it was sent too early -> fail!
+      if (targetRescued >= targetGoal && !allRescued) {
+        return 'lost';
+      }
+    }
+    if (allRescued) return 'won';
+    return state.queues.some((queue, q) => state.cars.some((car, c) => canBoard(state, q, c))) ? 'playing' : 'lost';
+  }
+
+  function advance(state, goals, queueIndex, carIndex, requiredLastAnimal) {
+    if (!canBoard(state, queueIndex, carIndex)) return null;
     const next = copy(state);
     const animal = next.queues[queueIndex].shift();
     const car = next.cars[carIndex];
@@ -25,7 +39,7 @@
       next.cars[carIndex] = [];
       next.departure = { animal, car: carIndex };
     }
-    next.status = evaluate(next, goals);
+    next.status = evaluate(next, goals, requiredLastAnimal);
     return next;
   }
 
@@ -36,12 +50,12 @@
     }
     restart() {
       this.state = { queues: copy(this.level.queues), cars: Array.from({ length: this.level.carCount ?? 3 }, () => []), rescued: {}, moves: 0, departure: null, status: 'playing' };
-      this.state.status = evaluate(this.state, this.level.goals);
+      this.state.status = evaluate(this.state, this.level.goals, this.level.requiredLastAnimal);
       this.previous = null;
     }
     get canUndo() { return this.previous !== null; }
     move(queue, car) {
-      const next = advance(this.state, this.level.goals, queue, car);
+      const next = advance(this.state, this.level.goals, queue, car, this.level.requiredLastAnimal);
       if (!next) return false;
       this.previous = copy(this.state);
       this.state = next;
@@ -55,5 +69,5 @@
     }
   }
 
-  return { Game, advance };
+  return { Game, advance, canBoard };
 });

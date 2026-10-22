@@ -2,40 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#0b0f19">
   <title>Animal Rescue Train · TOENOW</title>
-  <meta name="description" content="Plan the queues, fill the carriages and bring every animal home. Five difficulty levels, no timer.">
+  <meta name="description" content="Plan the queues and bring every animal home. Five difficulty levels, new puzzles each wave, and no timer.">
+  <link rel="stylesheet" href="../../assets/unified-title-menu.css">
   <link rel="stylesheet" href="style.css">
+  <script src="../../shared/toenow-levels.js"></script>
+  <script src="../../shared/toenow-security.js"></script>
+  <script src="../../shared/toenow-platform.js"></script>
+  <script src="../../shared/toenow-sdk.js"></script>
   <script src="engine.js" defer></script>
   <script src="levels.js" defer></script>
+  <script src="puzzles.js" defer></script>
   <script src="session.js" defer></script>
   <script src="game.js" defer></script>
 </head>
-<body data-screen="menu">
+<body data-state="title" data-screen="menu">
   <main class="shell">
-    <header class="masthead">
-      <a class="brand" href="../../index.html" target="_top" aria-label="Back to the TOENOW game hub">TOENOW<span>PLAY / THINK / UNWIND</span></a>
-      <span class="prototype"><i></i> Prototype</span>
-    </header>
-    <section id="menu-screen" aria-label="Game setup">
-      <div class="heading"><div><p class="eyebrow">THE LITTLE RESCUE LINE</p><h1>Animal Rescue Train</h1><p class="intro">A little room. A safe way home.</p></div><span class="no-rush">No timer. Take your time.</span></div>
-      <div class="start-layout">
-        <section class="panel start-rules" aria-labelledby="rules-title">
-          <img class="start-art" src="../../assets/animal-rescue-train-preview.svg" alt="Animal passengers waiting aboard the rescue train">
-          <h2 id="rules-title">How to play</h2>
-          <ol class="rules"><li><strong>Choose a queue head.</strong> Preview the next three animals; only the front animal can board.</li><li><strong>Choose a carriage.</strong> Each has three seats. Plan your groups and keep room for the next arrival.</li><li><strong>Three of a kind depart.</strong> Rescue all three animals and get an empty carriage immediately.</li></ol>
-          <p class="warning">Mixed groups cannot leave or be rearranged. Every animal is needed, so a mixed group requires undo or a retry.</p>
-          <p class="fineprint">Rescue every target to win. If no passenger can board before the targets are met, the puzzle ends.</p>
+    <section id="menu-screen" class="unified-title-screen" aria-label="Animal Rescue Train menu">
+      <div class="unified-title-card rescue-title-card">
+        <span class="unified-category-pill">LOGIC · NO TIMER</span>
+        <h1 class="unified-game-title">Animal Rescue Train</h1>
+        <p class="unified-game-desc">A little room. A safe way home.</p>
+        <div class="unified-records-strip"><div class="unified-record-box"><span class="unified-record-label" id="title-best-score-label">BEST SCORE</span><strong id="title-best-score">0</strong></div><div class="unified-record-box"><span class="unified-record-label" id="title-best-wave-label">BEST LEVEL</span><strong id="title-best-wave">1</strong></div></div>
+        <p id="title-best-level" class="record-level">LVL 1 · BEGINNER</p>
+        <section class="start-rules" aria-labelledby="rules-title"><h2 id="rules-title">How to play</h2>
+          <ol id="rules-list" class="rules"><li><strong>Pick a queue head.</strong> Preview the next three animals.</li><li><strong>Pick a carriage.</strong> Each has three seats.</li><li><strong>Three of a kind depart.</strong> An empty carriage replaces them. Rescue every target.</li></ol>
+          <p id="mixed-warning" class="warning">One species per carriage. Empty carriages accept any animal; occupied carriages accept only the same kind.</p>
         </section>
-        <section class="mission panel difficulty-picker" aria-labelledby="difficulty-title">
-          <p class="eyebrow">PLAY AT YOUR OWN LEVEL</p><h2 id="difficulty-title">Choose your difficulty</h2>
-          <nav id="levels" aria-label="Difficulty levels"></nav>
-          <p id="level-tip" class="tip"></p>
-          <button id="start" class="primary start-button">Start puzzle</button>
-          <button id="continue" class="secondary start-button" hidden>Continue last puzzle</button>
-          <p id="save-notice" class="fineprint">No account needed. Progress is saved in this browser.</p>
-        </section>
+        <button id="continue" class="secondary start-button" hidden>Continue last puzzle</button>
+        <div class="unified-actions-bar"><button id="btn-start-game" class="unified-start-btn" data-start="true">START GAME</button></div>
+        <p class="menu-note">Use PRACTICE to jump straight to any level. Practice does not change best records.</p>
+        <p id="save-notice" class="fineprint">Guest progress is saved in this browser.</p>
+        <button id="exit-title" class="text-button">Back to Hub</button>
       </div>
     </section>
     <section id="play-screen" aria-label="Rescue puzzle" hidden>
@@ -47,10 +47,13 @@
         <p id="instruction" class="instruction" role="status" aria-live="polite" aria-atomic="true"></p>
         <div class="section-label"><h3>Carriages</h3><span>3 seats each</span></div><div class="rail-yard"><div class="rail" aria-hidden="true"></div><div id="cars" class="cars"></div></div>
         <section id="result" class="result" aria-live="polite" hidden></section>
-        <footer class="controls"><button id="undo" class="secondary" disabled>↶ Undo move</button><button id="restart" class="secondary">↻ Retry puzzle</button><button id="replay" class="primary" hidden>Play this level again</button></footer>
+        <footer class="controls"><button id="undo" class="secondary" disabled>↶ Undo move</button><button id="restart" class="secondary">↻ Retry puzzle</button><button id="next" class="primary" hidden>Next puzzle →</button></footer>
+        <button id="btn-share-score" class="text-button" hidden>SHARE SCORE</button>
+        <p id="record-notice" class="fineprint" role="status"></p>
       </section>
     </section>
     <dialog id="help-dialog" aria-labelledby="help-title"><h2 id="help-title">How to play</h2><div id="help-content"></div><button id="close-help" class="primary">Back to puzzle</button></dialog>
+    <dialog id="pause-dialog" aria-labelledby="pause-title"><h2 id="pause-title">Paused</h2><button id="resume" class="primary">Resume puzzle</button></dialog>
   </main>
 </body>
 </html>

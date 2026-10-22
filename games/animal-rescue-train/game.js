@@ -16,126 +16,216 @@
   }
   const $ = id => document.getElementById(id);
   const levels = RescueLevels;
-  const storageKey = 'toenow_rescue_train_guest_v1';
+  const storageKey = ToenowLevels.GAME_STORAGE_KEYS['animal-rescue-train'].session;
+  function roundForWave(wave, existingRequiredAnimal) {
+    const info = ToenowLevels.getLevelInfo(wave);
+    const bank = RescuePuzzles[info.level - 1];
+    const round = { ...levels[info.level - 1], ...bank[(wave - info.startWave) % bank.length] };
+    if (info.level >= 5) {
+      round.carCount = 5;
+      if (existingRequiredAnimal) {
+        round.requiredLastAnimal = existingRequiredAnimal;
+      } else {
+        // Pick a guaranteed-solvable last animal
+        const species = Object.keys(round.goals);
+        round.requiredLastAnimal = species[Math.floor(Math.random() * species.length)];
+      }
+    }
+    return round;
+  }
   let storageAvailable = true;
   let saved = null;
-  try { saved = RescueSession.restoreProgress(localStorage.getItem(storageKey), levels); }
+  try { saved = RescueSession.restoreProgress(localStorage.getItem(storageKey), levels, roundForWave); }
   catch { storageAvailable = false; }
-  let levelIndex = saved?.index ?? 0;
-  let menuIndex = levelIndex;
-  let game = saved?.game ?? new RescueTrain.Game(levels[levelIndex]);
+  let wave = saved?.wave ?? 1;
+  let isPractice = saved?.isPractice ?? false;
+  let levelIndex = ToenowLevels.getLevelInfo(wave).level - 1;
+  let game = saved?.game ?? new RescueTrain.Game(roundForWave(wave));
   let actions = saved?.actions ?? [];
+  let scoreBefore = saved?.scoreBefore ?? 0;
+  let elapsedBank = saved?.elapsedMs ?? 0;
+  let runStarted = Date.now();
+  let reported = saved?.reported ?? false;
   let hasSave = Boolean(saved);
   let selected = null;
+  let paused = false;
   const letter = index => String.fromCharCode(65 + index);
+  const elapsed = () => elapsedBank + Date.now() - runStarted;
+  const rescued = () => Object.values(game.state.rescued).reduce((sum, count) => sum + count, 0);
+  const sdk = new ToenowGameSDK({
+    gameId: 'animal-rescue-train', category: 'logic', gameTitle: 'Animal Rescue Train',
+    hasWaves: false, maxLevels: 5,
+    onStart: begin, onRestart: retry,
+    onPause: () => { if (document.body.dataset.screen === 'play' && !paused) { paused = true; $('pause-dialog').showModal(); } },
+    onResume: () => { if ($('pause-dialog').open) $('pause-dialog').close(); if ($('help-dialog').open) $('help-dialog').close(); paused = false; }
+  });
+  sdk.setPracticeMode(isPractice);
 
   function persist() {
     hasSave = true;
-    try { localStorage.setItem(storageKey, JSON.stringify(RescueSession.saveProgress(levelIndex, levels[levelIndex], actions, game.canUndo))); }
+    try { localStorage.setItem(storageKey, JSON.stringify(RescueSession.saveProgress(levelIndex, game.level, actions, game.canUndo,
+      { wave, isPractice, scoreBefore, elapsedMs: elapsed(), reported }))); }
     catch { storageAvailable = false; }
   }
   function renderMenu() {
-    $('levels').innerHTML = levels.map((level, index) => `<button class="level ${index === menuIndex ? 'active' : ''}" data-level="${index}" aria-pressed="${index === menuIndex}" aria-label="Level ${level.tier}: ${level.tierName}, ${level.queues.length} queues and ${level.carCount} carriages"><span class="number">${level.tier}</span><span class="level-title">${level.tierName}<small>${level.queues.length} queues · ${level.carCount} carriages</small></span></button>`).join('');
-    $('level-tip').textContent = levels[menuIndex].thinking;
-    $('start').textContent = `Start level ${menuIndex + 1}`;
+    sdk.syncTitleUI();
     $('continue').hidden = !hasSave;
-    $('continue').textContent = `Continue level ${levelIndex + 1}`;
-    $('save-notice').textContent = storageAvailable ? 'No account needed. Progress is saved in this browser.' : 'Saving is unavailable in this browser. Keep this tab open to continue.';
+    const info = ToenowLevels.getLevelInfo(wave);
+    $('continue').textContent = `Continue Level ${info.level}${isPractice ? ' (practice)' : ''}`;
+    $('save-notice').textContent = storageAvailable ? 'No account needed. Guest progress is saved in this browser.' : 'Saving is unavailable. Keep this tab open to continue.';
   }
   function showPlay() {
-    $('menu-screen').hidden = true;
-    $('play-screen').hidden = false;
-    document.body.dataset.screen = 'play';
-    render();
+    $('menu-screen').hidden = true; $('play-screen').hidden = false;
+    document.body.dataset.screen = 'play'; document.body.dataset.state = 'playing';
+    paused = false; render();
     window.scrollTo(0, 0);
   }
-  function load(index) {
-    levelIndex = menuIndex = index;
-    game = new RescueTrain.Game(levels[index]);
-    actions = [];
-    selected = null;
-    persist();
-    showPlay();
+  function begin(options) {
+    wave = Math.max(1, Math.floor(options.wave || 1));
+    isPractice = Boolean(options.isPractice);
+    scoreBefore = 0; elapsedBank = 0; runStarted = Date.now();
+    loadRound();
+  }
+  function loadRound() {
+    sdk.resume();
+    levelIndex = ToenowLevels.getLevelInfo(wave).level - 1;
+    game = new RescueTrain.Game(roundForWave(wave));
+    actions = []; reported = false; selected = null;
+    persist(); showPlay();
+  }
+  function retry() { loadRound(); }
+  function reportResult() {
+    if (game.state.status === 'playing' || reported) return;
+    reported = true;
+    const report = sdk.handleGameOver({ score: scoreBefore + rescued(), wave, isPractice, duration: elapsed() });
+    if (report.isValid === false) $('record-notice').textContent = 'This attempt could not be recorded.';
   }
   function render(message) {
     const state = game.state;
-    const level = levels[levelIndex];
+    const info = ToenowLevels.getLevelInfo(wave);
     const playing = state.status === 'playing';
-    document.body.dataset.tier = level.tier;
+    document.body.dataset.tier = info.level;
     $('queues').style.setProperty('--queue-count', state.queues.length);
     $('cars').style.setProperty('--car-count', state.cars.length);
-    $('tier-label').textContent = `Level ${level.tier} · ${level.tierName}`;
+    $('tier-label').textContent = `${info.badgeText}${isPractice ? ' · PRACTICE' : ''}`;
     $('board-size').textContent = `${state.queues.length} queues · ${state.cars.length} carriages`;
-    $('level-number').textContent = `LEVEL ${level.tier} / 5`;
-    $('level-name').textContent = level.name;
+    $('level-number').textContent = `LEVEL ${info.level}`;
+    $('level-name').textContent = levels[levelIndex].name;
     $('moves').textContent = state.moves;
-    const total = Object.values(state.rescued).reduce((sum, count) => sum + count, 0);
-    const target = Object.values(level.goals).reduce((sum, count) => sum + count, 0);
-    $('total').textContent = `${total} / ${target} rescued`;
-    $('goals').innerHTML = Object.entries(level.goals).map(([animal, count]) => {
-      const rescued = state.rescued[animal] || 0;
-      return `<div class="goal ${rescued >= count ? 'done' : ''}" aria-label="${animals[animal].name}: ${rescued} rescued, target ${count}">${face(animal)}<span class="label">${animals[animal].name}</span><strong>${rescued} / ${count}</strong>${rescued >= count ? '<span aria-hidden="true">✓</span>' : ''}</div>`;
+    const target = Object.values(game.level.goals).reduce((sum, count) => sum + count, 0);
+    $('total').textContent = `${rescued()} / ${target} rescued`;
+    $('goals').innerHTML = Object.entries(game.level.goals).map(([animal, count]) => {
+      const savedCount = state.rescued[animal] || 0;
+      const isReq = game.level.requiredLastAnimal === animal;
+      const labelBadge = isReq ? '<span class="last-animal-badge" style="display:inline-block;margin-left:4px;font-size:0.7em;background:#f59e0b;color:#000;padding:1px 5px;border-radius:4px;font-weight:700;">LAST</span>' : '';
+      return `<div class="goal ${savedCount >= count ? 'done' : ''} ${isReq ? 'required-last-goal' : ''}" aria-label="${animals[animal].name}: ${savedCount} rescued, target ${count}">${face(animal)}<span class="label">${animals[animal].name}${labelBadge}</span><strong>${savedCount} / ${count}</strong>${savedCount >= count ? '<span aria-hidden="true">✓</span>' : ''}</div>`;
     }).join('');
     $('queues').innerHTML = state.queues.map((queue, index) => `<div class="queue"><div class="queue-header"><strong>Queue ${letter(index)}</strong><span>${queue.length} left</span></div><button class="head" data-queue="${index}" aria-pressed="${selected === index}" aria-label="Queue ${letter(index)} head: ${queue.length ? animals[queue[0]].name : 'empty'}" ${!playing || !queue.length ? 'disabled' : ''}>${queue.length ? `<span class="head-label">Front</span>${face(queue[0])}<span class="animal-name">${animals[queue[0]].name}</span>` : '<span class="empty-head">All aboard ✓</span>'}</button><p class="preview-label">Next 1 → 2 → 3</p><div class="previews">${[1, 2, 3].map(position => `<span class="preview ${queue[position] ? '' : 'empty'}" role="img" aria-label="${queue[position] ? `Upcoming ${position}: ${animals[queue[position]].name}` : 'No more animals'}">${queue[position] ? face(queue[position]) : '·'}</span>`).join('')}</div></div>`).join('');
     $('cars').innerHTML = state.cars.map((car, index) => {
-      const mixed = new Set(car).size > 1;
-      const boardable = playing && selected !== null && car.length < 3;
-      const hint = mixed ? 'Mixed · cannot depart' : car.length ? `Needs ${3 - car.length} more` : 'Empty carriage';
-      return `<button class="car ${boardable ? 'boardable' : ''} ${mixed ? 'mixed' : ''} ${car.length === 3 ? 'full' : ''}" data-car="${index}" aria-label="Carriage ${index + 1}, ${car.length} of 3 seats, ${car.map(animal => animals[animal].name).join(', ') || 'empty'}${mixed ? ', mixed group cannot depart' : ''}" ${boardable ? '' : 'disabled'}><span class="car-title"><span>Car ${index + 1}</span><span>${car.length} / 3</span></span><span class="seats">${[0, 1, 2].map(seat => `<span class="seat ${car[seat] ? '' : 'free'}">${car[seat] ? face(car[seat]) : '<span aria-hidden="true">+</span>'}</span>`).join('')}</span><span class="car-hint">${hint}</span></button>`;
+      const boardable = selected !== null && RescueTrain.canBoard(state, selected, index);
+      const hint = car.length ? `${animals[car[0]].name} only · needs ${3 - car.length}` : 'Any animal · empty';
+      return `<button class="car ${boardable ? 'boardable' : ''} ${car.length === 3 ? 'full' : ''}" data-car="${index}" aria-label="Carriage ${index + 1}, ${car.length} of 3 seats, ${car.map(animal => animals[animal].name).join(', ') || 'empty'}" ${boardable ? '' : 'disabled'}><span class="car-title"><span>Car ${index + 1}</span><span>${car.length} / 3</span></span><span class="seats">${[0, 1, 2].map(seat => `<span class="seat ${car[seat] ? '' : 'free'}">${car[seat] ? face(car[seat]) : '<span aria-hidden="true">+</span>'}</span>`).join('')}</span><span class="car-hint">${hint}</span></button>`;
     }).join('');
-    const prompt = selected === null ? 'Choose an animal, then a carriage.' : `${animals[state.queues[selected][0]].name} selected from queue ${letter(selected)}. Choose a carriage.`;
-    $('instruction').textContent = message || (playing ? prompt : state.status === 'won' ? 'Every animal is safely home.' : 'Try a different boarding order.');
+    const isLastLevel = info.level >= 5;
+    const reqName = game.level.requiredLastAnimal ? animals[game.level.requiredLastAnimal].name : null;
+    const reqPrompt = reqName ? ` ${reqName} must be the last animal to depart.` : '';
+    const prompt = selected === null ? ('Choose an animal, then a carriage.' + reqPrompt) : `${animals[state.queues[selected][0]].name} selected from queue ${letter(selected)}. Choose a carriage.`;
+    $('instruction').textContent = message || (playing ? prompt : state.status === 'won' ? (isLastLevel ? 'All 5 levels complete! Every animal is safely home.' : 'Every animal is safely home.') : (reqName && (state.rescued[game.level.requiredLastAnimal] || 0) >= game.level.goals[game.level.requiredLastAnimal] ? `${reqName} departed too early! ${reqName} must depart last.` : 'Try a different boarding order.'));
     $('undo').disabled = !game.canUndo;
-    $('result').hidden = playing;
-    $('result').className = `result ${state.status}`;
-    if (!playing) $('result').innerHTML = state.status === 'won' ? `<h3>Rescue complete!</h3><p>${total} animals rescued. You are still on level ${level.tier}; replay here or choose a difficulty from the menu.</p>` : `<h3>Station blocked</h3><p>${state.queues.some(queue => queue.length) ? 'Every carriage is full.' : 'No passengers remain in the queues.'} The rescue targets are not complete. Undo a move or retry this puzzle.</p>`;
-    $('replay').hidden = state.status !== 'won';
+    $('result').hidden = playing; $('result').className = `result ${state.status}`;
+    if (!playing) {
+      if (state.status === 'won') {
+        if (isLastLevel && !isPractice) {
+          $('result').innerHTML = `<h3>Game Complete!</h3><p>Outstanding! You completed all 5 levels and rescued ${scoreBefore + rescued()} animals.</p>`;
+        } else {
+          $('result').innerHTML = `<h3>Rescue complete!</h3><p>${rescued()} animals rescued. ${isPractice ? 'Practice level completed.' : 'Next level is unlocked!'}</p>`;
+        }
+      } else {
+        const premature = reqName && (state.rescued[game.level.requiredLastAnimal] || 0) >= game.level.goals[game.level.requiredLastAnimal];
+        $('result').innerHTML = premature
+          ? `<h3>Mission Failed</h3><p>${reqName} was sent away too early! ${reqName} was designated to leave last. Undo a move or retry.</p>`
+          : '<h3>Station blocked</h3><p>No animal can board before the targets are met. Undo a move or retry this puzzle.</p>';
+      }
+    }
+    if (state.status === 'won') {
+      if (isLastLevel && !isPractice) {
+        $('next').textContent = 'Play Again ↻';
+        $('next').hidden = false;
+      } else {
+        $('next').textContent = 'Next Level →';
+        $('next').hidden = isPractice;
+      }
+    } else {
+      $('next').hidden = true;
+    }
+    $('btn-share-score').hidden = playing;
+    if (playing) $('record-notice').textContent = '';
   }
-  $('levels').addEventListener('click', event => {
-    const button = event.target.closest('[data-level]');
-    if (button) { menuIndex = Number(button.dataset.level); renderMenu(); }
-  });
-  $('start').addEventListener('click', () => load(menuIndex));
-  $('continue').addEventListener('click', () => { selected = null; showPlay(); });
+  $('btn-start-game').addEventListener('click', () => sdk.start({ wave: 1, isPractice: false }));
+  sdk.setupPractice((startWave, practice) => sdk.start({ wave: startWave, isPractice: practice }));
+  $('continue').addEventListener('click', () => { selected = null; sdk.setPracticeMode(isPractice); showPlay(); });
   $('menu').addEventListener('click', () => {
-    persist(); menuIndex = levelIndex; selected = null; renderMenu();
+    sdk.resume(); persist(); selected = null; renderMenu();
     $('play-screen').hidden = true; $('menu-screen').hidden = false;
-    document.body.dataset.screen = 'menu';
-    $('continue').focus(); window.scrollTo(0, 0);
+    document.body.dataset.screen = 'menu'; document.body.dataset.state = 'title';
+    $('continue').focus();
   });
   $('queues').addEventListener('click', event => {
     const button = event.target.closest('[data-queue]');
-    if (!button || button.disabled) return;
-    const index = Number(button.dataset.queue);
-    selected = selected === index ? null : index;
-    render();
-    document.querySelector(`[data-queue="${index}"]`)?.focus({ preventScroll: true });
+    if (paused || !button || button.disabled) return;
+    const index = Number(button.dataset.queue); selected = selected === index ? null : index;
+    render(); document.querySelector(`[data-queue="${index}"]`)?.focus({ preventScroll: true });
   });
   $('cars').addEventListener('click', event => {
     const button = event.target.closest('[data-car]');
-    if (!button || button.disabled || selected === null) return;
+    if (paused || !button || button.disabled || selected === null) return;
     const queue = selected, carIndex = Number(button.dataset.car);
     if (!game.move(queue, carIndex)) return;
-    actions.push([queue, carIndex]); selected = null; persist();
+    actions.push([queue, carIndex]); selected = null; render(); reportResult(); persist();
     const departure = game.state.departure;
-    render(departure ? `${animals[departure.animal].name} carriage departed! Three rescued; an empty carriage is ready.` : undefined);
     if (departure) {
+      $('instruction').textContent = `${animals[departure.animal].name} carriage departed! Three rescued; an empty carriage is ready.`;
       const car = document.querySelector(`[data-car="${departure.car}"]`);
-      const ghost = document.createElement('span');
-      ghost.className = 'departure-ghost'; ghost.setAttribute('aria-hidden', 'true'); ghost.textContent = '+3 rescued →';
-      car.classList.add('departing'); car.append(ghost);
-      ghost.addEventListener('animationend', () => ghost.remove(), { once: true });
+      const ghost = document.createElement('span'); ghost.className = 'departure-ghost'; ghost.setAttribute('aria-hidden', 'true'); ghost.textContent = '+3 rescued →';
+      car.classList.add('departing'); car.append(ghost); ghost.addEventListener('animationend', () => ghost.remove(), { once: true });
     }
     if (event.detail === 0) (document.querySelector('.head:not(:disabled)') || $('undo')).focus({ preventScroll: true });
   });
   $('undo').addEventListener('click', () => {
-    if (game.undo()) { actions.pop(); selected = null; persist(); render('Last move undone. Choose a queue head.'); }
+    if (!paused && game.undo()) { actions.pop(); selected = null; reported = false; persist(); render('Last move undone. Choose a queue head.'); }
   });
-  $('restart').addEventListener('click', () => load(levelIndex));
-  $('replay').addEventListener('click', () => load(levelIndex));
-  $('help-content').innerHTML = `${document.querySelector('.rules').outerHTML}<p class="warning">${document.querySelector('.warning').textContent}</p>`;
-  $('help').addEventListener('click', () => $('help-dialog').showModal());
-  $('close-help').addEventListener('click', () => $('help-dialog').close());
-  renderMenu();
-  render();
+  $('restart').addEventListener('click', () => { if (!paused) sdk.restart(); });
+  $('next').addEventListener('click', () => {
+    if (paused || game.state.status !== 'won') return;
+    scoreBefore = isPractice ? 0 : scoreBefore + rescued();
+    const info = ToenowLevels.getLevelInfo(wave);
+    if (!isPractice && info.level >= 5) {
+      // Completed all 5 levels, restart normal run from level 1
+      wave = 1;
+      scoreBefore = 0;
+    } else {
+      // Each level is exactly 1 step (next level's start wave)
+      const nextLevel = info.level + 1;
+      const nextLvlObj = ToenowLevels.LEVELS.find(l => l.level === nextLevel);
+      wave = isPractice
+        ? info.startWave
+        : (nextLvlObj ? nextLvlObj.startWave : 1);
+    }
+    loadRound();
+  });
+  $('btn-share-score').addEventListener('click', () => sdk.share({ gameTitle: 'Animal Rescue Train', score: scoreBefore + rescued(), wave }));
+  $('help-content').innerHTML = `<ol class="rules">${$('rules-list').innerHTML}</ol><p class="warning">${$('mixed-warning').textContent}</p>`;
+  $('help').addEventListener('click', () => { paused = true; $('help-dialog').showModal(); });
+  $('close-help').addEventListener('click', () => sdk.resume());
+  $('resume').addEventListener('click', () => sdk.resume());
+  ['help-dialog', 'pause-dialog'].forEach(id => $(id).addEventListener('close', () => { paused = Boolean($('help-dialog').open || $('pause-dialog').open); }));
+  $('exit-title').addEventListener('click', () => sdk.exitToHub());
+  window.addEventListener('message', event => {
+    if (event.source !== window.parent || event.origin !== window.location.origin) return;
+    if (event.data?.type === 'GAME_RESTART') sdk.restart();
+    if (event.data?.type === 'GAME_PAUSE') sdk.pause();
+    if (event.data?.type === 'GAME_RESUME') sdk.resume();
+  });
+  window.addEventListener('pagehide', () => { if (hasSave) persist(); });
+  renderMenu(); render();
 })();

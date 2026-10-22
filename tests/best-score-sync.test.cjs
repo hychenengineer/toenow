@@ -5,7 +5,7 @@ const path = require('path');
 
 const ToenowLevels = require('../shared/toenow-levels.js');
 
-test('ToenowLevels exports GAME_STORAGE_KEYS for all 9 games', () => {
+test('ToenowLevels exports GAME_STORAGE_KEYS for all 10 games', () => {
   assert.ok(ToenowLevels.GAME_STORAGE_KEYS, 'GAME_STORAGE_KEYS should be exported');
   const expectedGames = [
     'number-pop',
@@ -16,7 +16,8 @@ test('ToenowLevels exports GAME_STORAGE_KEYS for all 9 games', () => {
     'tap-match',
     'spot-quick',
     'shadow-match',
-    'flash-brain'
+    'flash-brain',
+    'animal-rescue-train'
   ];
   for (const gameId of expectedGames) {
     const entry = ToenowLevels.GAME_STORAGE_KEYS[gameId];

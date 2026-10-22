@@ -19,3 +19,13 @@ test('invalid or incompatible guest data is ignored instead of mutating a game',
   assert.equal(restoreProgress({ ...saved, index: 9 }, [level]), null);
   assert.equal(restoreProgress(saved, [{ ...level, carCount: 3 }]), null);
 });
+
+test('resume retains practice status and an already-used undo remains unavailable', () => {
+  const { saveProgress, restoreProgress } = require('../games/animal-rescue-train/session.js');
+  const data = saveProgress(0, level, [[0, 0]], false, { wave: 2, isPractice: true, elapsedMs: 1000 });
+  const restored = restoreProgress(data, [level], () => level);
+  assert.equal(restored.wave, 2);
+  assert.equal(restored.isPractice, true);
+  assert.equal(restored.game.canUndo, false);
+  assert.equal(restoreProgress({ ...data, scoreBefore: Infinity }, [level]), null);
+});

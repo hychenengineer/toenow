@@ -1,5 +1,5 @@
 // Offline calibration, not a player success prediction. Cars with identical contents
-// are interchangeable. All passengers are required, so any mixed car is a dead end.
+// are interchangeable. Occupied cars accept only matching species.
 const { Game } = require('../games/animal-rescue-train/engine.js');
 
 function analyze(level, { stopOnGreedyWin = false } = {}) {

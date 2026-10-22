@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const GAMES = [
+  { id: 'animal-rescue-train', path: 'games/animal-rescue-train/index.html', titleCardId: 'menu-screen', controller: 'games/animal-rescue-train/game.js' },
   { id: 'number-pop', path: 'games/number-pop/index.html', titleCardId: 'title-screen' },
   { id: 'ball-track', path: 'games/ball-track/index.html', titleCardId: 'screen-title' },
   { id: 'spot-quick', path: 'games/spot-quick/index.html', titleCardId: 'briefingModal' },
@@ -14,23 +15,24 @@ const GAMES = [
   { id: 'shadow-match', path: 'games/shadow-match/index.html', titleCardId: 'title-overlay' }
 ];
 
-GAMES.forEach(({ id, path: relPath, titleCardId }) => {
+GAMES.forEach(({ id, path: relPath, titleCardId, controller }) => {
   test(`Practice Mode contract verified for game [${id}]`, () => {
     const fullPath = path.resolve(__dirname, '..', relPath);
     const html = fs.readFileSync(fullPath, 'utf8');
+    const source = html + (controller ? fs.readFileSync(path.resolve(__dirname, '..', controller), 'utf8') : '');
 
     // 1. Must load shared/toenow-levels.js
     assert.ok(html.includes('shared/toenow-levels.js'), `${id} must include shared/toenow-levels.js`);
 
     // 2. Must call setupPracticeMode
-    assert.ok(html.includes('setupPracticeMode'), `${id} must call ToenowLevels.setupPracticeMode`);
+    assert.ok(source.includes('setupPracticeMode') || source.includes('sdk.setupPractice('), `${id} must use shared practice setup`);
 
     // 3. Must target an existing container ID in HTML
     assert.ok(html.includes(`id="${titleCardId}"`) || html.includes(`id='${titleCardId}'`), `${id} must have container #${titleCardId}`);
-    assert.ok(html.includes(`#${titleCardId}`), `${id} setupPracticeMode container selector must match #${titleCardId}`);
+    assert.ok(controller ? html.includes('unified-title-card') : html.includes(`#${titleCardId}`), `${id} practice container must be discoverable by the shared helper`);
 
     // 4. Must accept (startWave, isPractice) in its start routine
-    assert.ok(html.includes('isPractice'), `${id} start routine must accept isPractice flag`);
+    assert.ok(source.includes('isPractice'), `${id} start routine must accept isPractice flag`);
   });
 });
 

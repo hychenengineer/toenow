@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const GAMES = [
+  { id: 'animal-rescue-train', path: 'games/animal-rescue-train/index.html', startBtn: 'btn-start-game', external: true },
   { id: 'number-pop', path: 'games/number-pop/index.html', startBtn: 'btn-start' },
   { id: 'ball-track', path: 'games/ball-track/index.html', startBtn: 'btn-start-game' },
   { id: 'spot-quick', path: 'games/spot-quick/index.html', startBtn: 'startAnalysisBtn' },
@@ -49,7 +50,11 @@ function createMockDOM(html) {
           const fns = (this._listeners && this._listeners[ev.type]) || [];
           fns.forEach((fn) => fn(ev));
         },
-        style: {},
+        style: { setProperty: () => {} },
+        innerHTML: '',
+        textContent: '',
+        querySelector: () => null,
+        querySelectorAll: () => [],
         getBoundingClientRect: () => ({ left: 0, top: 0, width: 800, height: 600, right: 800, bottom: 600 }),
         parentElement: {
           getBoundingClientRect: () => ({ left: 0, top: 0, width: 800, height: 600, right: 800, bottom: 600 })
@@ -173,6 +178,7 @@ for (const game of GAMES) {
       },
       removeEventListener: function () {}
     };
+    sandbox.scrollTo = () => {};
     sandbox.window = sandbox;
 
     // Extract inline scripts
@@ -180,7 +186,10 @@ for (const game of GAMES) {
     let match;
     const scriptBlocks = [];
     while ((match = scriptRegex.exec(html)) !== null) {
-      if (!match[0].includes('src=')) {
+      const src = match[0].match(/src=["']([^"']+)["']/);
+      if (game.external && src) {
+        scriptBlocks.push(fs.readFileSync(path.resolve(path.dirname(fullPath), src[1]), 'utf8'));
+      } else if (!src) {
         scriptBlocks.push(match[1]);
       }
     }
@@ -209,7 +218,11 @@ for (const game of GAMES) {
     );
 
     try {
-      runner(
+      if (game.external) {
+        const vm = require('node:vm');
+        const context = vm.createContext(sandbox);
+        scriptBlocks.forEach(code => vm.runInContext(code, context));
+      } else runner(
         sandbox.window,
         sandbox.document,
         sandbox.navigator,
@@ -242,6 +255,16 @@ for (const game of GAMES) {
       hasListener,
       `No click or pointerdown event listener attached to ${game.startBtn} in ${game.id}`
     );
+
+    // Verify Game Over screen is NEVER active/visible on initial launch
+    const gameoverScreenIds = ['gameover-screen', 'screen-gameover', 'gameOverModal', 'modal-gameover', 'gameover-overlay'];
+    gameoverScreenIds.forEach(gId => {
+      if (elements.has(gId)) {
+        const goEl = elements.get(gId);
+        const isActive = goEl.classList.contains('active') || goEl.classList.contains('visible');
+        assert.equal(isActive, false, `Game Over screen #${gId} in ${game.id} must NOT have active/visible class on boot`);
+      }
+    });
 
     // Dispatch click to ensure start doesn't throw
     try {

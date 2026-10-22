@@ -230,4 +230,28 @@ test('ToenowLevels setupPracticeMode renders practice button and opens modal to 
 
   // Modal should be removed after selection
   assert.equal(mockBody.querySelector('.unified-practice-modal'), null, 'Modal should be removed after selection');
+
+  // Test setupPracticeMode with hasWaves: false
+  const mockCard2 = createMockElement('div');
+  mockCard2.className = 'unified-title-card';
+  const mockStartBtn2 = createMockElement('button');
+  mockStartBtn2.className = 'unified-start-btn';
+  mockCard2.appendChild(mockStartBtn2);
+  mockBody.appendChild(mockCard2);
+
+  ToenowLevels.setupPracticeMode({
+    container: mockCard2,
+    startBtn: mockStartBtn2,
+    hasWaves: false,
+    onStartGame: () => {}
+  });
+  const practiceBtn2 = mockCard2.querySelector('.unified-practice-btn');
+  practiceBtn2.click();
+  const modal2 = mockBody.querySelector('.unified-practice-modal');
+  assert.ok(modal2);
+  const lvlBtns = modal2.querySelectorAll('.unified-practice-level-btn');
+  assert.equal(lvlBtns.length, 5);
+  assert.ok(lvlBtns[0].innerHTML.includes('Level 1'));
+  assert.ok(lvlBtns[4].innerHTML.includes('Level 5'));
+  modal2.remove();
 });

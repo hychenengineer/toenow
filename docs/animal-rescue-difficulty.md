@@ -1,25 +1,34 @@
-# 動物救援列車：TOENOW 五階難度
+# Animal Rescue Train — SDK integration
 
-依使用者最新要求，隊伍及車廂數隨難度增加。保留每隊後方三隻預覽、每節車廂三個座位、同類三隻自動出發、原有勝敗及一步撤銷規則。五關明確標示 Tier 1–5：入門、基礎、進階、挑戰、專家。
+This static HTML/CSS/JavaScript game follows the root AGENTS.md and uses the shared title styles, difficulty mapping, storage registry, security profile, platform adapter, and ToenowGameSDK. No additional engine or dependency is needed at runtime.
 
-| Tier | 隊伍 | 車廂 | 動物種類 |
-| --- | ---: | ---: | ---: |
-| 1 | 2 | 2 | 2 |
-| 2 | 3 | 2 | 3 |
-| 3 | 3 | 3 | 5 |
-| 4 | 4 | 3 | 6 |
-| 5 | 5 | 4 | 8 |
+| Shared level | Normal waves | Queues | Carriages | Species |
+| --- | --- | ---: | ---: | ---: |
+| Beginner | 1–5 | 2 | 2 | 2 |
+| Intermediate | 6–10 | 3 | 2 | 3 |
+| Advanced | 11–15 | 3 | 3 | 5 |
+| Expert | 16–20 | 4 | 3 | 6 |
+| Master | 21+ | 5 | 4 | 8 |
 
-增加車廂也會增加容錯空間，因此同時調整種類與隊伍交錯程度，並重新測量難度。手機上較大的月台分行，維持所有隊首可點選及清晰的動物圖案。
+The bank contains five distinct certified puzzles per level (25 total). Normal mode advances through shared wave bands; Master repeats its five-puzzle bank after wave 25. This is finite content, not unlimited unique generation. Practice can start directly at any shared level and continues within that level, without changing best score or best wave. No player has to replay easy levels to retry a hard puzzle.
 
-實作及驗證順序：
+The English title screen contains the short rules and practice selection. Gameplay shows the board, targets, and controls; Help opens instructions separately. Retry preserves the current puzzle and difficulty. Undo restores exactly one move, including a winning or losing transition.
 
-1. 建立離線難度分析，合併交換空車廂等無意義分支，只衡量選哪條隊伍。
-2. 確認所有動物都能救援；以確切的不混乘隨機選隊成功機率篩選五階關卡，另檢查簡單貪心策略及需要預判的分岔。此機率是程式比較指標，不宣稱為真人通關率。依次篩選 100%、65–90%、25–50%、6–16%、0.5–3.5% 的區間。
-3. Tier 1 保留短教學；Tier 2 引入隊伍依賴；Tier 3–5 逐步要求空車廂保留與救援順序規劃。高階關卡不能由所測量的一步貪心策略直接解出。
-4. 介面顯示目前 Tier、五點難度與該階思考重點；首頁卡片顯示 Tier 1–5 範圍。
-5. 重跑規則測試、獨立通關路徑重播與滑鼠／觸控瀏覽器操作，更新證據。保留既有工作區修改。本輪先完成本機調整；先前 Cloudflare 發布仍等待登入。
+Guest progress is stored as a validated move history under the registered session key. It restores puzzle, mode, cumulative normal score, and whether undo has already been used. It works in the same browser/profile without login. Clearing browser data or changing devices removes this local continuity. If browser storage is blocked, play remains available and the menu explains that progress cannot be saved.
 
-所有動物數恰等於救援目標，因此混乘會使本關無法完整救援；教學需明確說明。難度不得依靠倒數、看不清楚的動物或誤導性提示。
+SDK lifecycle callbacks handle start, pause, resume, and restart. Completed or blocked rounds report the cumulative number of rescued animals in normal mode. The Hub synchronizes personal records and uses GAME_RESTART/CLOSE_GAME for embedded controls. Practice reports are excluded from records. The game remains excluded from leaderboard/cloud score submission; it does not invoke ads or purchases.
 
-公平性檢查針對分析器輸出的通關證明路徑：Tier 3–5 的關鍵錯誤分支，都可在不使用超出現有預覽的資訊下證明會卡住。這不是所有可能遊玩歷程的公平性保證；實際玩家的體感難度仍需試玩確認。錯誤分支的最長延續步數是分析指標，並非人類必須計算的固定步數。
+## Difficulty evidence
+
+`tools/build-rescue-bank.cjs` generates the checked-in bank with a fixed seed and certifies every puzzle. `tools/rescue-train-difficulty.cjs` measures exact success probability for uniform legal non-mixing queue choices, one carriage per active species. This is a comparison model, not measured human success. Probability bands are 100%, 65–90%, 25–50%, 6–16%, and 0.5–3.5%. Advanced through Master reject the tested simple greedy strategies.
+
+The solver replays its certificate through the actual game engine; an independent replay also checks targets and rejects mixed species. Visibility and trap-depth metrics concern the selected certificate path, not every possible history or a fixed human thinking depth. Each carriage accepts one species only: empty carriages accept any animal, occupied carriages only matching animals. Incompatible carriage buttons are disabled. A station loses when no queue head can board any carriage, even if seats remain; departures and victory are settled first.
+
+## Local verification
+
+- `npm test`: shared SDK regression, all game startup checks, practice isolation, engine rules, session replay, difficulty analysis, and all 25 puzzle certificates.
+- `npm run serve`: local server, currently port 8765.
+- With Playwright available in NODE_PATH: `node tools/verify-animal-rescue-train-browser.cjs` (installed Chrome by default; optional RESCUE_BROWSER_CHANNEL).
+- Browser evidence: `artifacts/animal-rescue-train/browser-results.json`, plus menu, desktop, mobile, blocked-station and Hub screenshots.
+
+Browser checks cover normal wave progression, all five practice difficulties, winning/blocked undo, reload persistence, unavailable storage, touch emulation, responsive widths, Hub restart and result communication. Physical iPad Safari and authenticated backend services are not verified by these local checks. No public deployment is performed by this change.

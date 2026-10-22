@@ -7,6 +7,7 @@ var LEVELS = [
 ];
 
 var GAME_STORAGE_KEYS = {
+  'animal-rescue-train': { score: 'animal_rescue_train_best_score', wave: 'animal_rescue_train_best_wave', session: 'animal_rescue_train_guest_v2' },
   'number-pop': { score: 'qcc_high_score_v1', wave: 'qcc_best_wave_v1' },
   'ball-track': { score: 'quantum_shell_best_score_v5', wave: 'quantum_shell_best_wave_v5' },
   'block-match': { score: 'chip_defrag_high_score_v5', wave: 'block_match_best_wave' },
@@ -74,6 +75,15 @@ var GAME_STORAGE_KEYS = {
       waveEl.textContent = String(Math.max(1, maxWave));
     }
 
+    // Support hasWaves: false -> label shows "BEST LEVEL" instead of "BEST WAVE"
+    var waveLabelEl = options.waveLabelElement || document.getElementById('title-best-wave-label');
+    if (!waveLabelEl && waveEl && waveEl.parentElement && typeof waveEl.parentElement.querySelector === 'function') {
+      waveLabelEl = waveEl.parentElement.querySelector('.unified-record-label');
+    }
+    if (waveLabelEl && options.hasWaves === false) {
+      waveLabelEl.textContent = 'BEST LEVEL';
+    }
+
     var levelEl = options.levelElement || document.getElementById('title-best-level') || document.getElementById('titleBestLvl');
     if (levelEl) {
       if (bestScore <= 0 && (!options.maxWave || options.maxWave <= 1) && maxWave <= 1) {
@@ -108,9 +118,11 @@ var GAME_STORAGE_KEYS = {
 
   var activeModal = null;
 
-  function openPracticeModal(onStartGame) {
+  function openPracticeModal(onStartGame, options) {
     if (typeof document === 'undefined') return;
     var onStart = typeof onStartGame === 'function' ? onStartGame : function () {};
+    options = options || {};
+    var hasWaves = options.hasWaves !== false;
 
     if (activeModal && activeModal.parentNode) {
       activeModal.parentNode.removeChild(activeModal);
@@ -143,7 +155,10 @@ var GAME_STORAGE_KEYS = {
       itemBtn.setAttribute('data-level', String(lvl.level));
       itemBtn.setAttribute('data-wave', String(lvl.startWave));
 
-      var waveRangeText = lvl.level === 5 ? 'Wave 21+' : 'Waves ' + lvl.minWave + '–' + lvl.maxWave;
+      var waveRangeText = hasWaves
+        ? (lvl.level === 5 ? 'Wave 21+' : 'Waves ' + lvl.minWave + '–' + lvl.maxWave)
+        : 'Level ' + lvl.level;
+
       itemBtn.innerHTML = '<div class="unified-practice-level-num">LVL ' + lvl.level + '</div>' +
         '<div class="unified-practice-level-details">' +
         '  <span class="unified-practice-level-name">' + lvl.name.toUpperCase() + '</span>' +
@@ -213,20 +228,258 @@ var GAME_STORAGE_KEYS = {
 
     practiceBtn.onclick = function (e) {
       e.preventDefault();
-      openPracticeModal(onStart);
+      openPracticeModal(onStart, options);
     };
 
     if (options.gameId) {
       try {
-        syncTitleRecords(options.gameId);
+        syncTitleRecords(options);
       } catch (_) {}
     }
   }
 
-  
+
+  /**
+   * Generates a high-resolution, futuristic cyber/glow score challenge poster card.
+   * Renders to Canvas and exports as a PNG Blob.
+   * @param {Object} options
+   * @param {string} options.gameId
+   * @param {string} options.gameTitle
+   * @param {number} options.score
+   * @param {number} options.wave
+   * @param {string} options.badgeText
+   * @param {Function} callback (blob: Blob)
+   */
+  function generateScorePoster(options, callback) {
+    if (typeof document === 'undefined') {
+      if (typeof callback === 'function') callback(null);
+      return;
+    }
+
+    var canvas = document.createElement('canvas');
+    var w = 1200;
+    var h = 675; // Standard 16:9 social share card ratio (optimal for Twitter, Discord, Teams, WhatsApp preview)
+    canvas.width = w;
+    canvas.height = h;
+    var ctx = canvas.getContext('2d');
+    if (!ctx) {
+      if (typeof callback === 'function') callback(null);
+      return;
+    }
+
+    // 1. Deep Space Cyber Background
+    var bgGrad = ctx.createRadialGradient(w / 2, h * 0.35, 50, w / 2, h / 2, 700);
+    bgGrad.addColorStop(0, '#151e36');
+    bgGrad.addColorStop(0.5, '#0b0f19');
+    bgGrad.addColorStop(1, '#04060b');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    // 2. Futuristic Grid Mesh Effect
+    ctx.save();
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.05)';
+    ctx.lineWidth = 1;
+    for (var x = 0; x <= w; x += 40) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
+      ctx.stroke();
+    }
+    for (var y = 0; y <= h; y += 40) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // 3. Ambient Glow Orbs
+    ctx.save();
+    var glowCyan = ctx.createRadialGradient(220, 160, 10, 220, 160, 280);
+    glowCyan.addColorStop(0, 'rgba(34, 211, 238, 0.22)');
+    glowCyan.addColorStop(1, 'rgba(34, 211, 238, 0)');
+    ctx.fillStyle = glowCyan;
+    ctx.beginPath();
+    ctx.arc(220, 160, 280, 0, Math.PI * 2);
+    ctx.fill();
+
+    var glowPurple = ctx.createRadialGradient(w - 200, h - 140, 10, w - 200, h - 140, 320);
+    glowPurple.addColorStop(0, 'rgba(139, 92, 246, 0.25)');
+    glowPurple.addColorStop(1, 'rgba(139, 92, 246, 0)');
+    ctx.fillStyle = glowPurple;
+    ctx.beginPath();
+    ctx.arc(w - 200, h - 140, 320, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // 4. Central Glassmorphism Card Frame
+    var pad = 44;
+    var cardX = pad;
+    var cardY = pad;
+    var cardW = w - pad * 2;
+    var cardH = h - pad * 2;
+    var r = 24;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(cardX + r, cardY);
+    ctx.lineTo(cardX + cardW - r, cardY);
+    ctx.quadraticCurveTo(cardX + cardW, cardY, cardX + cardW, cardY + r);
+    ctx.lineTo(cardX + cardW, cardY + cardH - r);
+    ctx.quadraticCurveTo(cardX + cardW, cardY + cardH, cardX + cardW - r, cardY + cardH);
+    ctx.lineTo(cardX + r, cardY + cardH);
+    ctx.quadraticCurveTo(cardX, cardY + cardH, cardX, cardY + cardH - r);
+    ctx.lineTo(cardX, cardY + r);
+    ctx.quadraticCurveTo(cardX, cardY, cardX + r, cardY);
+    ctx.closePath();
+
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
+    ctx.fill();
+
+    // Card Glass Border
+    var borderGrad = ctx.createLinearGradient(cardX, cardY, cardX + cardW, cardY + cardH);
+    borderGrad.addColorStop(0, 'rgba(56, 189, 248, 0.7)');
+    borderGrad.addColorStop(0.5, 'rgba(139, 92, 246, 0.4)');
+    borderGrad.addColorStop(1, 'rgba(16, 185, 129, 0.6)');
+    ctx.strokeStyle = borderGrad;
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+    ctx.restore();
+
+    // 5. Header Branding: TOENOW MATRIX · COGNITIVE ARENA
+    ctx.save();
+    ctx.font = '900 24px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillStyle = '#38bdf8';
+    ctx.letterSpacing = '4px';
+    ctx.fillText('⚡ TOENOW MATRIX', cardX + 50, cardY + 70);
+
+    ctx.font = '600 16px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText('COGNITIVE CHALLENGE RECORD', cardX + 50, cardY + 98);
+    ctx.restore();
+
+    // Game Title Badge
+    ctx.save();
+    ctx.font = '800 48px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    var titleGrad = ctx.createLinearGradient(cardX + 50, cardY + 160, cardX + 450, cardY + 160);
+    titleGrad.addColorStop(0, '#ffffff');
+    titleGrad.addColorStop(1, '#e2e8f0');
+    ctx.fillStyle = titleGrad;
+    ctx.fillText(options.gameTitle.toUpperCase(), cardX + 50, cardY + 175);
+    ctx.restore();
+
+    // Level Badge Pill
+    ctx.save();
+    var badgeText = options.badgeText || 'LVL 1 · BEGINNER';
+    ctx.font = '700 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    var badgeW = ctx.measureText(badgeText).width + 36;
+    var badgeX = cardX + 50;
+    var badgeY = cardY + 205;
+
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(badgeX, badgeY, badgeW, 36, [18]);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText(badgeText, badgeX + 18, badgeY + 25);
+
+    // Wave Pill
+    var waveText = 'WAVE ' + options.wave;
+    var waveW = ctx.measureText(waveText).width + 36;
+    var waveX = badgeX + badgeW + 16;
+    ctx.fillStyle = 'rgba(139, 92, 246, 0.15)';
+    ctx.strokeStyle = '#a855f7';
+    ctx.beginPath();
+    ctx.roundRect(waveX, badgeY, waveW, 36, [18]);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#c084fc';
+    ctx.fillText(waveText, waveX + 18, badgeY + 25);
+    ctx.restore();
+
+    // 6. Giant Glowing Score Centerpiece
+    ctx.save();
+    ctx.font = '600 20px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText('FINAL SCORE', cardX + 50, cardY + 310);
+
+    ctx.font = '900 102px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    var scoreStr = options.score.toLocaleString();
+    var scoreGrad = ctx.createLinearGradient(cardX + 50, cardY + 360, cardX + 600, cardY + 410);
+    scoreGrad.addColorStop(0, '#38bdf8');
+    scoreGrad.addColorStop(0.5, '#22d3ee');
+    scoreGrad.addColorStop(1, '#a855f7');
+
+    ctx.shadowColor = 'rgba(56, 189, 248, 0.65)';
+    ctx.shadowBlur = 30;
+    ctx.fillStyle = scoreGrad;
+    ctx.fillText(scoreStr, cardX + 50, cardY + 410);
+    ctx.restore();
+
+    // 7. Right Side Call-To-Action Box ("CAN YOU BEAT THIS?")
+    ctx.save();
+    var ctaW = 340;
+    var ctaH = 340;
+    var ctaX = cardX + cardW - ctaW - 50;
+    var ctaY = cardY + 95;
+
+    ctx.fillStyle = 'rgba(30, 41, 59, 0.6)';
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(ctaX, ctaY, ctaW, ctaH, [20]);
+    ctx.fill();
+    ctx.stroke();
+
+    // Hologram icon
+    ctx.font = '64px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🏆', ctaX + ctaW / 2, ctaY + 95);
+
+    ctx.font = '900 24px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('CAN YOU BEAT THIS?', ctaX + ctaW / 2, ctaY + 155);
+
+    ctx.font = '500 15px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText('Accept challenge & test', ctaX + ctaW / 2, ctaY + 190);
+    ctx.fillText('your cognitive reflexes!', ctaX + ctaW / 2, ctaY + 215);
+
+    // Play Now simulated button
+    ctx.fillStyle = '#38bdf8';
+    ctx.beginPath();
+    ctx.roundRect(ctaX + 35, ctaY + 250, ctaW - 70, 48, [24]);
+    ctx.fill();
+
+    ctx.font = '800 17px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillStyle = '#0b0f19';
+    ctx.fillText('PLAY NOW ▶', ctaX + ctaW / 2, ctaY + 281);
+    ctx.restore();
+
+    // 8. Footer Link / Domain
+    ctx.save();
+    ctx.font = '600 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillStyle = '#64748b';
+    ctx.fillText('🔗 Free online training at toenow.com', cardX + 50, cardY + cardH - 35);
+    ctx.restore();
+
+    if (canvas.toBlob) {
+      canvas.toBlob(function (blob) {
+        callback(blob);
+      }, 'image/png');
+    } else {
+      callback(null);
+    }
+  }
+
   /**
    * Universal One-Click Share helper
-   * Shares game score / challenge link via Web Share API or falls back to Clipboard.
+   * Shares game score / challenge link with dynamic Poster Image via Web Share API or falls back to Clipboard.
    * @param {Object} options
    * @param {string} options.gameId
    * @param {string} options.gameTitle
@@ -264,18 +517,50 @@ var GAME_STORAGE_KEYS = {
       }, 2500);
     }
 
-    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
-      navigator.share({
-        title: 'Toenow Matrix — ' + gameTitle + ' Challenge',
-        text: shareText,
-        url: shareUrl
-      }).catch(function (err) {
-        if (err && err.name !== 'AbortError') {
-          copyToClipboard(shareText, showShareToast);
+    function doShare(file) {
+      if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+        var shareData = {
+          title: 'Toenow Matrix — ' + gameTitle + ' Challenge',
+          text: shareText,
+          url: shareUrl
+        };
+
+        // Attach image poster if supported
+        if (file && typeof navigator.canShare === 'function') {
+          try {
+            if (navigator.canShare({ files: [file] })) {
+              shareData.files = [file];
+            }
+          } catch (_) {}
+        }
+
+        navigator.share(shareData).catch(function (err) {
+          if (err && err.name !== 'AbortError') {
+            copyToClipboard(shareText, showShareToast);
+          }
+        });
+      } else {
+        copyToClipboard(shareText, showShareToast);
+      }
+    }
+
+    try {
+      generateScorePoster({
+        gameId: gameId,
+        gameTitle: gameTitle,
+        score: score,
+        wave: wave,
+        badgeText: info.badgeText
+      }, function (blob) {
+        if (blob && typeof File !== 'undefined') {
+          var file = new File([blob], gameId + '-score-record.png', { type: 'image/png' });
+          doShare(file);
+        } else {
+          doShare(null);
         }
       });
-    } else {
-      copyToClipboard(shareText, showShareToast);
+    } catch (_) {
+      doShare(null);
     }
   }
 
@@ -315,6 +600,7 @@ var GAME_STORAGE_KEYS = {
     createGameOverPayload: createGameOverPayload,
     openPracticeModal: openPracticeModal,
     setupPracticeMode: setupPracticeMode,
+    generateScorePoster: generateScorePoster,
     shareScore: shareScore
   };
 });

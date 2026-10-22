@@ -727,3 +727,280 @@ body[data-mode='paused'] .unified-pause-screen:not(.hidden):not([hidden]) {
   from { opacity: 0; transform: translateX(-50%) translateY(12px); }
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
+
+/* ============================================================================
+   6. UNIFIED GAME OVER POPUP & MODAL SYSTEM (STANDARD RESULT SCREEN)
+   ============================================================================ */
+
+/* Outer Overlay Container */
+.unified-gameover-screen,
+.overlay-screen.unified-gameover,
+.modal-backdrop.unified-gameover {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 105 !important;
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 40%, rgba(15, 23, 42, 0.92) 0%, rgba(4, 6, 14, 0.98) 100%) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.24s ease !important;
+}
+
+/* Active State Compatibility across games - STRICT ACTIVATION ONLY */
+.unified-gameover-screen.active,
+.unified-gameover-screen.visible,
+body[data-mode='gameover'] .unified-gameover-screen,
+body[data-state='gameover'] .unified-gameover-screen {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.unified-gameover-screen.hidden,
+.unified-gameover-screen[hidden] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Unified Game Over Modal Card */
+.unified-gameover-card,
+.unified-gameover-screen .modal-card,
+.unified-gameover-screen .status-modal-card {
+  width: 100% !important;
+  max-width: 460px !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+  background: rgba(11, 15, 25, 0.95) !important;
+  border: 1px solid rgba(244, 63, 94, 0.38) !important;
+  border-radius: 18px !important;
+  padding: 26px 22px 22px !important;
+  text-align: center !important;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.9), 0 0 35px rgba(244, 63, 94, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  position: relative !important;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  animation: unifiedModalZoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@keyframes unifiedModalZoomIn {
+  from { opacity: 0; transform: scale(0.94) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.unified-gameover-card::before,
+.unified-gameover-screen .modal-card::before,
+.unified-gameover-screen .status-modal-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, #f43f5e, #fb7185, transparent) !important;
+}
+
+/* Kicker / Status Pill */
+.unified-gameover-kicker,
+.unified-gameover-screen .modal-kicker,
+.unified-gameover-screen .eyebrow-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: #fda4af !important;
+  background: rgba(244, 63, 94, 0.15) !important;
+  border: 1px solid rgba(244, 63, 94, 0.35) !important;
+  border-radius: 9999px !important;
+  padding: 4px 14px !important;
+  margin-bottom: 12px !important;
+}
+
+/* Modal Title */
+.unified-gameover-title,
+.unified-gameover-screen .modal-title {
+  margin: 0 0 6px 0 !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 26px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 20px rgba(244, 63, 94, 0.4) !important;
+  line-height: 1.15 !important;
+}
+
+/* Subtitle / Reason */
+.unified-gameover-subtitle,
+.unified-gameover-screen .modal-subtitle,
+.unified-gameover-screen .modal-desc {
+  margin: 0 0 18px 0 !important;
+  font-size: 13px !important;
+  color: #94a3b8 !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+}
+
+/* Stats Container (2-col or 3-col adaptive grid) */
+.unified-gameover-stats,
+.unified-gameover-screen .stats-grid,
+.unified-gameover-screen .stat-grid,
+.unified-gameover-screen .telemetry-stats-grid {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(95px, 1fr)) !important;
+  gap: 8px !important;
+  margin-bottom: 20px !important;
+}
+
+/* Individual Stat Box / Tile */
+.unified-gameover-stat,
+.unified-gameover-screen .stat-tile,
+.unified-gameover-screen .stat-box,
+.unified-gameover-screen .stat-item {
+  background: rgba(15, 23, 42, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 10px !important;
+  padding: 10px 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: border-color 0.18s ease !important;
+}
+
+.unified-gameover-stat:hover,
+.unified-gameover-screen .stat-tile:hover,
+.unified-gameover-screen .stat-box:hover {
+  border-color: rgba(34, 211, 238, 0.3) !important;
+}
+
+.unified-gameover-screen .stat-label,
+.unified-gameover-screen .stat-tile-label,
+.unified-gameover-screen .stat-box-label {
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  color: #64748b !important;
+  text-transform: uppercase !important;
+  margin-bottom: 4px !important;
+}
+
+.unified-gameover-screen .stat-value,
+.unified-gameover-screen .stat-tile-value,
+.unified-gameover-screen .stat-tile-val,
+.unified-gameover-screen .stat-box-val {
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: #f8fafc !important;
+}
+
+.unified-gameover-screen .stat-value.highlight,
+.unified-gameover-screen .stat-tile-value.highlight-amber,
+.unified-gameover-screen .stat-box-val.highlight {
+  color: #fbbf24 !important;
+  text-shadow: 0 0 12px rgba(251, 191, 36, 0.4) !important;
+}
+
+/* Action Button Group */
+.unified-gameover-actions,
+.unified-gameover-screen .modal-actions,
+.unified-gameover-screen .btn-row,
+.unified-gameover-screen .btn-stack,
+.unified-gameover-screen .cta-stack {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+/* Standardized Buttons inside game over */
+.unified-gameover-actions button,
+.unified-gameover-screen .primary-cta-btn,
+.unified-gameover-screen .primary-btn,
+.unified-gameover-screen .btn-primary,
+.unified-gameover-screen .action-btn.retry-btn,
+.unified-gameover-screen #retryBtn {
+  width: 100% !important;
+  min-height: 44px !important;
+  box-sizing: border-box !important;
+  border-radius: 10px !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Primary Play Again CTA */
+.unified-gameover-screen [data-start="true"],
+.unified-gameover-screen #btn-retry,
+.unified-gameover-screen #btn-try-again,
+.unified-gameover-screen #btn-play-again,
+.unified-gameover-screen #btn-reboot-optics,
+.unified-gameover-screen #retryBtn {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 4px 18px rgba(244, 63, 94, 0.4) !important;
+}
+
+.unified-gameover-screen [data-start="true"]:hover,
+.unified-gameover-screen #btn-retry:hover,
+.unified-gameover-screen #btn-try-again:hover,
+.unified-gameover-screen #btn-play-again:hover,
+.unified-gameover-screen #btn-reboot-optics:hover,
+.unified-gameover-screen #retryBtn:hover {
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 0 6px 24px rgba(244, 63, 94, 0.6) !important;
+  filter: brightness(1.1) !important;
+}
+
+/* Secondary Button (Title / Hub Exit) */
+.unified-gameover-screen .secondary-cta-btn,
+.unified-gameover-screen .secondary-btn,
+.unified-gameover-screen .btn-secondary,
+.unified-gameover-screen #btn-gameover-title,
+.unified-gameover-screen #btn-title-gameover,
+.unified-gameover-screen #btn-title-over,
+.unified-gameover-screen #btn-go-title {
+  background: rgba(30, 41, 59, 0.65) !important;
+  color: #cbd5e1 !important;
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+}
+
+.unified-gameover-screen .secondary-cta-btn:hover,
+.unified-gameover-screen .secondary-btn:hover,
+.unified-gameover-screen .btn-secondary:hover,
+.unified-gameover-screen #btn-gameover-title:hover,
+.unified-gameover-screen #btn-title-gameover:hover,
+.unified-gameover-screen #btn-title-over:hover,
+.unified-gameover-screen #btn-go-title:hover {
+  background: rgba(51, 65, 85, 0.85) !important;
+  color: #ffffff !important;
+  border-color: rgba(148, 163, 184, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+

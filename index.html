@@ -1486,7 +1486,7 @@
         width: 100%;
       }
     }
-  
+
     .card-action-btns {
       display: flex;
       align-items: center;
@@ -1765,14 +1765,16 @@
     const GAMES_CONFIG = [
       {
         id: 'animal-rescue-train',
-        title: '動物救援列車',
+        title: 'Animal Rescue Train',
         category: 'logic',
         icon: '🚂',
         url: 'games/animal-rescue-train/index.html',
         difficulty: 5,
         difficultyMin: 1,
         leaderboard: false,
-        description: '隊伍與車廂隨 Tier 1–5 逐步增加，從兩隊兩車到五隊四車，挑戰預判與救援順序。'
+        description: 'Plan the queues and rescue every animal. Five difficulty levels, growing stations, and no timer.',
+        scoreKey: 'animal_rescue_train_best_score',
+        waveKey: 'animal_rescue_train_best_wave'
       },
       {
         id: 'number-pop',
@@ -2277,7 +2279,7 @@
         'animal-rescue-train': `
 
           <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/animal-rescue-train-preview.svg" alt="深色森林月台上的貓咪、小狗與救援列車" loading="lazy" />
+            <img class="card-preview-img" src="assets/animal-rescue-train-preview.svg" alt="Animal passengers aboard the rescue train" loading="lazy" />
             <div class="preview-badge-overlay">
               <span class="preview-category-pill" data-cat="logic"><span class="preview-cat-dot"></span> Logic · Local prototype</span>
             </div>
@@ -2364,14 +2366,10 @@
         };
         const record = scores[game.id];
         const lvlInfo = record && record.maxWave ? getLevelInfoFromWave(record.maxWave) : { level: 1, name: 'Beginner' };
-        const scoreText = game.leaderboard === false 
-          ? 'Prototype' 
-          : record && record.bestScore > 0 
-            ? `${record.bestScore.toLocaleString()} pts` 
+        const scoreText = record && record.bestScore > 0
+            ? `${record.bestScore.toLocaleString()} pts`
             : '0 pts';
-        const levelBadgeText = game.leaderboard === false
-          ? 'TIER 1–5'
-          : `LVL ${record ? (record.maxLevel || lvlInfo.level) : 1} · ${record ? (record.levelName || lvlInfo.name) : 'BEGINNER'}`;
+        const levelBadgeText = `LVL ${record ? (record.maxLevel || lvlInfo.level) : 1} · ${record ? (record.levelName || lvlInfo.name) : 'BEGINNER'}`;
 
         let dotsHtml = '';
         for (let i = 1; i <= 5; i++) {
@@ -2403,7 +2401,7 @@
               <div class="card-footer">
                 <div class="card-score-row">
                   <div class="card-score-left">
-                    <span>${game.leaderboard === false ? 'Mode:' : 'Personal Best:'}</span>
+                    <span>Personal Best:</span>
                     <strong>${scoreText}</strong>
                   </div>
                   <span class="card-level-badge">${levelBadgeText}</span>
@@ -2534,6 +2532,10 @@
 
     function restartCurrentGame() {
       if (!currentMountedGame) return;
+      if (currentMountedGame.id === 'animal-rescue-train') {
+        gameViewer.contentWindow.postMessage({ type: 'GAME_RESTART' }, window.location.origin);
+        return;
+      }
       const targetUrl = currentMountedGame.url;
       gameViewer.src = 'about:blank';
       setTimeout(() => {
@@ -2929,6 +2931,11 @@
       const payload = event.data;
       if (!payload || typeof payload !== 'object') return;
 
+      if (payload.type === 'CLOSE_GAME') {
+        if (event.source === gameViewer.contentWindow && event.origin === window.location.origin) closeTheaterModal();
+        return;
+      }
+
       if (payload.type === 'GAME_OVER') {
         const { gameId, category, score, isPractice } = payload;
         if (!gameId || typeof score !== 'number') return;
@@ -2936,7 +2943,8 @@
           showToast(`Practice Completed: ${score} pts (Practice mode not recorded)`);
           return;
         }
-        if (GAMES_CONFIG.find(game => game.id === gameId)?.leaderboard === false) return;
+        const gameConfig = GAMES_CONFIG.find(game => game.id === gameId);
+        if (!gameConfig) return;
 
         const wave = payload.wave || (typeof payload.level === 'number' ? (payload.level - 1) * 5 + 1 : 1);
         const durationSec = Math.max(0.5, (Number(payload.duration) ? Number(payload.duration) / 1000 : Number(payload.runDuration) || 10));
@@ -3000,7 +3008,7 @@
         );
 
         // If authenticated with Supabase, sync score to cloud
-        if (supabaseClient && currentAuthUser) {
+        if (gameConfig.leaderboard !== false && supabaseClient && currentAuthUser) {
           try {
             // Create a session nonce
             const { data: sessionData, error: sessionErr } = await supabaseClient

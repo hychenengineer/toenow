@@ -54,6 +54,8 @@
     this.config = config || {};
     this.gameId = this.config.gameId || 'unknown-game';
     this.category = this.config.category || 'puzzle';
+    this.hasWaves = this.config.hasWaves !== undefined ? Boolean(this.config.hasWaves) : (this.config.wavesPerLevel !== undefined ? this.config.wavesPerLevel > 1 : true);
+    this.maxLevels = Number(this.config.maxLevels) || 5;
     this.keys = GAME_STORAGE_KEYS[this.gameId] || {
       score: this.gameId.replace(/-/g, '_') + '_best_score',
       wave: this.gameId.replace(/-/g, '_') + '_best_wave'
@@ -64,8 +66,8 @@
   }
 
   ToenowGameSDK.prototype.loadBestScore = function () {
-    if (typeof localStorage === 'undefined') return 0;
     try {
+      if (typeof localStorage === 'undefined') return 0;
       return Number(localStorage.getItem(this.keys.score) || 0) || 0;
     } catch (_) {
       return 0;
@@ -73,8 +75,8 @@
   };
 
   ToenowGameSDK.prototype.loadBestWave = function () {
-    if (typeof localStorage === 'undefined') return 1;
     try {
+      if (typeof localStorage === 'undefined') return 1;
       return Number(localStorage.getItem(this.keys.wave) || 1) || 1;
     } catch (_) {
       return 1;
@@ -83,7 +85,8 @@
 
   ToenowGameSDK.prototype.saveBestRecords = function (score, wave) {
     if (this.isPractice) return { saved: false, reason: 'practice_mode' };
-    if (typeof localStorage === 'undefined') return { saved: false };
+    try { if (typeof localStorage === 'undefined') return { saved: false }; }
+    catch (_) { return { saved: false, reason: 'storage_unavailable' }; }
 
     var numericScore = Math.max(0, Math.round(Number(score) || 0));
     var numericWave = Math.max(1, Math.round(Number(wave) || 1));
@@ -101,7 +104,7 @@
       if (numericWave > curBestWave && this.keys.wave) {
         localStorage.setItem(this.keys.wave, String(updatedWave));
       }
-    } catch (_) {}
+    } catch (_) { return { saved: false, reason: 'storage_unavailable' }; }
 
     return {
       saved: true,
@@ -136,9 +139,21 @@
       document.getElementById('titleBestWave'),
       document.querySelector('[data-toenow-record="wave"]')
     ];
+    var displayWave = String(Math.max(1, bestWave));
     waveEls.forEach(function (el) {
-      if (el) el.textContent = String(Math.max(1, bestWave));
+      if (el) el.textContent = displayWave;
     });
+
+    // If game has no waves (hasWaves: false), update label from BEST WAVE to BEST LEVEL
+    if (!this.hasWaves) {
+      waveEls.forEach(function (el) {
+        if (!el || !el.parentElement || typeof el.parentElement.querySelector !== 'function') return;
+        var labelEl = el.parentElement.querySelector('.unified-record-label');
+        if (labelEl) labelEl.textContent = 'BEST LEVEL';
+      });
+      var dedicatedWaveLabel = document.getElementById('title-best-wave-label');
+      if (dedicatedWaveLabel) dedicatedWaveLabel.textContent = 'BEST LEVEL';
+    }
 
     // Sync level elements
     var levelEls = [
@@ -206,7 +221,8 @@
     if (ToenowLevels && typeof ToenowLevels.setupPracticeMode === 'function') {
       ToenowLevels.setupPracticeMode({
         gameId: this.gameId,
-        onStart: function (startWave, isPractice) {
+        hasWaves: this.hasWaves,
+        onStartGame: function (startWave, isPractice) {
           self.isPractice = Boolean(isPractice);
           if (typeof onStartGame === 'function') {
             onStartGame(startWave, isPractice);
@@ -234,6 +250,36 @@
 
   ToenowGameSDK.prototype.startRun = function () {
     this.runStartTime = Date.now();
+  };
+
+  // Opt-in lifecycle entry points; existing games using reportGameOver stay compatible.
+  ToenowGameSDK.prototype.start = function (options) {
+    options = options || {};
+    this.setPracticeMode(Boolean(options.isPractice));
+    this.startRun();
+    if (typeof this.config.onStart === 'function') this.config.onStart(options);
+  };
+  ['Pause', 'Resume', 'Restart'].forEach(function (name) {
+    ToenowGameSDK.prototype[name.toLowerCase()] = function () {
+      var callback = this.config['on' + name];
+      if (typeof callback === 'function') callback();
+    };
+  });
+  ToenowGameSDK.prototype.handleGameOver = function (options) {
+    options = Object.assign({}, options || {});
+    this.setPracticeMode(options.isPractice !== undefined ? options.isPractice : this.isPractice);
+    options.isPractice = this.isPractice;
+    options.duration = Math.max(0, Number(options.duration) || Date.now() - this.runStartTime);
+    if (!this.isPractice) {
+      var check = this.verifyScorePlausibility(options.score, options.wave, options.duration / 1000);
+      if (!check.isValid) return check;
+    }
+    return this.reportGameOver(options);
+  };
+  ToenowGameSDK.prototype.exitToHub = function () {
+    if (typeof window === 'undefined') return;
+    if (window.parent && window.parent !== window) window.parent.postMessage({ type: 'CLOSE_GAME', gameId: this.gameId }, '*');
+    else window.location.href = '../../index.html';
   };
 
   /**

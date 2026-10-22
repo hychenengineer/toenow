@@ -13,6 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
+    <script src="../../shared/toenow-levels.js"></script>
     <style>
       :root {
         --bg-deep: #0a0b10;
@@ -2624,7 +2625,7 @@
           syncBodyAttributes();
         }
 
-        function startGame() {
+        function startGame(startWave = 1, isPractice = false) {
           if (document.activeElement && typeof document.activeElement.blur === 'function') {
             document.activeElement.blur();
           }
@@ -2650,13 +2651,14 @@
           game.hitstopTimer = 0;
           game.waveTransitionTimer = 0;
           game.radarPulseTimer = 0;
+          game.isPractice = Boolean(isPractice);
 
           setScreenState('playing');
           syncHud();
-          spawnWave(1);
+          spawnWave(startWave);
         }
 
-        function reportScoreToHub(score, wave, runDuration) {
+        function reportScoreToHub(score, wave, runDuration, isPractice = false) {
           try {
             if (window.parent && window.parent !== window) {
               window.parent.postMessage(
@@ -2668,6 +2670,7 @@
                   wave: Number(wave) || 1,
                   runDuration: Number(runDuration) || 0,
                   duration: Math.round((Number(runDuration) || 0) * 1000),
+                  isPractice: Boolean(isPractice || game.isPractice),
                 },
                 '*'
               );
@@ -2685,8 +2688,10 @@
           const prevWaveRecord = game.bestWaveBeforeRun;
           const prevBestSurvival = loadBestSurvival();
 
-          saveRecords(game.score, game.wave);
-          saveBestSurvival(game.runDuration);
+          if (!game.isPractice) {
+            saveRecords(game.score, game.wave);
+            saveBestSurvival(game.runDuration);
+          }
 
           game.totalShards += game.shardsEarnedThisRun;
           saveTotalShards(game.totalShards);
@@ -3674,6 +3679,15 @@
         spawnWave(1);
 
         const params = new URLSearchParams(window.location.search);
+        if (typeof ToenowLevels !== 'undefined' && ToenowLevels.setupPracticeMode) {
+          ToenowLevels.setupPracticeMode({
+            container: '#title-screen .unified-title-card',
+            onStartGame: (startWave, isPractice) => {
+              startGame(startWave, isPractice);
+            }
+          });
+        }
+
         if (params.get('autostart') === '1') {
           startGame();
         } else {

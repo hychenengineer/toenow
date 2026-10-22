@@ -2850,8 +2850,12 @@
       if (!payload || typeof payload !== 'object') return;
 
       if (payload.type === 'GAME_OVER') {
-        const { gameId, category, score } = payload;
+        const { gameId, category, score, isPractice } = payload;
         if (!gameId || typeof score !== 'number') return;
+        if (isPractice) {
+          showToast(Practice Completed:  pts (Practice mode not recorded));
+          return;
+        }
         if (GAMES_CONFIG.find(game => game.id === gameId)?.leaderboard === false) return;
 
         const { isNewBest, bestScore, numericScore } = saveGameScore(gameId, category, score);

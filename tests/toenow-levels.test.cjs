@@ -60,7 +60,8 @@ test('ToenowLevels creates standard game-over payload', () => {
     category: 'math',
     score: 1250,
     wave: 7,
-    duration: 45000
+    duration: 45000,
+    isPractice: true
   });
 
   assert.equal(payload.type, 'GAME_OVER');
@@ -71,4 +72,149 @@ test('ToenowLevels creates standard game-over payload', () => {
   assert.equal(payload.level, 2);
   assert.equal(payload.levelName, 'Intermediate');
   assert.equal(payload.duration, 45000);
+  assert.equal(payload.isPractice, true);
+});
+
+test('ToenowLevels setupPracticeMode renders practice button and opens modal to select level', () => {
+  // Lightweight DOM mock
+  function createMockElement(tag = 'div') {
+    let _className = '';
+    const _classes = new Set();
+    const el = {
+      tagName: tag.toUpperCase(),
+      get className() { return _className; },
+      set className(val) {
+        _className = val || '';
+        _classes.clear();
+        _className.split(/\s+/).filter(Boolean).forEach(c => _classes.add(c));
+      },
+      classList: {
+        add(c) {
+          _classes.add(c);
+          _className = Array.from(_classes).join(' ');
+        },
+        remove(c) {
+          _classes.delete(c);
+          _className = Array.from(_classes).join(' ');
+        },
+        contains(c) {
+          return _classes.has(c);
+        }
+      },
+      style: {},
+      children: [],
+      setAttribute(k, v) { this[k] = v; },
+      getAttribute(k) { return this[k]; },
+      appendChild(child) {
+        this.children.push(child);
+        child.parentNode = this;
+        child.parentElement = this;
+        return child;
+      },
+      insertBefore(newNode, refNode) {
+        const idx = this.children.indexOf(refNode);
+        if (idx !== -1) {
+          this.children.splice(idx, 0, newNode);
+        } else {
+          this.children.push(newNode);
+        }
+        newNode.parentNode = this;
+        newNode.parentElement = this;
+        return newNode;
+      },
+      remove() {
+        if (this.parentElement) {
+          const idx = this.parentElement.children.indexOf(this);
+          if (idx !== -1) this.parentElement.children.splice(idx, 1);
+          this.parentElement = null;
+        }
+      },
+      querySelector(sel) {
+        const check = (node) => {
+          if (sel.startsWith('.') && node.classList && node.classList.contains(sel.slice(1))) return node;
+          if (sel.startsWith('#') && node.id === sel.slice(1)) return node;
+          if (node.tagName && node.tagName.toLowerCase() === sel.toLowerCase()) return node;
+          for (const c of (node.children || [])) {
+            const found = check(c);
+            if (found) return found;
+          }
+          return null;
+        };
+        return check(this);
+      },
+      querySelectorAll(sel) {
+        const results = [];
+        const check = (node) => {
+          if (node !== this) {
+            if (sel.startsWith('.') && node.classList && node.classList.contains(sel.slice(1))) results.push(node);
+          }
+          for (const c of (node.children || [])) {
+            check(c);
+          }
+        };
+        check(this);
+        return results;
+      },
+      addEventListener(ev, fn) {
+        if (!this._listeners) this._listeners = {};
+        if (!this._listeners[ev]) this._listeners[ev] = [];
+        this._listeners[ev].push(fn);
+      },
+      click() {
+        const fns = (this._listeners && this._listeners['click']) || [];
+        fns.forEach(fn => fn({ preventDefault: () => {}, stopPropagation: () => {} }));
+      }
+    };
+    return el;
+  }
+
+  const mockBody = createMockElement('body');
+  const mockCard = createMockElement('div');
+  mockCard.className = 'unified-title-card';
+  const mockStartBtn = createMockElement('button');
+  mockStartBtn.className = 'unified-start-btn';
+  mockCard.appendChild(mockStartBtn);
+  mockBody.appendChild(mockCard);
+
+  global.document = {
+    createElement: (tag) => createMockElement(tag),
+    body: mockBody,
+    querySelector: (sel) => mockBody.querySelector(sel)
+  };
+
+  let chosenStartWave = null;
+  let chosenPractice = null;
+
+  ToenowLevels.setupPracticeMode({
+    container: mockCard,
+    startBtn: mockStartBtn,
+    onStartGame: (startWave, isPractice) => {
+      chosenStartWave = startWave;
+      chosenPractice = isPractice;
+    }
+  });
+
+  const practiceBtn = mockCard.querySelector('.unified-practice-btn');
+  assert.ok(practiceBtn, 'Practice button should be created in actions bar');
+  assert.equal(practiceBtn.textContent, 'PRACTICE');
+
+  // Modal is created with hidden class initially
+  let modal = mockBody.querySelector('.unified-practice-modal');
+  assert.ok(modal, 'Modal should be attached to body');
+  assert.ok(modal.classList.contains('hidden'), 'Modal should initially have hidden class');
+
+  // Click Practice
+  practiceBtn.click();
+  assert.ok(!modal.classList.contains('hidden'), 'Modal should not have hidden class after clicking Practice');
+
+  const levelButtons = modal.querySelectorAll('.unified-practice-level-btn');
+  assert.equal(levelButtons.length, 5, 'Should have 5 levels to choose from');
+
+  // Click Level 3 (startWave 11)
+  levelButtons[2].click();
+  assert.equal(chosenStartWave, 11, 'Level 3 should launch wave 11');
+  assert.equal(chosenPractice, true, 'isPractice should be true');
+
+  // Modal should be hidden again
+  assert.ok(modal.classList.contains('hidden'), 'Modal should have hidden class after selection');
 });

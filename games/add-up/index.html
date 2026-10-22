@@ -22,6 +22,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
+    <script src="../../shared/toenow-levels.js"></script>
     <style>
       :root {
         --bg-deep: #080b10;
@@ -928,6 +929,7 @@
         }
 
         function saveMeta(best, cores) {
+          if (isPracticeMode) return;
           try {
             localStorage.setItem(STORAGE_KEY_BEST, String(Math.round(best)));
             localStorage.setItem(STORAGE_KEY_CORES, String(Math.round(cores)));
@@ -936,6 +938,7 @@
 
         const meta = loadMeta();
         let bestScore = meta.best;
+        let isPracticeMode = false;
         let totalLifetimeCores = meta.cores;
 
         // --- Pure Addition Math Rules ---
@@ -1605,9 +1608,10 @@
           }
         }
 
-        function startNewGame() {
+        function startNewGame(startWave = 1, isPractice = false) {
+          isPracticeMode = Boolean(isPractice);
           score = 0;
-          wave = 1;
+          wave = startWave;
           wavesStabilizedThisRun = 0;
           timeLeft = MAX_BANKED_TIME;
           ghostTimeLeft = MAX_BANKED_TIME;
@@ -1656,6 +1660,7 @@
                   gameId: 'add-up',
                   category: 'math',
                   score: finalScore,
+                  isPractice: Boolean(isPracticeMode),
                   wave: wavesStabilizedThisRun || 1
                 },
                 '*'
@@ -2514,6 +2519,14 @@
         syncMetaUI();
         spawnWaveNodes(1);
         const params = new URLSearchParams(window.location.search);
+        if (typeof ToenowLevels !== 'undefined' && ToenowLevels.setupPracticeMode) {
+          ToenowLevels.setupPracticeMode({
+            container: '#screen-title .unified-title-card',
+            onStartGame: (startWave, isPractice) => {
+              startNewGame(startWave, isPractice);
+            }
+          });
+        }
         if (params.get('autostart') === '1') {
           startNewGame();
         } else {

@@ -439,3 +439,224 @@ body[data-mode='paused'] .unified-pause-screen:not(.hidden):not([hidden]) {
   color: #ffffff !important;
 }
 
+
+/* ============================================================================
+   5b. Actions Bar & Universal Practice Mode Buttons
+   ============================================================================ */
+.unified-actions-bar {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  width: 100% !important;
+  margin-top: 10px !important;
+}
+
+@media (min-width: 380px) {
+  .unified-actions-bar {
+    flex-direction: row !important;
+  }
+  .unified-actions-bar .unified-start-btn {
+    flex: 1.4 !important;
+  }
+  .unified-actions-bar .unified-practice-btn {
+    flex: 1 !important;
+  }
+}
+
+.unified-practice-btn {
+  width: 100% !important;
+  padding: 13px 18px !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(139, 92, 246, 0.45) !important;
+  background: linear-gradient(135deg, rgba(30, 27, 75, 0.85) 0%, rgba(76, 29, 149, 0.85) 100%) !important;
+  color: #e0e7ff !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.25) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  box-sizing: border-box !important;
+}
+
+.unified-practice-btn:hover {
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 0 0 28px rgba(139, 92, 246, 0.6) !important;
+  border-color: #a78bfa !important;
+  background: linear-gradient(135deg, rgba(76, 29, 149, 0.95) 0%, rgba(109, 40, 217, 0.95) 100%) !important;
+  color: #ffffff !important;
+}
+
+.unified-practice-btn:active {
+  transform: translateY(0) scale(0.99) !important;
+}
+
+/* Practice Level Selector Modal Overlay */
+.unified-practice-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 200 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  background: rgba(5, 7, 14, 0.88) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  box-sizing: border-box !important;
+  transition: opacity 0.2s ease, visibility 0.2s ease !important;
+}
+
+.unified-practice-modal.hidden {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.unified-practice-card {
+  width: 100% !important;
+  max-width: 440px !important;
+  background: rgba(15, 23, 42, 0.96) !important;
+  border: 1px solid rgba(139, 92, 246, 0.45) !important;
+  border-radius: 18px !important;
+  padding: 24px 20px 20px !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.9), 0 0 36px rgba(139, 92, 246, 0.25) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+}
+
+.unified-practice-pill {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  color: #c084fc !important;
+  background: rgba(147, 51, 234, 0.15) !important;
+  border: 1px solid rgba(168, 85, 247, 0.35) !important;
+  border-radius: 9999px !important;
+  padding: 4px 12px !important;
+  display: inline-block !important;
+  margin-bottom: 6px !important;
+}
+
+.unified-practice-title {
+  margin: 0 !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  color: #f8fafc !important;
+  letter-spacing: 0.05em !important;
+}
+
+.unified-practice-subtitle {
+  margin: 4px 0 0 !important;
+  font-size: 12px !important;
+  color: #94a3b8 !important;
+  line-height: 1.4 !important;
+}
+
+.unified-practice-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+
+.unified-practice-level-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 10px 14px !important;
+  background: rgba(30, 41, 59, 0.65) !important;
+  border: 1px solid rgba(148, 163, 184, 0.18) !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  text-align: left !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.unified-practice-level-btn:hover {
+  background: rgba(49, 46, 129, 0.55) !important;
+  border-color: #818cf8 !important;
+  transform: translateX(4px) !important;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3) !important;
+}
+
+.unified-practice-level-num {
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  color: #38bdf8 !important;
+  background: rgba(14, 165, 233, 0.15) !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
+  min-width: 44px !important;
+  text-align: center !important;
+}
+
+.unified-practice-level-details {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  flex: 1 !important;
+  margin-left: 12px !important;
+}
+
+.unified-practice-level-name {
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 13.5px !important;
+  font-weight: 800 !important;
+  color: #f1f5f9 !important;
+  letter-spacing: 0.04em !important;
+}
+
+.unified-practice-level-range {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  color: #94a3b8 !important;
+}
+
+.unified-practice-play-arrow {
+  color: #818cf8 !important;
+  font-size: 13px !important;
+  transition: transform 0.15s ease !important;
+}
+
+.unified-practice-level-btn:hover .unified-practice-play-arrow {
+  transform: scale(1.25) translateX(2px) !important;
+  color: #c084fc !important;
+}
+
+.unified-practice-cancel-btn {
+  background: transparent !important;
+  border: 1px solid rgba(148, 163, 184, 0.22) !important;
+  border-radius: 8px !important;
+  color: #94a3b8 !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  padding: 8px 14px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  margin-top: 4px !important;
+}
+
+.unified-practice-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}

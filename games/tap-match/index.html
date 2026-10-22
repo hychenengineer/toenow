@@ -13,6 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
+    <script src="../../shared/toenow-levels.js"></script>
     <style>
       :root {
         --bg-void: #070a0e;
@@ -1297,7 +1298,8 @@
           audio.playStagePip(false);
         }
 
-        function startNewRun() {
+        function startNewRun(startWave = 1, isPractice = false) {
+          state.isPractice = Boolean(isPractice);
           audio.init();
           modalStart.classList.add('hidden');
           modalGameOver.classList.add('hidden');
@@ -1310,7 +1312,7 @@
           state.validHits = 0;
           state.reactionSumMs = 0;
 
-          prepareWaveBriefing(1);
+          prepareWaveBriefing(startWave);
         }
 
         function endRun(reasonText) {
@@ -1342,6 +1344,7 @@
                   gameId: 'tap-match',
                   category: 'spatial',
                   score: Math.round(state.score),
+                  isPractice: Boolean(state.isPractice),
                   wave: Number(state.wave) || 1,
                   accuracy: acc
                 },
@@ -1916,6 +1919,14 @@
         // Initial setup
         buildNodeMatrix();
         syncHud();
+        if (typeof ToenowLevels !== 'undefined' && ToenowLevels.setupPracticeMode) {
+          ToenowLevels.setupPracticeMode({
+            container: '#modal-start .unified-title-card',
+            onStartGame: (startWave, isPractice) => {
+              startNewRun(startWave, isPractice);
+            }
+          });
+        }
         requestAnimationFrame((t) => {
           lastFrameTime = t;
           loop(t);

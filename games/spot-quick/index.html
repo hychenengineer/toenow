@@ -10,6 +10,7 @@
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
+    <script src="../../shared/toenow-levels.js"></script>
     <style>
       :root {
         --bg-void-deep: #070a0e;
@@ -4847,6 +4848,7 @@
           } catch (_) { return 1; }
         }
         function saveBestFocusRecords(score, wave) {
+          if (state && state.isPractice) return;
           try {
             const curScore = loadBestFocusScore();
             const curWave = loadBestFocusWave();
@@ -5170,7 +5172,8 @@
           }
         }
 
-        function startGame() {
+        function startGame(startWave = 1, isPractice = false) {
+          state.isPractice = Boolean(isPractice);
           ensureAudioContext();
           briefingModal.classList.add("hidden");
           gameOverModal.classList.add("hidden");
@@ -5179,7 +5182,7 @@
           state.peakStreak = 0;
           state.timeRemaining = INITIAL_TOTAL_TIME;
           state.lastHistoryIds = [];
-          setupWave(1);
+          setupWave(startWave);
         }
 
         function triggerGameOver(reasonText) {
@@ -5760,7 +5763,15 @@
 
           ctx.restore();
 
-          requestAnimationFrame(gameLoop);
+          if (typeof ToenowLevels !== 'undefined' && ToenowLevels.setupPracticeMode) {
+          ToenowLevels.setupPracticeMode({
+            container: '#briefingModal .unified-title-card',
+            onStartGame: (startWave, isPractice) => {
+              startGame(startWave, isPractice);
+            }
+          });
+        }
+        requestAnimationFrame(gameLoop);
         }
 
         setupWave(1);

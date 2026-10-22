@@ -20,6 +20,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
+    <script src="../../shared/toenow-levels.js"></script>
     <style>
       :root {
         --bg-void: #0a0a12;
@@ -1129,6 +1130,7 @@
         }
 
         function saveRecords(score, wave) {
+          if (state && state.isPractice) return;
           if (score > bestScore) bestScore = score;
           if (wave > bestWave) bestWave = wave;
           try {
@@ -2385,7 +2387,7 @@
           audio.playSwapWhoosh(stepIndex);
         }
 
-        function startNewGame() {
+        function startNewGame(startWave = 1, isPractice = false) {
           audio.playUiClick(580);
           if (document.activeElement && typeof document.activeElement.blur === 'function') {
             document.activeElement.blur();
@@ -2394,6 +2396,7 @@
           state.streak = 0;
           state.currentMult = 1;
           state.shields = 3;
+          state.isPractice = Boolean(isPractice);
           state.maxShields = 3;
           state.shieldsLostThisWave = 0;
           state.bonusTimeBufferMs = 0;
@@ -2405,7 +2408,7 @@
           state.trauma = 0;
           state.hitstopMs = 0;
           floatingPopups.length = 0;
-          initWave(1, true);
+          initWave(startWave, true);
         }
 
         // --- Milestone Perk Modal Trigger (Every 3 Waves: Wave 3, 6, 9, 12...) ---
@@ -2670,7 +2673,8 @@
                   gameId: 'ball-track',
                   category: 'spatial',
                   score: Math.round(state.frozenSnapshot.score || state.score || 0),
-                  wave: state.frozenSnapshot.wave || state.wave || 1
+                  wave: state.frozenSnapshot.wave || state.wave || 1,
+                  isPractice: Boolean(state.isPractice)
                 },
                 '*'
               );
@@ -3826,6 +3830,15 @@
         updateHudReadouts();
 
         const params = new URLSearchParams(window.location.search);
+        if (typeof ToenowLevels !== 'undefined' && ToenowLevels.setupPracticeMode) {
+          ToenowLevels.setupPracticeMode({
+            container: '#screen-title .unified-title-card',
+            onStartGame: (startWave, isPractice) => {
+              startNewGame(startWave, isPractice);
+            }
+          });
+        }
+
         if (params.get('autostart') === '1') {
           startNewGame();
         }

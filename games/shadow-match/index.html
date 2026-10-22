@@ -10,6 +10,7 @@
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
+    <script src="../../shared/toenow-levels.js"></script>
     <style>
       :root {
         --bg-void: #070a0e;
@@ -1778,6 +1779,7 @@
         }
 
         function saveBestRecords(score, wave) {
+          if (state && state.isPractice) return;
           try {
             const current = loadBestRecords();
             const newScore = Math.max(current.bestScore, Math.round(score));
@@ -2056,7 +2058,8 @@
           }
         }
 
-        function startNewRun() {
+        function startNewRun(startWave = 1, isPractice = false) {
+          state.isPractice = Boolean(isPractice);
           state.score = 0;
           state.combo = 1;
           state.peakCombo = 1;
@@ -2109,6 +2112,7 @@
                   gameId: 'shadow-match',
                   category: 'puzzle',
                   score: Math.round(state.score),
+                  isPractice: Boolean(state.isPractice),
                   wave: Number(state.wave) || 1,
                   streak: Number(state.peakCombo) || 0
                 },
@@ -2838,6 +2842,14 @@
         measureLayout();
         loadWave(1);
         const params = new URLSearchParams(window.location.search);
+        if (typeof ToenowLevels !== 'undefined' && ToenowLevels.setupPracticeMode) {
+          ToenowLevels.setupPracticeMode({
+            container: '#title-overlay .unified-title-card',
+            onStartGame: (startWave, isPractice) => {
+              startNewRun(startWave, isPractice);
+            }
+          });
+        }
         if (params.get('autostart') === '1') {
           startNewRun();
         } else {

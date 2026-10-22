@@ -1,0 +1,434 @@
+{
+  "model": "Exact probability when choosing uniformly among legal non-mixing queue moves, with one car per active species. Not a measured human success rate.",
+  "fairness": "Visible critical decisions refer to the reported certificate path, not every possible player history.",
+  "results": [
+    {
+      "tier": 1,
+      "tierName": "入門",
+      "queues": 2,
+      "cars": 2,
+      "animals": 6,
+      "winProbability": 1,
+      "greedyWins": 6,
+      "greedyPolicies": 6,
+      "criticalDecisions": 0,
+      "visibleCriticalDecisions": 0,
+      "maxTrapDepth": 0,
+      "searched": 16,
+      "path": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "tier": 2,
+      "tierName": "基礎",
+      "queues": 3,
+      "cars": 2,
+      "animals": 9,
+      "winProbability": 0.8888888888888888,
+      "greedyWins": 12,
+      "greedyPolicies": 18,
+      "criticalDecisions": 0,
+      "visibleCriticalDecisions": 0,
+      "maxTrapDepth": 0,
+      "searched": 42,
+      "path": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "tier": 3,
+      "tierName": "進階",
+      "queues": 3,
+      "cars": 3,
+      "animals": 18,
+      "winProbability": 0.40234752070314483,
+      "greedyWins": 0,
+      "greedyPolicies": 18,
+      "criticalDecisions": 1,
+      "visibleCriticalDecisions": 1,
+      "maxTrapDepth": 2,
+      "searched": 158,
+      "path": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "tier": 4,
+      "tierName": "挑戰",
+      "queues": 4,
+      "cars": 3,
+      "animals": 24,
+      "winProbability": 0.10034528403288705,
+      "greedyWins": 0,
+      "greedyPolicies": 72,
+      "criticalDecisions": 2,
+      "visibleCriticalDecisions": 2,
+      "maxTrapDepth": 4,
+      "searched": 487,
+      "path": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    {
+      "tier": 5,
+      "tierName": "專家",
+      "queues": 5,
+      "cars": 4,
+      "animals": 30,
+      "winProbability": 0.006621715586330011,
+      "greedyWins": 0,
+      "greedyPolicies": 360,
+      "criticalDecisions": 4,
+      "visibleCriticalDecisions": 4,
+      "maxTrapDepth": 6,
+      "searched": 1181,
+      "path": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          1
+        ]
+      ]
+    }
+  ]
+}

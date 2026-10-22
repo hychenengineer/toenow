@@ -16,6 +16,7 @@
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
+    <script src="../../shared/toenow-levels.js"></script>
     <style>
       :root {
         --bg-void: #05070e;
@@ -1835,6 +1836,7 @@
 
         // State
         let gameState = 'title';
+        let isPracticeMode = false;
         let score = 0;
         let bestScore = parseInt(localStorage.getItem(STORAGE_BEST_SCORE) || '0', 10) || 0;
         let totalExp = parseInt(localStorage.getItem(STORAGE_BEST_EXP) || '0', 10) || 0;
@@ -1908,7 +1910,7 @@
         function updateExpUI(newExp, showBannerIfLevelUp) {
           const prevRank = getSynapseRank(totalExp);
           totalExp = newExp;
-          localStorage.setItem(STORAGE_BEST_EXP, String(totalExp));
+          if (!isPracticeMode) localStorage.setItem(STORAGE_BEST_EXP, String(totalExp));
           const currentRank = getSynapseRank(totalExp);
 
           const nextRank = SYNAPSE_RANKS.find((r) => r.level === currentRank.level + 1);
@@ -2012,7 +2014,8 @@
           syncHudDOM();
         }
 
-        function startNewGame() {
+        function startNewGame(startWave = 1, isPractice = false) {
+          isPracticeMode = Boolean(isPractice);
           score = 0;
           streak = 0;
           shields = MAX_SHIELDS;
@@ -2021,7 +2024,7 @@
           redFlashAlpha = 0;
           updateShieldsUI();
           updateExpUI(totalExp, false);
-          loadWave(1);
+          loadWave(startWave);
           setGameState('playing');
         }
 
@@ -2045,6 +2048,7 @@
                   gameId: 'space-scale',
                   category: 'logic',
                   score: finalScore,
+                  isPractice: Boolean(isPracticeMode),
                   wave: Math.max(1, wave - 1),
                   rank: r.title
                 },
@@ -2070,7 +2074,7 @@
 
             if (score > bestScore) {
               bestScore = score;
-              localStorage.setItem(STORAGE_BEST_SCORE, String(bestScore));
+              if (!isPracticeMode) localStorage.setItem(STORAGE_BEST_SCORE, String(bestScore));
             }
 
             const expGain = Math.round(100 + streak * 30 + speedRatio * 60);

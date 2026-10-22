@@ -35,7 +35,7 @@
       this.restart();
     }
     restart() {
-      this.state = { queues: copy(this.level.queues), cars: [[], [], []], rescued: {}, moves: 0, departure: null, status: 'playing' };
+      this.state = { queues: copy(this.level.queues), cars: Array.from({ length: this.level.carCount ?? 3 }, () => []), rescued: {}, moves: 0, departure: null, status: 'playing' };
       this.state.status = evaluate(this.state, this.level.goals);
       this.previous = null;
     }

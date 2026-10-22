@@ -10,10 +10,40 @@
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
+    <script src="../../shared/toenow-levels.js"></script>
     <script type="module" crossorigin src="./assets/index-cr-6j3L1.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-DlETJ6Fs.css">
   </head>
   <body data-state="title">
     <div id="root"></div>
+    <script>
+      (function() {
+        // Observe root for when React renders .unified-title-card and .unified-start-btn
+        let practiceAttached = false;
+        const observer = new MutationObserver(() => {
+          if (practiceAttached) return;
+          const startBtn = document.querySelector('.unified-start-btn');
+          const titleCard = document.querySelector('.unified-title-card');
+          if (startBtn && titleCard && window.ToenowLevels) {
+            practiceAttached = true;
+            ToenowLevels.setupPracticeMode({
+              container: titleCard,
+              startBtn: startBtn,
+              onStartGame: (startWave, isPractice) => {
+                if (typeof window.__FLASH_BRAIN_START_FUNC__ === 'function') {
+                  window.__FLASH_BRAIN_START_FUNC__(startWave, isPractice);
+                } else {
+                  // Fallback
+                  window.__FLASH_BRAIN_IS_PRACTICE__ = !!isPractice;
+                  window.__FLASH_BRAIN_START_WAVE__ = startWave;
+                  startBtn.click();
+                }
+              }
+            });
+          }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+      })();
+    </script>
   </body>
 </html>

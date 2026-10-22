@@ -894,6 +894,9 @@
             <button type="button" id="btn-retry" class="primary-cta-btn" data-start="true">
               Play Again
             </button>
+              <button type="button" id="btn-share-score" class="unified-share-btn">
+                <span>⚡</span> SHARE SCORE
+              </button>
             <button type="button" id="btn-gameover-title" class="secondary-cta-btn">
               Title
             </button>
@@ -1993,6 +1996,20 @@
           setGameState('title');
           spawnWaveNodes(1);
         });
+        const shareBtn = document.getElementById('btn-share-score');
+        if (shareBtn) {
+          shareBtn.addEventListener('click', () => {
+            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
+              ToenowLevels.shareScore({
+                gameId: 'add-up',
+                gameTitle: 'Add Up',
+                score: typeof score !== 'undefined' ? score : 0,
+                wave: typeof wave !== 'undefined' ? wave : 1
+              });
+            }
+          });
+        }
+
         document.getElementById('btn-retry').addEventListener('click', function (e) {
           e.currentTarget.blur();
           startNewGame();

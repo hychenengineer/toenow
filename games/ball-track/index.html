@@ -1105,6 +1105,9 @@
 
           <div class="btn-row">
             <button class="btn-primary" id="btn-try-again" type="button">PLAY AGAIN</button>
+              <button type="button" id="btn-share-score" class="unified-share-btn">
+                <span>⚡</span> SHARE SCORE
+              </button>
             <button class="btn-secondary" id="btn-title-gameover" type="button">TITLE</button>
           </div>
         </div>
@@ -1112,6 +1115,21 @@
     </div>
 
     <script>
+        const shareBtn = document.getElementById('btn-share-score');
+        if (shareBtn) {
+          shareBtn.addEventListener('click', () => {
+            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
+              ToenowLevels.shareScore({
+                gameId: 'ball-track',
+                gameTitle: 'Ball Track',
+                score: typeof score !== 'undefined' ? score : 0,
+                wave: typeof wave !== 'undefined' ? wave : 1
+              });
+            }
+          });
+        }
+
+        
       (function () {
         'use strict';
 

@@ -183,12 +183,97 @@ var LEVELS = [
     };
   }
 
+  
+  /**
+   * Universal One-Click Share helper
+   * Shares game score / challenge link via Web Share API or falls back to Clipboard.
+   * @param {Object} options
+   * @param {string} options.gameId
+   * @param {string} options.gameTitle
+   * @param {number} options.score
+   * @param {number} options.wave
+   * @param {number} [options.level]
+   * @param {string} [options.badgeText]
+   */
+  function shareScore(options) {
+    options = options || {};
+    var gameId = options.gameId || 'game';
+    var gameTitle = options.gameTitle || (gameId.charAt(0).toUpperCase() + gameId.slice(1).replace(/-/g, ' '));
+    var score = Math.round(Number(options.score) || 0);
+    var wave = Number(options.wave) || 1;
+    var info = options.level ? { level: options.level, badgeText: options.badgeText || ('LVL ' + options.level) } : getLevelInfo(wave);
+
+    var shareUrl = (typeof window !== 'undefined' && window.location)
+      ? (window.location.origin + window.location.pathname.replace(/games\/[^/]+\/?$/, '') + '?play=' + encodeURIComponent(gameId) + '&challenge=' + score)
+      : 'https://toenow.matrix.io/?play=' + encodeURIComponent(gameId) + '&challenge=' + score;
+
+    var shareText = '🧠 I scored ' + score.toLocaleString() + ' pts (' + info.badgeText + ' · Wave ' + wave + ') in ' + gameTitle + ' on Toenow Matrix! Can you beat my record? ' + shareUrl;
+
+    function showShareToast(msg) {
+      if (typeof document === 'undefined') return;
+      var existing = document.querySelector('.unified-share-toast');
+      if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+
+      var toast = document.createElement('div');
+      toast.className = 'unified-share-toast';
+      toast.innerHTML = '<span>🔗</span> ' + msg;
+      document.body.appendChild(toast);
+
+      setTimeout(function () {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 2500);
+    }
+
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      navigator.share({
+        title: 'Toenow Matrix — ' + gameTitle + ' Challenge',
+        text: shareText,
+        url: shareUrl
+      }).catch(function (err) {
+        if (err && err.name !== 'AbortError') {
+          copyToClipboard(shareText, showShareToast);
+        }
+      });
+    } else {
+      copyToClipboard(shareText, showShareToast);
+    }
+  }
+
+  function copyToClipboard(text, onComplete) {
+    if (typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      navigator.clipboard.writeText(text).then(function () {
+        onComplete('Challenge link copied to clipboard!');
+      }).catch(function () {
+        fallbackCopy(text, onComplete);
+      });
+    } else {
+      fallbackCopy(text, onComplete);
+    }
+  }
+
+  function fallbackCopy(text, onComplete) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      onComplete('Challenge link copied to clipboard!');
+    } catch (_) {
+      onComplete('Score: ' + text);
+    }
+  }
+
   return {
     LEVELS: LEVELS,
     getLevelInfo: getLevelInfo,
     syncTitleRecords: syncTitleRecords,
     createGameOverPayload: createGameOverPayload,
     openPracticeModal: openPracticeModal,
-    setupPracticeMode: setupPracticeMode
+    setupPracticeMode: setupPracticeMode,
+    shareScore: shareScore
   };
 });

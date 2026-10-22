@@ -549,6 +549,9 @@
             </div>
             <div class="action-row">
               <button type="button" id="btn-retry" class="action-btn">[RETRY]</button>
+              <button type="button" id="btn-share-score" class="unified-share-btn">
+                <span>⚡</span> SHARE SCORE
+              </button>
             </div>
           </div>
         </div>
@@ -556,6 +559,21 @@
     </div>
 
     <script>
+        const shareBtn = document.getElementById('btn-share-score');
+        if (shareBtn) {
+          shareBtn.addEventListener('click', () => {
+            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
+              ToenowLevels.shareScore({
+                gameId: 'tap-match',
+                gameTitle: 'Tap Match',
+                score: typeof score !== 'undefined' ? score : 0,
+                wave: typeof wave !== 'undefined' ? wave : 1
+              });
+            }
+          });
+        }
+
+        
       (function () {
         'use strict';
 

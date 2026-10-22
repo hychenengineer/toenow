@@ -907,6 +907,9 @@
               <button type="button" id="btn-reboot-optics" class="primary-cta-btn" data-start="true">
                 [ REBOOT OPTICS ]
               </button>
+              <button type="button" id="btn-share-score" class="unified-share-btn">
+                <span>⚡</span> SHARE SCORE
+              </button>
               <button type="button" id="btn-gameover-title" class="secondary-cta-btn">
                 RETURN TO BRIEFING
               </button>
@@ -917,6 +920,21 @@
     </main>
 
     <script>
+        const shareBtn = document.getElementById('btn-share-score');
+        if (shareBtn) {
+          shareBtn.addEventListener('click', () => {
+            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
+              ToenowLevels.shareScore({
+                gameId: 'shadow-match',
+                gameTitle: 'Shadow Match',
+                score: typeof score !== 'undefined' ? score : 0,
+                wave: typeof wave !== 'undefined' ? wave : 1
+              });
+            }
+          });
+        }
+
+        
       (function () {
         'use strict';
 

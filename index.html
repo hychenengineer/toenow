@@ -1483,6 +1483,43 @@
         width: 100%;
       }
     }
+  
+    .card-action-btns {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-share-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      background: rgba(14, 165, 233, 0.12);
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .card-share-btn:hover {
+      background: rgba(14, 165, 233, 0.28);
+      border-color: #38bdf8;
+      color: #f0f9ff;
+      transform: translateY(-1px);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+    }
+
+    .card-share-btn:active {
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -2368,7 +2405,10 @@
                   </div>
                   <span class="card-level-badge">${levelBadgeText}</span>
                 </div>
-                <button type="button" class="launch-pill" tabindex="-1">Play Now →</button>
+                <div class="card-action-btns">
+                  <button type="button" class="card-share-btn" data-share-game="${game.id}" title="Share challenge" aria-label="Share ${game.title}">⚡ Share</button>
+                  <button type="button" class="launch-pill" tabindex="-1">Play Now →</button>
+                </div>
               </div>
             </div>
           </article>
@@ -2381,13 +2421,37 @@
           const game = GAMES_CONFIG.find(g => g.id === gameId);
           if (game) openTheaterModal(game);
         };
-        card.addEventListener('click', triggerLaunch);
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.card-share-btn')) return;
+          triggerLaunch();
+        });
         card.addEventListener('keydown', (e) => {
+          if (e.target.closest('.card-share-btn')) return;
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             triggerLaunch();
           }
         });
+
+        const shareBtn = card.querySelector('.card-share-btn');
+        if (shareBtn) {
+          shareBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const gameId = shareBtn.getAttribute('data-share-game');
+            const game = GAMES_CONFIG.find(g => g.id === gameId);
+            const entry = scores[gameId];
+            const bestScore = entry?.bestScore || 0;
+            const maxWave = entry?.maxWave || 1;
+            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
+              ToenowLevels.shareScore({
+                gameId: gameId,
+                gameTitle: game ? game.title : gameId,
+                score: bestScore,
+                wave: maxWave
+              });
+            }
+          });
+        }
       });
     }
 
@@ -3296,6 +3360,20 @@
       initHubInteractions();
       discoverAdditionalGames();
       initAuthListener();
+
+      // Deep link challenge handler (?play=gameId&challenge=score)
+      const params = new URLSearchParams(window.location.search);
+      const playId = params.get('play');
+      const challengeScore = params.get('challenge');
+      if (playId) {
+        const game = GAMES_CONFIG.find(g => g.id === playId);
+        if (game) {
+          openTheaterModal(game);
+          if (challengeScore) {
+            showToast(`Challenge Accepted: Beat ${Number(challengeScore).toLocaleString()} pts in ${game.title}!`);
+          }
+        }
+      }
     })();
   </script>
 </body>

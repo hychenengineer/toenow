@@ -1165,6 +1165,9 @@
 
         <div class="modal-actions">
           <button id="btn-play-again" type="button" class="primary-cta" data-start="true">Play Again</button>
+              <button type="button" id="btn-share-score" class="unified-share-btn">
+                <span>⚡</span> SHARE SCORE
+              </button>
           <button id="btn-title-over" type="button" class="secondary-cta">Title</button>
         </div>
       </div>
@@ -2270,6 +2273,20 @@
           e.currentTarget.blur();
           startNewGame();
         });
+
+        const shareBtn = document.getElementById('btn-share-score');
+        if (shareBtn) {
+          shareBtn.addEventListener('click', () => {
+            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
+              ToenowLevels.shareScore({
+                gameId: 'space-scale',
+                gameTitle: 'Space Scale',
+                score: typeof score !== 'undefined' ? score : 0,
+                wave: typeof wave !== 'undefined' ? wave : 1
+              });
+            }
+          });
+        }
 
         document.getElementById('btn-play-again').addEventListener('click', (e) => {
           e.currentTarget.blur();

@@ -4,7 +4,7 @@
   "private": true,
   "description": "Toenow Cognitive Games Suite",
   "scripts": {
-    "test": "node --test tests/hub-runtime.test.cjs tests/practice-mode.test.cjs tests/toenow-levels.test.cjs tests/games-runtime.test.cjs tests/flash-brain.test.cjs tests/rescue-session.test.cjs tests/animal-rescue-difficulty.test.cjs",
+    "test": "node --test tests/hub-runtime.test.cjs tests/share-feature.test.cjs tests/practice-mode.test.cjs tests/toenow-levels.test.cjs tests/games-runtime.test.cjs tests/flash-brain.test.cjs tests/rescue-session.test.cjs tests/animal-rescue-difficulty.test.cjs",
     "serve": "node tools/serve-local.cjs"
   }
 }

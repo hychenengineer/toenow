@@ -607,6 +607,9 @@
         </div>
         <div class="btn-stack">
           <button type="button" class="primary-btn" id="btn-retry" data-start="true">Play Again</button>
+              <button type="button" id="btn-share-score" class="unified-share-btn">
+                <span>⚡</span> SHARE SCORE
+              </button>
           <button type="button" class="secondary-btn" id="btn-title-gameover">Title Screen</button>
         </div>
       </div>
@@ -1450,6 +1453,20 @@
           e.currentTarget.blur();
           resumeFromPhaseBriefing();
         });
+        const shareBtn = document.getElementById('btn-share-score');
+        if (shareBtn) {
+          shareBtn.addEventListener('click', () => {
+            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
+              ToenowLevels.shareScore({
+                gameId: 'block-match',
+                gameTitle: 'Block Match',
+                score: typeof score !== 'undefined' ? score : 0,
+                wave: typeof wave !== 'undefined' ? wave : 1
+              });
+            }
+          });
+        }
+
         document.getElementById('btn-retry').addEventListener('click', function (e) {
           e.currentTarget.blur();
           startNewGame();

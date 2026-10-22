@@ -1294,6 +1294,9 @@
         <button type="button" id="btn-retry" class="primary-cta-btn pulsing-cta" data-start="true">
           RETRY NOW (Press Space or Tap)
         </button>
+              <button type="button" id="btn-share-score" class="unified-share-btn">
+                <span>⚡</span> SHARE SCORE
+              </button>
 
         <div class="secondary-btn-row">
           <button type="button" id="btn-go-title" class="secondary-btn">
@@ -1304,6 +1307,21 @@
     </section>
 
     <script>
+        const shareBtn = document.getElementById('btn-share-score');
+        if (shareBtn) {
+          shareBtn.addEventListener('click', () => {
+            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
+              ToenowLevels.shareScore({
+                gameId: 'number-pop',
+                gameTitle: 'Number Pop',
+                score: typeof score !== 'undefined' ? score : 0,
+                wave: typeof wave !== 'undefined' ? wave : 1
+              });
+            }
+          });
+        }
+
+        
       (function () {
         'use strict';
 

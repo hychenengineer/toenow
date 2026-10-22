@@ -660,3 +660,70 @@ body[data-mode='paused'] .unified-pause-screen:not(.hidden):not([hidden]) {
   color: #f8fafc !important;
   border-color: rgba(255, 255, 255, 0.35) !important;
 }
+
+
+/* ============================================================================
+   5c. Universal Share Button & Share Feedback Toast
+   ============================================================================ */
+.unified-share-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  padding: 12px 18px !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(56, 189, 248, 0.45) !important;
+  background: linear-gradient(135deg, rgba(12, 74, 110, 0.75) 0%, rgba(3, 105, 161, 0.75) 100%) !important;
+  color: #f0f9ff !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.25) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease !important;
+  box-sizing: border-box !important;
+  margin-top: 8px !important;
+}
+
+.unified-share-btn:hover {
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.6) !important;
+  border-color: #38bdf8 !important;
+  background: linear-gradient(135deg, rgba(3, 105, 161, 0.9) 0%, rgba(2, 132, 199, 0.9) 100%) !important;
+  color: #ffffff !important;
+}
+
+.unified-share-btn:active {
+  transform: translateY(0) scale(0.99) !important;
+}
+
+.unified-share-toast {
+  position: fixed !important;
+  bottom: 24px !important;
+  left: 50% !important;
+  transform: translateX(-50%) translateY(0) !important;
+  z-index: 9999 !important;
+  background: rgba(15, 23, 42, 0.96) !important;
+  border: 1px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 9999px !important;
+  padding: 10px 22px !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #f0f9ff !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.3) !important;
+  pointer-events: none !important;
+  animation: unifiedToastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+}
+
+@keyframes unifiedToastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}

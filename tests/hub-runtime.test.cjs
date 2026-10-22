@@ -89,6 +89,7 @@ test('Hub index.html scripts have zero syntax errors and render all game cards c
     window: windowMock,
     document: documentMock,
     localStorage: windowMock.localStorage,
+    URLSearchParams: global.URLSearchParams || URLSearchParams,
     console: console,
     setTimeout: () => {},
     setInterval: () => {},

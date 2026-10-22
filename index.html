@@ -2853,7 +2853,7 @@
         const { gameId, category, score, isPractice } = payload;
         if (!gameId || typeof score !== 'number') return;
         if (isPractice) {
-          showToast(Practice Completed:  pts (Practice mode not recorded));
+          showToast(`Practice Completed: ${score} pts (Practice mode not recorded)`);
           return;
         }
         if (GAMES_CONFIG.find(game => game.id === gameId)?.leaderboard === false) return;

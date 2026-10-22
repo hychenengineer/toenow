@@ -1,0 +1,10 @@
+{
+  "name": "toenow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Toenow Cognitive Games Suite",
+  "scripts": {
+    "test": "node --test tests/toenow-levels.test.cjs tests/games-runtime.test.cjs tests/rescue-session.test.cjs tests/animal-rescue-difficulty.test.cjs",
+    "serve": "node tools/serve-local.cjs"
+  }
+}

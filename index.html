@@ -10,6 +10,8 @@
   <meta http-equiv="Expires" content="0" />
   <!-- Supabase JS Client (v2 CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Toenow Shared Levels Module -->
+  <script src="shared/toenow-levels.js"></script>
   <style>
     :root {
       --bg-primary: #0b0f19;
@@ -2100,6 +2102,9 @@
 
         // Helper: calculate 5-level name and level number from wave
     function getLevelInfoFromWave(wave) {
+      if (typeof ToenowLevels !== 'undefined' && typeof ToenowLevels.getLevelInfo === 'function') {
+        return ToenowLevels.getLevelInfo(wave);
+      }
       const w = Math.max(1, parseInt(wave, 10) || 1);
       if (w <= 5) return { level: 1, name: 'Beginner' };
       if (w <= 10) return { level: 2, name: 'Intermediate' };

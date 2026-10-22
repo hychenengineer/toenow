@@ -1,12 +1,11 @@
-/**
- * Toenow Universal Levels and Runtime Standards Module
- * Central single-source-of-truth for:
- * 1. 5-Level difficulty mapping (5 waves per level)
- * 2. Cross-game level badge formatting
- * 3. Hub message contracts
- * 4. Safe title screen initialization helpers
- * 5. Universal Practice Mode (Modal UI + Level Selection + Safe Launch)
- */
+var LEVELS = [
+  { level: 1, name: 'Beginner', badgeText: 'LVL 1 · BEGINNER', minWave: 1, maxWave: 5, startWave: 1 },
+  { level: 2, name: 'Intermediate', badgeText: 'LVL 2 · INTERMEDIATE', minWave: 6, maxWave: 10, startWave: 6 },
+  { level: 3, name: 'Advanced', badgeText: 'LVL 3 · ADVANCED', minWave: 11, maxWave: 15, startWave: 11 },
+  { level: 4, name: 'Expert', badgeText: 'LVL 4 · EXPERT', minWave: 16, maxWave: 20, startWave: 16 },
+  { level: 5, name: 'Master', badgeText: 'LVL 5 · MASTER', minWave: 21, maxWave: Infinity, startWave: 21 }
+];
+
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) {
     module.exports = factory();
@@ -16,133 +15,76 @@
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
 
-  var LEVELS = [
-    { level: 1, name: 'Beginner', minWave: 1, maxWave: 5, startWave: 1 },
-    { level: 2, name: 'Intermediate', minWave: 6, maxWave: 10, startWave: 6 },
-    { level: 3, name: 'Advanced', minWave: 11, maxWave: 15, startWave: 11 },
-    { level: 4, name: 'Expert', minWave: 16, maxWave: 20, startWave: 16 },
-    { level: 5, name: 'Master', minWave: 21, maxWave: Infinity, startWave: 21 }
-  ];
-
-  /**
-   * Returns standard level descriptor for any given wave number.
-   * @param {number|string} wave
-   * @returns {{ level: number, name: string, badgeText: string, fullBadgeText: string, startWave: number }}
-   */
   function getLevelInfo(wave) {
-    var w = Math.max(1, parseInt(wave, 10) || 1);
-    var matched = LEVELS[0];
+    var w = Number(wave) || 1;
+    if (w < 1) w = 1;
+
     for (var i = 0; i < LEVELS.length; i++) {
-      if (w <= LEVELS[i].maxWave) {
-        matched = LEVELS[i];
-        break;
+      var lvl = LEVELS[i];
+      if (w >= lvl.minWave && w <= lvl.maxWave) {
+        return lvl;
       }
     }
-    return {
-      level: matched.level,
-      name: matched.name,
-      startWave: matched.startWave,
-      badgeText: 'LVL ' + matched.level + ' · ' + matched.name.toUpperCase(),
-      fullBadgeText: 'LVL ' + matched.level + ' · ' + matched.name.toUpperCase() + ' (W' + w + ')'
-    };
+    return LEVELS[LEVELS.length - 1];
   }
 
-  /**
-   * Safely updates a game's title screen records without throwing null errors.
-   * @param {Object} options
-   * @param {number|string} options.score
-   * @param {number|string} options.wave
-   * @param {string} [options.scoreElementId='title-best-score']
-   * @param {string} [options.levelElementId='title-best-level']
-   */
   function syncTitleRecords(options) {
     if (typeof document === 'undefined') return;
     options = options || {};
-    var score = Math.max(0, parseInt(options.score, 10) || 0);
-    var wave = Math.max(1, parseInt(options.wave, 10) || 1);
-    var scoreId = options.scoreElementId || 'title-best-score';
-    var levelId = options.levelElementId || 'title-best-level';
 
-    var elScore = document.getElementById(scoreId);
-    if (elScore) {
-      elScore.textContent = score.toLocaleString();
+    var bestScore = Number(options.bestScore) || 0;
+    var maxWave = Number(options.maxWave) || 1;
+
+    var scoreEl = options.scoreElement || document.getElementById('title-best-score');
+    if (scoreEl) {
+      scoreEl.textContent = bestScore > 0 ? bestScore.toLocaleString() : '0';
     }
 
-    var elLevel = document.getElementById(levelId);
-    if (elLevel) {
-      var info = getLevelInfo(wave);
-      elLevel.textContent = info.badgeText;
+    var levelEl = options.levelElement || document.getElementById('title-best-level');
+    if (levelEl) {
+      if (bestScore <= 0 && (!options.maxWave || options.maxWave <= 1)) {
+        levelEl.textContent = 'LVL 1 · BEGINNER';
+      } else {
+        var info = getLevelInfo(maxWave);
+        levelEl.textContent = info.badgeText;
+      }
     }
   }
 
-  /**
-   * Formats a game-over postMessage payload to report back to toenow hub.
-   * @param {Object} data
-   * @returns {Object}
-   */
   function createGameOverPayload(data) {
     data = data || {};
-    var isPractice = Boolean(data.isPractice);
-    var wave = Math.max(1, Number(data.wave) || 1);
-    var lvl = getLevelInfo(wave);
+    var wave = Number(data.wave) || 1;
+    var levelInfo = getLevelInfo(wave);
+
     return {
       type: 'GAME_OVER',
-      gameId: String(data.gameId || ''),
-      category: String(data.category || 'puzzle'),
-      score: Math.max(0, Math.round(Number(data.score) || 0)),
+      gameId: data.gameId,
+      category: data.category,
+      score: Math.round(Number(data.score) || 0),
       wave: wave,
-      level: lvl.level,
-      levelName: lvl.name,
-      isPractice: isPractice,
-      duration: Math.max(0, Math.round(Number(data.duration) || 0))
+      level: levelInfo.level,
+      levelName: levelInfo.name,
+      duration: data.duration,
+      accuracy: data.accuracy,
+      streak: data.streak,
+      rank: data.rank,
+      isPractice: Boolean(data.isPractice)
     };
   }
 
-  /**
-   * Attaches universal Practice Mode modal to the title screen.
-   * Generates a "PRACTICE" button next to "START GAME", and opens a level picker (Level 1-5).
-   * Selecting a level triggers onStartGame(startWave, true).
-   * @param {Object} options
-   * @param {HTMLElement|string} options.container - The title card element or selector containing START GAME button
-   * @param {Function} options.onStartGame - Callback: (startWave, isPractice) => void
-   */
-  function setupPracticeMode(options) {
+  var activeModal = null;
+
+  function openPracticeModal(onStartGame) {
     if (typeof document === 'undefined') return;
-    options = options || {};
-    var onStart = typeof options.onStartGame === 'function' ? options.onStartGame : function () {};
-    var container = typeof options.container === 'string'
-      ? document.querySelector(options.container)
-      : (options.container || document.querySelector('.unified-title-card'));
+    var onStart = typeof onStartGame === 'function' ? onStartGame : function () {};
 
-    if (!container) return;
-
-    var startBtn = container.querySelector('.unified-start-btn') || container.querySelector('[data-start="true"]');
-    if (!startBtn) return;
-
-    // Check if practice button already exists
-    if (container.querySelector('.unified-practice-btn')) return;
-
-    // Wrap buttons into an actions bar if needed
-    var actionsBar = container.querySelector('.unified-actions-bar');
-    if (!actionsBar) {
-      actionsBar = document.createElement('div');
-      actionsBar.className = 'unified-actions-bar';
-      startBtn.parentNode.insertBefore(actionsBar, startBtn);
-      actionsBar.appendChild(startBtn);
+    if (activeModal && activeModal.parentNode) {
+      activeModal.parentNode.removeChild(activeModal);
+      activeModal = null;
     }
 
-    var practiceBtn = document.createElement('button');
-    practiceBtn.type = 'button';
-    practiceBtn.className = 'unified-practice-btn';
-    practiceBtn.textContent = 'PRACTICE';
-    practiceBtn.setAttribute('aria-label', 'Open Practice Mode Level Selector');
-    actionsBar.appendChild(practiceBtn);
-
-    // Create Modal for Level Selection
-    var modalId = 'unified-practice-modal-' + Math.random().toString(36).slice(2, 7);
     var modal = document.createElement('div');
-    modal.className = 'unified-practice-modal hidden';
-    modal.id = modalId;
+    modal.className = 'unified-practice-modal';
     modal.setAttribute('role', 'dialog');
     modal.setAttribute('aria-modal', 'true');
     modal.setAttribute('aria-label', 'Select Practice Level');
@@ -180,7 +122,8 @@
         if (document.activeElement && typeof document.activeElement.blur === 'function') {
           document.activeElement.blur();
         }
-        modal.classList.add('hidden');
+        if (modal.parentNode) modal.parentNode.removeChild(modal);
+        activeModal = null;
         onStart(lvl.startWave, true);
       });
 
@@ -193,17 +136,51 @@
     closeBtn.className = 'unified-practice-cancel-btn';
     closeBtn.textContent = 'CANCEL';
     closeBtn.addEventListener('click', function () {
-      modal.classList.add('hidden');
+      if (modal.parentNode) modal.parentNode.removeChild(modal);
+      activeModal = null;
     });
     modalContent.appendChild(closeBtn);
 
     modal.appendChild(modalContent);
     document.body.appendChild(modal);
+    activeModal = modal;
+  }
 
-    practiceBtn.addEventListener('click', function (e) {
+  function setupPracticeMode(options) {
+    if (typeof document === 'undefined') return;
+    options = options || {};
+    var onStart = typeof options.onStartGame === 'function' ? options.onStartGame : function () {};
+    var container = typeof options.container === 'string'
+      ? document.querySelector(options.container)
+      : (options.container || document.querySelector('.unified-title-card'));
+
+    if (!container) return;
+
+    var startBtn = container.querySelector('.unified-start-btn') || container.querySelector('[data-start="true"]');
+    if (!startBtn) return;
+
+    var practiceBtn = container.querySelector('.unified-practice-btn');
+    if (!practiceBtn) {
+      var actionsBar = container.querySelector('.unified-actions-bar');
+      if (!actionsBar) {
+        actionsBar = document.createElement('div');
+        actionsBar.className = 'unified-actions-bar';
+        startBtn.parentNode.insertBefore(actionsBar, startBtn);
+        actionsBar.appendChild(startBtn);
+      }
+
+      practiceBtn = document.createElement('button');
+      practiceBtn.type = 'button';
+      practiceBtn.className = 'unified-practice-btn';
+      practiceBtn.textContent = 'PRACTICE';
+      practiceBtn.setAttribute('aria-label', 'Open Practice Mode Level Selector');
+      actionsBar.appendChild(practiceBtn);
+    }
+
+    practiceBtn.onclick = function (e) {
       e.preventDefault();
-      modal.classList.remove('hidden');
-    });
+      openPracticeModal(onStart);
+    };
   }
 
   return {
@@ -211,6 +188,7 @@
     getLevelInfo: getLevelInfo,
     syncTitleRecords: syncTitleRecords,
     createGameOverPayload: createGameOverPayload,
+    openPracticeModal: openPracticeModal,
     setupPracticeMode: setupPracticeMode
   };
 });

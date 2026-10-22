@@ -129,6 +129,15 @@ test('ToenowLevels setupPracticeMode renders practice button and opens modal to 
           this.parentElement = null;
         }
       },
+      removeChild(child) {
+        const idx = this.children.indexOf(child);
+        if (idx !== -1) {
+          this.children.splice(idx, 1);
+          child.parentNode = null;
+          child.parentElement = null;
+        }
+        return child;
+      },
       querySelector(sel) {
         const check = (node) => {
           if (sel.startsWith('.') && node.classList && node.classList.contains(sel.slice(1))) return node;
@@ -161,8 +170,12 @@ test('ToenowLevels setupPracticeMode renders practice button and opens modal to 
         this._listeners[ev].push(fn);
       },
       click() {
+        const ev = { preventDefault: () => {}, stopPropagation: () => {} };
+        if (typeof this.onclick === 'function') {
+          this.onclick(ev);
+        }
         const fns = (this._listeners && this._listeners['click']) || [];
-        fns.forEach(fn => fn({ preventDefault: () => {}, stopPropagation: () => {} }));
+        fns.forEach(fn => fn(ev));
       }
     };
     return el;
@@ -198,14 +211,14 @@ test('ToenowLevels setupPracticeMode renders practice button and opens modal to 
   assert.ok(practiceBtn, 'Practice button should be created in actions bar');
   assert.equal(practiceBtn.textContent, 'PRACTICE');
 
-  // Modal is created with hidden class initially
+  // Modal is not attached until Practice is clicked
   let modal = mockBody.querySelector('.unified-practice-modal');
-  assert.ok(modal, 'Modal should be attached to body');
-  assert.ok(modal.classList.contains('hidden'), 'Modal should initially have hidden class');
+  assert.equal(modal, null, 'Modal should not be in DOM before click');
 
   // Click Practice
   practiceBtn.click();
-  assert.ok(!modal.classList.contains('hidden'), 'Modal should not have hidden class after clicking Practice');
+  modal = mockBody.querySelector('.unified-practice-modal');
+  assert.ok(modal, 'Modal should be attached to body after clicking Practice');
 
   const levelButtons = modal.querySelectorAll('.unified-practice-level-btn');
   assert.equal(levelButtons.length, 5, 'Should have 5 levels to choose from');
@@ -215,6 +228,6 @@ test('ToenowLevels setupPracticeMode renders practice button and opens modal to 
   assert.equal(chosenStartWave, 11, 'Level 3 should launch wave 11');
   assert.equal(chosenPractice, true, 'isPractice should be true');
 
-  // Modal should be hidden again
-  assert.ok(modal.classList.contains('hidden'), 'Modal should have hidden class after selection');
+  // Modal should be removed after selection
+  assert.equal(mockBody.querySelector('.unified-practice-modal'), null, 'Modal should be removed after selection');
 });

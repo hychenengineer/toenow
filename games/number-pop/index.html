@@ -1718,15 +1718,20 @@
         }
 
         function getWaveType(wave) {
-          if (wave <= 3) return 'SINGLE_DIGIT';
-          if (wave <= 6) return 'DOUBLE_DIGIT';
-          if (wave <= 9) return 'TRIPLE_DIGIT';
-          if (wave <= 12) return 'POS_NEG_INT';
-          if (wave <= 15) return 'DECIMALS_INT';
-          if (wave <= 18) return 'FRACTIONS_SAME_NUMERATOR';
-          if (wave <= 21) return 'FRACTIONS_SAME_DENOMINATOR';
-          if (wave <= 24) return 'PURE_FRACTIONS';
-          if (wave <= 27) return 'TRI_SYSTEM_POS';
+          // Level 1: Beginner (Waves 1-5) -> Single & Double digit integers
+          if (wave <= 2) return 'SINGLE_DIGIT';
+          if (wave <= 5) return 'DOUBLE_DIGIT';
+          // Level 2: Intermediate (Waves 6-10) -> Triple digit & Positive/Negative
+          if (wave <= 8) return 'TRIPLE_DIGIT';
+          if (wave <= 10) return 'POS_NEG_INT';
+          // Level 3: Advanced (Waves 11-15) -> Decimals & Same Numerator Fractions
+          if (wave <= 13) return 'DECIMALS_INT';
+          if (wave <= 15) return 'FRACTIONS_SAME_NUMERATOR';
+          // Level 4: Expert (Waves 16-20) -> Same Denominator & Mixed Fractions
+          if (wave <= 18) return 'FRACTIONS_SAME_DENOMINATOR';
+          if (wave <= 20) return 'PURE_FRACTIONS';
+          // Level 5: Master (Waves 21+) -> Tri-System & Ultimate Singularity
+          if (wave <= 25) return 'TRI_SYSTEM_POS';
           return 'ULTIMATE_SINGULARITY';
         }
 
@@ -1810,16 +1815,20 @@
             // Stage 4 Deep Late-Game Board Entropy: Spawn 8 to 9 floating cores simultaneously
             return 8 + (wave % 2);
           }
-          if (wave <= 3) return 4;
-          if (wave <= 6) return 5;
-          if (wave <= 12) return 5 + (wave % 2);
-          if (wave <= 24) return 6;
-          return 7;
+          if (wave <= 5) return 4;               // Level 1: 4 numbers
+          if (wave <= 10) return 5;              // Level 2: 5 numbers
+          if (wave <= 15) return 5 + (wave % 2); // Level 3: 5-6 numbers
+          if (wave <= 20) return 6;              // Level 4: 6 numbers
+          return 7;                              // Level 5: 7 numbers
         }
 
         function getWaveTierName(wave, runDuration = 0) {
           const type = getWaveType(wave);
-          const prefix = runDuration >= 480 ? 'OVERLOAD · ' : '';
+          const lvlName = wave <= 5 ? 'LEVEL 1 · BEGINNER' :
+                                wave <= 10 ? 'LEVEL 2 · INTERMEDIATE' :
+                                wave <= 15 ? 'LEVEL 3 · ADVANCED' :
+                                wave <= 20 ? 'LEVEL 4 · EXPERT' : 'LEVEL 5 · MASTER';
+          const prefix = (runDuration >= 480 ? 'OVERLOAD · ' : '') + lvlName + ' · ';
           switch (type) {
             case 'SINGLE_DIGIT':
               return prefix + 'SINGLE-DIGIT INTEGERS';
@@ -2652,7 +2661,7 @@
               window.parent.postMessage(
                 {
                   type: 'GAME_OVER',
-                  gameId: 'quantum-core-collapse',
+                  gameId: 'number-pop',
                   category: 'math',
                   score: Math.round(Number(score) || 0),
                   wave: Number(wave) || 1,

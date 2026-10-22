@@ -484,6 +484,11 @@
       color: #fcd34d;
     }
 
+    .preview-category-pill[data-cat="memory"] {
+      border-color: rgba(236, 72, 153, 0.45);
+      color: #f472b6;
+    }
+
     .preview-cat-dot {
       width: 6px;
       height: 6px;
@@ -505,6 +510,11 @@
     .preview-category-pill[data-cat="puzzle"] .preview-cat-dot {
       background: #f59e0b;
       box-shadow: 0 0 6px #f59e0b;
+    }
+
+    .preview-category-pill[data-cat="memory"] .preview-cat-dot {
+      background: #ec4899;
+      box-shadow: 0 0 6px #ec4899;
     }
 
     .card-content-wrap {
@@ -570,6 +580,12 @@
       background: rgba(245, 158, 11, 0.14);
       color: #fcd34d;
       border-color: rgba(245, 158, 11, 0.35);
+    }
+
+    .category-badge[data-cat="memory"] {
+      background: rgba(236, 72, 153, 0.14);
+      color: #f472b6;
+      border-color: rgba(236, 72, 153, 0.35);
     }
 
     .difficulty-dots {
@@ -1470,7 +1486,7 @@
         <button type="button" class="tab-btn" data-category="spatial">Space</button>
         <button type="button" class="tab-btn" data-category="math">Numbers</button>
         <button type="button" class="tab-btn" data-category="logic">Logic</button>
-        <button type="button" class="tab-btn" data-category="memory" style="opacity: 0.6;" title="Coming soon">Memory (Soon)</button>
+        <button type="button" class="tab-btn" data-category="memory">Memory</button>
       </nav>
 
       <!-- Action Bar -->
@@ -1682,72 +1698,91 @@
         category: 'logic',
         icon: '🚂',
         url: 'games/animal-rescue-train/index.html',
-        difficulty: 3,
+        difficulty: 5,
+        difficultyMin: 1,
         leaderboard: false,
-        description: '觀察三條動物隊伍，安排三節救援車廂。五個由易到難的小關卡，沒有倒數，慢慢想。'
+        description: '隊伍與車廂隨 Tier 1–5 逐步增加，從兩隊兩車到五隊四車，挑戰預判與救援順序。'
       },
       {
-        id: 'quantum-core-collapse',
+        id: 'number-pop',
         title: 'Number Pop',
         category: 'math',
         icon: '🔢',
-        url: 'games/quantum-core-collapse/index.html',
+        url: 'games/number-pop/index.html',
         difficulty: 4,
         description: 'Fast-paced number sorting challenge. Click or tap floating numbers from smallest to largest before time runs out!'
       },
       {
-        id: 'quantum-shell',
+        id: 'ball-track',
         title: 'Ball Track',
         category: 'spatial',
         icon: '🔮',
-        url: 'games/quantum-shell/index.html',
+        url: 'games/ball-track/index.html',
         difficulty: 4,
         description: 'Track the glowing balls running around the circle. Keep your eyes on them and tap the right spots!'
       },
       {
-        id: 'chip-defrag',
+        id: 'block-match',
         title: 'Block Match',
         category: 'puzzle',
         icon: '🖲️',
-        url: 'games/chip-defrag/index.html',
+        url: 'games/block-match/index.html',
         difficulty: 3,
         description: 'Shatter excess blocks from the active board to match the target blueprint pattern.'
       },
       {
-        id: 'overclock-reactor',
+        id: 'add-up',
         title: 'Add Up',
         category: 'math',
         icon: '⚡',
-        url: 'games/overclock-reactor/index.html',
+        url: 'games/add-up/index.html',
         difficulty: 3,
         description: 'Fast-paced mental math reflex drill. Tap floating number balls to add up and match the target sum.'
       },
       {
-        id: 'gravitational-anomaly',
+        id: 'space-scale',
         title: 'Space Scale',
         category: 'logic',
         icon: '⚖️',
-        url: 'games/gravitational-anomaly/index.html',
+        url: 'games/space-scale/index.html',
         difficulty: 4,
         description: 'Deep-space logical deduction drill. Analyze kinetic scales, asymmetric lever moments, and celestial densities to identify target masses.'
       },
       {
-        id: 'whack-match',
-        title: 'Whack Match',
+        id: 'tap-match',
+        title: 'Tap Match',
         category: 'spatial',
         icon: '🎯',
-        url: 'games/whack-match/index.html',
+        url: 'games/tap-match/index.html',
         difficulty: 3,
         description: 'High-speed cyber-analytic spatial node matching drill. Intercept dynamic geometric glyph configurations with escalating wave criteria.'
       },
       {
-        id: 'fast-focus',
-        title: 'Fast Focus',
+        id: 'spot-quick',
+        title: 'Spot Quick',
         category: 'puzzle',
         icon: '🔬',
-        url: 'games/fast-focus/index.html',
+        url: 'games/spot-quick/index.html',
         difficulty: 4,
         description: 'Optical aperture de-blurring drill. Deconvolve procedural vector biological silhouettes across 50 progressive specimen taxonomies.'
+      },
+      {
+        id: 'shadow-match',
+        title: 'Shadow Match',
+        category: 'puzzle',
+        icon: '👤',
+        url: 'games/shadow-match/index.html',
+        difficulty: 3,
+        description: 'Dynamic silhouette deconstruction drill. Identify matching composite shapes as drifting silhouettes merge and overlap.'
+      },
+      {
+        id: 'flash-brain',
+        title: 'Flash Brain',
+        category: 'memory',
+        icon: '🧠',
+        url: 'games/flash-brain/index.html',
+        difficulty: 4,
+        description: 'High-speed memory matrix drill. Memorize illuminated blocks in a flash, avoid crimson decoys, and recall coordinates.'
       }
     ];
 
@@ -2150,66 +2185,83 @@
 
       const GAME_PREVIEWS = {
         'animal-rescue-train': `
+
           <div class="card-preview-banner">
             <img class="card-preview-img" src="assets/animal-rescue-train-preview.svg" alt="深色森林月台上的貓咪、小狗與救援列車" loading="lazy" />
             <div class="preview-badge-overlay">
-              <span class="preview-category-pill" data-cat="logic"><span class="preview-cat-dot"></span> Logic · Prototype</span>
+              <span class="preview-category-pill" data-cat="logic"><span class="preview-cat-dot"></span> Logic · Local prototype</span>
             </div>
           </div>
         `,
-        'quantum-core-collapse': `
+        'number-pop': `
           <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/quantum-core-collapse-preview.png" alt="Quantum Core Collapse In-Game Arena" loading="lazy" />
+            <img class="card-preview-img" src="assets/number-pop-preview.png" alt="Number Pop In-Game Arena" loading="lazy" />
             <div class="preview-badge-overlay">
               <span class="preview-category-pill" data-cat="math"><span class="preview-cat-dot"></span> Numbers</span>
             </div>
           </div>
         `,
-        'quantum-shell': `
+        'ball-track': `
           <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/quantum-shell-preview.png" alt="Quantum Shell In-Game Arena" loading="lazy" />
+            <img class="card-preview-img" src="assets/ball-track-preview.png" alt="Ball Track In-Game Arena" loading="lazy" />
             <div class="preview-badge-overlay">
               <span class="preview-category-pill" data-cat="spatial"><span class="preview-cat-dot"></span> Space</span>
             </div>
           </div>
         `,
-        'chip-defrag': `
+        'block-match': `
           <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/chip-defrag-preview.png" alt="Block Match In-Game Arena" loading="lazy" />
+            <img class="card-preview-img" src="assets/block-match-preview.png" alt="Block Match In-Game Arena" loading="lazy" />
             <div class="preview-badge-overlay">
               <span class="preview-category-pill" data-cat="puzzle"><span class="preview-cat-dot"></span> Pattern</span>
             </div>
           </div>
         `,
-        'overclock-reactor': `
+        'add-up': `
           <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/overclock-reactor-preview.png" alt="Overclock Reactor In-Game Arena" loading="lazy" />
+            <img class="card-preview-img" src="assets/add-up-preview.png" alt="Add Up In-Game Arena" loading="lazy" />
             <div class="preview-badge-overlay">
               <span class="preview-category-pill" data-cat="math"><span class="preview-cat-dot"></span> Numbers</span>
             </div>
           </div>
         `,
-        'gravitational-anomaly': `
+        'space-scale': `
           <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/gravitational-anomaly-preview.png" alt="Gravitational Anomaly In-Game Arena" loading="lazy" />
+            <img class="card-preview-img" src="assets/space-scale-preview.png" alt="Space Scale In-Game Arena" loading="lazy" />
             <div class="preview-badge-overlay">
               <span class="preview-category-pill" data-cat="logic"><span class="preview-cat-dot"></span> Logic</span>
             </div>
           </div>
         `,
-        'whack-match': `
+        'tap-match': `
           <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/whack-match-preview.png" alt="Whack Match In-Game Target Matrix" loading="lazy" />
+            <img class="card-preview-img" src="assets/tap-match-preview.png" alt="Tap Match In-Game Target Matrix" loading="lazy" />
             <div class="preview-badge-overlay">
               <span class="preview-category-pill" data-cat="spatial"><span class="preview-cat-dot"></span> Space</span>
             </div>
           </div>
         `,
-        'fast-focus': `
+        'spot-quick': `
           <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/fast-focus-preview.png" alt="Fast Focus Optical Aperture Arena" loading="lazy" />
+            <img class="card-preview-img" src="assets/spot-quick-preview.png" alt="Spot Quick Optical Aperture Arena" loading="lazy" />
             <div class="preview-badge-overlay">
               <span class="preview-category-pill" data-cat="puzzle"><span class="preview-cat-dot"></span> Pattern</span>
+            </div>
+          </div>
+        `,
+        'shadow-match': `
+          <div class="card-preview-banner">
+            <img class="card-preview-img" src="assets/shadow-match-preview.png" alt="Shadow Match Silhouette Arena" loading="lazy" />
+            <div class="preview-badge-overlay">
+              <span class="preview-category-pill" data-cat="puzzle"><span class="preview-cat-dot"></span> Pattern</span>
+            </div>
+          </div>
+        `,
+        'flash-brain': `
+          <div class="card-preview-banner">
+            <img class="card-preview-img" src="assets/flash-brain-preview.png" alt="Flash Brain Matrix Arena" loading="lazy" />
+            <div class="preview-badge-overlay">
+              <span class="preview-category-pill" data-cat="memory"><span class="preview-cat-dot"></span> Memory</span>
             </div>
           </div>
         `
@@ -2221,7 +2273,7 @@
           description: 'Modular cognitive training simulation.'
         };
         const record = scores[game.id];
-        const bestText = game.leaderboard === false ? 'Prototype' : record ? `${record.bestScore.toLocaleString()} pts` : 'Unranked';
+        const bestText = game.leaderboard === false ? 'Local prototype' : record ? `${record.bestScore.toLocaleString()} pts` : 'Unranked';
 
         let dotsHtml = '';
         for (let i = 1; i <= 5; i++) {
@@ -2229,6 +2281,7 @@
         }
 
         const previewHtml = GAME_PREVIEWS[game.id] || '';
+        const difficultyLabel = game.difficultyMin ? `${game.difficultyMin}–${game.difficulty}` : String(game.difficulty);
 
         return `
           <article class="game-card" data-game-id="${game.id}" tabindex="0" role="button" aria-label="Play ${game.title}">
@@ -2237,8 +2290,8 @@
               <div class="card-top">
                 <div class="game-icon-wrap" aria-hidden="true">${game.icon}</div>
                 <div class="card-badges">
-                  <div class="difficulty-dots" title="Difficulty Tier ${game.difficulty}/5">
-                    <span>Tier</span>
+                  <div class="difficulty-dots" title="Difficulty Tier ${difficultyLabel}/5">
+                    <span>${game.difficultyMin ? `Tier ${difficultyLabel}` : 'Tier'}</span>
                     ${dotsHtml}
                   </div>
                 </div>
@@ -2300,13 +2353,15 @@
         const record = scores[game.id];
         if (record && record.bestScore > 0) {
           const gameStorageKeyMap = {
-            'quantum-core-collapse': 'qcc_high_score_v1',
-            'quantum-shell': 'quantum_shell_best_score_v5',
-            'chip-defrag': 'chip_defrag_high_score_v5',
-            'overclock-reactor': 'overclock_reactor_best_v2',
-            'gravitational-anomaly': 'grav_anomaly_best_score_v2',
-            'whack-match': 'whack_match_high_score_v1',
-            'fast-focus': 'fast_focus_high_score_v1'
+            'number-pop': 'number_pop_high_score_v1',
+            'ball-track': 'ball_track_high_score_v1',
+            'block-match': 'block_match_high_score_v1',
+            'add-up': 'add_up_high_score_v1',
+            'space-scale': 'space_scale_high_score_v1',
+            'tap-match': 'tap_match_high_score_v1',
+            'spot-quick': 'spot_quick_high_score_v1',
+            'shadow-match': 'shadow_match_best_score_v1',
+            'flash-brain': 'flash_brain_best_score_v1'
           };
           const key = gameStorageKeyMap[game.id];
           if (key) {
@@ -2503,7 +2558,7 @@
        ============================================================================ */
     /* --- TODO: Connect Supabase / Firebase leaderboard endpoint for toenow.com --- */
     const BASELINE_LEADERBOARD_DATA = {
-      'quantum-shell': [
+      'ball-track': [
         { player: 'OrbitalTracker', score: 34200, date: '2026-10-18' },
         { player: 'VoxelDroneX', score: 29800, date: '2026-10-18' },
         { player: 'ShuffleMaster', score: 26500, date: '2026-10-17' },
@@ -2515,7 +2570,7 @@
         { player: 'KineticDrift', score: 11800, date: '2026-10-12' },
         { player: 'VectorGaze', score: 9500, date: '2026-10-11' }
       ],
-      'quantum-core-collapse': [
+      'number-pop': [
         { player: 'SingularityArch', score: 28450, date: '2026-10-18' },
         { player: 'ChronoSiphon_X', score: 24900, date: '2026-10-17' },
         { player: 'QuantumPulse9', score: 21600, date: '2026-10-17' },
@@ -2527,7 +2582,7 @@
         { player: 'SubZero_Math', score: 10850, date: '2026-10-12' },
         { player: 'CadetOperator', score: 9400, date: '2026-10-11' }
       ],
-      'chip-defrag': [
+      'block-match': [
         { player: 'SiliconShredder', score: 26800, date: '2026-10-18' },
         { player: 'DefragMaster_9', score: 23400, date: '2026-10-18' },
         { player: 'WaferCarver', score: 20100, date: '2026-10-17' },
@@ -2539,7 +2594,7 @@
         { player: 'CircuitBreaker', score: 9800, date: '2026-10-12' },
         { player: 'SemiconZero', score: 8400, date: '2026-10-11' }
       ],
-      'overclock-reactor': [
+      'add-up': [
         { player: 'PlasmaSurge', score: 31200, date: '2026-10-19' },
         { player: 'FluxCascade_9', score: 27800, date: '2026-10-18' },
         { player: 'CoreStabilizer', score: 24500, date: '2026-10-18' },
@@ -2551,7 +2606,7 @@
         { player: 'ArcDischarge', score: 11900, date: '2026-10-13' },
         { player: 'OverclockCadet', score: 9600, date: '2026-10-12' }
       ],
-      'gravitational-anomaly': [
+      'space-scale': [
         { player: 'SingularityMaster', score: 29500, date: '2026-10-19' },
         { player: 'CosmicArchitect_X', score: 26200, date: '2026-10-19' },
         { player: 'AstrometricPro', score: 23100, date: '2026-10-18' },
@@ -2563,7 +2618,7 @@
         { player: 'EquilibriumSeeker', score: 9800, date: '2026-10-13' },
         { player: 'CadetAnalyst', score: 8100, date: '2026-10-12' }
       ],
-      'whack-match': [
+      'tap-match': [
         { player: 'CyberReflex_99', score: 34200, date: '2026-10-19' },
         { player: 'GlyphStriker', score: 30800, date: '2026-10-19' },
         { player: 'PulseMatrix', score: 27500, date: '2026-10-18' },
@@ -2575,7 +2630,7 @@
         { player: 'GridAssault', score: 12100, date: '2026-10-13' },
         { player: 'SpatialCadet', score: 9900, date: '2026-10-12' }
       ],
-      'fast-focus': [
+      'spot-quick': [
         { player: 'TaxonArchon', score: 32600, date: '2026-10-19' },
         { player: 'ApertureFocus', score: 29100, date: '2026-10-19' },
         { player: 'BioDeconvolver', score: 25800, date: '2026-10-18' },
@@ -2586,6 +2641,30 @@
         { player: 'OpticLens_88', score: 13000, date: '2026-10-14' },
         { player: 'FloraFaunaMaster', score: 11200, date: '2026-10-13' },
         { player: 'SpotlightCadet', score: 9400, date: '2026-10-12' }
+      ],
+      'shadow-match': [
+        { player: 'EclipseSavant', score: 35800, date: '2026-10-21' },
+        { player: 'SilhouetteKing', score: 31200, date: '2026-10-20' },
+        { player: 'ChamberMaster', score: 28400, date: '2026-10-20' },
+        { player: 'PhantomHunter', score: 25100, date: '2026-10-19' },
+        { player: 'OpticDrifter', score: 22300, date: '2026-10-19' },
+        { player: 'ShadowLock_9', score: 19800, date: '2026-10-18' },
+        { player: 'ShapeSynth', score: 17400, date: '2026-10-17' },
+        { player: 'CompositePro', score: 15200, date: '2026-10-16' },
+        { player: 'ShutterCadet', score: 12900, date: '2026-10-15' },
+        { player: 'UmbraSeeker', score: 10400, date: '2026-10-14' }
+      ],
+      'flash-brain': [
+        { player: 'SynapseOverlord', score: 38900, date: '2026-10-21' },
+        { player: 'MatrixRecall_X', score: 34500, date: '2026-10-20' },
+        { player: 'NeuroStrobe', score: 30800, date: '2026-10-20' },
+        { player: 'FlashPhantom', score: 27200, date: '2026-10-19' },
+        { player: 'GridMnemonist', score: 24100, date: '2026-10-19' },
+        { player: 'MemoryArchon', score: 21300, date: '2026-10-18' },
+        { player: 'ChronoStasis', score: 18600, date: '2026-10-17' },
+        { player: 'RecallPulse', score: 16200, date: '2026-10-16' },
+        { player: 'DecoyDodger', score: 13700, date: '2026-10-15' },
+        { player: 'NeuralCadet', score: 11100, date: '2026-10-14' }
       ]
     };
 
@@ -2607,7 +2686,7 @@
       if (!tbody) return;
 
       if (GAMES_CONFIG.find(game => game.id === gameId)?.leaderboard === false) {
-        tbody.innerHTML = '<tr><td colspan="4">Prototype — no leaderboard.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4">Local prototype — no leaderboard.</td></tr>';
         return;
       }
 

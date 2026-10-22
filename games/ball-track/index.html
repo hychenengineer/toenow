@@ -1432,7 +1432,7 @@
           let outerRingSpeedRad = 0;
           let radialHopChance = 0;
 
-          if (safeWave <= 9) {
+          if (safeWave <= 10) {
             const spec = EARLY_WAVE_TABLE[safeWave];
             shellCount = spec.shells;
             targetCount = spec.targets;
@@ -1443,90 +1443,60 @@
             hasBoardRotation = spec.rotating;
             if (safeWave <= 5) {
               tier = 1;
-              tierName = 'TIER 1 · SINGLE RING';
+              tierName = 'LEVEL 1 · BEGINNER (SINGLE RING)';
             } else {
               tier = 2;
-              tierName = spec.rotating ? 'TIER 2 · ROTATING ORBIT' : 'TIER 2 · SINGLE RING';
-              if (spec.rotating) {
-                const dir = safeWave % 2 === 0 ? 1 : -1;
-                boardRotationSpeedRad = dir * (0.28 + (safeWave - 7) * 0.04);
-              }
+              tierName = 'LEVEL 2 · INTERMEDIATE (ROTATING ORBIT)';
+              const dir = safeWave % 2 === 0 ? 1 : -1;
+              boardRotationSpeedRad = dir * (0.28 + (safeWave - 6) * 0.035);
             }
-          } else if (safeWave <= 12) {
-            // Tier 3 (Waves 10-12): Dual Concentric Rings
+          } else if (safeWave <= 15) {
+            // Level 3: Advanced (Waves 11-15) - Dual Concentric Rings (3+3 to 4+4)
             tier = 3;
-            tierName = 'TIER 3 · DUAL CONCENTRIC RINGS';
+            tierName = 'LEVEL 3 · ADVANCED (DUAL RINGS)';
             isDualRing = true;
-            if (safeWave === 10) {
-              shellCount = 8;
-              innerRingCount = 4;
-              outerRingCount = 4;
-              targetCount = 4;
-            } else {
+            if (safeWave <= 12) {
               shellCount = 6;
               innerRingCount = 3;
               outerRingCount = 3;
               targetCount = 3;
+            } else {
+              shellCount = 8;
+              innerRingCount = 4;
+              outerRingCount = 4;
+              targetCount = 4;
             }
-            baseWavePoints = Math.round(1200 * Math.pow(1.3, safeWave - 10));
-            innerRingSpeedRad = 0.34 + (safeWave - 10) * 0.025; // CW
-            outerRingSpeedRad = -(0.28 + (safeWave - 10) * 0.02); // CCW
-            radialHopChance = 0.42;
-          } else if (safeWave <= 16) {
-            // Tier 4 (Waves 13-16): Dual Concentric 4+4
+            baseWavePoints = Math.round(1000 * Math.pow(1.22, safeWave - 10));
+            innerRingSpeedRad = 0.32 + (safeWave - 10) * 0.02; // CW
+            outerRingSpeedRad = -(0.26 + (safeWave - 10) * 0.02); // CCW
+            radialHopChance = 0.35;
+          } else if (safeWave <= 20) {
+            // Level 4: Expert (Waves 16-20) - Dual Concentric 4+4 with High Radial Hop
             tier = 4;
-            tierName = 'TIER 4 · DUAL CONCENTRIC 4+4';
+            tierName = 'LEVEL 4 · EXPERT (DUAL 4+4 HOP)';
             shellCount = 8;
             targetCount = 4;
             isDualRing = true;
             innerRingCount = 4;
             outerRingCount = 4;
-            baseWavePoints = Math.round(1200 * Math.pow(1.32, safeWave - 10));
-            innerRingSpeedRad = 0.38 + (safeWave - 13) * 0.02; // CW
-            outerRingSpeedRad = -(0.32 + (safeWave - 13) * 0.02); // CCW
-            radialHopChance = 0.45;
-          } else if (safeWave <= 20) {
-            // Tier 5 (Waves 17-20): Expanded Single Ring Grandmaster (9 to 10 capsules)
+            baseWavePoints = Math.round(2000 * Math.pow(1.25, safeWave - 15));
+            innerRingSpeedRad = 0.40 + (safeWave - 15) * 0.025; // CW
+            outerRingSpeedRad = -(0.35 + (safeWave - 15) * 0.025); // CCW
+            radialHopChance = 0.48;
+          } else {
+            // Level 5: Master (Waves 21+) - Grandmaster High-Density Dynamic System
             tier = 5;
-            tierName = 'TIER 5 · GRANDMASTER RING';
-            shellCount = safeWave <= 18 ? 9 : 10;
-            targetCount = safeWave <= 17 ? 4 : 5;
+            tierName = 'LEVEL 5 · MASTER (SINGULARITY)';
+            shellCount = safeWave <= 23 ? 9 : 10;
+            targetCount = safeWave <= 22 ? 4 : 5;
             isDualRing = false;
             innerRingCount = 0;
             outerRingCount = shellCount;
-            baseWavePoints = Math.round(1200 * Math.pow(1.35, safeWave - 10));
+            baseWavePoints = Math.round(4000 * Math.pow(1.30, Math.min(10, safeWave - 20)));
             hasBoardRotation = true;
             const dir = safeWave % 2 === 0 ? 1 : -1;
-            boardRotationSpeedRad = dir * 0.32;
-          } else {
-            // Tier 6 (Waves 21+): Dual Concentric 5+5 Master Tier
-            tier = 6;
-            tierName = 'TIER 6 · DUAL 5+5 SINGULARITY';
-            shellCount = 10;
-            targetCount = 5;
-            isDualRing = true;
-            innerRingCount = 5;
-            outerRingCount = 5;
-            baseWavePoints = Math.round(1200 * Math.pow(1.38, safeWave - 10));
-            innerRingSpeedRad = Math.min(0.46, 0.4 + (safeWave - 21) * 0.012); // CW
-            outerRingSpeedRad = -Math.min(0.4, 0.34 + (safeWave - 21) * 0.01); // CCW
-            radialHopChance = 0.48;
+            boardRotationSpeedRad = dir * Math.min(1.05, 0.52 + (safeWave - 20) * 0.035);
           }
-
-          // Calm Drift perk slows shuffling speed by 15% per stack
-          const calmSlowFactor = Math.pow(1 / 0.85, Math.max(0, calmDriftCount));
-          boardRotationSpeedRad /= calmSlowFactor;
-          innerRingSpeedRad /= calmSlowFactor;
-          outerRingSpeedRad /= calmSlowFactor;
-
-          const swapCount = Math.min(14, 4 + Math.floor(safeWave * 0.75));
-          const rawSwapDurationMs = Math.max(540, 740 - safeWave * 11);
-          const swapDurationMs = Math.round(rawSwapDurationMs * calmSlowFactor);
-
-          const lineupDurationMs = 1200; // 1.2s top-right TARGET lineup
-          const insertDurationMs = 750; // Smooth Bezier insertion into circular orbit
-          const readyDurationMs = 600; // 0.6s "READY" staging beat
-          const goDurationMs = 400; // 0.4s "GO!" launch beat
 
           const baseSelectMs = Math.max(
             4500,
@@ -2676,7 +2646,7 @@
               window.parent.postMessage(
                 {
                   type: 'GAME_OVER',
-                  gameId: 'quantum-shell',
+                  gameId: 'ball-track',
                   category: 'spatial',
                   score: Math.round(state.frozenSnapshot.score || state.score || 0),
                   wave: state.frozenSnapshot.wave || state.wave || 1

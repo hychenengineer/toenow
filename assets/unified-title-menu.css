@@ -6,7 +6,10 @@
   position: fixed !important;
   inset: 0 !important;
   z-index: 100 !important;
-  display: flex !important;
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
   align-items: center !important;
   justify-content: center !important;
   padding: 16px !important;
@@ -15,6 +18,23 @@
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
   transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.22s ease !important;
+}
+
+/* Active states across the games:
+   - ball-track: .active
+   - number-pop: .visible
+   - spot-quick, tap-match: not .hidden and not [hidden]
+   - block-match: not [hidden]
+   - add-up, space-scale: body[data-state='title']
+*/
+.unified-title-screen.active,
+.unified-title-screen.visible,
+body[data-mode='title'] .unified-title-screen:not(.hidden):not([hidden]),
+body[data-state='title'] .unified-title-screen:not(.hidden):not([hidden]),
+body:not([data-mode]):not([data-state]) .unified-title-screen:not(.hidden):not([hidden]) {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
   pointer-events: auto !important;
 }
 
@@ -249,11 +269,11 @@
 }
 
 /* Active states across the games:
-   - quantum-shell: .active
-   - quantum-core-collapse: .visible
-   - fast-focus: #pauseModal.active, body[data-paused='true'] #pauseModal
-   - whack-match: #modal-pause.active, body[data-paused='true'] #modal-pause
-   - chip-defrag, overclock-reactor, gravitational-anomaly: body[data-state='paused']
+   - ball-track: .active
+   - number-pop: .visible
+   - spot-quick: #pauseModal.active, body[data-paused='true'] #pauseModal
+   - tap-match: #modal-pause.active, body[data-paused='true'] #modal-pause
+   - block-match, add-up, space-scale: body[data-state='paused']
 */
 .unified-pause-screen.active,
 .unified-pause-screen.visible,

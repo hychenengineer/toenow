@@ -330,7 +330,8 @@
         margin-bottom: 14px;
       }
 
-      .title-card {
+      .title-card,
+      .unified-title-card {
         pointer-events: auto;
         width: 100%;
         background: rgba(8, 11, 16, 0.94);
@@ -972,16 +973,36 @@
         //   c1 + c2 = target (2 nodes)
         //   (c1a + c1b) + c2 = target AND c1 + (c2a + c2b) = target (3 nodes)
         //   c1a + c1b + c2a + c2b = target (4 nodes)
+        function getLevelInfoForWave(waveNum) {
+          if (waveNum <= 5) return { level: 1, name: 'BEGINNER' };
+          if (waveNum <= 10) return { level: 2, name: 'INTERMEDIATE' };
+          if (waveNum <= 15) return { level: 3, name: 'ADVANCED' };
+          if (waveNum <= 20) return { level: 4, name: 'EXPERT' };
+          return { level: 5, name: 'MASTER' };
+        }
+
         function generateWaveData(waveNum) {
+          const lvlInfo = getLevelInfoForWave(waveNum);
           let targetVal = 20;
+
+          // 5-Level Progressive Math Tuning (5 waves each):
+          // Level 1: Beginner (Waves 1-5) -> target 16-30
+          // Level 2: Intermediate (Waves 6-10) -> target 28-48
+          // Level 3: Advanced (Waves 11-15) -> target 40-65, +1 extra decoy
+          // Level 4: Expert (Waves 16-20) -> target 55-85, +2 extra decoys
+          // Level 5: Master (Waves 21+) -> target 70-120, +2 extra decoys, fast reflex
           if (waveNum === 1) {
             targetVal = 20;
           } else if (waveNum <= 5) {
-            targetVal = randInt(16, 36);
+            targetVal = randInt(16, 30);
           } else if (waveNum <= 10) {
-            targetVal = randInt(28, 56);
+            targetVal = randInt(28, 48);
+          } else if (waveNum <= 15) {
+            targetVal = randInt(40, 65);
+          } else if (waveNum <= 20) {
+            targetVal = randInt(55, 85);
           } else {
-            targetVal = randInt(40, 80);
+            targetVal = randInt(70, 120);
           }
 
           const c1 = randInt(Math.max(4, Math.floor(targetVal * 0.35)), Math.floor(targetVal * 0.65));
@@ -998,9 +1019,12 @@
           const extra1 = randInt(2, Math.max(3, Math.floor(targetVal * 0.3)));
           values.push(extra1);
 
-          if (waveNum >= 5) {
+          if (waveNum >= 6) {
             const extra2 = Math.max(2, targetVal - c1a - extra1);
             values.push(extra2);
+          }
+          if (waveNum >= 16) {
+            values.push(randInt(3, Math.max(4, Math.floor(targetVal * 0.4))));
           }
 
           const items = values.map(function (v) {
@@ -1022,6 +1046,8 @@
 
           return {
             wave: waveNum,
+            level: lvlInfo.level,
+            levelName: lvlInfo.name,
             target: targetVal,
             items: items,
           };
@@ -1368,6 +1394,7 @@
         const hudTimerGhostEl = document.getElementById('hud-timer-ghost');
 
         const titleBestScoreEl = document.getElementById('title-best-score');
+        const titleScreenEl = document.getElementById('title-screen');
         const pauseScoreEl = document.getElementById('pause-score');
         const pauseWaveEl = document.getElementById('pause-wave');
         const gameoverScoreEl = document.getElementById('gameover-score');
@@ -1553,6 +1580,9 @@
           const prevState = state;
           state = nextState;
           document.body.dataset.state = nextState;
+          if (titleScreenEl) {
+            titleScreenEl.classList.toggle('hidden', nextState !== 'title');
+          }
           const center = getActiveCoreCenter();
           coreX = center.x;
           coreY = center.y;
@@ -1612,7 +1642,7 @@
               window.parent.postMessage(
                 {
                   type: 'GAME_OVER',
-                  gameId: 'overclock-reactor',
+                  gameId: 'add-up',
                   category: 'math',
                   score: finalScore,
                   wave: wavesStabilizedThisRun || 1

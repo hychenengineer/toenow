@@ -752,34 +752,44 @@
 
         // --- Staged Phase Transition Briefings (Before Waves 16, 31, and 46) ---
         var PHASE_BRIEFINGS = {
-          16: {
-            targetWave: 16,
+          6: {
+            targetWave: 6,
             phaseNumber: 2,
             mode: 'FLIP-H',
-            title: 'MODIFIER DETECTED: HORIZONTAL MIRROR',
-            badge: '[ FLIP-H / \u25C4\u25BA ]',
-            briefing: 'The target blueprint is flipped LEFT to RIGHT. Mentally invert columns before carving!',
-            buttonText: '[ ENGAGE WAVE 16 ]',
+            title: 'LEVEL 2 · INTERMEDIATE: HORIZONTAL MIRROR',
+            badge: '[ LEVEL 2 · FLIP-H / \u25C4\u25BA ]',
+            briefing: 'Grid expanded to 4x4! The blueprint is flipped LEFT to RIGHT. Mentally invert columns!',
+            buttonText: '[ ENGAGE LEVEL 2 · WAVE 6 ]',
             animType: 'flip-h'
           },
-          31: {
-            targetWave: 31,
+          11: {
+            targetWave: 11,
             phaseNumber: 3,
             mode: 'FLIP-V',
-            title: 'MODIFIER DETECTED: VERTICAL MIRROR',
-            badge: '[ FLIP-V / \u25B2\u25BC ]',
-            briefing: 'The target blueprint is flipped TOP to BOTTOM. Mentally invert rows before carving!',
-            buttonText: '[ ENGAGE WAVE 31 ]',
+            title: 'LEVEL 3 · ADVANCED: VERTICAL MIRROR',
+            badge: '[ LEVEL 3 · FLIP-V / \u25B2\u25BC ]',
+            briefing: 'Grid expanded to 5x5! Blueprint is flipped TOP to BOTTOM. Mentally invert rows!',
+            buttonText: '[ ENGAGE LEVEL 3 · WAVE 11 ]',
             animType: 'flip-v'
           },
-          46: {
-            targetWave: 46,
+          16: {
+            targetWave: 16,
             phaseNumber: 4,
             mode: 'FLIP-HV',
-            title: 'MODIFIER DETECTED: DUAL 180\u00B0 INVERSION',
-            badge: '[ FLIP-HV / 180\u00B0 ]',
-            briefing: 'Total spatial inversion! Blueprint is flipped BOTH horizontally and vertically.',
-            buttonText: '[ ENTER OVERCLOCK ]',
+            title: 'LEVEL 4 · EXPERT: DUAL 180\u00B0 INVERSION',
+            badge: '[ LEVEL 4 · FLIP-HV / 180\u00B0 ]',
+            briefing: 'Grid expanded to 6x6! Total inversion: flipped BOTH horizontally and vertically.',
+            buttonText: '[ ENGAGE LEVEL 4 · WAVE 16 ]',
+            animType: 'flip-hv'
+          },
+          21: {
+            targetWave: 21,
+            phaseNumber: 5,
+            mode: 'FLIP-HV',
+            title: 'LEVEL 5 · MASTER: SINGULARITY 7x7 MATRIX',
+            badge: '[ LEVEL 5 · MASTER / 7x7 ]',
+            briefing: 'Maximum spatial deconstruction on a full 7x7 grid! Carve with zero hesitation.',
+            buttonText: '[ ENGAGE LEVEL 5 · WAVE 21 ]',
             animType: 'flip-hv'
           }
         };
@@ -787,34 +797,38 @@
         // --- 60-Wave Multi-Phase Curriculum (3 Waves Per Grid Size 3x3..7x7) ---
         function getPhaseForWave(wave) {
           var w = Math.max(1, Math.floor(wave));
-          if (w <= 15) return { phase: 1, notch: 'N' };
-          if (w <= 30) return { phase: 2, notch: 'FLIP-H' };
-          if (w <= 45) return { phase: 3, notch: 'FLIP-V' };
-          return { phase: 4, notch: 'FLIP-HV' };
+          if (w <= 5) return { phase: 1, name: 'BEGINNER', notch: 'N' };
+          if (w <= 10) return { phase: 2, name: 'INTERMEDIATE', notch: 'FLIP-H' };
+          if (w <= 15) return { phase: 3, name: 'ADVANCED', notch: 'FLIP-V' };
+          if (w <= 20) return { phase: 4, name: 'EXPERT', notch: 'FLIP-HV' };
+          return { phase: 5, name: 'MASTER', notch: 'FLIP-HV' };
         }
 
         function getGridSizeForWave(wave) {
           var w = Math.max(1, Math.floor(wave));
-          if (w > 60) return 7;
-          var localIndex = (w - 1) % 15; // 0..14
-          return 3 + Math.floor(localIndex / 3); // 3, 4, 5, 6, 7
+          if (w <= 5) return 3;  // Level 1: 3x3
+          if (w <= 10) return 4; // Level 2: 4x4
+          if (w <= 15) return 5; // Level 3: 5x5
+          if (w <= 20) return 6; // Level 4: 6x6
+          return 7;              // Level 5: 7x7
         }
 
         function getWaveConfig(wave) {
           var w = Math.max(1, Math.floor(wave));
           var pInfo = getPhaseForWave(w);
           var gridSize = getGridSizeForWave(w);
-          var subStep = (w - 1) % 3;
+          var subStep = (w - 1) % 5;
           var baseExcess =
             gridSize === 3 ? 2 :
             gridSize === 4 ? 3 :
             gridSize === 5 ? 5 :
             gridSize === 6 ? 7 : 9;
-          var excessCount = baseExcess + (subStep === 2 ? 1 : 0);
+          var excessCount = baseExcess + (subStep >= 3 ? 1 : 0);
 
           return {
             wave: w,
             phase: pInfo.phase,
+            phaseName: pInfo.name,
             gridSize: gridSize,
             excessCount: excessCount,
             compassNotch: pInfo.notch
@@ -1261,7 +1275,7 @@
             if (window.parent && window.parent !== window) {
               window.parent.postMessage({
                 type: 'GAME_OVER',
-                gameId: 'chip-defrag',
+                gameId: 'block-match',
                 category: 'puzzle',
                 score: Math.round(state.score || 0),
                 wave: state.wavesCleared || 1

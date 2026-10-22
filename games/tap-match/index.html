@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Whack Match</title>
+    <title>Tap Match</title>
     <meta name="description" content="High-speed cyber-analytic spatial node matching arcade game with geometric glyph configurations and escalating wave criteria." />
-    <meta property="og:title" content="Whack Match" />
+    <meta property="og:title" content="Tap Match" />
     <meta property="og:description" content="High-speed cyber-analytic spatial node matching arcade game with geometric glyph configurations and escalating wave criteria." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -422,7 +422,7 @@
         <div id="modal-start" class="modal-backdrop unified-title-screen" role="dialog" aria-modal="true" aria-labelledby="start-title">
           <div class="unified-title-card">
             <div class="unified-category-pill"><span class="unified-category-icon">🎯</span> SPACE</div>
-            <h1 id="start-title" class="unified-game-title">WHACK MATCH</h1>
+            <h1 id="start-title" class="unified-game-title">TAP MATCH</h1>
             <p class="unified-game-desc">
               Tap nodes matching the wave target shape before they fade away.
             </p>
@@ -817,34 +817,57 @@
         // Waves 7-9: 5x5 (Slow -> Medium -> Fast) · >= 25 hits per wave
         // Waves 10+: 5x5 Master Tiers (High Speed) · >= 30 hits per wave
         function getWaveConfig(wave) {
+          // 5 Structured Levels (5 Waves each = 25 waves curriculum):
+          // Level 1: Beginner (Waves 1-5, 3x3 Matrix, 20 hits)
+          // Level 2: Intermediate (Waves 6-10, 4x4 Matrix, 22-24 hits)
+          // Level 3: Advanced (Waves 11-15, 5x5 Matrix, 25-27 hits)
+          // Level 4: Expert (Waves 16-20, 5x5 Matrix, 28-30 hits, rapid pacing)
+          // Level 5: Master (Waves 21+, 5x5 Matrix, 32+ hits, 400ms reflex window)
           const tierPresets = [
-            // Waves 1-3: 3x3 Matrix (At least 20 hits per wave)
-            { gridSize: 3, speedLabel: 'SLOW', activeWindowMs: 2200, spawnIntervalMs: 800, maxConcurrentNodes: 3, waveQuota: 20, waveTimeSeconds: 65 },
-            { gridSize: 3, speedLabel: 'MEDIUM', activeWindowMs: 1750, spawnIntervalMs: 680, maxConcurrentNodes: 3, waveQuota: 21, waveTimeSeconds: 62 },
-            { gridSize: 3, speedLabel: 'FAST', activeWindowMs: 1350, spawnIntervalMs: 560, maxConcurrentNodes: 3, waveQuota: 22, waveTimeSeconds: 58 },
-            // Waves 4-6: 4x4 Matrix (At least 20 hits per wave, resets to Slow when grid expands!)
-            { gridSize: 4, speedLabel: 'SLOW', activeWindowMs: 2000, spawnIntervalMs: 720, maxConcurrentNodes: 4, waveQuota: 22, waveTimeSeconds: 65 },
-            { gridSize: 4, speedLabel: 'MEDIUM', activeWindowMs: 1600, spawnIntervalMs: 580, maxConcurrentNodes: 4, waveQuota: 24, waveTimeSeconds: 62 },
-            { gridSize: 4, speedLabel: 'FAST', activeWindowMs: 1250, spawnIntervalMs: 480, maxConcurrentNodes: 4, waveQuota: 25, waveTimeSeconds: 58 },
-            // Waves 7-9: 5x5 Matrix (At least 20 hits per wave, resets to Slow when grid expands!)
-            { gridSize: 5, speedLabel: 'SLOW', activeWindowMs: 1850, spawnIntervalMs: 650, maxConcurrentNodes: 5, waveQuota: 25, waveTimeSeconds: 65 },
-            { gridSize: 5, speedLabel: 'MEDIUM', activeWindowMs: 1450, spawnIntervalMs: 520, maxConcurrentNodes: 5, waveQuota: 27, waveTimeSeconds: 62 },
-            { gridSize: 5, speedLabel: 'FAST', activeWindowMs: 1100, spawnIntervalMs: 420, maxConcurrentNodes: 5, waveQuota: 28, waveTimeSeconds: 58 }
+            // Level 1: Beginner (Waves 1-5, 3x3)
+            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'SLOW', activeWindowMs: 2400, spawnIntervalMs: 850, maxConcurrentNodes: 3, waveQuota: 20, waveTimeSeconds: 65 },
+            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'SLOW', activeWindowMs: 2200, spawnIntervalMs: 800, maxConcurrentNodes: 3, waveQuota: 20, waveTimeSeconds: 65 },
+            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'MEDIUM', activeWindowMs: 1900, spawnIntervalMs: 720, maxConcurrentNodes: 3, waveQuota: 21, waveTimeSeconds: 62 },
+            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'MEDIUM', activeWindowMs: 1650, spawnIntervalMs: 640, maxConcurrentNodes: 3, waveQuota: 21, waveTimeSeconds: 60 },
+            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'FAST', activeWindowMs: 1400, spawnIntervalMs: 560, maxConcurrentNodes: 3, waveQuota: 22, waveTimeSeconds: 58 },
+
+            // Level 2: Intermediate (Waves 6-10, 4x4)
+            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'SLOW', activeWindowMs: 2000, spawnIntervalMs: 720, maxConcurrentNodes: 4, waveQuota: 22, waveTimeSeconds: 65 },
+            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'SLOW', activeWindowMs: 1800, spawnIntervalMs: 650, maxConcurrentNodes: 4, waveQuota: 23, waveTimeSeconds: 65 },
+            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'MEDIUM', activeWindowMs: 1600, spawnIntervalMs: 580, maxConcurrentNodes: 4, waveQuota: 24, waveTimeSeconds: 62 },
+            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'MEDIUM', activeWindowMs: 1450, spawnIntervalMs: 520, maxConcurrentNodes: 4, waveQuota: 24, waveTimeSeconds: 60 },
+            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'FAST', activeWindowMs: 1280, spawnIntervalMs: 460, maxConcurrentNodes: 4, waveQuota: 25, waveTimeSeconds: 58 },
+
+            // Level 3: Advanced (Waves 11-15, 5x5)
+            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'SLOW', activeWindowMs: 1850, spawnIntervalMs: 650, maxConcurrentNodes: 5, waveQuota: 25, waveTimeSeconds: 65 },
+            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'SLOW', activeWindowMs: 1650, spawnIntervalMs: 580, maxConcurrentNodes: 5, waveQuota: 26, waveTimeSeconds: 65 },
+            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'MEDIUM', activeWindowMs: 1450, spawnIntervalMs: 520, maxConcurrentNodes: 5, waveQuota: 27, waveTimeSeconds: 62 },
+            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'MEDIUM', activeWindowMs: 1300, spawnIntervalMs: 470, maxConcurrentNodes: 5, waveQuota: 27, waveTimeSeconds: 60 },
+            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'FAST', activeWindowMs: 1150, spawnIntervalMs: 420, maxConcurrentNodes: 5, waveQuota: 28, waveTimeSeconds: 58 },
+
+            // Level 4: Expert (Waves 16-20, 5x5 Rapid)
+            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'RAPID', activeWindowMs: 1050, spawnIntervalMs: 390, maxConcurrentNodes: 5, waveQuota: 28, waveTimeSeconds: 58 },
+            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'RAPID', activeWindowMs: 980, spawnIntervalMs: 360, maxConcurrentNodes: 6, waveQuota: 29, waveTimeSeconds: 56 },
+            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'INTENSE', activeWindowMs: 900, spawnIntervalMs: 330, maxConcurrentNodes: 6, waveQuota: 30, waveTimeSeconds: 55 },
+            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'INTENSE', activeWindowMs: 820, spawnIntervalMs: 300, maxConcurrentNodes: 6, waveQuota: 30, waveTimeSeconds: 55 },
+            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'HYPER', activeWindowMs: 750, spawnIntervalMs: 280, maxConcurrentNodes: 6, waveQuota: 32, waveTimeSeconds: 55 }
           ];
 
           if (wave <= tierPresets.length) {
             return tierPresets[wave - 1];
           }
 
-          // Master Tiers (Wave 10+): 5x5 Matrix scaling down to 400ms floor
-          const overWave = wave - 9;
+          // Level 5: Master (Wave 21+): 5x5 Matrix scaling down to 400ms floor
+          const overWave = wave - 20;
           return {
+            level: 5,
+            levelName: 'MASTER',
             gridSize: 5,
             speedLabel: `MASTER ${overWave}`,
-            activeWindowMs: Math.max(400, 950 - overWave * 85),
-            spawnIntervalMs: Math.max(240, 380 - overWave * 20),
+            activeWindowMs: Math.max(400, 700 - overWave * 40),
+            spawnIntervalMs: Math.max(220, 260 - overWave * 10),
             maxConcurrentNodes: 6,
-            waveQuota: Math.min(45, 30 + overWave * 2),
+            waveQuota: Math.min(50, 32 + overWave * 2),
             waveTimeSeconds: 55
           };
         }
@@ -1310,7 +1333,7 @@
               window.parent.postMessage(
                 {
                   type: 'GAME_OVER',
-                  gameId: 'whack-match',
+                  gameId: 'tap-match',
                   category: 'spatial',
                   score: Math.round(state.score),
                   wave: Number(state.wave) || 1,

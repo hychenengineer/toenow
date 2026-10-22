@@ -1448,11 +1448,11 @@
 
         // 5-Level System Mapping
         function getLevelForWave(wave) {
-          if (wave <= 3) return 1;
-          if (wave <= 6) return 2;
-          if (wave <= 9) return 3;
-          if (wave <= 12) return 4;
-          return 5;
+          if (wave <= 5) return 1;  // Level 1 (Beginner): Waves 1-5
+          if (wave <= 10) return 2; // Level 2 (Intermediate): Waves 6-10
+          if (wave <= 15) return 3; // Level 3 (Advanced): Waves 11-15
+          if (wave <= 20) return 4; // Level 4 (Expert): Waves 16-20
+          return 5;                 // Level 5 (Master): Waves 21+
         }
 
         // Progressive Time Bonuses:
@@ -1702,11 +1702,11 @@
             }
           }
 
-          let modeLabel = 'LEVEL 1 · EQUAL ARMS';
-          if (level === 2) modeLabel = 'LEVEL 2 · ASYMMETRIC ARMS (2 SCALES)';
-          else if (level === 3) modeLabel = 'LEVEL 3 · TRI-SCALE TORQUE (3 SCALES)';
-          else if (level === 4) modeLabel = 'LEVEL 4 · QUAD-SCALE LEVER (4 SCALES)';
-          else if (level === 5) modeLabel = 'LEVEL 5 · MULTI-SCALE MATRIX (' + scaleCount + ' SCALES)';
+          let modeLabel = 'LEVEL 1 · BEGINNER (EQUAL ARMS)';
+          if (level === 2) modeLabel = 'LEVEL 2 · INTERMEDIATE (2 SCALES)';
+          else if (level === 3) modeLabel = 'LEVEL 3 · ADVANCED (3 SCALES)';
+          else if (level === 4) modeLabel = 'LEVEL 4 · EXPERT (4 SCALES)';
+          else if (level === 5) modeLabel = 'LEVEL 5 · MASTER (' + scaleCount + ' SCALES)';
 
           return {
             wave,
@@ -2035,7 +2035,7 @@
               window.parent.postMessage(
                 {
                   type: 'GAME_OVER',
-                  gameId: 'gravitational-anomaly',
+                  gameId: 'space-scale',
                   category: 'logic',
                   score: finalScore,
                   wave: Math.max(1, wave - 1),

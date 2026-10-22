@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Fast Focus</title>
+    <title>Spot Quick</title>
     <meta name="description" content="Mobile-first HTML5 Canvas arcade game featuring procedural vector silhouettes and real-time optical aperture de-blurring." />
-    <meta property="og:title" content="Fast Focus" />
+    <meta property="og:title" content="Spot Quick" />
     <meta property="og:description" content="Mobile-first HTML5 Canvas arcade game featuring procedural vector silhouettes and real-time optical aperture de-blurring." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -361,7 +361,7 @@
 
       <!-- Main Canvas & Synchronized Hit Layer -->
       <main class="canvas-stage" id="canvasStage">
-        <canvas id="gameCanvas" aria-label="Fast Focus Viewport"></canvas>
+        <canvas id="gameCanvas" aria-label="Spot Quick Viewport"></canvas>
         <div class="candidate-dom-layer" id="candidateDomLayer">
           <button type="button" class="candidate-hit-btn" id="candBtn0" data-index="0" aria-label="Option 1"></button>
           <button type="button" class="candidate-hit-btn" id="candBtn1" data-index="1" aria-label="Option 2"></button>
@@ -373,7 +373,7 @@
         <div class="modal-backdrop unified-title-screen" id="briefingModal" role="dialog" aria-modal="true" aria-labelledby="briefingTitle">
           <div class="unified-title-card">
             <div class="unified-category-pill"><span class="unified-category-icon">🔬</span> PATTERN</div>
-            <h1 class="unified-game-title" id="briefingTitle">FAST FOCUS</h1>
+            <h1 class="unified-game-title" id="briefingTitle">SPOT QUICK</h1>
             <p class="unified-game-desc">
               Identify the focused biological specimen before time runs out.
             </p>
@@ -4894,19 +4894,19 @@
         const WRONG_TIME_PENALTY = 1.5;
 
         const TIERS = [
-          { level: 1, name: "NOVICE", focusWindow: 10.0 },
-          { level: 2, name: "SCOUT", focusWindow: 20.0 },
-          { level: 3, name: "TRACKER", focusWindow: 30.0 },
+          { level: 1, name: "BEGINNER", focusWindow: 10.0 },
+          { level: 2, name: "INTERMEDIATE", focusWindow: 20.0 },
+          { level: 3, name: "ADVANCED", focusWindow: 30.0 },
           { level: 4, name: "EXPERT", focusWindow: 40.0 },
           { level: 5, name: "MASTER", focusWindow: 50.0 }
         ];
 
         function getTierForWave(waveNum) {
-          if (waveNum <= 3) return TIERS[0]; // Tier 1: Waves 1-3 (10s)
-          if (waveNum <= 6) return TIERS[1]; // Tier 2: Waves 4-6 (20s)
-          if (waveNum <= 9) return TIERS[2]; // Tier 3: Waves 7-9 (30s)
-          if (waveNum <= 12) return TIERS[3]; // Tier 4: Waves 10-12 (40s)
-          return TIERS[4]; // Tier 5: Waves 13+ (50s)
+          if (waveNum <= 5) return TIERS[0]; // Level 1 (Beginner): Waves 1-5
+          if (waveNum <= 10) return TIERS[1]; // Level 2 (Intermediate): Waves 6-10
+          if (waveNum <= 15) return TIERS[2]; // Level 3 (Advanced): Waves 11-15
+          if (waveNum <= 20) return TIERS[3]; // Level 4 (Expert): Waves 16-20
+          return TIERS[4]; // Level 5 (Master): Waves 21+
         }
 
         const state = {
@@ -5212,7 +5212,7 @@
               window.parent.postMessage(
                 {
                   type: 'GAME_OVER',
-                  gameId: 'fast-focus',
+                  gameId: 'spot-quick',
                   category: 'puzzle',
                   score: Math.round(state.score),
                   wave: Number(state.wave) || 1,

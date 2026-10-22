@@ -2612,14 +2612,14 @@
 
           if (nextState === 'title') {
             titleBestScore.textContent = loadHighScore().toLocaleString();
-            titleBestWave.textContent = String(loadBestWave());
+            if (titleBestWave) if (titleBestWave) titleBestWave.textContent = String(loadBestWave());
         const elTitleBestLvl = document.getElementById('title-best-level');
         if (elTitleBestLvl) {
           const bw = loadBestWave();
           const lvlName = bw <= 5 ? 'LVL 1 · BEGINNER' : bw <= 10 ? 'LVL 2 · INTERMEDIATE' : bw <= 15 ? 'LVL 3 · ADVANCED' : bw <= 20 ? 'LVL 4 · EXPERT' : 'LVL 5 · MASTER';
           elTitleBestLvl.textContent = lvlName;
         }
-            titleBestSurvival.textContent = formatSurvivalTime(loadBestSurvival());
+            if (titleBestSurvival) if (titleBestSurvival) titleBestSurvival.textContent = formatSurvivalTime(loadBestSurvival());
           }
           syncBodyAttributes();
         }

@@ -3057,7 +3057,7 @@
         }
 
         function handleQuitOrRestartRun(nextAction) {
-          if (game.score > 0) {
+          if (!game.isPractice && game.score > 0) {
             saveRecords(game.score, game.wave);
             saveBestSurvival(game.runDuration);
             reportScoreToHub(game.score, game.wave, game.runDuration);
@@ -3076,7 +3076,7 @@
 
         // Also report score if browser tab / iframe unloads during an active run
         window.addEventListener('pagehide', () => {
-          if (game.score > 0) {
+          if (!game.isPractice && game.score > 0) {
             saveRecords(game.score, game.wave);
             saveBestSurvival(game.runDuration);
             reportScoreToHub(game.score, game.wave, game.runDuration);

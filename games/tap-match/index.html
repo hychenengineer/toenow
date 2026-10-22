@@ -733,6 +733,7 @@
         }
         function saveBestWhackRecords(score, wave) {
           try {
+            if (state && state.isPractice) return;
             const curScore = loadBestWhackScore();
             const curWave = loadBestWhackWave();
             if (score > curScore) localStorage.setItem(STORAGE_KEY_SCORE, String(Math.round(score)));

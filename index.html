@@ -2473,27 +2473,40 @@
 
       // Before loading iframe, sync Hub's verified bestScore into the game's internal localStorage
       // so the title menu records strip immediately displays the user's synced best record!
+      // Also sync bidirectionally: if game localStorage has a higher score/wave, update Hub scores!
       try {
         const scores = getGameScores();
-        const record = scores[game.id];
-        if (record && record.bestScore > 0) {
-          const gameStorageKeyMap = {
-            'number-pop': 'number_pop_high_score_v1',
-            'ball-track': 'ball_track_high_score_v1',
-            'block-match': 'block_match_high_score_v1',
-            'add-up': 'add_up_high_score_v1',
-            'space-scale': 'space_scale_high_score_v1',
-            'tap-match': 'tap_match_high_score_v1',
-            'spot-quick': 'spot_quick_high_score_v1',
-            'shadow-match': 'shadow_match_best_score_v1',
-            'flash-brain': 'flash_brain_best_score_v1'
-          };
-          const key = gameStorageKeyMap[game.id];
-          if (key) {
-            const currentInStorage = parseInt(localStorage.getItem(key) || '0', 10) || 0;
-            if (record.bestScore > currentInStorage) {
-              localStorage.setItem(key, String(record.bestScore));
+        const record = scores[game.id] || { bestScore: 0, maxWave: 1 };
+        const keyMap = (typeof ToenowLevels !== 'undefined' && ToenowLevels.GAME_STORAGE_KEYS) || {
+          'number-pop': { score: 'qcc_high_score_v1', wave: 'qcc_best_wave_v1' },
+          'ball-track': { score: 'quantum_shell_best_score_v5', wave: 'quantum_shell_best_wave_v5' },
+          'block-match': { score: 'chip_defrag_high_score_v5', wave: 'block_match_best_wave' },
+          'add-up': { score: 'overclock_reactor_best_v2', wave: 'add_up_best_wave' },
+          'space-scale': { score: 'grav_anomaly_best_score_v2', wave: 'space_scale_best_wave' },
+          'tap-match': { score: 'whack_match_high_score_v1', wave: 'whack_match_best_wave_v1' },
+          'spot-quick': { score: 'fast_focus_high_score_v1', wave: 'fast_focus_best_wave_v1' },
+          'shadow-match': { score: 'shadow_match_best_score_v1', wave: 'shadow_match_best_wave_v1' },
+          'flash-brain': { score: 'flash_brain_best_score_v1', wave: 'flash_brain_best_wave_v1' }
+        };
+        const keys = keyMap[game.id];
+        if (keys) {
+          const gameScoreInStorage = parseInt(localStorage.getItem(keys.score) || '0', 10) || 0;
+          const gameWaveInStorage = parseInt(localStorage.getItem(keys.wave) || '1', 10) || 1;
+
+          // Bidirectional sync: take maximum of Hub vs Game storage
+          const highestScore = Math.max(record.bestScore || 0, gameScoreInStorage);
+          const highestWave = Math.max(record.maxWave || 1, gameWaveInStorage);
+
+          if (highestScore > 0) {
+            localStorage.setItem(keys.score, String(highestScore));
+            if (keys.wave) {
+              localStorage.setItem(keys.wave, String(highestWave));
             }
+          }
+
+          if (highestScore > (record.bestScore || 0) || highestWave > (record.maxWave || 1)) {
+            saveGameScore(game.id, game.category, highestScore, highestWave);
+            renderBentoGrid();
           }
         }
       } catch (_) {}

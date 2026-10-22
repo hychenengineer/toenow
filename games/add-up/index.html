@@ -1634,12 +1634,14 @@
 
         function triggerGameOver() {
           const finalScore = Math.round(score);
-          if (finalScore > bestScore) {
+          if (!isPracticeMode && finalScore > bestScore) {
             bestScore = finalScore;
           }
-          totalLifetimeCores += wavesStabilizedThisRun;
-          saveMeta(bestScore, totalLifetimeCores);
-          syncMetaUI();
+          if (!isPracticeMode) {
+            totalLifetimeCores += wavesStabilizedThisRun;
+            saveMeta(bestScore, totalLifetimeCores);
+            syncMetaUI();
+          }
 
           gameoverScoreEl.textContent = String(finalScore);
           gameoverBestEl.textContent = String(Math.round(bestScore));
@@ -1728,7 +1730,7 @@
             score += pointsEarned;
             wavesStabilizedThisRun += 1;
 
-            if (score > bestScore) {
+            if (!isPracticeMode && score > bestScore) {
               bestScore = score;
               syncMetaUI();
             }

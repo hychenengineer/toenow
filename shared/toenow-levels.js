@@ -6,6 +6,18 @@ var LEVELS = [
   { level: 5, name: 'Master', badgeText: 'LVL 5 · MASTER', minWave: 21, maxWave: Infinity, startWave: 21 }
 ];
 
+var GAME_STORAGE_KEYS = {
+  'number-pop': { score: 'qcc_high_score_v1', wave: 'qcc_best_wave_v1' },
+  'ball-track': { score: 'quantum_shell_best_score_v5', wave: 'quantum_shell_best_wave_v5' },
+  'block-match': { score: 'chip_defrag_high_score_v5', wave: 'block_match_best_wave' },
+  'add-up': { score: 'overclock_reactor_best_v2', wave: 'add_up_best_wave' },
+  'space-scale': { score: 'grav_anomaly_best_score_v2', wave: 'space_scale_best_wave' },
+  'tap-match': { score: 'whack_match_high_score_v1', wave: 'whack_match_best_wave_v1' },
+  'spot-quick': { score: 'fast_focus_high_score_v1', wave: 'fast_focus_best_wave_v1' },
+  'shadow-match': { score: 'shadow_match_best_score_v1', wave: 'shadow_match_best_wave_v1' },
+  'flash-brain': { score: 'flash_brain_best_score_v1', wave: 'flash_brain_best_wave_v1' }
+};
+
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) {
     module.exports = factory();
@@ -269,6 +281,7 @@ var LEVELS = [
 
   return {
     LEVELS: LEVELS,
+    GAME_STORAGE_KEYS: GAME_STORAGE_KEYS,
     getLevelInfo: getLevelInfo,
     syncTitleRecords: syncTitleRecords,
     createGameOverPayload: createGameOverPayload,

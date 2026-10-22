@@ -4859,6 +4859,12 @@
         const titleBestWaveEl = document.getElementById("titleBestWave");
         if (titleBestScoreEl) titleBestScoreEl.textContent = loadBestFocusScore().toLocaleString();
         if (titleBestWaveEl) titleBestWaveEl.textContent = String(loadBestFocusWave());
+          const elTitleBestLvl = document.getElementById('title-best-level');
+          if (elTitleBestLvl) {
+            const bw = loadBestFocusWave();
+            const tier = getTierForWave(bw);
+            elTitleBestLvl.textContent = 'LVL ' + tier.level + ' · ' + tier.name;
+          }
 
         const startAnalysisBtn = document.getElementById("startAnalysisBtn");
         const retryBtn = document.getElementById("retryBtn");

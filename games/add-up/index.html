@@ -1439,6 +1439,12 @@
         function syncMetaUI() {
           hudBestEl.textContent = String(Math.round(bestScore));
           titleBestScoreEl.textContent = String(Math.round(bestScore));
+          const elTitleBestLvl = document.getElementById('title-best-level');
+          if (elTitleBestLvl) {
+            const maxW = parseInt(localStorage.getItem('add_up_best_wave') || '1', 10) || 1;
+            const lInfo = getLevelInfoForWave(maxW);
+            elTitleBestLvl.textContent = 'LVL ' + lInfo.level + ' · ' + lInfo.name;
+          }
           hudCoresEl.textContent = String(totalLifetimeCores);
         }
 

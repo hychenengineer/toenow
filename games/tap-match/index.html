@@ -725,6 +725,12 @@
         const elTitleBestWave = document.getElementById('title-best-wave');
         if (elTitleBestScore) elTitleBestScore.textContent = loadBestWhackScore().toLocaleString();
         if (elTitleBestWave) elTitleBestWave.textContent = String(loadBestWhackWave());
+          const elTitleBestLvl = document.getElementById('title-best-level');
+          if (elTitleBestLvl) {
+            const bw = loadBestWhackWave();
+            const cfg = getWaveConfig(bw);
+            elTitleBestLvl.textContent = 'LVL ' + cfg.level + ' · ' + cfg.levelName;
+          }
 
         const btnAudio = document.getElementById('btn-audio');
         const btnReset = document.getElementById('btn-reset');

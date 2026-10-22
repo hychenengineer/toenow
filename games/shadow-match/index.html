@@ -820,8 +820,8 @@
               </div>
               <span class="unified-record-sep" aria-hidden="true">·</span>
               <div class="unified-record-item">
-                <span class="unified-record-label">MAX WAVE</span>
-                <span id="title-best-wave" class="unified-record-val">1</span>
+                <span class="unified-record-label">BEST LEVEL</span>
+                <span id="title-best-level" class="unified-record-val">LVL 1 · BEGINNER</span>
               </div>
             </div>
 
@@ -876,6 +876,8 @@
             </div>
 
             <div class="cognitive-tier-block">
+              <div class="tier-label">FINAL LEVEL REACHED</div>
+              <div id="gameover-level-reached" style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;color:#22d3ee;margin-bottom:8px;">LEVEL 1 · BEGINNER</div>
               <div class="tier-label">COGNITIVE TIER CLASSIFICATION</div>
               <div id="gameover-tier-badge">ECLIPSE SAVANT</div>
               <p id="gameover-tier-desc">Supreme spatial deconstruction under high-velocity occlusion</p>
@@ -2082,6 +2084,11 @@
           const badge = getCognitiveTierBadge(state.score, accuracyPct, state.wavesResolved);
 
           gameoverTierBadgeEl.textContent = badge.tier;
+            const elGoLvlReached = document.getElementById('gameover-level-reached');
+            if (elGoLvlReached) {
+              const spec = getLevelSpecForWave(state.wave);
+              elGoLvlReached.textContent = 'LEVEL ' + spec.level + ' · ' + spec.levelName + ' (WAVE ' + state.wave + ')';
+            }
           gameoverTierDescEl.textContent = badge.subtitle;
           statFinalScoreEl.textContent = String(Math.floor(state.score)).padStart(6, '0');
           statPeakComboEl.textContent = state.peakCombo + 'x';

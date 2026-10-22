@@ -1090,6 +1090,12 @@
         var elTitleBest = document.getElementById('title-best-score');
         if (elTitleBest) {
           elTitleBest.textContent = String(Math.round(state.highScore || 0));
+        const elTitleBestLvl = document.getElementById('title-best-level');
+        if (elTitleBestLvl) {
+          const maxW = parseInt(localStorage.getItem('block_match_best_wave') || '1', 10) || 1;
+          const pInfo = getPhaseForWave(maxW);
+          elTitleBestLvl.textContent = 'LVL ' + pInfo.phase + ' · ' + pInfo.name;
+        }
         }
 
         // Dynamic Visual Feedback Timers
@@ -1267,6 +1273,13 @@
           elFinalScore.textContent = String(Math.round(state.score));
           elFinalBest.textContent = String(Math.round(state.highScore));
           elFinalWaves.textContent = state.wavesCleared + '/60';
+        const elFinalLvl = document.getElementById('final-level-badge');
+        if (elFinalLvl) {
+          const pInfo = getPhaseForWave(state.wavesCleared || 1);
+          elFinalLvl.textContent = 'LVL ' + pInfo.phase + ' · ' + pInfo.name + ' (' + state.wavesCleared + '/60)';
+        }
+        const prevBW = parseInt(localStorage.getItem('block_match_best_wave') || '1', 10) || 1;
+        if (state.wavesCleared > prevBW) localStorage.setItem('block_match_best_wave', String(state.wavesCleared));
           elFinalCombo.textContent = 'x' + state.peakCombo;
 
           setGameMode('gameover');

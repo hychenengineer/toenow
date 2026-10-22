@@ -998,8 +998,8 @@
             </div>
             <span class="unified-record-sep" aria-hidden="true">·</span>
             <div class="unified-record-item">
-              <span class="unified-record-label">MAX WAVE</span>
-              <span id="title-best-wave" class="unified-record-val">1</span>
+              <span class="unified-record-label">BEST LEVEL</span>
+              <span id="title-best-level" class="unified-record-val">LVL 1 · BEGINNER</span>
             </div>
           </div>
 
@@ -2154,6 +2154,11 @@
           hudOverdriveMultEl.textContent = state.overdriveMultiplier.toFixed(1) + 'x';
           hudBestEl.textContent = String(Math.round(bestScore));
           titleBestScoreEl.textContent = String(Math.round(bestScore));
+          const elTitleLvl = document.getElementById('title-best-level');
+          if (elTitleLvl) {
+            const lvl = bestWave <= 5 ? 'LVL 1 · BEGINNER' : bestWave <= 10 ? 'LVL 2 · INTERMEDIATE' : bestWave <= 15 ? 'LVL 3 · ADVANCED' : bestWave <= 20 ? 'LVL 4 · EXPERT' : 'LVL 5 · MASTER';
+            elTitleLvl.textContent = lvl;
+          }
           titleBestWaveEl.textContent = String(bestWave);
           // Exact required indicator format: "WAVE [X] | TARGET: [Y]"
           hudWaveTargetEl.textContent = `WAVE ${state.wave} | TARGET: ${state.config.targetCount}`;

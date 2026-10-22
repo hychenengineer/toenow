@@ -2069,6 +2069,16 @@
       updateCompositeStat(profile);
     }
 
+        // Helper: calculate 5-level name and level number from wave
+    function getLevelInfoFromWave(wave) {
+      const w = Math.max(1, parseInt(wave, 10) || 1);
+      if (w <= 5) return { level: 1, name: 'Beginner' };
+      if (w <= 10) return { level: 2, name: 'Intermediate' };
+      if (w <= 15) return { level: 3, name: 'Advanced' };
+      if (w <= 20) return { level: 4, name: 'Expert' };
+      return { level: 5, name: 'Master' };
+    }
+
     function getGameScores() {
       try {
         const raw = localStorage.getItem(STORAGE_KEYS.GAME_SCORES);
@@ -2079,21 +2089,28 @@
       return {};
     }
 
-    function saveGameScore(gameId, category, score) {
+    function saveGameScore(gameId, category, score, wave) {
       const scores = getGameScores();
-      const prevBest = scores[gameId]?.bestScore || 0;
+      const prev = scores[gameId] || { bestScore: 0, maxWave: 1, maxLevel: 1, levelName: 'Beginner' };
+      const prevBest = prev.bestScore || 0;
       const numericScore = Math.max(0, Math.round(Number(score) || 0));
+      const numericWave = Math.max(1, Number(wave) || prev.maxWave || 1);
+      const lvlInfo = getLevelInfoFromWave(numericWave);
       const isNewBest = numericScore >= prevBest;
 
       scores[gameId] = {
         bestScore: Math.max(prevBest, numericScore),
+        maxWave: Math.max(prev.maxWave || 1, numericWave),
+        maxLevel: Math.max(prev.maxLevel || 1, lvlInfo.level),
+        levelName: getLevelInfoFromWave(Math.max(prev.maxWave || 1, numericWave)).name,
         lastScore: numericScore,
         category: category || 'puzzle',
         updatedAt: new Date().toISOString().slice(0, 10)
       };
 
       localStorage.setItem(STORAGE_KEYS.GAME_SCORES, JSON.stringify(scores));
-      return { isNewBest, bestScore: scores[gameId].bestScore, numericScore };
+      return { isNewBest, bestScore: scores[gameId].bestScore, maxLevel: scores[gameId].maxLevel, levelName: scores[gameId].levelName, numericScore };
+    };
     }
 
     function updateCompositeStat(profile) {
@@ -2273,7 +2290,12 @@
           description: 'Modular cognitive training simulation.'
         };
         const record = scores[game.id];
-        const bestText = game.leaderboard === false ? 'Local prototype' : record ? `${record.bestScore.toLocaleString()} pts` : 'Unranked';
+        const lvlInfo = record && record.maxWave ? getLevelInfoFromWave(record.maxWave) : { level: 1, name: 'Beginner' };
+        const bestText = game.leaderboard === false 
+          ? 'Local prototype' 
+          : record 
+            ? `${record.bestScore.toLocaleString()} pts <span style="display:inline-block;margin-left:6px;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:0.04em;background:rgba(34,211,238,0.12);color:#22d3ee;border:1px solid rgba(34,211,238,0.25);">LVL ${record.maxLevel || lvlInfo.level} · ${record.levelName || lvlInfo.name}</span>` 
+            : 'Unranked';
 
         let dotsHtml = '';
         for (let i = 1; i <= 5; i++) {

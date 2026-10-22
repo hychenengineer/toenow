@@ -1,4 +1,4 @@
-<!doctype html>
+<!doct<div style="font-size:12px;font-weight:700;color:#22d3ee;margin-top:4px;" id="over-level-badge">LVL 1 · BEGINNER</div>ype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -1094,8 +1094,8 @@
           </div>
           <span class="unified-record-sep" aria-hidden="true">·</span>
           <div class="unified-record-item">
-            <span class="unified-record-label">RANK</span>
-            <span id="title-best-rank" class="unified-record-val">Cadet</span>
+            <span class="unified-record-label">BEST LEVEL</span>
+            <span id="title-best-level" class="unified-record-val">LVL 1 · BEGINNER</span>
           </div>
         </div>
 
@@ -1869,6 +1869,13 @@
         function syncPersistentStatsUI() {
           const r = getSynapseRank(totalExp);
           titleBestScoreEl.textContent = String(Math.round(bestScore));
+          const elTitleLvl = document.getElementById('title-best-level');
+          if (elTitleLvl) {
+            const maxW = parseInt(localStorage.getItem('space_scale_best_wave') || '1', 10) || 1;
+            const lvl = getLevelForWave(maxW);
+            const lvlNames = ['', 'BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT', 'MASTER'];
+            elTitleLvl.textContent = 'LVL ' + lvl + ' · ' + lvlNames[lvl];
+          }
           titleBestRankEl.textContent = r.title;
           hudBestEl.textContent = String(Math.round(bestScore));
         }

@@ -990,6 +990,11 @@
           pendingBriefing: null
         };
 
+        // Initialize Toenow Game SDK
+        var toenowSdk = typeof ToenowGameSDK !== 'undefined'
+          ? new ToenowGameSDK({ gameId: 'block-match', category: 'puzzle', gameTitle: 'Block Match' })
+          : null;
+
         var board = generateWaveBoard(1, 0);
         var gameMode = 'title'; // 'title' | 'playing' | 'briefing' | 'gameover'
 
@@ -1303,18 +1308,28 @@
 
           setGameMode('gameover');
 
-          try {
-            if (window.parent && window.parent !== window) {
-              window.parent.postMessage({
-                type: 'GAME_OVER',
-                gameId: 'block-match',
-                category: 'puzzle',
-                score: Math.round(state.score || 0),
-                wave: state.wavesCleared || 1,
-                isPractice: Boolean(state.isPractice)
-              }, '*');
-            }
-          } catch (_) {}
+          // Toenow Game SDK Unified Lifecycle & Hub Contract
+          if (toenowSdk) {
+            toenowSdk.reportGameOver({
+              score: Math.round(state.score || 0),
+              wave: state.wavesCleared || 1,
+              isPractice: Boolean(state.isPractice),
+              streak: state.peakCombo
+            });
+          } else {
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({
+                  type: 'GAME_OVER',
+                  gameId: 'block-match',
+                  category: 'puzzle',
+                  score: Math.round(state.score || 0),
+                  wave: state.wavesCleared || 1,
+                  isPractice: Boolean(state.isPractice)
+                }, '*');
+              }
+            } catch (_) {}
+          }
         }
 
         function getCellCenter(box, r, c) {

@@ -742,6 +742,11 @@
           } catch (_) {}
         }
 
+        // Initialize Toenow Game SDK
+        const toenowSdk = typeof ToenowGameSDK !== 'undefined'
+          ? new ToenowGameSDK({ gameId: 'tap-match', category: 'spatial', gameTitle: 'Tap Match' })
+          : null;
+
         const elTitleBestScore = document.getElementById('title-best-score');
         const elTitleBestWave = document.getElementById('title-best-wave');
         if (elTitleBestScore) elTitleBestScore.textContent = loadBestWhackScore().toLocaleString();
@@ -1360,23 +1365,33 @@
 
           modalGameOver.classList.remove('hidden');
 
-          // Toenow Hub Cross-Origin Runtime Contract
-          try {
-            if (window.parent && window.parent !== window) {
-              window.parent.postMessage(
-                {
-                  type: 'GAME_OVER',
-                  gameId: 'tap-match',
-                  category: 'spatial',
-                  score: Math.round(state.score),
-                  isPractice: Boolean(state.isPractice),
-                  wave: Number(state.wave) || 1,
-                  accuracy: acc
-                },
-                '*'
-              );
-            }
-          } catch (_) {}
+          // Toenow Game SDK Unified Lifecycle & Hub Contract
+          if (toenowSdk) {
+            toenowSdk.reportGameOver({
+              score: Math.round(state.score),
+              wave: Number(state.wave) || 1,
+              isPractice: Boolean(state.isPractice),
+              accuracy: acc,
+              streak: state.peakStreak
+            });
+          } else {
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage(
+                  {
+                    type: 'GAME_OVER',
+                    gameId: 'tap-match',
+                    category: 'spatial',
+                    score: Math.round(state.score),
+                    isPractice: Boolean(state.isPractice),
+                    wave: Number(state.wave) || 1,
+                    accuracy: acc
+                  },
+                  '*'
+                );
+              }
+            } catch (_) {}
+          }
         }
 
         function syncHud() {

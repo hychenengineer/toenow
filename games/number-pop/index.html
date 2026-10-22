@@ -2253,6 +2253,11 @@
         const pauseScreen = document.getElementById('pause-screen');
         const gameoverScreen = document.getElementById('gameover-screen');
 
+        // Initialize Toenow Game SDK
+        const toenowSdk = typeof ToenowGameSDK !== 'undefined'
+          ? new ToenowGameSDK({ gameId: 'number-pop', category: 'math', gameTitle: 'Number Pop' })
+          : null;
+
         const titleBestScore = document.getElementById('title-best-score');
         const titleBestWave = document.getElementById('title-best-wave');
         const titleBestSurvival = document.getElementById('title-best-survival');
@@ -2678,6 +2683,15 @@
         }
 
         function reportScoreToHub(score, wave, runDuration, isPractice = false) {
+          if (toenowSdk) {
+            toenowSdk.reportGameOver({
+              score: Math.round(Number(score) || 0),
+              wave: Number(wave) || 1,
+              duration: Math.round((Number(runDuration) || 0) * 1000),
+              isPractice: Boolean(isPractice || game.isPractice)
+            });
+            return;
+          }
           try {
             if (window.parent && window.parent !== window) {
               window.parent.postMessage(

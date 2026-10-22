@@ -945,6 +945,11 @@
         let isPracticeMode = false;
         let totalLifetimeCores = meta.cores;
 
+        // Initialize Toenow Game SDK
+        const toenowSdk = typeof ToenowGameSDK !== 'undefined'
+          ? new ToenowGameSDK({ gameId: 'add-up', category: 'math', gameTitle: 'Add Up' })
+          : null;
+
         // --- Pure Addition Math Rules ---
         function evaluateSelection(selectedList) {
           if (!selectedList || selectedList.length === 0) return 0;
@@ -1663,22 +1668,30 @@
           Sfx.playGameOver();
           setGameState('gameover');
 
-          // Toenow Hub Cross-Origin Runtime Contract
-          try {
-            if (window.parent && window.parent !== window) {
-              window.parent.postMessage(
-                {
-                  type: 'GAME_OVER',
-                  gameId: 'add-up',
-                  category: 'math',
-                  score: finalScore,
-                  isPractice: Boolean(isPracticeMode),
-                  wave: wavesStabilizedThisRun || 1
-                },
-                '*'
-              );
-            }
-          } catch (_) {}
+          // Toenow Game SDK Unified Lifecycle & Hub Contract
+          if (toenowSdk) {
+            toenowSdk.reportGameOver({
+              score: finalScore,
+              wave: wavesStabilizedThisRun || 1,
+              isPractice: isPracticeMode
+            });
+          } else {
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage(
+                  {
+                    type: 'GAME_OVER',
+                    gameId: 'add-up',
+                    category: 'math',
+                    score: finalScore,
+                    isPractice: Boolean(isPracticeMode),
+                    wave: wavesStabilizedThisRun || 1
+                  },
+                  '*'
+                );
+              }
+            } catch (_) {}
+          }
         }
 
         function clearCurrentSelection(withSound) {

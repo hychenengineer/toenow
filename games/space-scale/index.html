@@ -1844,6 +1844,11 @@
         let score = 0;
         let bestScore = parseInt(localStorage.getItem(STORAGE_BEST_SCORE) || '0', 10) || 0;
         let totalExp = parseInt(localStorage.getItem(STORAGE_BEST_EXP) || '0', 10) || 0;
+
+        // Initialize Toenow Game SDK
+        const toenowSdk = typeof ToenowGameSDK !== 'undefined'
+          ? new ToenowGameSDK({ gameId: 'space-scale', category: 'logic', gameTitle: 'Space Scale' })
+          : null;
         let streak = 0;
         let shields = 3;
         const MAX_SHIELDS = 3;
@@ -2059,23 +2064,32 @@
           sound.playGameOver();
           setGameState('gameover');
 
-          // Toenow Hub Cross-Origin Runtime Contract
-          try {
-            if (window.parent && window.parent !== window) {
-              window.parent.postMessage(
-                {
-                  type: 'GAME_OVER',
-                  gameId: 'space-scale',
-                  category: 'logic',
-                  score: finalScore,
-                  isPractice: Boolean(isPracticeMode),
-                  wave: Math.max(1, wave - 1),
-                  rank: r.title
-                },
-                '*'
-              );
-            }
-          } catch (_) {}
+          // Toenow Game SDK Unified Lifecycle & Hub Contract
+          if (toenowSdk) {
+            toenowSdk.reportGameOver({
+              score: finalScore,
+              wave: Math.max(1, wave - 1),
+              isPractice: isPracticeMode,
+              rank: r.title
+            });
+          } else {
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage(
+                  {
+                    type: 'GAME_OVER',
+                    gameId: 'space-scale',
+                    category: 'logic',
+                    score: finalScore,
+                    isPractice: Boolean(isPracticeMode),
+                    wave: Math.max(1, wave - 1),
+                    rank: r.title
+                  },
+                  '*'
+                );
+              }
+            } catch (_) {}
+          }
         }
 
         function handleBodySelection(bodyId, tapX, tapY) {

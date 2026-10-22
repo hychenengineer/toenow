@@ -4876,6 +4876,11 @@
           } catch (_) {}
         }
 
+        // Initialize Toenow Game SDK
+        const toenowSdk = typeof ToenowGameSDK !== 'undefined'
+          ? new ToenowGameSDK({ gameId: 'spot-quick', category: 'puzzle', gameTitle: 'Spot Quick' })
+          : null;
+
         let titleBestScoreEl = document.getElementById("titleBestScore");
         let titleBestWaveEl = document.getElementById("titleBestWave");
 
@@ -5232,22 +5237,31 @@
           gameOverModal.classList.remove("hidden");
           updateHudDOM();
 
-          // Toenow Hub Cross-Origin Runtime Contract
-          try {
-            if (window.parent && window.parent !== window) {
-              window.parent.postMessage(
-                {
-                  type: 'GAME_OVER',
-                  gameId: 'spot-quick',
-                  category: 'puzzle',
-                  score: Math.round(state.score),
-                  wave: Number(state.wave) || 1,
-                  streak: Number(state.peakStreak) || 0
-                },
-                '*'
-              );
-            }
-          } catch (_) {}
+          // Toenow Game SDK Unified Lifecycle & Hub Contract
+          if (toenowSdk) {
+            toenowSdk.reportGameOver({
+              score: Math.round(state.score),
+              wave: Number(state.wave) || 1,
+              streak: Number(state.peakStreak) || 0,
+              isPractice: Boolean(state.isPractice)
+            });
+          } else {
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage(
+                  {
+                    type: 'GAME_OVER',
+                    gameId: 'spot-quick',
+                    category: 'puzzle',
+                    score: Math.round(state.score),
+                    wave: Number(state.wave) || 1,
+                    streak: Number(state.peakStreak) || 0
+                  },
+                  '*'
+                );
+              }
+            } catch (_) {}
+          }
         }
 
         function handleCandidateSelection(index) {

@@ -1138,6 +1138,11 @@
         const STORAGE_KEY_SCORE = 'quantum_shell_best_score_v5';
         const STORAGE_KEY_WAVE = 'quantum_shell_best_wave_v5';
 
+        // Initialize Toenow Game SDK
+        const toenowSdk = typeof ToenowGameSDK !== 'undefined'
+          ? new ToenowGameSDK({ gameId: 'ball-track', category: 'spatial', gameTitle: 'Ball Track' })
+          : null;
+
         let bestScore = 0;
         let bestWave = 1;
         try {
@@ -2683,22 +2688,30 @@
           gameoverReasonEl.textContent = state.frozenSnapshot.reason;
           setBodyState('gameover', 'idle');
 
-          // Toenow Hub Cross-Origin Runtime Contract
-          try {
-            if (window.parent && window.parent !== window) {
-              window.parent.postMessage(
-                {
-                  type: 'GAME_OVER',
-                  gameId: 'ball-track',
-                  category: 'spatial',
-                  score: Math.round(state.frozenSnapshot.score || state.score || 0),
-                  wave: state.frozenSnapshot.wave || state.wave || 1,
-                  isPractice: Boolean(state.isPractice)
-                },
-                '*'
-              );
-            }
-          } catch (_) {}
+          // Toenow Game SDK Unified Lifecycle & Hub Contract
+          if (toenowSdk) {
+            toenowSdk.reportGameOver({
+              score: Math.round(state.frozenSnapshot.score || state.score || 0),
+              wave: state.frozenSnapshot.wave || state.wave || 1,
+              isPractice: Boolean(state.isPractice)
+            });
+          } else {
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage(
+                  {
+                    type: 'GAME_OVER',
+                    gameId: 'ball-track',
+                    category: 'spatial',
+                    score: Math.round(state.frozenSnapshot.score || state.score || 0),
+                    wave: state.frozenSnapshot.wave || state.wave || 1,
+                    isPractice: Boolean(state.isPractice)
+                  },
+                  '*'
+                );
+              }
+            } catch (_) {}
+          }
         }
 
         function togglePause() {

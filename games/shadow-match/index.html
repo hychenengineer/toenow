@@ -1788,6 +1788,11 @@
         const STORAGE_KEY_SCORE = 'shadow_match_best_score_v1';
         const STORAGE_KEY_WAVE = 'shadow_match_best_wave_v1';
 
+        // Initialize Toenow Game SDK
+        const toenowSdk = typeof ToenowGameSDK !== 'undefined'
+          ? new ToenowGameSDK({ gameId: 'shadow-match', category: 'puzzle', gameTitle: 'Shadow Match' })
+          : null;
+
         function loadBestRecords() {
           let s = 0, w = 1;
           try {
@@ -2127,23 +2132,33 @@
 
           setGameState('gameover');
 
-          // Toenow Hub Cross-Origin Runtime Contract
-          try {
-            if (window.parent && window.parent !== window) {
-              window.parent.postMessage(
-                {
-                  type: 'GAME_OVER',
-                  gameId: 'shadow-match',
-                  category: 'puzzle',
-                  score: Math.round(state.score),
-                  isPractice: Boolean(state.isPractice),
-                  wave: Number(state.wave) || 1,
-                  streak: Number(state.peakCombo) || 0
-                },
-                '*'
-              );
-            }
-          } catch (_) {}
+          // Toenow Game SDK Unified Lifecycle & Hub Contract
+          if (toenowSdk) {
+            toenowSdk.reportGameOver({
+              score: Math.round(state.score),
+              wave: Number(state.wave) || 1,
+              isPractice: Boolean(state.isPractice),
+              streak: Number(state.peakCombo) || 0,
+              accuracy: accuracyPct
+            });
+          } else {
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage(
+                  {
+                    type: 'GAME_OVER',
+                    gameId: 'shadow-match',
+                    category: 'puzzle',
+                    score: Math.round(state.score),
+                    isPractice: Boolean(state.isPractice),
+                    wave: Number(state.wave) || 1,
+                    streak: Number(state.peakCombo) || 0
+                  },
+                  '*'
+                );
+              }
+            } catch (_) {}
+          }
         }
 
         function handleCardSelection(cardIdx) {

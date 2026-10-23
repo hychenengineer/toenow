@@ -93,3 +93,16 @@ test('screen result normalization uses the shared five-level mapping', () => {
     assert.equal(result.combo, 3);
   }
 });
+
+test('membership invitation follows replay and preserves the three game actions', () => {
+  const screens = require('../shared/toenow-screens.js');
+  for (const id of games) {
+    const html = screens.gameOverMarkup(id);
+    assert.ok(html.indexOf('data-membership-invite') > html.indexOf('data-screen-action="retry"'));
+    assert.ok(html.indexOf('data-membership-invite') < html.indexOf('data-screen-action="share"'));
+    assert.match(html, /Create Free Account/);
+    assert.match(html, /Already a member\?/);
+    assert.match(html, /data-account-action="signin"/);
+    assert.equal((html.match(/data-screen-action=/g) || []).length, 3);
+  }
+});

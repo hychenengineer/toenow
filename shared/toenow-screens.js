@@ -30,7 +30,9 @@
     return `<div class="modal-card"><h2 id="screen-gameover-title" data-screen-field="reason" class="toenow-result-heading">TIME EXPIRED</h2><p class="modal-subtitle">Session complete.</p>
       <div class="stat-grid">${Object.keys(labels).map(key => `<div class="stat-tile"><span class="stat-tile-label">${labels[key]}</span><span id="${escape(c.fields[key])}" data-screen-field="${key}" class="stat-tile-value">0</span></div>`).join('')}</div>
       <p id="${escape(c.fields.level)}" data-screen-field="level" class="unified-gameover-subtitle">LVL 1 · BEGINNER</p>
-      <div class="modal-actions"><button id="${escape(c.retryId)}" data-screen-action="retry" data-start="true" type="button" class="primary-btn">PLAY AGAIN</button><button id="btn-share-score" data-screen-action="share" type="button" class="unified-share-btn"><span aria-hidden="true">⚡</span><span>SHARE SCORE</span></button><button id="${escape(c.returnId)}" data-screen-action="title" type="button" class="secondary-btn">TITLE SCREEN</button></div></div>`;
+      <div class="modal-actions"><button id="${escape(c.retryId)}" data-screen-action="retry" data-start="true" type="button" class="primary-btn">PLAY AGAIN</button>
+      <section class="toenow-membership" data-membership-invite aria-label="Keep Your Progress"><h3>Keep Your Progress</h3><p>Save your game records to your account and sync across devices.</p><a class="toenow-membership-register" data-account-action="register" href="../../?auth=register" target="_blank" rel="noopener">Create Free Account</a><p class="toenow-membership-login"><span>Already a member?</span> <a data-account-action="signin" href="../../?auth=signin" target="_blank" rel="noopener">Sign In</a></p></section>
+      <button id="btn-share-score" data-screen-action="share" type="button" class="unified-share-btn"><span aria-hidden="true">⚡</span><span>SHARE SCORE</span></button><button id="${escape(c.returnId)}" data-screen-action="title" type="button" class="secondary-btn">TITLE SCREEN</button></div></div>`;
   }
   function stamp(host, id, kind) {
     host.dataset.toenowScreenOwner = 'ToenowScreens';
@@ -65,12 +67,33 @@
     });
     if (options.onRetry) host.querySelector('[data-screen-action="retry"]').addEventListener('click', options.onRetry);
     if (options.onTitle) host.querySelector('[data-screen-action="title"]').addEventListener('click', options.onTitle);
+    const accountWindow = () => {
+      try { if (root.parent !== root && root.parent.location.origin === root.location.origin && root.parent.ToenowAccount) return root.parent; } catch (_) {}
+      return root;
+    };
+    const refreshMembership = () => {
+      if (!root) return;
+      host.querySelector('[data-membership-invite]').hidden = !!accountWindow().ToenowAccount?.signedIn;
+    };
+    let accountTarget;
+    if (root) {
+      accountTarget = accountWindow();
+      accountTarget.addEventListener('toenow-auth-change', refreshMembership);
+      for (const action of ['register', 'signin']) {
+        host.querySelector('[data-account-action="' + action + '"]').addEventListener('click', event => {
+          const account = accountWindow().ToenowAccount;
+          if (account?.open) { event.preventDefault(); account.open(action); }
+        });
+      }
+    }
+    instance.refreshMembership = refreshMembership;
     updateGameOver(id, options);
-    return { destroy() { if (instances.get(id) === instance) instances.delete(id); host.replaceChildren(); } };
+    return { destroy() { accountTarget?.removeEventListener('toenow-auth-change', refreshMembership); if (instances.get(id) === instance) instances.delete(id); host.replaceChildren(); } };
   }
   function updateGameOver(id, data) {
     const instance = instances.get(id);
     if (!instance) throw new Error('Screen not mounted: ' + id);
+    instance.refreshMembership?.();
     instance.data = normalizeResult(data);
     for (const [key, value] of Object.entries(instance.data)) {
       const node = instance.host.querySelector('[data-screen-field="' + key + '"]');

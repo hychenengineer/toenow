@@ -1268,6 +1268,7 @@
     /* ==========================================
        TOAST NOTIFICATION
        ========================================== */
+    #authModal { z-index: 140; }
     .toast-container {
       position: fixed;
       bottom: 1.5rem;
@@ -1559,7 +1560,7 @@
 
       <!-- Category Filter Tabs -->
       <nav class="category-tabs" aria-label="Cognitive Discipline Filters" id="categoryTabs">
-        <button type="button" class="tab-btn active" data-category="all">All Disciplines</button>
+        <button type="button" class="tab-btn active" data-category="all">All</button>
         <button type="button" class="tab-btn" data-category="puzzle">Pattern</button>
         <button type="button" class="tab-btn" data-category="spatial">Space</button>
         <button type="button" class="tab-btn" data-category="math">Numbers</button>
@@ -1574,11 +1575,10 @@
           <span>Leaderboard</span>
         </button>
 
-        <button type="button" class="profile-trigger" id="openProfileBtn" aria-label="Open Toenow Brain Matrix Profile">
-          <div class="guest-avatar">GO</div>
+        <button type="button" class="profile-trigger" id="openProfileBtn" aria-label="Open Your Game Stats">
+          <div class="guest-avatar" aria-hidden="true">👤</div>
           <div class="profile-meta">
-            <span class="profile-name">Guest Operator</span>
-            <span class="profile-status"><span class="status-dot"></span> Matrix Active</span>
+            <span class="profile-name">Sign In / Register</span>
           </div>
         </button>
       </div>
@@ -1623,11 +1623,11 @@
        USER PROFILE DRAWER & BRAIN HEXAGON RADAR
        ========================================== -->
   <div class="drawer-backdrop" id="drawerBackdrop"></div>
-  <aside class="profile-drawer" id="profileDrawer" aria-hidden="true" aria-label="Toenow Brain Matrix Drawer">
+  <aside class="profile-drawer" id="profileDrawer" aria-hidden="true" aria-label="Your Game Stats">
     <div class="drawer-header">
       <div class="drawer-title-group">
-        <h2>Toenow Brain Matrix</h2>
-        <p>Operator Telemetry &amp; 6-Axis Cognitive Hexagon</p>
+        <h2>Your Game Stats</h2>
+        <p>Based on your game scores. Updates as you play.</p>
       </div>
       <button type="button" class="icon-close-btn" id="closeProfileBtn" aria-label="Close Profile Drawer">✕</button>
     </div>
@@ -1641,13 +1641,6 @@
       </div>
 
       <div class="account-tier-card">
-        <div class="tier-status-row">
-          <strong>Account Telemetry Tier</strong>
-          <span class="tier-badge" id="accountTierBadge">Cloud Sync Disabled (Guest Mode)</span>
-        </div>
-        <p class="tier-desc" id="accountTierDesc">
-          Your cognitive vectors and personal records are currently persisted in local browser storage (<code>toenow.com</code> sandbox).
-        </p>
         <button type="button" class="btn-primary-gradient" id="signInRegisterBtn">
           Sign In / Register
         </button>
@@ -1761,6 +1754,7 @@
     let supabaseClient = null;
     let currentAuthUser = null;
     let currentCloudProfile = null;
+    window.ToenowAccount = { get signedIn() { return !!currentAuthUser; } };
 
     if (window.supabase) {
       supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
@@ -3010,6 +3004,13 @@
         authModal.setAttribute('aria-hidden', 'true');
       };
 
+      window.ToenowAccount.open = () => {
+        if (profileDrawer.classList.contains('open')) closeProfileDrawer();
+        openAuthModal();
+      };
+      const authRequest = new URLSearchParams(window.location.search).get('auth');
+      if (authRequest === 'register' || authRequest === 'signin') openAuthModal();
+
       document.getElementById('signInRegisterBtn').addEventListener('click', () => {
         if (profileDrawer.classList.contains('open')) closeProfileDrawer();
         openAuthModal();
@@ -3133,10 +3134,9 @@
       const updateUIWithUser = (user, profile) => {
         currentAuthUser = user;
         currentCloudProfile = profile;
+        window.dispatchEvent(new Event('toenow-auth-change'));
 
         const openProfileBtn = document.getElementById('openProfileBtn');
-        const accountTierBadge = document.getElementById('accountTierBadge');
-        const accountTierDesc = document.getElementById('accountTierDesc');
         const signInRegisterBtn = document.getElementById('signInRegisterBtn');
         const signOutBtn = document.getElementById('signOutBtn');
 
@@ -3154,37 +3154,16 @@
             `;
           }
 
-          if (accountTierBadge) {
-            accountTierBadge.textContent = 'Active Operator (Cloud Verified)';
-            accountTierBadge.style.color = '#38bdf8';
-            accountTierBadge.style.borderColor = 'rgba(56, 189, 248, 0.4)';
-          }
-
-          if (accountTierDesc) {
-            accountTierDesc.innerHTML = `Connected as <strong>${user.email}</strong>. High scores and cognitive hexagon indices are synchronized to Supabase Cloud.`;
-          }
-
           if (signInRegisterBtn) signInRegisterBtn.style.display = 'none';
           if (signOutBtn) signOutBtn.style.display = 'block';
         } else {
           if (openProfileBtn) {
             openProfileBtn.innerHTML = `
-              <div class="guest-avatar">GO</div>
+              <div class="guest-avatar" aria-hidden="true">👤</div>
               <div class="profile-meta">
-                <span class="profile-name">Guest Operator</span>
-                <span class="profile-status"><span class="status-dot"></span> Matrix Active</span>
+                <span class="profile-name">Sign In / Register</span>
               </div>
             `;
-          }
-
-          if (accountTierBadge) {
-            accountTierBadge.textContent = 'Cloud Sync Disabled (Guest Mode)';
-            accountTierBadge.style.color = '';
-            accountTierBadge.style.borderColor = '';
-          }
-
-          if (accountTierDesc) {
-            accountTierDesc.innerHTML = `Your cognitive vectors and personal records are currently persisted in local browser storage (<code>toenow.com</code> sandbox).`;
           }
 
           if (signInRegisterBtn) signInRegisterBtn.style.display = 'block';

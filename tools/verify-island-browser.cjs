@@ -1,0 +1,174 @@
+const {chromium} = require('playwright');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const {LOCATIONS} = require('../shared/toenow-island.js');
+const base = process.env.TOENOW_TEST_URL || 'http://127.0.0.1:8765';
+const output = path.resolve(__dirname,'../artifacts/island-explorer');
+(async()=>{
+ fs.mkdirSync(output,{recursive:true});
+ const browser=await chromium.launch({channel:'msedge',headless:true});
+ const errors=[],checks=[];
+ try{
+  const context=await browser.newContext();
+  await context.route('https://**',route=>route.abort());
+  const page=await context.newPage();
+  page.setDefaultTimeout(10000);page.setDefaultNavigationTimeout(30000);
+  page.on('pageerror',error=>errors.push(error.message));
+  async function readyArt(selector='.island-map-markers img[data-island-art]') {
+   await page.locator(selector).evaluateAll(images=>Promise.all(images.map(image=>image.decode())));
+  }
+  await page.goto(base,{waitUntil:'domcontentloaded'});
+  await page.locator('.island-location').first().waitFor();
+  await readyArt();
+  assert.equal(await page.locator('.island-map-markers img[data-island-art]').count(),10,'all ten map landmarks use illustrated art');
+  assert.equal(await page.locator('.island-location').count(),10);
+  assert.equal(await page.locator('#hubListView').isVisible(),false);
+  assert.equal(await page.locator('.island-counter').innerText(),'0 / 10 places explored');
+  const initial=await page.evaluate(()=>JSON.stringify({...localStorage}));
+  for(const stage of [1,2,3,4,5]){
+   await page.locator('#islandStagePreview').selectOption(String(stage));
+   await readyArt();
+   assert.equal(await page.locator('.island-map-markers img[data-island-art]').count(),10);
+   const stageSources=await page.locator('.island-map-markers img[data-island-art]').evaluateAll(images=>images.map(image=>image.getAttribute('src')));
+   assert(stageSources.every(source=>source.endsWith('-level'+stage+'.webp')),'stage preview selects ten matching real textures');
+   assert.equal(await page.locator(`.island-location[data-stage="${stage}"]`).count(),10);
+   assert.equal(await page.locator('.island-preview-note').isVisible(),true);
+   const count=await page.locator('.island-map-markers .landmark-stage-5').count();
+   assert.equal(count,stage===5?10:0);
+  }
+  assert.equal(await page.evaluate(()=>JSON.stringify({...localStorage})),initial,'preview must never write saves');
+  await page.locator('#islandStagePreview').selectOption('0');
+  for(const width of [1440,1024,768,390,320]){
+   await page.setViewportSize({width,height:1000});
+   for(const language of ['en','zh-Hant']){
+    await page.evaluate(lang=>ToenowI18n.setLanguage(lang),language);
+    for(const theme of ['bright','arena','calm']){
+     await page.locator('#hubThemeSelect').selectOption(theme);
+     await readyArt();
+     assert(!(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)),`page overflow: ${width}/${language}/${theme}`);
+     assert.equal(await page.locator('.island-location').count(),10);
+     const overlaps=await page.locator('.island-location').evaluateAll(nodes=>{
+      const boxes=nodes.map(n=>({id:n.dataset.islandGame,box:n.getBoundingClientRect()}));
+      return boxes.flatMap((a,i)=>boxes.slice(i+1).filter(b=>Math.min(a.box.right,b.box.right)-Math.max(a.box.left,b.box.left)>2&&Math.min(a.box.bottom,b.box.bottom)-Math.max(a.box.top,b.box.top)>2).map(b=>[a.id,b.id]));
+     });
+     assert.deepEqual(overlaps,[],`overlapping map targets at ${width}/${language}/${theme}`);
+     assert((await page.locator('.island-intro h1').innerText()).includes(language==='en'?'island':'小島'));
+     if(width===1440&&language==='zh-Hant')await page.screenshot({path:path.join(output,`island-${theme}-desktop.png`),fullPage:true,animations:'disabled'});
+     checks.push({width,language,theme,status:'PASS'});
+    }
+   }
+   if(width===390)await page.screenshot({path:path.join(output,'island-mobile.png'),fullPage:true,animations:'disabled'});
+  }
+  await page.setViewportSize({width:1440,height:1000});
+  await page.locator('#hubThemeSelect').selectOption('bright');
+  await page.evaluate(()=>ToenowI18n.setLanguage('zh-Hant'));
+  for(const place of LOCATIONS){
+   await page.locator('#islandLocationSelect').selectOption(place.gameId);
+   await page.locator('.island-location-dialog').waitFor({state:'visible'});
+   await readyArt('.island-location-dialog img[data-island-art]');
+   assert.equal(await page.locator('.island-stage-gallery .island-stage-card').count(),5);
+   assert.equal(await page.locator('.island-location-dialog .landmark-stage-5').count(),1);
+   assert((await page.locator('.island-real-progress').innerText()).includes('尚未探索'));
+   await page.keyboard.press('Escape');
+  }
+  // Open a map button with the keyboard, then change language inside the native dialog.
+  await page.locator('[data-island-game="flash-brain"]').focus();await page.keyboard.press('Enter');
+  await page.locator('.island-location-dialog').waitFor({state:'visible'});
+  await page.evaluate(()=>ToenowI18n.setLanguage('en'));
+  assert.equal(await page.locator('#islandLocationTitle').innerText(),'Memory Lighthouse');
+  await page.evaluate(()=>ToenowI18n.setLanguage('zh-Hant'));
+  assert.equal(await page.locator('#islandLocationTitle').innerText(),'記憶燈塔');
+  await readyArt('.island-location-dialog img[data-island-art]');
+  await page.screenshot({path:path.join(output,'location-five-stages.png'),animations:'disabled'});
+  await page.setViewportSize({width:390,height:900});
+  assert(!(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)),'mobile dialog stays within viewport');
+  await page.screenshot({path:path.join(output,'location-mobile.png'),animations:'disabled'});
+  await page.setViewportSize({width:1440,height:1000});
+  await page.keyboard.press('Escape');
+  await page.waitForFunction(()=>document.activeElement.dataset.islandGame==='flash-brain',null,{polling:100});
+  assert.equal(await page.evaluate(()=>document.activeElement.dataset.islandGame),'flash-brain','closing after a language refresh returns focus to its location');
+  await page.evaluate(()=>ToenowI18n.setLanguage('en'));
+  assert.equal(await page.evaluate(()=>document.activeElement.dataset.islandGame),'flash-brain','focused marker survives a refresh outside a dialog');
+  await page.evaluate(()=>ToenowI18n.setLanguage('zh-Hant'));
+  await page.locator('[data-island-game="flash-brain"]').click();
+  await page.locator('.island-location-dialog').waitFor({state:'visible'});
+  await page.locator('.island-play-button').click();
+  await page.locator('#theaterModal.open').waitFor({state:'visible'});
+  await page.locator('#gameViewer').contentFrame().locator('[data-toenow-screen="title"]').waitFor({state:'visible'});
+  assert((await page.locator('#gameViewer').getAttribute('src')).includes('flash-brain'));
+  await page.locator('#closeTheaterBtn').click();
+  await page.waitForFunction(()=>!document.getElementById('theaterModal').classList.contains('open'));
+  // Real number-pop normal/practice starts and production game-over flow.
+  await page.route(/\/games\/number-pop\/(?:index\.html)?(?:\?.*)?$/,route=>{
+   let html=fs.readFileSync(path.resolve(__dirname,'../games/number-pop/index.html'),'utf8');
+   const end=html.lastIndexOf('})();');
+   html=html.slice(0,end)+'window.__islandFinish=()=>{game.score=120;game.wave=11;game.runDuration=60;triggerGameOver();};'+html.slice(end);
+   return route.fulfill({contentType:'text/html',body:html});
+  });
+  async function openNumber(){await page.locator('#islandLocationSelect').selectOption('number-pop');await page.locator('.island-play-button').click();return page.locator('#gameViewer').contentFrame();}
+  const practice=await openNumber();
+  await practice.locator('.unified-practice-btn').click();
+  await practice.locator('.unified-practice-level-btn[data-level="3"]').click();
+  await page.frames().find(f=>f.url().includes('/games/number-pop/')).evaluate(()=>window.__islandFinish());
+  await practice.locator('[data-toenow-screen="gameover"]').waitFor({state:'visible'});
+  await page.locator('#closeTheaterBtn').click();
+  assert.equal(await page.locator('[data-island-game="number-pop"]').getAttribute('data-stage'),'1','practice must not grow island');
+  assert(!(await page.locator('[data-island-game="number-pop"]').getAttribute('class')).includes('is-explored'));
+  const normal=await openNumber();
+  await normal.locator('#btn-start').click();
+  await page.frames().find(f=>f.url().includes('/games/number-pop/')).evaluate(()=>window.__islandFinish());
+  await normal.locator('[data-toenow-screen="gameover"]').waitFor({state:'visible'});
+  await page.locator('#closeTheaterBtn').click();
+  await page.waitForFunction(()=>document.querySelector('[data-island-game="number-pop"]').dataset.stage==='3');
+  assert.equal(await page.locator('.island-counter').innerText(),'1 / 10 個地點已探索');
+  await page.reload({waitUntil:'domcontentloaded'});
+  assert.equal(await page.locator('[data-island-game="number-pop"]').getAttribute('data-stage'),'3');
+  // Standalone/canonical record updates also refresh the parent map via storage events.
+  const other=await context.newPage();await other.goto(base,{waitUntil:'domcontentloaded'});
+  await other.evaluate(()=>{localStorage.setItem('flash_brain_best_wave_v1','21');localStorage.setItem('flash_brain_best_score_v1','200');});
+  // Edge throttles background-page polling; resume the map before observing its update.
+  await page.bringToFront();
+  try {
+   await page.waitForFunction(()=>document.querySelector('[data-island-game="flash-brain"]').dataset.stage==='5',null,{polling:100});
+  } catch(error) {
+   console.error('Storage refresh diagnostics:',await page.evaluate(()=>({wave:localStorage.getItem('flash_brain_best_wave_v1'),stage:document.querySelector('[data-island-game="flash-brain"]')?.dataset.stage,ready:document.readyState})),errors);
+   throw error;
+  }
+  await other.close();
+  await page.locator('[data-category="math"]').click();assert.equal(await page.locator('.island-location').count(),2);
+  await page.locator('#islandListViewBtn').click();assert.equal(await page.locator('.game-card:visible').count(),2);
+  await page.reload({waitUntil:'domcontentloaded'});assert.equal(await page.locator('#hubListView').isVisible(),true);
+  await page.locator('#islandMapViewBtn').click();assert.equal(await page.locator('.island-location').count(),10);
+  await page.locator('#islandStagePreview').selectOption('5');
+  await readyArt();
+  await page.screenshot({path:path.join(output,'island-stage5-preview.png'),fullPage:true,animations:'disabled'});
+  await page.locator('#islandStagePreview').selectOption('0');
+  assert.equal(await page.locator('[data-island-game="number-pop"]').getAttribute('data-stage'),'3');
+  const blockedContext=await browser.newContext();await blockedContext.route('https://**',route=>route.abort());
+  // Disable storage after the existing Hub bootstraps; test island's read-only fallback separately.
+  const blocked=await blockedContext.newPage();await blocked.goto(base,{waitUntil:'domcontentloaded'});
+  await blocked.evaluate(()=>{
+   const storage={getItem(){throw Error('blocked');}};
+   window.__blockedIslandProgress=ToenowIsland.getProgress('number-pop',storage,ToenowLevels);
+  });
+  assert.deepEqual(await blocked.evaluate(()=>window.__blockedIslandProgress),{level:1,wave:1,bestScore:0,explored:false});
+  // A missing image falls back without removing the location or its launcher.
+  const fallbackContext=await browser.newContext();await fallbackContext.route('https://**',route=>route.abort());
+  await fallbackContext.route('**/assets/island-buildings/station-level1.webp',route=>route.abort());
+  const fallback=await fallbackContext.newPage();await fallback.goto(base,{waitUntil:'domcontentloaded'});
+  await fallback.locator('[data-island-game="animal-rescue-train"] [data-art-fallback="true"]').waitFor();
+  await fallback.locator('[data-island-game="animal-rescue-train"]').click();
+  await fallback.locator('.island-play-button').click();
+  await fallback.locator('#theaterModal.open').waitFor();
+  assert((await fallback.locator('#gameViewer').getAttribute('src')).includes('animal-rescue-train'));
+  // Independently decode all fifty shipped assets, not just the default stage.
+  const allAssets=require('../assets/island-buildings/manifest.json').assets.map(asset=>asset.runtime);
+  await page.evaluate(async assets=>{
+   await Promise.all(assets.map(src=>new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve();img.onerror=()=>reject(Error('Cannot decode '+src));img.src=src;})));
+  },allAssets);
+  assert.deepEqual(errors,[]);
+  fs.writeFileSync(path.join(output,'results.json'),JSON.stringify({checks,locations:10,statesPerLocation:5,illustratedAssets:50,artFallback:'PASS',previewIsolation:'PASS',gameLaunch:'PASS',normalAndPractice:'PASS',storageAndReload:'PASS',keyboardAndLanguage:'PASS',errors},null,2));
+  console.log('PASS: island 30 responsive/theme/language combinations, all ten locations and five states, real game launch, normal/practice finish, storage/reload, view/category and keyboard/dialog.');
+ }finally{let timer;await Promise.race([browser.close(),new Promise(resolve=>{timer=setTimeout(resolve,5000);})]);clearTimeout(timer);}
+})().then(()=>process.exit(0),error=>{console.error(error);process.exit(1);});

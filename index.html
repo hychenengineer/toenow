@@ -1532,6 +1532,10 @@
   </style>
   <link rel="stylesheet" href="assets/toenow-game-previews.css">
   <script src="shared/toenow-game-previews.js"></script>
+  <link rel="stylesheet" href="assets/toenow-hub-themes.css">
+  <script src="shared/toenow-hub-themes.js"></script>
+  <link rel="stylesheet" href="assets/toenow-island.css">
+  <script src="shared/toenow-island.js"></script>
 </head>
 <body>
 
@@ -1570,6 +1574,14 @@
 
       <!-- Action Bar -->
       <div class="action-bar">
+        <label class="hub-theme-control" data-i18n-ignore>
+          <span id="hubThemeLabel">Theme</span>
+          <select id="hubThemeSelect" aria-label="Homepage theme">
+            <option value="bright" data-source="Bright Challenge Hall">Bright Challenge Hall</option>
+            <option value="arena" data-source="Dark Challenge Arena">Dark Challenge Arena</option>
+            <option value="calm" data-source="Calm Practice Room">Calm Practice Room</option>
+          </select>
+        </label>
         <button type="button" class="btn-action" id="openLeaderboardBtn">
           <span>🏆</span>
           <span>Leaderboard</span>
@@ -1589,7 +1601,30 @@
        MAIN BENTO HUB
        ========================================== -->
   <main class="main-container">
+    <section id="islandExplorer" aria-label="Island explorer"></section>
+    <div id="hubListView" class="hub-list-view">
+    <section class="hub-challenge-hero" id="hubChallengeHero" aria-labelledby="hubChallengeTitle" data-i18n-ignore>
+      <div>
+        <p class="hub-eyebrow" data-hub-copy="eyebrow">A LITTLE CHALLENGE. A NEW BEST.</p>
+        <h1 id="hubChallengeTitle" data-hub-copy="heading">Your next breakthrough starts with a challenge.</h1>
+        <p class="hub-challenge-description" data-hub-copy="description">Memory, numbers, observation and logic. Pick a challenge and see how far you can go.</p>
+        <button type="button" class="hub-challenge-start" id="hubChallengeStart" data-hub-copy="action">Try a memory challenge</button>
+        <span class="hub-challenge-note" data-hub-source="Level 1–5 · Practice mode available">Level 1–5 · Practice mode available</span>
+      </div>
+      <div class="hub-feature">
+        <div class="hub-feature-top"><span data-hub-copy="feature">Start with a little curiosity</span><span data-hub-source="Memory">Memory</span></div>
+        <div class="hub-memory-board" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <h2 data-hub-source="Which squares lit up?">Which squares lit up?</h2>
+        <p data-hub-source="Look, remember, then try the next level.">Look, remember, then try the next level.</p>
+      </div>
+    </section>
+    <div class="hub-challenges-heading" data-i18n-ignore>
+      <h2 data-hub-copy="section">What will you challenge today?</h2>
+      <p data-hub-source="Five difficulty levels · Your own best to beat">Five difficulty levels · Your own best to beat</p>
+    </div>
     <section class="bento-grid" id="gamesBentoGrid" aria-live="polite"></section>
+    <p class="hub-theme-footer" data-i18n-ignore data-hub-source="Game-based challenges for your own exploration, not a standardized ability assessment.">Game-based challenges for your own exploration, not a standardized ability assessment.</p>
+    </div>
   </main>
 
   <!-- ==========================================
@@ -2258,6 +2293,7 @@
        3. BENTO GRID RENDERING
        ============================================================================ */
     let gamePreviewController = null;
+    let islandExplorer = null;
     function renderBentoGrid() {
       gamePreviewController?.destroy();
       gamePreviewController = null;
@@ -2284,7 +2320,7 @@
         const poster = known ? 'assets/gameplay-previews/' + game.id + '-poster.png' : (game.preview || 'assets/number-pop-preview.png');
         const video = known ? '<video muted playsinline loop preload="none" data-src="assets/gameplay-previews/' + game.id + '.webm" aria-hidden="true"></video>' : '';
         return `
-          <article class="game-card" data-game-id="${game.id}" aria-label="${game.title}">
+          <article class="game-card" data-game-id="${game.id}" data-challenge-category="${game.category}" aria-label="${game.title}">
             <button type="button" class="game-launch" aria-label="Play ${game.title}">
               <img src="${poster}" alt="${game.title}" loading="lazy" decoding="async">
               ${video}
@@ -2293,6 +2329,10 @@
               <h2>${game.title}</h2>
               ${known ? '<button type="button" class="game-preview-button">Preview</button>' : ''}
               <button type="button" class="card-share-btn" data-share-game="${game.id}" title="Share challenge" aria-label="Share ${game.title}">↗</button>
+            </div>
+            <div class="hub-card-detail">
+              <span class="hub-card-category">${CATEGORY_META[game.category]?.label || 'Challenge'}</span>
+              <p class="hub-card-description">${game.description || ''}</p>
             </div>
           </article>
         `;
@@ -2331,6 +2371,7 @@
         }
       });
       gamePreviewController = window.ToenowGamePreviews?.mount(grid) || null;
+      islandExplorer?.refresh({ games: GAMES_CONFIG, category: activeCategory });
     }
 
     /* ============================================================================
@@ -3292,6 +3333,13 @@
       renderHexagonRadar();
       populateLeaderboardDropdown();
       initHubInteractions();
+      if (window.ToenowIsland) islandExplorer = window.ToenowIsland.mount({
+        host: document.getElementById('islandExplorer'),
+        listHost: document.getElementById('hubListView'),
+        games: GAMES_CONFIG,
+        levels: ToenowLevels,
+        openGame: openTheaterModal
+      });
       discoverAdditionalGames();
       initAuthListener();
 

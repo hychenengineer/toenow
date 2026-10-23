@@ -1,0 +1,10 @@
+{
+  "kind": "garden",
+  "level": 5,
+  "method": "built-in image_gen",
+  "source": "C:\\Users\\HsinYuChen\\.codex\\generated_images\\01a16a47-2f32-7341-83dd-edc8be80d6f0\\exec-77b53592-128e-4102-846e-c7cb9bd5ff16.png",
+  "references": [
+    "C:/Users/HsinYuChen/.codex/generated_images/01a16a47-2f32-7341-83dd-edc8be80d6f0/exec-5a6b4c80-311f-444c-a764-08cbdf502a60.png"
+  ],
+  "prompt": "SINGLE production game landmark sprite, premium richly detailed hand-painted isometric 2.5D storybook architecture matching the approved reference, tactile stone/wood/roof tiles, soft ambient occlusion, afternoon light from upper-left. Fixed 35-degree overhead isometric camera, entrance facing lower-left, ground centered horizontally near 80% image height, square sprite canvas with roughly 10% clear transparent margin. Genuinely TRANSPARENT background and soft alpha contact shadow. Entire subject including roofs and tiny ground patch visible, no cropping. No typography, labels, level numerals, icons, UI, characters, opaque paper, sky, sea, broad terrain, giant plinth or floating land cube. Keep architecture readable at map size; restrained local grass, steps and planting only. Create the complete LEVEL 5 version of Sum Conservatory. Elegant botanical glass conservatory, cream limestone lower walls, muted sage-green iron framing and patinated copper-green glass roof, a central rounded glass dome and symmetric smaller side glasshouse wing. Visible potted ferns, a modest stone path with a very subtle geometric counting mosaic, low garden borders, restrained terracotta pots and warm lanterns. NO printed plus signs, numbers or labels. This is ONE isolated finished landmark, not a sheet or scene. Use the reference solely for coherent architecture/rendering style; do not copy unrelated buildings or compose several landmarks together. Five-stage growth derivatives will preserve this same central core and camera. The complete final landmark has elegant central dome finial, low garden borders, abundant carefully arranged botanical pots and lamps."
+}

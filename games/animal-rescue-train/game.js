@@ -102,7 +102,7 @@
     actions = []; reported = false; selected = null;
     persist(); showPlay();
   }
-  function retry() { loadRound(); }
+  function retry() { sdk.startRun({ wave, isPractice }); loadRound(); }
   function reportResult() {
     if (game.state.status === 'playing' || reported) return;
     reported = true;
@@ -172,7 +172,7 @@
   }
   $('btn-start-game').addEventListener('click', () => sdk.start({ wave: 1, isPractice: false }));
   sdk.setupPractice((startWave, practice) => sdk.start({ wave: startWave, isPractice: practice }));
-  $('continue').addEventListener('click', () => { selected = null; sdk.setPracticeMode(isPractice); showPlay(); });
+  $('continue').addEventListener('click', () => { selected = null; sdk.startRun({ wave, isPractice }); showPlay(); });
   $('menu').addEventListener('click', () => {
     sdk.resume(); persist(); selected = null; renderMenu();
     $('play-screen').hidden = true; $('menu-screen').hidden = false;
@@ -220,6 +220,7 @@
         ? info.startWave
         : (nextLvlObj ? nextLvlObj.startWave : 1);
     }
+    sdk.startRun({ wave, isPractice });
     loadRound();
   });
   $('btn-share-score').addEventListener('click', () => sdk.share({ gameTitle: 'Animal Rescue Train', score: scoreBefore + rescued(), wave }));

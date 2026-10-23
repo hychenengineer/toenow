@@ -23,6 +23,7 @@
     <script src="../../shared/toenow-levels.js"></script>
     <script src="../../shared/toenow-security.js"></script>
     <script src="../../shared/toenow-platform.js"></script>
+    <script src="../../shared/toenow-analytics.js"></script>
     <script src="../../shared/toenow-sdk.js"></script>
     <script src="../../shared/toenow-i18n-core.js"></script>
     <script src="../../shared/toenow-i18n-games-a.js"></script>
@@ -2418,6 +2419,7 @@
         }
 
         function startNewGame(startWave = 1, isPractice = false) {
+          if (toenowSdk) toenowSdk.startRun({ wave: startWave, isPractice });
           audio.playUiClick(580);
           if (document.activeElement && typeof document.activeElement.blur === 'function') {
             document.activeElement.blur();

@@ -184,6 +184,12 @@
     var rawWave = Math.max(1, Math.round(Number(options.wave) || 1));
     var isPractice = options.isPractice !== undefined ? Boolean(options.isPractice) : this.isPractice;
 
+    try {
+      if (typeof window !== 'undefined' && window.ToenowAnalytics) {
+        window.ToenowAnalytics.endGame(this.gameId, { score: rawScore, wave: rawWave, isPractice: isPractice });
+      }
+    } catch (_) {}
+
     if (!isPractice) {
       this.saveBestRecords(rawScore, rawWave);
     }
@@ -248,15 +254,22 @@
     this.isPractice = Boolean(isPractice);
   };
 
-  ToenowGameSDK.prototype.startRun = function () {
+  ToenowGameSDK.prototype.startRun = function (options) {
     this.runStartTime = Date.now();
+    options = options || {};
+    this.setPracticeMode(options.isPractice !== undefined ? options.isPractice : this.isPractice);
+    try {
+      if (typeof window !== 'undefined' && window.ToenowAnalytics) {
+        window.ToenowAnalytics.startGame(this.gameId, { wave: options.wave || 1, isPractice: this.isPractice });
+      }
+    } catch (_) {}
   };
 
   // Opt-in lifecycle entry points; existing games using reportGameOver stay compatible.
   ToenowGameSDK.prototype.start = function (options) {
     options = options || {};
     this.setPracticeMode(Boolean(options.isPractice));
-    this.startRun();
+    this.startRun(options);
     if (typeof this.config.onStart === 'function') this.config.onStart(options);
   };
   ['Pause', 'Resume', 'Restart'].forEach(function (name) {

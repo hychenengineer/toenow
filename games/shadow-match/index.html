@@ -19,6 +19,8 @@
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
     <script src="../../shared/toenow-i18n.js"></script>
+    <script src="../../shared/toenow-screen-config.js"></script>
+    <script src="../../shared/toenow-screens.js"></script>
     <style>
       :root {
         --bg-void: #070a0e;
@@ -803,42 +805,7 @@
         </section>
 
         <!-- OVERLAY 1: Concise Title / Boot Overlay -->
-        <section id="title-overlay" class="overlay-screen unified-title-screen" aria-label="Shadow Match Title">
-          <div class="unified-title-card">
-            <div class="unified-category-pill"><span class="unified-category-icon">👤</span> PATTERN</div>
-            <h1 class="unified-game-title" id="title-heading">SHADOW MATCH</h1>
-            <p class="unified-game-desc">
-              Fast shadow-matching drill. Identify matching composite shapes as drifting silhouettes merge and overlap!
-            </p>
-
-            <div class="unified-rules-box">
-              <div class="unified-rule-item">
-                <span class="unified-rule-kicker">HOW TO PLAY</span>
-                <span class="unified-rule-text">Observe drifting silhouette pieces in the chamber and tap the matching composite card.</span>
-              </div>
-              <div class="unified-rule-item">
-                <span class="unified-rule-kicker">SCORE &amp; SPEED</span>
-                <span class="unified-rule-text">Correct solves award points and combo multipliers. Finish under par time for +1.5s time bonus!</span>
-              </div>
-            </div>
-
-            <div class="unified-records-strip">
-              <div class="unified-record-item">
-                <span class="unified-record-label">BEST SCORE</span>
-                <span id="title-best-score" class="unified-record-val">0</span>
-              </div>
-              <span class="unified-record-sep" aria-hidden="true">·</span>
-              <div class="unified-record-item">
-                <span class="unified-record-label">BEST LEVEL</span>
-                <span id="title-best-level" class="unified-record-val">LVL 1 · BEGINNER</span>
-              </div>
-            </div>
-
-            <button type="button" id="btn-init-optics" class="unified-start-btn" data-start="true">
-              START GAME
-            </button>
-          </div>
-        </section>
+        <section id="title-overlay" class="overlay-screen unified-title-screen" aria-label="Shadow Match Title" data-toenow-screen="title"></section>
 
         <!-- OVERLAY 2: Pause Modal -->
         <section id="pause-overlay" class="overlay-screen unified-pause-screen hidden" aria-label="Optics Paused">
@@ -876,71 +843,13 @@
           </div>
         </section>
 
-        <!-- OVERLAY 3: Game Over Telemetry Modal -->
-        <section id="gameover-overlay" class="overlay-screen unified-gameover-screen hidden" aria-label="Game Over Telemetry Report">
-          <div class="modal-card">
-            <div class="modal-header">
-              <div class="modal-kicker">60.0s CYCLE COMPLETE</div>
-              <h2 class="modal-title">OPTICAL TELEMETRY REPORT</h2>
-            </div>
-
-            <div class="cognitive-tier-block">
-              <div class="tier-label">FINAL LEVEL REACHED</div>
-              <div id="gameover-level-reached" style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;color:#22d3ee;margin-bottom:8px;">LEVEL 1 · BEGINNER</div>
-              <div class="tier-label">COGNITIVE TIER CLASSIFICATION</div>
-              <div id="gameover-tier-badge">ECLIPSE SAVANT</div>
-              <p id="gameover-tier-desc">Supreme spatial deconstruction under high-velocity occlusion</p>
-            </div>
-
-            <div class="telemetry-stats-grid">
-              <div class="stat-tile">
-                <span class="stat-tile-label">FINAL SCORE</span>
-                <span id="stat-final-score" class="stat-tile-value">000000</span>
-              </div>
-              <div class="stat-tile">
-                <span class="stat-tile-label">PEAK COMBO</span>
-                <span id="stat-peak-combo" class="stat-tile-value">1x</span>
-              </div>
-              <div class="stat-tile">
-                <span class="stat-tile-label">WAVES RESOLVED</span>
-                <span id="stat-waves-resolved" class="stat-tile-value">0</span>
-              </div>
-              <div class="stat-tile">
-                <span class="stat-tile-label">OPTICAL ACCURACY</span>
-                <span id="stat-accuracy" class="stat-tile-value">100%</span>
-              </div>
-            </div>
-
-            <div class="cta-stack">
-              <button type="button" id="btn-reboot-optics" class="primary-cta-btn" data-start="true">
-                [ REBOOT OPTICS ]
-              </button>
-              <button type="button" id="btn-share-score" class="unified-share-btn">
-                <span>⚡</span> SHARE SCORE
-              </button>
-              <button type="button" id="btn-gameover-title" class="secondary-cta-btn">
-                RETURN TO BRIEFING
-              </button>
-            </div>
-          </div>
-        </section>
+        <!-- Shared game over layout -->
+        <section id="gameover-overlay" class="overlay-screen unified-gameover-screen hidden" role="dialog" aria-modal="true" aria-labelledby="gameover-title" data-toenow-screen="gameover"></section>
       </div>
     </main>
 
+    <script>ToenowScreens.mount("shadow-match");</script>
     <script>
-        const shareBtn = document.getElementById('btn-share-score');
-        if (shareBtn) {
-          shareBtn.addEventListener('click', () => {
-            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
-              ToenowLevels.shareScore({
-                gameId: 'shadow-match',
-                gameTitle: 'Shadow Match',
-                score: typeof score !== 'undefined' ? score : 0,
-                wave: typeof wave !== 'undefined' ? wave : 1
-              });
-            }
-          });
-        }
 
         
       (function () {
@@ -1778,16 +1687,6 @@
         const btnPauseTitle = document.getElementById('btn-pause-title');
         const btnRebootOptics = document.getElementById('btn-reboot-optics');
         const btnGameoverTitle = document.getElementById('btn-gameover-title');
-
-        const gameoverTierBadgeEl = document.getElementById('gameover-tier-badge');
-        const gameoverTierDescEl = document.getElementById('gameover-tier-desc');
-        const statFinalScoreEl = document.getElementById('stat-final-score');
-        const statPeakComboEl = document.getElementById('stat-peak-combo');
-        const statWavesResolvedEl = document.getElementById('stat-waves-resolved');
-        const statAccuracyEl = document.getElementById('stat-accuracy');
-
-        const titleBestScoreEl = document.getElementById('title-best-score');
-        const titleBestWaveEl = document.getElementById('title-best-wave');
         const pauseStatScoreEl = document.getElementById('pause-stat-score');
         const pauseStatWaveEl = document.getElementById('pause-stat-wave');
         const pauseStatTimeEl = document.getElementById('pause-stat-time');
@@ -1822,13 +1721,7 @@
 
         function updateTitleScreenRecords() {
           const rec = loadBestRecords();
-          if (titleBestScoreEl) titleBestScoreEl.textContent = rec.bestScore.toLocaleString();
-          if (titleBestWaveEl) titleBestWaveEl.textContent = String(rec.bestWave);
-          const elTitleLvl = document.getElementById('title-best-level');
-          if (elTitleLvl) {
-            const lInfo = getLevelSpecForWave(rec.bestWave);
-            elTitleLvl.textContent = 'LVL ' + lInfo.level + ' · ' + lInfo.levelName;
-          }
+          ToenowScreens.updateTitle('shadow-match', { bestScore: rec.bestScore, bestWave: rec.bestWave });
         }
 
         // ============================================================================
@@ -2121,21 +2014,9 @@
             state.totalAttempts > 0
               ? Math.round((state.correctAttempts / state.totalAttempts) * 100)
               : 100;
-          const badge = getCognitiveTierBadge(state.score, accuracyPct, state.wavesResolved);
 
-          gameoverTierBadgeEl.textContent = badge.tier;
-            const elGoLvlReached = document.getElementById('gameover-level-reached');
-            if (elGoLvlReached) {
-              const spec = getLevelSpecForWave(state.wave);
-              elGoLvlReached.textContent = 'LEVEL ' + spec.level + ' · ' + spec.levelName + ' (WAVE ' + state.wave + ')';
-            }
-          gameoverTierDescEl.textContent = badge.subtitle;
-          statFinalScoreEl.textContent = String(Math.floor(state.score)).padStart(6, '0');
-          statPeakComboEl.textContent = state.peakCombo + 'x';
-          statWavesResolvedEl.textContent = String(state.wavesResolved);
-          statAccuracyEl.textContent = accuracyPct + '%';
-
-          saveBestRecords(state.score, state.wave);
+                    saveBestRecords(state.score, state.wave);
+          ToenowScreens.updateGameOver('shadow-match', { score: state.score, bestScore: loadBestRecords().bestScore, wave: state.wave, combo: state.peakCombo });
           updateTitleScreenRecords();
 
           setGameState('gameover');

@@ -4,6 +4,34 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
+test('Number Pop keeps drifting bubbles in the middle half on wide screens and leaves room on phones', () => {
+  const html = fs.readFileSync(path.resolve(__dirname, '../games/number-pop/index.html'), 'utf8');
+  const boundsFunction = html.slice(html.indexOf('function getArenaBounds()'), html.indexOf('function computeCoreScaleFactor'));
+  const clampFunction = html.slice(html.indexOf('function clampCoreToSafeArena('), html.indexOf('const BASE_GAME_TIME'));
+  for (const width of [390, 768, 1280, 1860, 2560]) {
+    const context = { viewportW: width, viewportH: 900, getHudBottom: () => 160 };
+    vm.createContext(context);
+    vm.runInContext(`${boundsFunction}\n${clampFunction}`, context);
+    const bounds = context.getArenaBounds();
+    if (width >= 1280) {
+      assert.equal(bounds.left, width / 4);
+      assert.equal(bounds.right, width * 3 / 4);
+    } else if (width === 390) {
+      assert.equal(bounds.left, 15);
+      assert.equal(bounds.right, width - 15);
+    }
+    for (const startX of [-100, width + 100]) {
+      const core = { x: startX, y: 400, vx: startX < 0 ? -80 : 80, vy: 0, radius: 46 };
+      for (let frame = 0; frame < 3600; frame++) {
+        core.x += core.vx / 60;
+        context.clampCoreToSafeArena(core, bounds);
+        assert.ok(core.x - core.radius >= bounds.left, `${width}px: bubble crossed left boundary`);
+        assert.ok(core.x + core.radius <= bounds.right, `${width}px: bubble crossed right boundary`);
+      }
+    }
+  }
+});
+
 test('Number Pop generates valid math fractions for all waves 1-30 with no zero denominators or NaN', () => {
   const htmlPath = path.resolve(__dirname, '../games/number-pop/index.html');
   const html = fs.readFileSync(htmlPath, 'utf8');
@@ -74,7 +102,7 @@ test('Number Pop generates valid math fractions for all waves 1-30 with no zero 
           connect: () => {},
           start: () => {},
           stop: () => {},
-          frequency: { setValueAtTime: () => {}, exponentialRampToValueAtTime: () => {} }
+          frequency: { setValueAtTime: () => {}, linearRampToValueAtTime: () => {}, exponentialRampToValueAtTime: () => {} }
         };
       }
       createGain() {
@@ -95,6 +123,8 @@ test('Number Pop generates valid math fractions for all waves 1-30 with no zero 
   windowMock.webkitAudioContext = windowMock.AudioContext;
 
   const context = {
+    ToenowLevels: require('../shared/toenow-levels.js'),
+    ToenowScreens: require('./helpers/screen-engine-adapter.cjs').adapter(documentMock),
     window: windowMock,
     document: documentMock,
     navigator: { userAgent: 'NodeTest', maxTouchPoints: 0 },
@@ -115,6 +145,16 @@ test('Number Pop generates valid math fractions for all waves 1-30 with no zero 
 
   const game = windowMock.__QUANTUM_GAME__;
   assert.ok(game, '__QUANTUM_GAME__ hook must be exposed');
+
+  for (const wave of [1, 5, 6, 10, 11, 15, 16, 20, 21, 30]) {
+    vm.runInContext(`{ ${gameScript}\n}`, context);
+    const run = windowMock.__QUANTUM_GAME__;
+    run.setWave(wave);
+    run.setRunDuration(60);
+    run.forceGameOver();
+    assert.equal(mockElements.get('go-survival-rank').textContent,
+      context.ToenowLevels.getLevelInfo(wave).badgeText, `Wave ${wave}: show the shared difficulty level`);
+  }
 
   // Verify all waves from 1 to 30
   for (let w = 1; w <= 30; w++) {

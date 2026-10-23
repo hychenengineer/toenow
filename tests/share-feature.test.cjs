@@ -73,13 +73,14 @@ test('All game over screens provide unified SHARE SCORE button', () => {
   ];
 
   games.forEach(g => {
-    const html = fs.readFileSync(path.resolve(__dirname, `../games/${g}/index.html`), 'utf8');
+    const html = require('./helpers/screen-engine-adapter.cjs').expand(fs.readFileSync(path.resolve(__dirname, `../games/${g}/index.html`), 'utf8'), g);
     assert.ok(html.includes('btn-share-score'), `${g} must contain btn-share-score`);
     assert.ok(html.includes('SHARE SCORE'), `${g} must display SHARE SCORE text in English`);
   });
 
   const flashBrainBundle = fs.readFileSync(path.resolve(__dirname, '../games/flash-brain/assets/index-cr-6j3L1.js'), 'utf8');
-  assert.ok(flashBrainBundle.includes('SHARE SCORE'), 'Flash Brain Game Over screen must contain SHARE SCORE button in English');
+  assert.ok(flashBrainBundle.includes('ToenowScreens.renderGameOver'));
+  assert.ok(require('../shared/toenow-screens.js').gameOverMarkup('flash-brain').includes('SHARE SCORE'));
 });
 
 test('Hub index.html provides Share button on game cards and deep link challenge support', () => {

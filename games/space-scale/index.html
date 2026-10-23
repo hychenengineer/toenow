@@ -25,6 +25,8 @@
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
     <script src="../../shared/toenow-i18n.js"></script>
+    <script src="../../shared/toenow-screen-config.js"></script>
+    <script src="../../shared/toenow-screens.js"></script>
     <style>
       :root {
         --bg-void: #05070e;
@@ -1077,42 +1079,7 @@
     </div>
 
     <!-- Title Screen Overlay -->
-    <section id="title-screen" class="overlay-screen unified-title-screen" aria-label="Title Screen">
-      <div class="unified-title-card">
-        <div class="unified-category-pill"><span class="unified-category-icon">⚖️</span> LOGIC</div>
-        <h1 class="unified-game-title">SPACE SCALE</h1>
-        <p class="unified-game-desc">
-          Watch how scales tilt and deduce target celestial masses before time runs out.
-        </p>
-
-        <div class="unified-rules-box">
-          <div class="unified-rule-item">
-            <span class="unified-rule-kicker">HOW TO PLAY</span>
-            <span class="unified-rule-text">Analyze lever tilts to find Heaviest, Lightest, or Middle planet.</span>
-          </div>
-          <div class="unified-rule-item">
-            <span class="unified-rule-kicker">REMEMBER</span>
-            <span class="unified-rule-text">Size &ne; Weight! A small Black Hole can be far heavier than a Gas Cloud.</span>
-          </div>
-        </div>
-
-        <div class="unified-records-strip">
-          <div class="unified-record-item">
-            <span class="unified-record-label">BEST SCORE</span>
-            <span id="title-best-score" class="unified-record-val">0</span>
-          </div>
-          <span class="unified-record-sep" aria-hidden="true">·</span>
-          <div class="unified-record-item">
-            <span class="unified-record-label">BEST LEVEL</span>
-            <span id="title-best-level" class="unified-record-val">LVL 1 · BEGINNER</span>
-          </div>
-        </div>
-
-        <button id="btn-start" type="button" class="unified-start-btn" data-start="true">
-          START GAME
-        </button>
-      </div>
-    </section>
+    <section id="title-screen" class="overlay-screen unified-title-screen" aria-label="Title Screen" data-toenow-screen="title"></section>
 
       <div class="control-hint-bar">
         Tap Directly on Any Planet · P Pause · R Restart
@@ -1150,37 +1117,9 @@
     </section>
 
     <!-- Game Over Modal Overlay -->
-    <section id="gameover-screen" class="overlay-screen unified-gameover-screen" aria-label="Game Over Summary" role="dialog" aria-modal="true">
-      <div class="modal-card">
-        <div class="modal-kicker" id="over-kicker">MISSION CONCLUDED</div>
-        <h2 class="modal-title">Calibration Terminated</h2>
-        <p id="gameover-reason" class="modal-subtitle">Energy shields depleted under gravitational stress.</p>
+    <section id="gameover-screen" class="overlay-screen unified-gameover-screen" aria-label="Game Over Summary" role="dialog" aria-modal="true" data-toenow-screen="gameover"></section>
 
-        <div class="stat-grid">
-          <div class="stat-tile">
-            <div class="stat-tile-label">FINAL SCORE</div>
-            <div id="over-score" class="stat-tile-val">0</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-tile-label">FINAL RANK</div>
-            <div id="over-rank" class="stat-tile-val" style="font-size: 14px; color: var(--accent-cyan)">Cadet</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-tile-label">WAVES CLEARED</div>
-            <div id="over-wave" class="stat-tile-val">0</div>
-          </div>
-        </div>
-
-        <div class="modal-actions">
-          <button id="btn-play-again" type="button" class="primary-cta" data-start="true">Play Again</button>
-              <button type="button" id="btn-share-score" class="unified-share-btn">
-                <span>⚡</span> SHARE SCORE
-              </button>
-          <button id="btn-title-over" type="button" class="secondary-cta">Title</button>
-        </div>
-      </div>
-    </section>
-
+    <script>ToenowScreens.mount("space-scale");</script>
     <script>
       (function () {
         'use strict';
@@ -1827,23 +1766,14 @@
         const hudWaveBarEl = document.getElementById('hud-wave-bar');
         const hudTimerEl = document.getElementById('hud-timer');
         const dockButtonsEl = document.getElementById('dock-buttons');
-        const dockDirectiveTagEl = document.getElementById('dock-directive-tag');
 
         const levelUpBannerEl = document.getElementById('level-up-banner');
         const levelUpTitleEl = document.getElementById('levelup-title');
 
-        const titleBestScoreEl = document.getElementById('title-best-score');
-        const titleBestRankEl = document.getElementById('title-best-rank');
 
         const pauseScoreEl = document.getElementById('pause-score');
         const pauseWaveEl = document.getElementById('pause-wave');
         const pauseShieldsEl = document.getElementById('pause-shields');
-
-        const overScoreEl = document.getElementById('over-score');
-        const overRankEl = document.getElementById('over-rank');
-        const overWaveEl = document.getElementById('over-wave');
-        const overKickerEl = document.getElementById('over-kicker');
-        const gameoverReasonEl = document.getElementById('gameover-reason');
 
         // State
         let gameState = 'title';
@@ -1857,6 +1787,7 @@
           ? new ToenowGameSDK({ gameId: 'space-scale', category: 'logic', gameTitle: 'Space Scale' })
           : null;
         let streak = 0;
+        let peakStreak = 0;
         let shields = 3;
         const MAX_SHIELDS = 3;
         let globalTimeSec = 600.0; // 10-Minute Exponential Mission Clock
@@ -1885,16 +1816,8 @@
         }
 
         function syncPersistentStatsUI() {
-          const r = getSynapseRank(totalExp);
-          titleBestScoreEl.textContent = String(Math.round(bestScore));
-          const elTitleLvl = document.getElementById('title-best-level');
-          if (elTitleLvl) {
-            const maxW = parseInt(localStorage.getItem('space_scale_best_wave') || '1', 10) || 1;
-            const lvl = getLevelForWave(maxW);
-            const lvlNames = ['', 'BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT', 'MASTER'];
-            elTitleLvl.textContent = 'LVL ' + lvl + ' · ' + lvlNames[lvl];
-          }
-          if (titleBestRankEl) titleBestRankEl.textContent = r.title;
+          ToenowScreens.updateTitle('space-scale', { bestScore: bestScore, bestWave: parseInt(localStorage.getItem('space_scale_best_wave') || '1', 10) });
+
           hudBestEl.textContent = String(Math.round(bestScore));
         }
         syncPersistentStatsUI();
@@ -2035,6 +1958,7 @@
           isPracticeMode = Boolean(isPractice);
           score = 0;
           streak = 0;
+          peakStreak = 0;
           shields = MAX_SHIELDS;
           globalTimeSec = 600.0; // 10-Minute Session
           cameraTrauma = 0;
@@ -2045,7 +1969,7 @@
           setGameState('playing');
         }
 
-        function triggerGameOver(reasonText) {
+        function triggerGameOver() {
           const finalScore = Math.round(score);
           if (!isPracticeMode) {
             const clearedWave = Math.max(1, wave - 1);
@@ -2063,13 +1987,9 @@
             }
             syncPersistentStatsUI();
           }
-          overScoreEl.textContent = String(finalScore);
-          const r = getSynapseRank(totalExp);
-          overRankEl.textContent = r.title;
-          overWaveEl.textContent = String(wave - 1);
-          gameoverReasonEl.textContent = reasonText || 'Energy shields depleted.';
-          overKickerEl.textContent = shields <= 0 ? 'SHIELDS EXHAUSTED' : 'MISSION CLOCK EXPIRED';
-          sound.playGameOver();
+          const levelInfo = ToenowLevels.getLevelInfo(wave);
+          ToenowScreens.updateGameOver('space-scale', { score: finalScore, bestScore, wave, combo: peakStreak, reason: shields <= 0 ? 'GAME OVER' : 'TIME EXPIRED' });
+                    sound.playGameOver();
           setGameState('gameover');
 
           // Toenow Game SDK Unified Lifecycle & Hub Contract
@@ -2078,7 +1998,7 @@
               score: finalScore,
               wave: Math.max(1, wave - 1),
               isPractice: isPracticeMode,
-              rank: r.title
+              rank: levelInfo.badgeText
             });
           } else {
             try {
@@ -2091,7 +2011,7 @@
                     score: finalScore,
                     isPractice: Boolean(isPracticeMode),
                     wave: Math.max(1, wave - 1),
-                    rank: r.title
+                    rank: levelInfo.badgeText
                   },
                   '*'
                 );
@@ -2107,6 +2027,7 @@
 
           if (isCorrect) {
             streak++;
+            peakStreak = Math.max(peakStreak, streak);
             const tierBase = wave <= 3 ? 120 : wave <= 6 ? 200 : 320;
             const speedRatio = Math.max(0, waveTimeSec / currentPuzzle.waveDurationSec);
             const speedBonus = Math.round(speedRatio * 110);
@@ -2160,7 +2081,7 @@
             syncHudDOM();
 
             if (shields <= 0) {
-              triggerGameOver('All 3 Energy Shields depleted under mass anomalies.');
+              triggerGameOver();
             } else if (bodyId === null) {
               loadWave(wave);
             }
@@ -2313,19 +2234,6 @@
           startNewGame();
         });
 
-        const shareBtn = document.getElementById('btn-share-score');
-        if (shareBtn) {
-          shareBtn.addEventListener('click', () => {
-            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
-              ToenowLevels.shareScore({
-                gameId: 'space-scale',
-                gameTitle: 'Space Scale',
-                score: typeof score !== 'undefined' ? score : 0,
-                wave: typeof wave !== 'undefined' ? wave : 1
-              });
-            }
-          });
-        }
 
         document.getElementById('btn-play-again').addEventListener('click', (e) => {
           e.currentTarget.blur();
@@ -3110,7 +3018,7 @@
               syncHudDOM();
 
               if (globalTimeSec <= 0) {
-                triggerGameOver('10-minute mission duration expired.');
+                triggerGameOver();
               } else if (waveTimeSec <= 0) {
                 handleBodySelection(null);
               }

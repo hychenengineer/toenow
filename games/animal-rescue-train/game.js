@@ -17,30 +17,17 @@
   const $ = id => document.getElementById(id);
   const levels = RescueLevels;
   const storageKey = ToenowLevels.GAME_STORAGE_KEYS['animal-rescue-train'].session;
-  function roundForWave(wave, existingRequiredAnimal) {
-    const info = ToenowLevels.getLevelInfo(wave);
-    const bank = RescuePuzzles[info.level - 1];
-    const round = { ...levels[info.level - 1], ...bank[(wave - info.startWave) % bank.length] };
-    if (info.level >= 5) {
-      round.carCount = 5;
-      if (existingRequiredAnimal) {
-        round.requiredLastAnimal = existingRequiredAnimal;
-      } else {
-        // Pick a guaranteed-solvable last animal
-        const species = Object.keys(round.goals);
-        round.requiredLastAnimal = species[Math.floor(Math.random() * species.length)];
-      }
-    }
-    return round;
-  }
+  let puzzleStorage;
+  try { puzzleStorage = localStorage; } catch { /* Storage can be disabled by the browser. */ }
+  const picker = RescuePicker.createPicker({ storage: puzzleStorage, key: ToenowLevels.GAME_STORAGE_KEYS['animal-rescue-train'].puzzles });
   let storageAvailable = true;
   let saved = null;
-  try { saved = RescueSession.restoreProgress(localStorage.getItem(storageKey), levels, roundForWave); }
+  try { saved = RescueSession.restoreProgress(localStorage.getItem(storageKey), levels, picker.resolve); }
   catch { storageAvailable = false; }
   let wave = saved?.wave ?? 1;
   let isPractice = saved?.isPractice ?? false;
   let levelIndex = ToenowLevels.getLevelInfo(wave).level - 1;
-  let game = saved?.game ?? new RescueTrain.Game(roundForWave(wave));
+  let game = saved?.game ?? new RescueTrain.Game(picker.resolve(wave));
   let actions = saved?.actions ?? [];
   let scoreBefore = saved?.scoreBefore ?? 0;
   let elapsedBank = saved?.elapsedMs ?? 0;
@@ -49,6 +36,25 @@
   let hasSave = Boolean(saved);
   let selected = null;
   let paused = false;
+  const successParts = ['result', 'next', 'btn-share-score', 'record-notice'].map(id => {
+    const node = $(id);
+    return { node, home: node.parentElement, before: node.nextSibling };
+  });
+  function closeSuccess() {
+    if ($('success-dialog').open) $('success-dialog').close();
+    successParts.forEach(({ node, home, before }) => {
+      if (node.parentElement !== home) home.insertBefore(node, before);
+    });
+  }
+  function syncSuccess() {
+    if (game.state.status !== 'won' || document.body.dataset.screen !== 'play') { closeSuccess(); return; }
+    const dialog = $('success-dialog');
+    dialog.insertBefore($('result'), $('success-actions'));
+    $('success-actions').insertBefore($('next'), $('success-menu'));
+    dialog.appendChild($('btn-share-score'));
+    dialog.appendChild($('record-notice'));
+    if (!dialog.open) { dialog.showModal(); $('next').focus(); }
+  }
   const letter = index => String.fromCharCode(65 + index);
   const elapsed = () => elapsedBank + Date.now() - runStarted;
   const rescued = () => Object.values(game.state.rescued).reduce((sum, count) => sum + count, 0);
@@ -95,10 +101,11 @@
     loadRound();
   }
   function loadRound() {
+    closeSuccess();
     if ($('last-animal-dialog').open) $('last-animal-dialog').close();
     sdk.resume();
     levelIndex = ToenowLevels.getLevelInfo(wave).level - 1;
-    game = new RescueTrain.Game(roundForWave(wave));
+    game = new RescueTrain.Game(picker.pick(wave));
     actions = []; reported = false; selected = null;
     persist(); showPlay();
   }
@@ -145,9 +152,9 @@
     if (!playing) {
       if (state.status === 'won') {
         if (isLastLevel && !isPractice) {
-          $('result').innerHTML = `<h3>Game Complete!</h3><p>Outstanding! You completed all 5 levels and rescued ${scoreBefore + rescued()} animals.</p>`;
+          $('result').innerHTML = `<h3 id="result-title">Game Complete!</h3><p>Outstanding! You completed all 5 levels and rescued ${scoreBefore + rescued()} animals.</p>`;
         } else {
-          $('result').innerHTML = `<h3>Rescue complete!</h3><p>${rescued()} animals rescued. ${isPractice ? 'Practice level completed.' : 'Next level is unlocked!'}</p>`;
+          $('result').innerHTML = `<h3 id="result-title">Level cleared!</h3><p>${rescued()} animals rescued. ${isPractice ? 'Practice level completed.' : 'Next level is unlocked!'}</p>`;
         }
       } else {
         const premature = reqName && (state.rescued[game.level.requiredLastAnimal] || 0) >= game.level.goals[game.level.requiredLastAnimal];
@@ -161,19 +168,21 @@
         $('next').textContent = 'Play Again ↻';
         $('next').hidden = false;
       } else {
-        $('next').textContent = 'Next Level →';
-        $('next').hidden = isPractice;
+        $('next').textContent = isPractice ? 'Next puzzle →' : 'Next level →';
+        $('next').hidden = false;
       }
     } else {
       $('next').hidden = true;
     }
     $('btn-share-score').hidden = playing;
     if (playing) $('record-notice').textContent = '';
+    syncSuccess();
   }
   $('btn-start-game').addEventListener('click', () => sdk.start({ wave: 1, isPractice: false }));
   sdk.setupPractice((startWave, practice) => sdk.start({ wave: startWave, isPractice: practice }));
   $('continue').addEventListener('click', () => { selected = null; sdk.startRun({ wave, isPractice }); showPlay(); });
   $('menu').addEventListener('click', () => {
+    closeSuccess();
     sdk.resume(); persist(); selected = null; renderMenu();
     $('play-screen').hidden = true; $('menu-screen').hidden = false;
     document.body.dataset.screen = 'menu'; document.body.dataset.state = 'title';
@@ -224,6 +233,8 @@
     loadRound();
   });
   $('btn-share-score').addEventListener('click', () => sdk.share({ gameTitle: 'Animal Rescue Train', score: scoreBefore + rescued(), wave }));
+  $('success-menu').addEventListener('click', () => $('menu').click());
+  $('success-dialog').addEventListener('cancel', event => event.preventDefault());
   $('help-content').innerHTML = `<ol class="rules">${$('rules-list').innerHTML}</ol><p class="warning">${$('mixed-warning').textContent}</p>`;
   $('help').addEventListener('click', () => { paused = true; $('help-dialog').showModal(); });
   $('close-help').addEventListener('click', () => sdk.resume());

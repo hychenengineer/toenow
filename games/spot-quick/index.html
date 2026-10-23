@@ -19,6 +19,8 @@
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
     <script src="../../shared/toenow-i18n.js"></script>
+    <script src="../../shared/toenow-screen-config.js"></script>
+    <script src="../../shared/toenow-screens.js"></script>
     <style>
       :root {
         --bg-void-deep: #070a0e;
@@ -91,6 +93,7 @@
 
       .hud-sub-bar {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
         gap: 6px;
@@ -103,6 +106,19 @@
       .hud-score-val {
         color: var(--accent-cyan);
         font-weight: 700;
+      }
+
+      .hud-controls {
+        display: flex;
+        gap: 6px;
+        margin-left: auto;
+      }
+
+      .hud-controls button {
+        background: rgba(34, 211, 238, 0.15);
+        border: 1px solid rgba(34, 211, 238, 0.4);
+        color: var(--accent-cyan);
+        cursor: pointer;
       }
 
       .hud-cat-val {
@@ -364,7 +380,11 @@
           <span>SCORE: <strong class="hud-score-val" id="hudScoreText">0</strong></span>
           <span>TIER: <strong class="hud-cat-val" id="hudCatText">L1 NOVICE</strong></span>
           <span class="hud-tier-val" id="hudTierText">+100 PTS · +2.0s</span>
-          <button id="btnPauseHud" type="button" aria-label="Pause Game (P)" title="Pause Game (P)" style="margin-left: auto; background: rgba(34, 211, 238, 0.15); border: 1px solid rgba(34, 211, 238, 0.4); color: var(--accent-cyan); border-radius: 4px; padding: 2px 7px; font-size: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase;">PAUSE</button>
+          <div class="hud-controls">
+            <button id="btnAudioHud" type="button" class="toenow-icon-control" aria-label="Toggle Audio" title="Toggle Audio" aria-pressed="true" data-muted="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use class="control-sound-on" href="../../assets/toenow-control-icons.svg#sound-on"/><use class="control-sound-off" href="../../assets/toenow-control-icons.svg#sound-off"/></svg></button>
+            <button id="btnPauseHud" type="button" class="toenow-icon-control" aria-label="Pause Game (P)" title="Pause Game (P)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#pause"/></svg></button>
+            <button id="btnRestartHud" type="button" class="toenow-icon-control" aria-label="Restart Run" title="Restart Run"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#restart"/></svg></button>
+          </div>
         </div>
       </header>
 
@@ -379,37 +399,7 @@
         </div>
 
         <!-- Briefing Modal -->
-        <div class="modal-backdrop unified-title-screen" id="briefingModal" role="dialog" aria-modal="true" aria-labelledby="briefingTitle">
-          <div class="unified-title-card">
-            <div class="unified-category-pill"><span class="unified-category-icon">🔬</span> PATTERN</div>
-            <h1 class="unified-game-title" id="briefingTitle">SPOT QUICK</h1>
-            <p class="unified-game-desc">
-              Identify the focused biological specimen before time runs out.
-            </p>
-            <div class="unified-rules-box">
-              <div class="unified-rule-item">
-                <span class="unified-rule-kicker">HOW TO PLAY</span>
-                <span class="unified-rule-text">Watch the optical aperture clarify and tap the matching silhouette.</span>
-              </div>
-              <div class="unified-rule-item">
-                <span class="unified-rule-kicker">SCORE &amp; TIME</span>
-                <span class="unified-rule-text">Correct (+2.0s) · Wrong (-1.5s) · Max Time 60s capped.</span>
-              </div>
-            </div>
-            <div class="unified-records-strip">
-          <div class="unified-record-item">
-            <span class="unified-record-label">BEST SCORE</span>
-            <span id="titleBestScore" class="unified-record-val">0</span>
-          </div>
-          <span class="unified-record-sep" aria-hidden="true">·</span>
-          <div class="unified-record-item">
-            <span class="unified-record-label">BEST LEVEL</span>
-            <span id="title-best-level" class="unified-record-val">LVL 1 · BEGINNER</span>
-          </div>
-        </div>
-            <button type="button" class="unified-start-btn" id="startAnalysisBtn" data-start="true">START GAME</button>
-          </div>
-        </div>
+        <div class="modal-backdrop unified-title-screen" id="briefingModal" role="dialog" aria-modal="true" aria-labelledby="briefingTitle" data-toenow-screen="title"></div>
 
         <!-- Pause Modal (Anti-cheat blackout) -->
         <div class="modal-backdrop unified-pause-screen hidden" id="pauseModal" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
@@ -442,55 +432,12 @@
         </div>
 
         <!-- Game Over Modal -->
-        <div class="modal-backdrop unified-gameover-screen hidden" id="gameOverModal" role="dialog" aria-modal="true" aria-labelledby="gameOverTitle">
-          <div class="modal-card game-over-card">
-            <div class="modal-kicker" id="gameOverReason">TIME EXPIRED</div>
-            <h2 class="modal-title" id="gameOverTitle">GAME OVER</h2>
-            <div class="stats-grid">
-              <div class="stat-item">
-                <span class="stat-label">FINAL SCORE</span>
-                <span class="stat-value" id="finalScoreVal">0</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-label">WAVE</span>
-                <span class="stat-value" id="finalWaveVal">1</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-label">BEST STREAK</span>
-                <span class="stat-value" id="finalStreakVal">0</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-label">TIER REACHED</span>
-                <span class="stat-value" id="finalTierVal">NOVICE</span>
-              </div>
-              <div class="stat-item" style="grid-column: span 2;">
-                <span class="stat-label">LAST SPECIMEN</span>
-                <span class="stat-value" id="finalSpecimenVal">CAT</span>
-              </div>
-            </div>
-            <button type="button" class="action-btn retry-btn" id="retryBtn">[RETRY]</button>
-              <button type="button" id="btn-share-score" class="unified-share-btn">
-                <span>⚡</span> SHARE SCORE
-              </button>
-          </div>
-        </div>
+        <div class="modal-backdrop unified-gameover-screen hidden" id="gameOverModal" role="dialog" aria-modal="true" aria-labelledby="gameOverTitle" data-toenow-screen="gameover"></div>
       </main>
     </div>
 
+    <script>ToenowScreens.mount("spot-quick");</script>
     <script>
-        const shareBtn = document.getElementById('btn-share-score');
-        if (shareBtn) {
-          shareBtn.addEventListener('click', () => {
-            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
-              ToenowLevels.shareScore({
-                gameId: 'spot-quick',
-                gameTitle: 'Spot Quick',
-                score: typeof score !== 'undefined' ? score : 0,
-                wave: typeof wave !== 'undefined' ? wave : 1
-              });
-            }
-          });
-        }
 
         
       (function () {
@@ -515,12 +462,17 @@
         // 2. PROCEDURAL WEB AUDIO SYNTHESIZER (ZERO EXTERNAL FILES)
         // ==================================================
         let audioCtx = null;
+        let audioOutput = null;
+        let audioEnabled = true;
 
         function ensureAudioContext() {
           if (!audioCtx) {
             const AudioContextClass = window.AudioContext || window.webkitAudioContext;
             if (AudioContextClass) {
               audioCtx = new AudioContextClass();
+              audioOutput = audioCtx.createGain();
+              audioOutput.gain.value = audioEnabled ? 1 : 0;
+              audioOutput.connect(audioCtx.destination);
             }
           }
           if (audioCtx && audioCtx.state === "suspended") {
@@ -529,6 +481,7 @@
         }
 
         function playCorrectBlip(clarityRatio) {
+          if (!audioEnabled) return;
           ensureAudioContext();
           if (!audioCtx) return;
           try {
@@ -552,7 +505,7 @@
 
             osc.connect(filter);
             filter.connect(gain);
-            gain.connect(audioCtx.destination);
+            gain.connect(audioOutput);
 
             osc.start(now);
             osc.stop(now + 0.13);
@@ -560,6 +513,7 @@
         }
 
         function playIncorrectBuzz() {
+          if (!audioEnabled) return;
           ensureAudioContext();
           if (!audioCtx) return;
           try {
@@ -581,7 +535,7 @@
 
             osc.connect(filter);
             filter.connect(gain);
-            gain.connect(audioCtx.destination);
+            gain.connect(audioOutput);
 
             osc.start(now);
             osc.stop(now + 0.16);
@@ -4888,9 +4842,6 @@
           ? new ToenowGameSDK({ gameId: 'spot-quick', category: 'puzzle', gameTitle: 'Spot Quick' })
           : null;
 
-        let titleBestScoreEl = document.getElementById("titleBestScore");
-        let titleBestWaveEl = document.getElementById("titleBestWave");
-
         const startAnalysisBtn = document.getElementById("startAnalysisBtn");
         const retryBtn = document.getElementById("retryBtn");
 
@@ -5209,6 +5160,7 @@
           ensureAudioContext();
           briefingModal.classList.add("hidden");
           gameOverModal.classList.add("hidden");
+          gameOverModal.classList.remove("active");
           state.score = 0;
           state.streak = 0;
           state.peakStreak = 0;
@@ -5218,31 +5170,18 @@
         }
 
         function triggerGameOver(reasonText) {
+          if (state.mode === "GAME_OVER") return;
+          state.timeRemaining = 0;
           state.mode = "GAME_OVER";
           for (let i = 0; i < domCandBtns.length; i++) {
             domCandBtns[i].disabled = true;
           }
-          gameOverReason.textContent = reasonText || "TIME EXPIRED";
-          finalScoreVal.textContent = String(state.score);
-          finalWaveVal.textContent = String(state.wave);
-          finalStreakVal.textContent = String(state.peakStreak);
-          finalSpecimenVal.textContent = state.targetSpecimen ? state.targetSpecimen.id : "-";
-          const finalTierVal = document.getElementById("finalTierVal");
-          if (finalTierVal) {
-            const tier = state.currentTier || getTierForWave(state.wave);
-            finalTierVal.textContent = "L" + tier.level + " " + tier.name;
-          }
-          saveBestFocusRecords(state.score, state.wave);
-          if (titleBestScoreEl) titleBestScoreEl.textContent = loadBestFocusScore().toLocaleString();
-          if (titleBestWaveEl) titleBestWaveEl.textContent = String(loadBestFocusWave());
-          const elTitleLvl = document.getElementById('title-best-level');
-          if (elTitleLvl) {
-            const bw = loadBestFocusWave();
-            const tier = getTierForWave(bw);
-            elTitleLvl.textContent = 'LVL ' + tier.level + ' · ' + tier.name;
-          }
 
+                    saveBestFocusRecords(state.score, state.wave);
+          ToenowScreens.updateGameOver('spot-quick', { score: state.score, bestScore: loadBestFocusScore(), wave: state.wave, combo: state.peakStreak });
+          ToenowScreens.updateTitle('spot-quick', { bestScore: loadBestFocusScore(), bestWave: loadBestFocusWave() });
           gameOverModal.classList.remove("hidden");
+          gameOverModal.classList.add("active");
           updateHudDOM();
 
           // Toenow Game SDK Unified Lifecycle & Hub Contract
@@ -5410,6 +5349,27 @@
             togglePause();
           });
         }
+        document.getElementById("btnAudioHud").addEventListener("click", function (e) {
+          e.currentTarget.blur();
+          audioEnabled = !audioEnabled;
+          if (audioOutput && audioCtx) {
+            audioOutput.gain.setValueAtTime(audioEnabled ? 1 : 0, audioCtx.currentTime);
+          }
+          if (audioEnabled) ensureAudioContext();
+          e.currentTarget.dataset.muted = String(!audioEnabled);
+          e.currentTarget.setAttribute("aria-pressed", String(audioEnabled));
+        });
+        document.getElementById("btnRestartHud").addEventListener("click", function (e) {
+          e.currentTarget.blur();
+          document.body.dataset.paused = "false";
+          pauseModal.classList.remove("active");
+          pauseModal.classList.add("hidden");
+          startGame(1, state.isPractice);
+        });
+        document.getElementById('btn-gameover-title').addEventListener('click', () => {
+          gameOverModal.classList.add('hidden'); gameOverModal.classList.remove('active');
+          state.mode = 'BRIEFING'; briefingModal.classList.remove('hidden'); updateHudDOM();
+        });
         if (btnResumeFocus) {
           btnResumeFocus.addEventListener("click", function (e) {
             e.currentTarget.blur();
@@ -5825,14 +5785,7 @@
         state.mode = "BRIEFING";
         updateLayoutMetrics();
         updateHudDOM();
-        if (titleBestScoreEl) titleBestScoreEl.textContent = loadBestFocusScore().toLocaleString();
-        if (titleBestWaveEl) titleBestWaveEl.textContent = String(loadBestFocusWave());
-        const elTitleBestLvl = document.getElementById('title-best-level');
-        if (elTitleBestLvl) {
-          const bw = loadBestFocusWave();
-          const tier = getTierForWave(bw);
-          elTitleBestLvl.textContent = 'LVL ' + tier.level + ' · ' + tier.name;
-        }
+          ToenowScreens.updateTitle('spot-quick', { bestScore: loadBestFocusScore(), bestWave: loadBestFocusWave() });
         requestAnimationFrame(gameLoop);
       })();
     </script>

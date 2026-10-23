@@ -31,6 +31,8 @@
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
     <script src="../../shared/toenow-i18n.js"></script>
+    <script src="../../shared/toenow-screen-config.js"></script>
+    <script src="../../shared/toenow-screens.js"></script>
     <style>
       :root {
         --bg-deep: #080b10;
@@ -772,7 +774,6 @@
                 <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                 <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
               </svg>
-              <span class="icon-btn-key">[M]</span>
             </button>
             <button
               type="button"
@@ -786,7 +787,6 @@
                 <rect x="6" y="4" width="4" height="16" rx="1" />
                 <rect x="14" y="4" width="4" height="16" rx="1" />
               </svg>
-              <span class="icon-btn-key">[P]</span>
             </button>
             <button
               type="button"
@@ -800,49 +800,13 @@
                 <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
                 <path d="M3 3v5h5" />
               </svg>
-              <span class="icon-btn-key">[R]</span>
             </button>
           </div>
         </div>
       </div>
 
       <!-- Simple & Clean Title Screen Overlay -->
-      <section id="title-screen" class="overlay-screen unified-title-screen" aria-label="Add Up Title Screen">
-        <div class="unified-title-card">
-          <div class="unified-category-pill"><span class="unified-category-icon">⚡</span> NUMBERS</div>
-          <h1 class="unified-game-title">ADD UP</h1>
-          <p class="unified-game-desc">
-            Tap floating number balls to add up and match the target sum!
-          </p>
-
-          <div class="unified-rules-box">
-            <div class="unified-rule-item">
-              <span class="unified-rule-kicker">HOW TO PLAY</span>
-              <span class="unified-rule-text">Tap 2, 3, or 4 balls that sum to the core target number.</span>
-            </div>
-            <div class="unified-rule-item">
-              <span class="unified-rule-kicker">BONUS</span>
-              <span class="unified-rule-text">3-ball match adds +5s (2x Pts). 4-ball match adds +10s (3x Pts).</span>
-            </div>
-          </div>
-
-          <div class="unified-records-strip">
-          <div class="unified-record-item">
-            <span class="unified-record-label">BEST SCORE</span>
-            <span id="title-best-score" class="unified-record-val">0</span>
-          </div>
-          <span class="unified-record-sep" aria-hidden="true">·</span>
-          <div class="unified-record-item">
-            <span class="unified-record-label">BEST LEVEL</span>
-            <span id="title-best-level" class="unified-record-val">LVL 1 · BEGINNER</span>
-          </div>
-        </div>
-
-          <button type="button" id="btn-start-game" class="unified-start-btn" data-start="true">
-            START GAME
-          </button>
-        </div>
-      </section>
+      <section id="title-screen" class="overlay-screen unified-title-screen" aria-label="Add Up Title Screen" data-toenow-screen="title"></section>
 
       <!-- Pause Modal Overlay (Anti-cheat blackout) -->
       <section id="pause-screen" class="overlay-screen unified-pause-screen" role="dialog" aria-modal="true" aria-labelledby="pause-title">
@@ -871,48 +835,10 @@
       </section>
 
       <!-- Game Over Modal Overlay -->
-      <section id="gameover-screen" class="overlay-screen unified-gameover-screen" role="dialog" aria-modal="true" aria-labelledby="gameover-title">
-        <div class="status-modal-card">
-          <div id="gameover-kicker" class="modal-kicker">TIME UP</div>
-          <h2 id="gameover-title" class="modal-title">Run Complete</h2>
-          <p id="gameover-subtitle" class="modal-subtitle">
-            Final score recorded.
-          </p>
-
-          <div class="stats-grid">
-            <div class="stat-tile">
-              <span class="stat-tile-label">FINAL SCORE</span>
-              <span id="gameover-score" class="stat-tile-value">0</span>
-            </div>
-            <div class="stat-tile">
-              <span class="stat-tile-label">BEST SCORE</span>
-              <span id="gameover-best" class="stat-tile-value highlight-amber">0</span>
-            </div>
-            <div class="stat-tile">
-              <span class="stat-tile-label">WAVES CLEARED</span>
-              <span id="gameover-waves" class="stat-tile-value highlight-emerald">0</span>
-            </div>
-            <div class="stat-tile">
-              <span class="stat-tile-label">TOTAL CORES</span>
-              <span id="gameover-cores" class="stat-tile-value">0</span>
-            </div>
-          </div>
-
-          <div class="modal-actions">
-            <button type="button" id="btn-retry" class="primary-cta-btn" data-start="true">
-              Play Again
-            </button>
-              <button type="button" id="btn-share-score" class="unified-share-btn">
-                <span>⚡</span> SHARE SCORE
-              </button>
-            <button type="button" id="btn-gameover-title" class="secondary-cta-btn">
-              Title
-            </button>
-          </div>
-        </div>
-      </section>
+      <section id="gameover-screen" class="overlay-screen unified-gameover-screen" role="dialog" aria-modal="true" aria-labelledby="gameover-title" data-toenow-screen="gameover"></section>
     </div>
 
+    <script>ToenowScreens.mount("add-up");</script>
     <script>
       (function () {
         'use strict';
@@ -1416,16 +1342,9 @@
         const hudTimerEl = document.getElementById('hud-timer');
         const hudTimerFillEl = document.getElementById('hud-timer-fill');
         const hudTimerGhostEl = document.getElementById('hud-timer-ghost');
-
-        const titleBestScoreEl = document.getElementById('title-best-score');
         const titleScreenEl = document.getElementById('title-screen');
         const pauseScoreEl = document.getElementById('pause-score');
         const pauseWaveEl = document.getElementById('pause-wave');
-        const gameoverScoreEl = document.getElementById('gameover-score');
-        const gameoverBestEl = document.getElementById('gameover-best');
-        const gameoverWavesEl = document.getElementById('gameover-waves');
-        const gameoverCoresEl = document.getElementById('gameover-cores');
-        const gameoverSubtitleEl = document.getElementById('gameover-subtitle');
 
         // --- Game State Variables ---
         const MAX_BANKED_TIME = 60.0;
@@ -1462,13 +1381,7 @@
 
         function syncMetaUI() {
           hudBestEl.textContent = String(Math.round(bestScore));
-          titleBestScoreEl.textContent = String(Math.round(bestScore));
-          const elTitleBestLvl = document.getElementById('title-best-level');
-          if (elTitleBestLvl) {
-            const maxW = parseInt(localStorage.getItem('add_up_best_wave') || '1', 10) || 1;
-            const lInfo = getLevelInfoForWave(maxW);
-            elTitleBestLvl.textContent = 'LVL ' + lInfo.level + ' · ' + lInfo.name;
-          }
+          ToenowScreens.updateTitle('add-up', { bestScore: bestScore, bestWave: parseInt(localStorage.getItem('add_up_best_wave') || '1', 10) });
           hudCoresEl.textContent = String(totalLifetimeCores);
         }
 
@@ -1663,16 +1576,8 @@
             syncMetaUI();
           }
 
-          gameoverScoreEl.textContent = String(finalScore);
-          gameoverBestEl.textContent = String(Math.round(bestScore));
-          gameoverWavesEl.textContent = String(wavesStabilizedThisRun);
-          gameoverCoresEl.textContent = String(totalLifetimeCores);
-          gameoverSubtitleEl.textContent =
-            finalScore >= bestScore && finalScore > 0
-              ? 'New high score!'
-              : 'Run complete.';
-
-          criticalVignette.dataset.active = 'false';
+          ToenowScreens.updateGameOver('add-up', { score: finalScore, bestScore, wave: wave, combo: null });
+                    criticalVignette.dataset.active = 'false';
           Sfx.playGameOver();
           setGameState('gameover');
 
@@ -2026,19 +1931,6 @@
           setGameState('title');
           spawnWaveNodes(1);
         });
-        const shareBtn = document.getElementById('btn-share-score');
-        if (shareBtn) {
-          shareBtn.addEventListener('click', () => {
-            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
-              ToenowLevels.shareScore({
-                gameId: 'add-up',
-                gameTitle: 'Add Up',
-                score: typeof score !== 'undefined' ? score : 0,
-                wave: typeof wave !== 'undefined' ? wave : 1
-              });
-            }
-          });
-        }
 
         document.getElementById('btn-retry').addEventListener('click', function (e) {
           e.currentTarget.blur();

@@ -24,7 +24,7 @@ function solve(level, limit = 500000) {
     }
     choices.sort((a, b) => a.priority - b.priority);
     for (const { queue, car } of choices) {
-      const tail = visit(advance(state, level.goals, queue, car));
+      const tail = visit(advance(state, level.goals, queue, car, level.requiredLastAnimal));
       if (tail) return [[queue, car], ...tail];
     }
     return null;

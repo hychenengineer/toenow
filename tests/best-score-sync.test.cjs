@@ -143,15 +143,8 @@ test('Hub and games immediately update maxLevel and best wave on game over witho
   const spaceScale = fs.readFileSync(path.join(__dirname, '..', 'games/space-scale/index.html'), 'utf8');
   assert.ok(spaceScale.includes('space_scale_best_wave') && spaceScale.includes('syncPersistentStatsUI()'), 'Space Scale must sync best level on game over');
 
-  const blockMatch = fs.readFileSync(path.join(__dirname, '..', 'games/block-match/index.html'), 'utf8');
-  assert.ok(blockMatch.includes('title-best-level'), 'Block Match must sync title-best-level when returning to title');
-
-  const tapMatch = fs.readFileSync(path.join(__dirname, '..', 'games/tap-match/index.html'), 'utf8');
-  assert.ok(tapMatch.includes('elTitleBestLvl.textContent ='), 'Tap Match must immediately sync elTitleBestLvl on game over');
-
-  const spotQuick = fs.readFileSync(path.join(__dirname, '..', 'games/spot-quick/index.html'), 'utf8');
-  assert.ok(spotQuick.includes('tier.level') && spotQuick.includes('title-best-level'), 'Spot Quick must immediately sync title-best-level on game over');
-
-  const shadowMatch = fs.readFileSync(path.join(__dirname, '..', 'games/shadow-match/index.html'), 'utf8');
-  assert.ok(shadowMatch.includes('getLevelSpecForWave(rec.bestWave)'), 'Shadow Match must immediately sync level on updateTitleScreenRecords');
+  for (const game of ['number-pop','ball-track','block-match','add-up','space-scale','tap-match','spot-quick','shadow-match']) {
+    const source=fs.readFileSync(path.join(__dirname,'..','games',game,'index.html'),'utf8');
+    assert.ok(source.includes('ToenowScreens.updateTitle('),game+' must pass current records to the shared title renderer');
+  }
 });

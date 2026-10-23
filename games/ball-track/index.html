@@ -29,6 +29,8 @@
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
     <script src="../../shared/toenow-i18n.js"></script>
+    <script src="../../shared/toenow-screen-config.js"></script>
+    <script src="../../shared/toenow-screens.js"></script>
     <style>
       :root {
         --bg-void: #0a0a12;
@@ -981,40 +983,7 @@
       </div>
 
       <!-- Title Overlay -->
-      <section class="overlay-screen unified-title-screen active" id="screen-title" aria-labelledby="title-heading">
-        <div class="unified-title-card">
-          <div class="unified-category-pill"><span class="unified-category-icon">🔮</span> SPACE</div>
-          <h1 class="unified-game-title" id="title-heading">BALL TRACK</h1>
-          <p class="unified-game-desc">
-            Watch the glowing balls run around the orbit circle, then tap where they stop!
-          </p>
-
-          <div class="unified-rules-box">
-            <div class="unified-rule-item">
-              <span class="unified-rule-kicker">HOW TO PLAY</span>
-              <span class="unified-rule-text">Memorize target balls in the queue and track them during circular shuffle.</span>
-            </div>
-            <div class="unified-rule-item">
-              <span class="unified-rule-kicker">TIP</span>
-              <span class="unified-rule-text">Hold Overdrive during shuffle to accelerate balls and boost score up to 3.5x.</span>
-            </div>
-          </div>
-
-          <div class="unified-records-strip">
-            <div class="unified-record-item">
-              <span class="unified-record-label">BEST SCORE</span>
-              <span id="title-best-score" class="unified-record-val">0</span>
-            </div>
-            <span class="unified-record-sep" aria-hidden="true">·</span>
-            <div class="unified-record-item">
-              <span class="unified-record-label">BEST LEVEL</span>
-              <span id="title-best-level" class="unified-record-val">LVL 1 · BEGINNER</span>
-            </div>
-          </div>
-
-          <button class="unified-start-btn" id="btn-start-game" type="button" data-start="true">START GAME</button>
-        </div>
-      </section>
+      <section class="overlay-screen unified-title-screen active" id="screen-title" aria-labelledby="title-heading" data-toenow-screen="title"></section>
 
       <!-- Perk Selection Modal (No "UPGRADE" wording, strictly left-aligned descriptions) -->
       <section class="overlay-screen" id="screen-perk" aria-labelledby="perk-title">
@@ -1086,56 +1055,11 @@
       </section>
 
       <!-- Game Over Overlay -->
-      <section class="overlay-screen unified-gameover-screen" id="screen-gameover" aria-labelledby="gameover-title">
-        <div class="modal-card">
-          <div class="eyebrow-tag" style="color: var(--crimson-err); border-color: rgba(244, 63, 94, 0.35); background: rgba(244, 63, 94, 0.12)">
-            OUT OF SHIELDS
-          </div>
-          <h2 class="modal-title" id="gameover-title">GAME OVER</h2>
-          <p class="modal-subtitle" id="gameover-reason">
-            All 3 shields were lost.
-          </p>
-
-          <div class="stats-grid">
-            <div class="stat-box">
-              <span class="stat-box-label">Final Score</span>
-              <span class="stat-box-val highlight" id="go-stat-score">0</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-box-label">Wave Reached</span>
-              <span class="stat-box-val" id="go-stat-wave">1</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-box-label">Best Score</span>
-              <span class="stat-box-val" id="go-stat-best">0</span>
-            </div>
-          </div>
-
-          <div class="btn-row">
-            <button class="btn-primary" id="btn-try-again" type="button">PLAY AGAIN</button>
-              <button type="button" id="btn-share-score" class="unified-share-btn">
-                <span>⚡</span> SHARE SCORE
-              </button>
-            <button class="btn-secondary" id="btn-title-gameover" type="button">TITLE</button>
-          </div>
-        </div>
-      </section>
+      <section class="overlay-screen unified-gameover-screen" id="screen-gameover" aria-labelledby="gameover-title" data-toenow-screen="gameover"></section>
     </div>
 
+    <script>ToenowScreens.mount("ball-track");</script>
     <script>
-        const shareBtn = document.getElementById('btn-share-score');
-        if (shareBtn) {
-          shareBtn.addEventListener('click', () => {
-            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
-              ToenowLevels.shareScore({
-                gameId: 'ball-track',
-                gameTitle: 'Ball Track',
-                score: typeof score !== 'undefined' ? score : 0,
-                wave: typeof wave !== 'undefined' ? wave : 1
-              });
-            }
-          });
-        }
 
         
       (function () {
@@ -1730,9 +1654,6 @@
         const screenPauseEl = document.getElementById('screen-pause');
         const screenGameoverEl = document.getElementById('screen-gameover');
 
-        const titleBestScoreEl = document.getElementById('title-best-score');
-        const titleBestWaveEl = document.getElementById('title-best-wave');
-
         const perkSubtitleEl = document.getElementById('perk-subtitle');
         const perkBtnShield = document.getElementById('perk-btn-shield');
         const perkBtnSurge = document.getElementById('perk-btn-surge');
@@ -1741,11 +1662,6 @@
         const pauseStatScoreEl = document.getElementById('pause-stat-score');
         const pauseStatWaveEl = document.getElementById('pause-stat-wave');
         const pauseStatShieldsEl = document.getElementById('pause-stat-shields');
-
-        const goStatScoreEl = document.getElementById('go-stat-score');
-        const goStatWaveEl = document.getElementById('go-stat-wave');
-        const goStatBestEl = document.getElementById('go-stat-best');
-        const gameoverReasonEl = document.getElementById('gameover-reason');
 
         const btnStartGame = document.getElementById('btn-start-game');
         const btnResumeGame = document.getElementById('btn-resume-game');
@@ -2202,13 +2118,7 @@
           hudMultEl.textContent = state.currentMult.toFixed(1).replace(/\.0$/, '') + 'x';
           hudOverdriveMultEl.textContent = state.overdriveMultiplier.toFixed(1) + 'x';
           hudBestEl.textContent = String(Math.round(bestScore));
-          titleBestScoreEl.textContent = String(Math.round(bestScore));
-          const elTitleLvl = document.getElementById('title-best-level');
-          if (elTitleLvl) {
-            const lvl = bestWave <= 5 ? 'LVL 1 · BEGINNER' : bestWave <= 10 ? 'LVL 2 · INTERMEDIATE' : bestWave <= 15 ? 'LVL 3 · ADVANCED' : bestWave <= 20 ? 'LVL 4 · EXPERT' : 'LVL 5 · MASTER';
-            elTitleLvl.textContent = lvl;
-          }
-          if (titleBestWaveEl) titleBestWaveEl.textContent = String(bestWave);
+          ToenowScreens.updateTitle('ball-track', { bestScore: bestScore, bestWave: bestWave });
           // Exact required indicator format: "WAVE [X] | TARGET: [Y]"
           hudWaveTargetEl.textContent = `WAVE ${state.wave} | TARGET: ${state.config.targetCount}`;
           renderShieldIcons(state.shields, state.maxShields);
@@ -2690,11 +2600,8 @@
         }
 
         function showGameOverModal() {
-          goStatScoreEl.textContent = String(state.frozenSnapshot.score);
-          goStatWaveEl.textContent = String(state.frozenSnapshot.wave);
-          goStatBestEl.textContent = String(state.frozenSnapshot.best);
-          gameoverReasonEl.textContent = state.frozenSnapshot.reason;
-          setBodyState('gameover', 'idle');
+          ToenowScreens.updateGameOver('ball-track', { score: state.frozenSnapshot.score, bestScore: state.frozenSnapshot.best, wave: state.frozenSnapshot.wave, combo: null, reason: 'GAME OVER' });
+                    setBodyState('gameover', 'idle');
 
           // Toenow Game SDK Unified Lifecycle & Hub Contract
           if (toenowSdk) {

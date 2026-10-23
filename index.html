@@ -1529,6 +1529,8 @@
       transform: translateY(0);
     }
   </style>
+  <link rel="stylesheet" href="assets/toenow-game-previews.css">
+  <script src="shared/toenow-game-previews.js"></script>
 </head>
 <body>
 
@@ -1824,7 +1826,7 @@
         icon: '⚖️',
         url: 'games/space-scale/index.html',
         difficulty: 4,
-        description: 'Deep-space logical deduction drill. Analyze kinetic scales, asymmetric lever moments, and celestial densities to identify target masses.'
+        description: 'Look at the scales. Pick the heaviest, lightest, or middle-weight planet as shown in the instructions.'
       },
       {
         id: 'tap-match',
@@ -1833,7 +1835,7 @@
         icon: '🎯',
         url: 'games/tap-match/index.html',
         difficulty: 3,
-        description: 'High-speed cyber-analytic spatial node matching drill. Intercept dynamic geometric glyph configurations with escalating wave criteria.'
+        description: 'Follow the prompt and tap the matching pictures before they disappear.'
       },
       {
         id: 'spot-quick',
@@ -1842,7 +1844,7 @@
         icon: '🔬',
         url: 'games/spot-quick/index.html',
         difficulty: 4,
-        description: 'Optical aperture de-blurring drill. Deconvolve procedural vector biological silhouettes across 50 progressive specimen taxonomies.'
+        description: 'Watch the blurry animal become clearer. Tap the matching animal before time runs out.'
       },
       {
         id: 'shadow-match',
@@ -1851,7 +1853,7 @@
         icon: '👤',
         url: 'games/shadow-match/index.html',
         difficulty: 3,
-        description: 'Dynamic silhouette deconstruction drill. Identify matching composite shapes as drifting silhouettes merge and overlap.'
+        description: 'Look at the moving shapes, then pick the card with the same shapes.'
       },
       {
         id: 'flash-brain',
@@ -1860,7 +1862,7 @@
         icon: '🧠',
         url: 'games/flash-brain/index.html',
         difficulty: 4,
-        description: 'High-speed memory matrix drill. Memorize illuminated blocks in a flash, avoid crimson decoys, and recall coordinates.'
+        description: 'Remember where the blocks light up, then tap those spots. Avoid the red blocks!'
       }
     ];
 
@@ -2261,7 +2263,10 @@
     /* ============================================================================
        3. BENTO GRID RENDERING
        ============================================================================ */
+    let gamePreviewController = null;
     function renderBentoGrid() {
+      gamePreviewController?.destroy();
+      gamePreviewController = null;
       const grid = document.getElementById('gamesBentoGrid');
       const moduleCountEl = document.getElementById('statModuleCount');
       if (moduleCountEl) moduleCountEl.textContent = GAMES_CONFIG.length;
@@ -2280,142 +2285,20 @@
         return;
       }
 
-      const GAME_PREVIEWS = {
-        'animal-rescue-train': `
-
-          <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/animal-rescue-train-preview.svg" alt="Animal passengers aboard the rescue train" loading="lazy" />
-            <div class="preview-badge-overlay">
-              <span class="preview-category-pill" data-cat="logic"><span class="preview-cat-dot"></span> Logic</span>
-            </div>
-          </div>
-        `,
-        'number-pop': `
-          <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/number-pop-preview.png" alt="Number Pop In-Game Arena" loading="lazy" />
-            <div class="preview-badge-overlay">
-              <span class="preview-category-pill" data-cat="math"><span class="preview-cat-dot"></span> Numbers</span>
-            </div>
-          </div>
-        `,
-        'ball-track': `
-          <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/ball-track-preview.png" alt="Ball Track In-Game Arena" loading="lazy" />
-            <div class="preview-badge-overlay">
-              <span class="preview-category-pill" data-cat="spatial"><span class="preview-cat-dot"></span> Space</span>
-            </div>
-          </div>
-        `,
-        'block-match': `
-          <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/block-match-preview.png" alt="Block Match In-Game Arena" loading="lazy" />
-            <div class="preview-badge-overlay">
-              <span class="preview-category-pill" data-cat="puzzle"><span class="preview-cat-dot"></span> Pattern</span>
-            </div>
-          </div>
-        `,
-        'add-up': `
-          <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/add-up-preview.png" alt="Add Up In-Game Arena" loading="lazy" />
-            <div class="preview-badge-overlay">
-              <span class="preview-category-pill" data-cat="math"><span class="preview-cat-dot"></span> Numbers</span>
-            </div>
-          </div>
-        `,
-        'space-scale': `
-          <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/space-scale-preview.png" alt="Space Scale In-Game Arena" loading="lazy" />
-            <div class="preview-badge-overlay">
-              <span class="preview-category-pill" data-cat="logic"><span class="preview-cat-dot"></span> Logic</span>
-            </div>
-          </div>
-        `,
-        'tap-match': `
-          <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/tap-match-preview.png" alt="Tap Match In-Game Target Matrix" loading="lazy" />
-            <div class="preview-badge-overlay">
-              <span class="preview-category-pill" data-cat="spatial"><span class="preview-cat-dot"></span> Space</span>
-            </div>
-          </div>
-        `,
-        'spot-quick': `
-          <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/spot-quick-preview.png" alt="Spot Quick Optical Aperture Arena" loading="lazy" />
-            <div class="preview-badge-overlay">
-              <span class="preview-category-pill" data-cat="puzzle"><span class="preview-cat-dot"></span> Pattern</span>
-            </div>
-          </div>
-        `,
-        'shadow-match': `
-          <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/shadow-match-preview.png" alt="Shadow Match Silhouette Arena" loading="lazy" />
-            <div class="preview-badge-overlay">
-              <span class="preview-category-pill" data-cat="puzzle"><span class="preview-cat-dot"></span> Pattern</span>
-            </div>
-          </div>
-        `,
-        'flash-brain': `
-          <div class="card-preview-banner">
-            <img class="card-preview-img" src="assets/flash-brain-preview.png" alt="Flash Brain Matrix Arena" loading="lazy" />
-            <div class="preview-badge-overlay">
-              <span class="preview-category-pill" data-cat="memory"><span class="preview-cat-dot"></span> Memory</span>
-            </div>
-          </div>
-        `
-      };
-
-      grid.innerHTML = filtered.map((game) => {
-        const meta = CATEGORY_META[game.category] || {
-          label: game.category.toUpperCase(),
-          description: 'Modular cognitive training simulation.'
-        };
-        const record = scores[game.id];
-        const lvlInfo = record && record.maxWave ? getLevelInfoFromWave(record.maxWave) : { level: 1, name: 'Beginner' };
-        const scoreText = record && record.bestScore > 0
-            ? `${record.bestScore.toLocaleString()} pts`
-            : '0 pts';
-        const levelBadgeText = `LVL ${record ? (record.maxLevel || lvlInfo.level) : 1} · ${record ? (record.levelName || lvlInfo.name) : 'BEGINNER'}`;
-
-        let dotsHtml = '';
-        for (let i = 1; i <= 5; i++) {
-          dotsHtml += `<span class="diff-dot ${i <= game.difficulty ? 'filled' : ''}"></span>`;
-        }
-
-        const previewHtml = GAME_PREVIEWS[game.id] || '';
-        const difficultyLabel = game.difficultyMin ? `${game.difficultyMin}–${game.difficulty}` : String(game.difficulty);
-
+      grid.innerHTML = filtered.map(game => {
+        const known = ['animal-rescue-train','number-pop','ball-track','block-match','add-up','space-scale','tap-match','spot-quick','shadow-match','flash-brain'].includes(game.id);
+        const poster = known ? 'assets/gameplay-previews/' + game.id + '-poster.png' : (game.preview || 'assets/number-pop-preview.png');
+        const video = known ? '<video muted playsinline loop preload="none" data-src="assets/gameplay-previews/' + game.id + '.webm" aria-hidden="true"></video>' : '';
         return `
-          <article class="game-card" data-game-id="${game.id}" tabindex="0" role="button" aria-label="Play ${game.title}">
-            ${previewHtml}
-            <div class="card-content-wrap">
-              <div class="card-top">
-                <div class="game-icon-wrap" aria-hidden="true">${game.icon}</div>
-                <div class="card-badges">
-                  <div class="difficulty-dots" title="Difficulty Tier ${difficultyLabel}/5">
-                    <span>${game.difficultyMin ? `Tier ${difficultyLabel}` : 'Tier'}</span>
-                    ${dotsHtml}
-                  </div>
-                </div>
-              </div>
-
-              <div class="card-body">
-                <h2>${game.title}</h2>
-                <p class="card-desc">${game.description || meta.description}</p>
-              </div>
-
-              <div class="card-footer">
-                <div class="card-score-row">
-                  <div class="card-score-left">
-                    <span>Personal Best:</span>
-                    <strong>${scoreText}</strong>
-                  </div>
-                  <span class="card-level-badge">${levelBadgeText}</span>
-                </div>
-                <div class="card-action-btns">
-                  <button type="button" class="card-share-btn" data-share-game="${game.id}" title="Share challenge" aria-label="Share ${game.title}">⚡ Share</button>
-                  <button type="button" class="launch-pill" tabindex="-1">Play Now →</button>
-                </div>
-              </div>
+          <article class="game-card" data-game-id="${game.id}" aria-label="${game.title}">
+            <button type="button" class="game-launch" aria-label="Play ${game.title}">
+              <img src="${poster}" alt="${game.title}" loading="lazy" decoding="async">
+              ${video}
+            </button>
+            <div class="game-tile-caption">
+              <h2>${game.title}</h2>
+              ${known ? '<button type="button" class="game-preview-button">Preview</button>' : ''}
+              <button type="button" class="card-share-btn" data-share-game="${game.id}" title="Share challenge" aria-label="Share ${game.title}">↗</button>
             </div>
           </article>
         `;
@@ -2428,16 +2311,10 @@
           if (game) openTheaterModal(game);
         };
         card.addEventListener('click', (e) => {
-          if (e.target.closest('.card-share-btn')) return;
+          if (e.target.closest('.card-share-btn, .game-preview-button')) return;
           triggerLaunch();
         });
-        card.addEventListener('keydown', (e) => {
-          if (e.target.closest('.card-share-btn')) return;
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            triggerLaunch();
-          }
-        });
+
 
         const shareBtn = card.querySelector('.card-share-btn');
         if (shareBtn) {
@@ -2459,6 +2336,7 @@
           });
         }
       });
+      gamePreviewController = window.ToenowGamePreviews?.mount(grid) || null;
     }
 
     /* ============================================================================
@@ -2472,6 +2350,7 @@
     const theaterStage = document.getElementById('theaterStage');
 
     function openTheaterModal(game) {
+      gamePreviewController?.stop();
       currentMountedGame = game;
       theaterIcon.textContent = game.icon;
       theaterTitle.textContent = game.title;

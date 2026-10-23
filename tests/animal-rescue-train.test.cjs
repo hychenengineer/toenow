@@ -101,3 +101,10 @@ test('DFS solver skips incompatible cars and supports growing station sizes', ()
   assert.ok(solve({ ...level, carCount: 4 }).path);
   assert.ok(solve({ carCount: 2, queues: [['cat', 'cat', 'cat'], ['dog', 'dog', 'dog']], goals: { cat: 3, dog: 3 } }).path);
 });
+
+test('solver rejects solutions that send the required last animal too early', () => {
+  const { solve } = require('../tools/rescue-train-solver.cjs');
+  const level = { carCount: 1, queues: [['cat', 'cat', 'cat', 'dog', 'dog', 'dog']], goals: { cat: 3, dog: 3 } };
+  assert.ok(solve(level).path);
+  assert.equal(solve({ ...level, requiredLastAnimal: 'cat' }).path, null);
+});

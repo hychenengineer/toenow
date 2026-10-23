@@ -41,8 +41,8 @@ test('Practice Mode contract verified for game [flash-brain]', () => {
   const js = fs.readFileSync(bundlePath, 'utf8');
 
   // Must render unified-actions-bar with START GAME and PRACTICE button
-  assert.ok(js.includes('unified-actions-bar'), 'Flash Brain must contain unified-actions-bar');
-  assert.ok(js.includes('unified-practice-btn'), 'Flash Brain must contain unified-practice-btn');
+  assert.ok(js.includes('ToenowScreens.renderTitle'), 'Flash Brain must use the shared title renderer');
+  assert.ok(js.includes('onPractice:'), 'Flash Brain must provide a practice callback');
 
   // Must support practice query parameter and not overwrite best scores during practice
   assert.ok(js.includes('practice'), 'Flash Brain must support practice query param');

@@ -24,20 +24,11 @@ test('Game [flash-brain] bundle contains valid syntax, title records, start butt
     assert.fail(`Syntax error in Flash Brain JS bundle: ${err.message}`);
   }
 
-  // Verify Title Screen, Start Button, and Level Elements are baked into React components
-  assert.ok(bundle.includes('unified-title-screen'), 'Flash Brain bundle missing unified-title-screen');
-  assert.ok(bundle.includes('unified-title-card'), 'Flash Brain bundle missing unified-title-card');
-  assert.ok(bundle.includes('title-best-score'), 'Flash Brain bundle missing title-best-score');
-  assert.ok(bundle.includes('title-best-level'), 'Flash Brain bundle missing title-best-level');
-  assert.ok(bundle.includes('unified-start-btn'), 'Flash Brain bundle missing unified-start-btn');
-  assert.ok(bundle.includes('START GAME'), 'Flash Brain bundle missing START GAME button text');
-
-  // Verify 5-Level standard is encoded
-  assert.ok(bundle.includes('LVL 1 · BEGINNER'), 'Flash Brain missing LVL 1 · BEGINNER mapping');
-  assert.ok(bundle.includes('LVL 2 · INTERMEDIATE'), 'Flash Brain missing LVL 2 · INTERMEDIATE mapping');
-  assert.ok(bundle.includes('LVL 3 · ADVANCED'), 'Flash Brain missing LVL 3 · ADVANCED mapping');
-  assert.ok(bundle.includes('LVL 4 · EXPERT'), 'Flash Brain missing LVL 4 · EXPERT mapping');
-  assert.ok(bundle.includes('LVL 5 · MASTER'), 'Flash Brain missing LVL 5 · MASTER mapping');
+  // React supplies host elements and callbacks; the shared library owns both templates.
+  assert.ok(bundle.includes('ToenowScreens.renderTitle'));
+  assert.ok(bundle.includes('ToenowScreens.renderGameOver'));
+  assert.ok(html.includes('shared/toenow-screens.js'));
+  assert.ok(!bundle.includes('className:`unified-title-card`'));
 
   // Verify Hub Game Over postMessage Contract
   assert.ok(bundle.includes('gameId:`flash-brain`'), 'Flash Brain missing postMessage gameId');

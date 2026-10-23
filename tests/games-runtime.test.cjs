@@ -125,7 +125,7 @@ for (const game of GAMES) {
     const fullPath = path.resolve(__dirname, '..', game.path);
     assert.ok(fs.existsSync(fullPath), `Game file missing: ${game.path}`);
 
-    const html = fs.readFileSync(fullPath, 'utf8');
+    const html = require('./helpers/screen-engine-adapter.cjs').expand(fs.readFileSync(fullPath, 'utf8'), game.id);
     const { doc, existingIds, elements } = createMockDOM(html);
 
     // Verify Start Button exists in DOM
@@ -178,6 +178,7 @@ for (const game of GAMES) {
       },
       removeEventListener: function () {}
     };
+    sandbox.ToenowScreens = require('./helpers/screen-engine-adapter.cjs').adapter(doc);
     sandbox.scrollTo = () => {};
     sandbox.window = sandbox;
 
@@ -197,7 +198,7 @@ for (const game of GAMES) {
     assert.ok(scriptBlocks.length > 0, `No inline script blocks found in ${game.path}`);
 
     // Execute scripts in isolated function scope with mock window/document
-    const combinedScript = scriptBlocks.join('\n;\n');
+    const combinedScript = 'const ToenowScreens = window.ToenowScreens;\n' + scriptBlocks.join('\n;\n');
     const runner = new Function(
       'window',
       'document',

@@ -20,6 +20,7 @@
   <script src="engine.js" defer></script>
   <script src="levels.js" defer></script>
   <script src="puzzles.js" defer></script>
+  <script src="picker.js" defer></script>
   <script src="session.js" defer></script>
   <script src="game.js" defer></script>
 </head>
@@ -52,11 +53,14 @@
         <p id="instruction" class="instruction" role="status" aria-live="polite" aria-atomic="true"></p>
         <div class="section-label"><h3>Carriages</h3><span>3 seats each</span></div><div class="rail-yard"><div class="rail" aria-hidden="true"></div><div id="cars" class="cars"></div></div>
         <section id="result" class="result" aria-live="polite" hidden></section>
-        <footer class="controls"><button id="undo" class="secondary" disabled>↶ Undo move</button><button id="restart" class="secondary">↻ Retry puzzle</button><button id="next" class="primary" hidden>Next puzzle →</button></footer>
+        <footer class="controls"><button id="undo" class="secondary" disabled>↶ Undo move</button><button id="restart" aria-label="Restart Run" class="secondary toenow-icon-control" title="Restart Run"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#restart"/></svg></button><button id="next" class="primary" hidden>Next puzzle →</button></footer>
         <button id="btn-share-score" class="text-button" hidden>SHARE SCORE</button>
         <p id="record-notice" class="fineprint" role="status"></p>
       </section>
     </section>
+    <dialog id="success-dialog" aria-labelledby="result-title">
+      <div id="success-actions" class="success-actions"><button id="success-menu" class="secondary">Title Screen</button></div>
+    </dialog>
     <dialog id="last-animal-dialog" aria-labelledby="last-animal-title" aria-describedby="last-animal-rule last-animal-detail">
       <p class="eyebrow">LEVEL 5 · SPECIAL RULE</p>
       <h2 id="last-animal-title">Save this animal for last</h2>

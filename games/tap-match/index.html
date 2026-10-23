@@ -22,6 +22,8 @@
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
     <script src="../../shared/toenow-i18n.js"></script>
+    <script src="../../shared/toenow-screen-config.js"></script>
+    <script src="../../shared/toenow-screens.js"></script>
     <style>
       :root {
         --bg-void: #070a0e;
@@ -145,6 +147,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-wrap: wrap;
         gap: 6px;
         font-family: 'JetBrains Mono', monospace;
         font-variant-numeric: tabular-nums;
@@ -416,9 +419,9 @@
             <span>FAULTS <span id="hud-faults" class="hud-value">0/5</span></span>
           </div>
           <div class="hud-controls">
-            <button type="button" id="btn-audio" class="hud-btn" aria-label="Toggle Audio">SFX: ON</button>
-            <button type="button" id="btn-pause-hud" class="hud-btn" aria-label="Pause Game (P)">PAUSE</button>
-            <button type="button" id="btn-reset" class="hud-btn" aria-label="Restart Run">RESET</button>
+            <button type="button" id="btn-audio" class="hud-btn toenow-icon-control" aria-label="Toggle Audio" title="Toggle Audio" aria-pressed="true" data-muted="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use class="control-sound-on" href="../../assets/toenow-control-icons.svg#sound-on"/><use class="control-sound-off" href="../../assets/toenow-control-icons.svg#sound-off"/></svg></button>
+            <button type="button" id="btn-pause-hud" class="hud-btn toenow-icon-control" aria-label="Pause Game (P)" title="Pause Game (P)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#pause"/></svg></button>
+            <button type="button" id="btn-reset" class="hud-btn toenow-icon-control" aria-label="Restart Run" title="Restart Run"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#restart"/></svg></button>
           </div>
         </div>
       </header>
@@ -428,37 +431,7 @@
         <canvas id="game-canvas"></canvas>
 
         <!-- Ultra-Concise Start Menu -->
-        <div id="modal-start" class="modal-backdrop unified-title-screen" role="dialog" aria-modal="true" aria-labelledby="start-title">
-          <div class="unified-title-card">
-            <div class="unified-category-pill"><span class="unified-category-icon">🎯</span> SPACE</div>
-            <h1 id="start-title" class="unified-game-title">TAP MATCH</h1>
-            <p class="unified-game-desc">
-              Tap nodes matching the wave target shape before they fade away.
-            </p>
-            <div class="unified-rules-box">
-              <div class="unified-rule-item">
-                <span class="unified-rule-kicker">HOW TO PLAY</span>
-                <span class="unified-rule-text">Check target glyph in HUD and tap matching nodes across the grid.</span>
-              </div>
-              <div class="unified-rule-item">
-                <span class="unified-rule-kicker">ESCALATION</span>
-                <span class="unified-rule-text">3x3 (Waves 1-3) &rarr; 4x4 (Waves 4-6) &rarr; 5x5 Matrix (Waves 7+).</span>
-              </div>
-            </div>
-            <div class="unified-records-strip">
-          <div class="unified-record-item">
-            <span class="unified-record-label">BEST SCORE</span>
-            <span id="title-best-score" class="unified-record-val">0</span>
-          </div>
-          <span class="unified-record-sep" aria-hidden="true">·</span>
-          <div class="unified-record-item">
-            <span class="unified-record-label">BEST LEVEL</span>
-            <span id="title-best-level" class="unified-record-val">LVL 1 · BEGINNER</span>
-          </div>
-        </div>
-            <button type="button" id="btn-start-run" class="unified-start-btn" data-start="true">START GAME</button>
-          </div>
-        </div>
+        <div id="modal-start" class="modal-backdrop unified-title-screen" role="dialog" aria-modal="true" aria-labelledby="start-title" data-toenow-screen="title"></div>
 
         <!-- Pause Modal (Anti-cheat blackout) -->
         <div id="modal-pause" class="modal-backdrop unified-pause-screen hidden" role="dialog" aria-modal="true" aria-labelledby="pause-title">
@@ -528,58 +501,12 @@
         </div>
 
         <!-- Game Over Summary Modal -->
-        <div id="modal-gameover" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="gameover-title">
-          <div class="modal-card">
-            <div id="gameover-kicker" class="modal-kicker">RUN TERMINATED</div>
-            <h2 id="gameover-title" class="modal-title">Session Summary</h2>
-            <p id="gameover-reason" class="modal-desc">Time expired during wave evaluation.</p>
-            <div class="spec-list">
-              <div class="spec-row">
-                <span class="spec-label">FINAL SCORE</span>
-                <span id="summary-score" class="spec-val">0</span>
-              </div>
-              <div class="spec-row">
-                <span class="spec-label">WAVE REACHED</span>
-                <span id="summary-wave" class="spec-val">1</span>
-              </div>
-              <div class="spec-row">
-                <span class="spec-label">PEAK STREAK</span>
-                <span id="summary-streak" class="spec-val">0</span>
-              </div>
-              <div class="spec-row">
-                <span class="spec-label">ACCURACY</span>
-                <span id="summary-accuracy" class="spec-val">0%</span>
-              </div>
-              <div class="spec-row">
-                <span class="spec-label">MEAN REACTION</span>
-                <span id="summary-reaction" class="spec-val">0ms</span>
-              </div>
-            </div>
-            <div class="action-row">
-              <button type="button" id="btn-retry" class="action-btn">[RETRY]</button>
-              <button type="button" id="btn-share-score" class="unified-share-btn">
-                <span>⚡</span> SHARE SCORE
-              </button>
-            </div>
-          </div>
-        </div>
+        <div id="modal-gameover" class="modal-backdrop unified-gameover-screen hidden" role="dialog" aria-modal="true" aria-labelledby="gameover-title" data-toenow-screen="gameover"></div>
       </main>
     </div>
 
+    <script>ToenowScreens.mount("tap-match");</script>
     <script>
-        const shareBtn = document.getElementById('btn-share-score');
-        if (shareBtn) {
-          shareBtn.addEventListener('click', () => {
-            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
-              ToenowLevels.shareScore({
-                gameId: 'tap-match',
-                gameTitle: 'Tap Match',
-                score: typeof score !== 'undefined' ? score : 0,
-                wave: typeof wave !== 'undefined' ? wave : 1
-              });
-            }
-          });
-        }
 
         
       (function () {
@@ -754,17 +681,7 @@
           ? new ToenowGameSDK({ gameId: 'tap-match', category: 'spatial', gameTitle: 'Tap Match' })
           : null;
 
-        const elTitleBestScore = document.getElementById('title-best-score');
-        const elTitleBestWave = document.getElementById('title-best-wave');
-        if (elTitleBestScore) elTitleBestScore.textContent = loadBestWhackScore().toLocaleString();
-        if (elTitleBestWave) elTitleBestWave.textContent = String(loadBestWhackWave());
-          const elTitleBestLvl = document.getElementById('title-best-level');
-          if (elTitleBestLvl) {
-            const bw = loadBestWhackWave();
-            const cfg = getWaveConfig(bw);
-            elTitleBestLvl.textContent = 'LVL ' + cfg.level + ' · ' + cfg.levelName;
-          }
-
+          ToenowScreens.updateTitle('tap-match', { bestScore: loadBestWhackScore(), bestWave: loadBestWhackWave() });
         const btnAudio = document.getElementById('btn-audio');
         const btnReset = document.getElementById('btn-reset');
         const btnStartRun = document.getElementById('btn-start-run');
@@ -790,13 +707,6 @@
         const elBriefGridSpeed = document.getElementById('brief-grid-speed');
         const elBriefQuota = document.getElementById('brief-quota');
         const elBriefTime = document.getElementById('brief-time');
-
-        const elGameOverReason = document.getElementById('gameover-reason');
-        const elSummaryScore = document.getElementById('summary-score');
-        const elSummaryWave = document.getElementById('summary-wave');
-        const elSummaryStreak = document.getElementById('summary-streak');
-        const elSummaryAccuracy = document.getElementById('summary-accuracy');
-        const elSummaryReaction = document.getElementById('summary-reaction');
 
         // ==================================================
         // 4. GAME STATE & 3x3 -> 4x4 -> 5x5 ESCALATION ENGINE
@@ -1336,6 +1246,7 @@
           audio.init();
           modalStart.classList.add('hidden');
           modalGameOver.classList.add('hidden');
+          modalGameOver.classList.remove('active');
 
           state.score = 0;
           state.streak = 0;
@@ -1351,27 +1262,12 @@
         function endRun(reasonText) {
           state.phase = 'GAMEOVER';
           modalWaveBrief.classList.add('hidden');
-          elGameOverReason.textContent = reasonText;
-          elSummaryScore.textContent = state.score.toLocaleString();
-          elSummaryWave.textContent = String(state.wave);
-          elSummaryStreak.textContent = String(state.peakStreak);
-
           const acc = state.totalTaps > 0 ? Math.round((state.validHits / state.totalTaps) * 100) : 0;
-          elSummaryAccuracy.textContent = `${acc}%`;
-
-          const avgReact = state.validHits > 0 ? Math.round(state.reactionSumMs / state.validHits) : 0;
-          elSummaryReaction.textContent = `${avgReact}ms`;
-
-          saveBestWhackRecords(state.score, state.wave);
-          if (elTitleBestScore) elTitleBestScore.textContent = loadBestWhackScore().toLocaleString();
-          if (elTitleBestWave) elTitleBestWave.textContent = String(loadBestWhackWave());
-          if (elTitleBestLvl) {
-            const bw = loadBestWhackWave();
-            const cfg = getWaveConfig(bw);
-            elTitleBestLvl.textContent = 'LVL ' + cfg.level + ' · ' + cfg.levelName;
-          }
-
+                    saveBestWhackRecords(state.score, state.wave);
+          ToenowScreens.updateGameOver('tap-match', { score: state.score, bestScore: loadBestWhackScore(), wave: state.wave, combo: state.peakStreak, reason: state.faults >= 5 ? 'GAME OVER' : 'TIME EXPIRED' });
+          ToenowScreens.updateTitle('tap-match', { bestScore: loadBestWhackScore(), bestWave: loadBestWhackWave() });
           modalGameOver.classList.remove('hidden');
+          modalGameOver.classList.add('active');
 
           // Toenow Game SDK Unified Lifecycle & Hub Contract
           if (toenowSdk) {
@@ -1951,13 +1847,22 @@
           startNewRun();
         });
 
+        document.getElementById('btn-gameover-title').addEventListener('click', () => {
+          modalGameOver.classList.remove('active');
+          modalGameOver.classList.add('hidden');
+          state.phase = 'MENU';
+          modalStart.classList.remove('hidden');
+        });
+
+
         btnReset.addEventListener('click', () => {
           startNewRun();
         });
 
         btnAudio.addEventListener('click', () => {
           const isOn = audio.toggle();
-          btnAudio.textContent = isOn ? 'SFX: ON' : 'SFX: OFF';
+          btnAudio.dataset.muted = String(!isOn);
+          btnAudio.setAttribute('aria-pressed', String(isOn));
         });
 
         window.addEventListener('resize', () => {

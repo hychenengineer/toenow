@@ -22,6 +22,8 @@
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
     <script src="../../shared/toenow-i18n.js"></script>
+    <script src="../../shared/toenow-screen-config.js"></script>
+    <script src="../../shared/toenow-screens.js"></script>
     <style>
       :root {
         --bg-deep: #0a0b10;
@@ -1187,41 +1189,7 @@
     </div>
 
     <!-- TITLE SCREEN OVERLAY (Unified Universal Design) -->
-    <section id="title-screen" class="screen-overlay unified-title-screen visible" aria-label="Title Screen">
-      <div class="unified-title-card">
-        <div class="unified-category-pill"><span class="unified-category-icon">🔢</span> NUMBERS</div>
-
-        <h1 class="unified-game-title">NUMBER POP</h1>
-        <p class="unified-game-desc">Tap numbers from smallest to largest before time runs out!</p>
-
-        <div class="unified-rules-box">
-          <div class="unified-rule-item">
-            <span class="unified-rule-kicker">HOW TO PLAY</span>
-            <span class="unified-rule-text">Find smallest value and tap it (Lowest &rarr; Highest sequence).</span>
-          </div>
-          <div class="unified-rule-item">
-            <span class="unified-rule-kicker">WATCH OUT</span>
-            <span class="unified-rule-text">Look at actual values, not bubble sizes! Keep combo meter high.</span>
-          </div>
-        </div>
-
-        <div class="unified-records-strip">
-          <div class="unified-record-item">
-            <span class="unified-record-label">BEST SCORE</span>
-            <span id="title-best-score" class="unified-record-val">0</span>
-          </div>
-          <span class="unified-record-sep" aria-hidden="true">·</span>
-          <div class="unified-record-item">
-            <span class="unified-record-label">BEST LEVEL</span>
-            <span id="title-best-level" class="unified-record-val">LVL 1 · BEGINNER</span>
-          </div>
-        </div>
-
-        <button type="button" id="btn-start" class="unified-start-btn" data-start="true">
-          START GAME
-        </button>
-      </div>
-    </section>
+    <section id="title-screen" class="screen-overlay unified-title-screen visible" aria-label="Title Screen" data-toenow-screen="title"></section>
 
     <!-- PAUSE MODAL OVERLAY (Anti-cheat blackout) -->
     <section id="pause-screen" class="screen-overlay unified-pause-screen" aria-label="Pause Menu">
@@ -1260,74 +1228,10 @@
     </section>
 
     <!-- GAME OVER MODAL OVERLAY -->
-    <section id="gameover-screen" class="screen-overlay unified-gameover-screen" aria-label="Game Over Screen">
-      <div class="modal-card">
-        <span class="hud-kicker" style="color: var(--crimson-glow); margin-bottom: 6px;">CONTAINMENT BREACH · TIME EXPIRED</span>
-        <h2 class="game-title">QUANTUM COLLAPSE</h2>
+    <section id="gameover-screen" class="screen-overlay unified-gameover-screen" aria-label="Game Over Screen" data-toenow-screen="gameover"></section>
 
-        <div class="stats-grid-3">
-          <div class="stat-tile">
-            <span class="hud-kicker">FINAL SCORE</span>
-            <span id="go-score" class="stat-tile-value">0</span>
-            <span id="go-best-score" class="stat-tile-sub">BEST: 0</span>
-          </div>
-          <div class="stat-tile">
-            <span class="hud-kicker">MAX COMBO</span>
-            <span id="go-combo" class="stat-tile-value">0x</span>
-            <span id="go-mistakes" class="stat-tile-sub">0 MISTAKES</span>
-          </div>
-          <div class="stat-tile">
-            <span class="hud-kicker">WAVE REACHED</span>
-            <span id="go-wave" class="stat-tile-value">1</span>
-            <span id="go-best-wave" class="stat-tile-sub">RECORD: 1</span>
-          </div>
-        </div>
-
-        <!-- Prominent Survival Duration & Operator Ranking -->
-        <div class="survival-status-card" style="width: 100%; margin: 0 0 16px; padding: 12px 18px; border-radius: 10px; background: rgba(30, 16, 28, 0.9); border: 1px solid rgba(244, 63, 94, 0.35); display: flex; justify-content: space-between; align-items: center;">
-          <div style="text-align: left;">
-            <span class="hud-kicker" style="color: var(--crimson-glow); font-size: 10px;">TOTAL SURVIVAL DURATION</span>
-            <div id="go-survival-time" style="font-family: var(--font-mono); font-size: 24px; font-weight: 800; color: #fff;">00m 00s</div>
-          </div>
-          <div style="text-align: right;">
-            <span id="go-survival-rank" style="display: inline-block; padding: 4px 10px; border-radius: 6px; font-family: var(--font-mono); font-size: 11px; font-weight: 800; background: rgba(244, 63, 94, 0.25); color: #fecdd3; border: 1px solid rgba(244, 63, 94, 0.55); letter-spacing: 0.04em;">NOVICE RECRUIT</span>
-            <div id="go-best-survival" style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-top: 3px;">RECORD: 00m 00s</div>
-          </div>
-        </div>
-
-        <div id="go-near-miss" class="near-miss-banner">
-          NEW PERSONAL BEST RECORD!
-        </div>
-
-        <button type="button" id="btn-retry" class="primary-cta-btn pulsing-cta" data-start="true">
-          RETRY NOW (Press Space or Tap)
-        </button>
-              <button type="button" id="btn-share-score" class="unified-share-btn">
-                <span>⚡</span> SHARE SCORE
-              </button>
-
-        <div class="secondary-btn-row">
-          <button type="button" id="btn-go-title" class="secondary-btn">
-            Title Screen
-          </button>
-        </div>
-      </div>
-    </section>
-
+    <script>ToenowScreens.mount("number-pop");</script>
     <script>
-        const shareBtn = document.getElementById('btn-share-score');
-        if (shareBtn) {
-          shareBtn.addEventListener('click', () => {
-            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
-              ToenowLevels.shareScore({
-                gameId: 'number-pop',
-                gameTitle: 'Number Pop',
-                score: typeof score !== 'undefined' ? score : 0,
-                wave: typeof wave !== 'undefined' ? wave : 1
-              });
-            }
-          });
-        }
 
         
       (function () {
@@ -1823,14 +1727,6 @@
           return (m < 10 ? '0' : '') + m + 'm ' + (s < 10 ? '0' : '') + s + 's';
         }
 
-        function getSurvivalRank(seconds) {
-          if (seconds < 180) return 'CADET OPERATOR';
-          if (seconds < 360) return 'QUANTUM SURVIVOR';
-          if (seconds < 480) return 'VETERAN CONTROLLER';
-          if (seconds < 600) return 'LEGENDARY OPERATOR';
-          return 'SINGULARITY ARCHITECT';
-        }
-
         // 3. Deep Late-Game Board Entropy: 8 to 9 floating cores at 8+ minutes
         function getCoreCountForWave(wave, runDuration = 0) {
           if (runDuration >= 480) {
@@ -2239,15 +2135,12 @@
         const hudCombo = document.getElementById('hud-combo');
         const hudComboLabel = document.getElementById('hud-combo-label');
         const hudComboPips = Array.from(document.querySelectorAll('#hud-combo-pips .combo-pip'));
-        const hudShardsBadge = document.getElementById('hud-shards-badge');
-        const hudPerksRow = document.getElementById('hud-perks-row');
         const hudCenterCluster = document.getElementById('hud-center-cluster');
         const hudWave = document.getElementById('hud-wave');
         const hudWaveTier = document.getElementById('hud-wave-tier');
         const hudTimer = document.getElementById('hud-timer');
         const hudTimerBar = document.getElementById('hud-timer-bar');
         const hudRemaining = document.getElementById('hud-remaining');
-        const feverBanner = document.getElementById('fever-hud-banner');
 
         const hudStageLabel = document.getElementById('hud-stage-label');
         const hudSurvivalTimer = document.getElementById('hud-survival-timer');
@@ -2255,8 +2148,6 @@
         const singularityWarningBanner = document.getElementById('singularity-warning-banner');
 
         const titleScreen = document.getElementById('title-screen');
-        const perkScreen = document.getElementById('perk-screen');
-        const themesScreen = document.getElementById('themes-screen');
         const pauseScreen = document.getElementById('pause-screen');
         const gameoverScreen = document.getElementById('gameover-screen');
 
@@ -2265,33 +2156,10 @@
           ? new ToenowGameSDK({ gameId: 'number-pop', category: 'math', gameTitle: 'Number Pop' })
           : null;
 
-        const titleBestScore = document.getElementById('title-best-score');
-        const titleBestWave = document.getElementById('title-best-wave');
-        const titleBestSurvival = document.getElementById('title-best-survival');
-        const titleTotalShards = document.getElementById('title-total-shards');
 
         const pauseScore = document.getElementById('pause-score');
         const pauseWave = document.getElementById('pause-wave');
         const pauseTime = document.getElementById('pause-time');
-
-        const goScore = document.getElementById('go-score');
-        const goBestScore = document.getElementById('go-best-score');
-        const goCombo = document.getElementById('go-combo');
-        const goMistakes = document.getElementById('go-mistakes');
-        const goWave = document.getElementById('go-wave');
-        const goBestWave = document.getElementById('go-best-wave');
-        const goSurvivalTime = document.getElementById('go-survival-time');
-        const goSurvivalRank = document.getElementById('go-survival-rank');
-        const goBestSurvival = document.getElementById('go-best-survival');
-        const goNearMiss = document.getElementById('go-near-miss');
-        const goShardsEarned = document.getElementById('go-shards-earned');
-        const goShardsTotal = document.getElementById('go-shards-total');
-
-        const btnEmp = document.getElementById('btn-emp');
-        const empBtnText = document.getElementById('emp-btn-text');
-        const perksContainer = document.getElementById('perks-container');
-        const themesContainer = document.getElementById('themes-container');
-        const themeModalShards = document.getElementById('theme-modal-shards');
 
         const hudTopContainer = document.getElementById('hud-top-container');
         const TOUCH_HITBOX_EXPANSION = 20;
@@ -2311,9 +2179,11 @@
 
         function getArenaBounds() {
           const hudBottom = getHudBottom();
+          // Wide screens use the middle half; smaller screens keep at least 640px of play space when available.
+          const sideInset = Math.max(15, Math.min(viewportW * 0.25, (viewportW - 640) * 0.5));
           return {
-            left: 15,
-            right: Math.max(60, viewportW - 15),
+            left: sideInset,
+            right: Math.max(60, viewportW - sideInset),
             top: hudBottom,
             bottom: Math.max(hudBottom + 80, viewportH - 15),
           };
@@ -2328,8 +2198,8 @@
         }
 
         function clampCoreToSafeArena(c, bounds) {
-          const minX = c.radius + 15;
-          const maxX = Math.max(minX, viewportW - c.radius - 15);
+          const minX = bounds.left + c.radius;
+          const maxX = Math.max(minX, bounds.right - c.radius);
           const minY = bounds.top + c.radius;
           const maxY = Math.max(minY, viewportH - c.radius - 15);
 
@@ -2411,16 +2281,16 @@
               c.radius = Math.round(baseRadius * scaleFactor);
 
               if (sizeChanged && prevW > 0 && prevH > 0) {
-                const prevMinX = c.radius + 15;
-                const prevMaxX = Math.max(prevMinX + 1, prevW - c.radius - 15);
+                const prevMinX = prevBounds.left + c.radius;
+                const prevMaxX = Math.max(prevMinX + 1, prevBounds.right - c.radius);
                 const prevMinY = prevBounds.top + c.radius;
                 const prevMaxY = Math.max(prevMinY + 1, prevH - c.radius - 15);
 
                 const normX = Math.max(0, Math.min(1, (c.x - prevMinX) / (prevMaxX - prevMinX)));
                 const normY = Math.max(0, Math.min(1, (c.y - prevMinY) / (prevMaxY - prevMinY)));
 
-                const newMinX = c.radius + 15;
-                const newMaxX = Math.max(newMinX, viewportW - c.radius - 15);
+                const newMinX = bounds.left + c.radius;
+                const newMaxX = Math.max(newMinX, bounds.right - c.radius);
                 const newMinY = bounds.top + c.radius;
                 const newMaxY = Math.max(newMinY, viewportH - c.radius - 15);
 
@@ -2487,8 +2357,8 @@
           sortedByValue.forEach((item, rankIndex) => {
             const radius = Math.round((46 + (rankIndex % 2) * 6) * scaleFactor);
 
-            const minX = radius + 15;
-            const maxX = Math.max(minX, viewportW - radius - 15);
+            const minX = bounds.left + radius;
+            const maxX = Math.max(minX, bounds.right - radius);
             const minY = bounds.top + radius + 6;
             const maxY = Math.max(minY, viewportH - radius - 18);
 
@@ -2643,15 +2513,8 @@
           gameoverScreen.classList.toggle('visible', nextState === 'gameover');
 
           if (nextState === 'title') {
-            titleBestScore.textContent = loadHighScore().toLocaleString();
-            if (titleBestWave) if (titleBestWave) titleBestWave.textContent = String(loadBestWave());
-        const elTitleBestLvl = document.getElementById('title-best-level');
-        if (elTitleBestLvl) {
-          const bw = loadBestWave();
-          const lvlName = bw <= 5 ? 'LVL 1 · BEGINNER' : bw <= 10 ? 'LVL 2 · INTERMEDIATE' : bw <= 15 ? 'LVL 3 · ADVANCED' : bw <= 20 ? 'LVL 4 · EXPERT' : 'LVL 5 · MASTER';
-          elTitleBestLvl.textContent = lvlName;
-        }
-            if (titleBestSurvival) if (titleBestSurvival) titleBestSurvival.textContent = formatSurvivalTime(loadBestSurvival());
+          ToenowScreens.updateTitle('number-pop', { bestScore: loadHighScore(), bestWave: loadBestWave() });
+
           }
           syncBodyAttributes();
         }
@@ -2726,8 +2589,6 @@
           sound.playGameOver();
 
           const prevBest = game.highScoreBeforeRun;
-          const prevWaveRecord = game.bestWaveBeforeRun;
-          const prevBestSurvival = loadBestSurvival();
 
           if (!game.isPractice) {
             saveRecords(game.score, game.wave);
@@ -2738,32 +2599,9 @@
           saveTotalShards(game.totalShards);
 
           const newBestScore = Math.max(prevBest, game.score);
-          const newBestWave = Math.max(prevWaveRecord, game.wave);
-          const newBestSurvival = Math.max(prevBestSurvival, game.runDuration);
 
-          goScore.textContent = game.score.toLocaleString();
-          goBestScore.textContent = 'BEST: ' + newBestScore.toLocaleString();
-          goCombo.textContent = game.maxCombo + 'x';
-          goMistakes.textContent =
-            game.totalMistakes + (game.totalMistakes === 1 ? ' MISTAKE' : ' MISTAKES');
-          goWave.textContent = String(game.wave);
-        const elGoLvl = document.getElementById('go-level-badge');
-        if (elGoLvl) {
-          const lvlName = game.wave <= 5 ? 'LVL 1 · BEGINNER' : game.wave <= 10 ? 'LVL 2 · INTERMEDIATE' : game.wave <= 15 ? 'LVL 3 · ADVANCED' : game.wave <= 20 ? 'LVL 4 · EXPERT' : 'LVL 5 · MASTER';
-          elGoLvl.textContent = lvlName + ' (W' + game.wave + ')';
-        }
-          goBestWave.textContent = 'RECORD: WAVE ' + newBestWave;
-
-          // Prominent Survival Duration & Operator Ranking
-          goSurvivalTime.textContent = formatSurvivalTime(game.runDuration);
-          goSurvivalRank.textContent = getSurvivalRank(game.runDuration);
-          goBestSurvival.textContent = 'BEST RECORD: ' + formatSurvivalTime(newBestSurvival);
-
-          const msg = formatNearMissMessage(game.score, prevBest);
-          goNearMiss.textContent = msg;
-          goNearMiss.classList.toggle('new-best', game.score >= prevBest);
-
-          setScreenState('gameover');
+          ToenowScreens.updateGameOver('number-pop', { score: game.score, bestScore: newBestScore, wave: game.wave, combo: game.maxCombo });
+                    setScreenState('gameover');
           syncHud();
 
           // Toenow Hub Cross-Origin Runtime Contract
@@ -3714,9 +3552,8 @@
         window.__TEST_HOOKS__ = window.__QUANTUM_GAME__;
 
         // Initial Boot
-        if (titleBestScore) titleBestScore.textContent = loadHighScore().toLocaleString();
-        if (titleBestWave) titleBestWave.textContent = String(loadBestWave());
-        if (titleBestSurvival) titleBestSurvival.textContent = formatSurvivalTime(loadBestSurvival());
+          ToenowScreens.updateTitle('number-pop', { bestScore: loadHighScore(), bestWave: loadBestWave() });
+
         spawnWave(1);
 
         const params = new URLSearchParams(window.location.search);

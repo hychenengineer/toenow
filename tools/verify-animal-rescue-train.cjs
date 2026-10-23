@@ -18,6 +18,10 @@ function replay(level, moves) {
     if (cars[car].length === 3 && new Set(cars[car]).size === 1) {
       rescued[animal] = (rescued[animal] || 0) + 3;
       cars[car] = [];
+      if (animal === level.requiredLastAnimal && rescued[animal] >= level.goals[animal]) {
+        assert.ok(Object.entries(level.goals).every(([species, count]) => (rescued[species] || 0) >= count),
+          'the required animal must finish after all other rescue goals');
+      }
     }
   }
   for (const [animal, count] of Object.entries(level.goals)) assert.ok(rescued[animal] >= count, `unmet goal: ${animal}`);

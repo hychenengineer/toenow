@@ -19,6 +19,8 @@
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
     <script src="../../shared/toenow-i18n.js"></script>
+    <script src="../../shared/toenow-screen-config.js"></script>
+    <script src="../../shared/toenow-screens.js"></script>
     <style>
       *, *::before, *::after {
         box-sizing: border-box;
@@ -69,7 +71,7 @@
 
       .hud-bar {
         display: grid;
-        grid-template-columns: repeat(5, 1fr) auto;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
         align-items: center;
         gap: 4px;
         background: rgba(8, 11, 18, 0.92);
@@ -85,6 +87,26 @@
         align-items: center;
         text-align: center;
         min-width: 0;
+      }
+
+      .hud-controls {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        pointer-events: auto;
+      }
+
+      .hud-control-btn {
+        background: rgba(34, 211, 238, 0.15);
+        border: 1px solid rgba(34, 211, 238, 0.4);
+        color: #00f0ff;
+        border-radius: 4px;
+        padding: 5px 8px;
+        min-height: 32px;
+        font-size: 10px;
+        font-weight: 800;
+        cursor: pointer;
       }
 
       .hud-kicker {
@@ -475,7 +497,7 @@
   <body data-state="title">
     <canvas id="game-canvas" data-testid="game-canvas" aria-label="Block Match Workboard"></canvas>
 
-    <!-- Top HUD: ONLY SCORE, WAVE [X]/60, GRID [NxN], COMBO, and TIMER -->
+    <!-- Top HUD: stats and game controls -->
     <div id="hud-layer">
       <div class="hud-bar" aria-live="polite">
         <div class="hud-stat">
@@ -498,48 +520,16 @@
           <span class="hud-kicker">Timer</span>
           <span class="hud-value" id="hud-timer">100.0s</span>
         </div>
-        <div class="hud-stat" style="pointer-events: auto;">
-          <button id="btn-pause-hud" type="button" aria-label="Pause Game (P)" title="Pause Game (P)" style="background: rgba(34, 211, 238, 0.15); border: 1px solid rgba(34, 211, 238, 0.4); color: #00f0ff; border-radius: 4px; padding: 3px 6px; font-size: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase;">
-            PAUSE
-          </button>
+        <div class="hud-controls">
+          <button id="btn-audio-hud" type="button" class="hud-control-btn toenow-icon-control" aria-label="Toggle Audio" aria-pressed="true" title="Toggle Audio" data-muted="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use class="control-sound-on" href="../../assets/toenow-control-icons.svg#sound-on"/><use class="control-sound-off" href="../../assets/toenow-control-icons.svg#sound-off"/></svg></button>
+          <button id="btn-pause-hud" type="button" class="hud-control-btn toenow-icon-control" aria-label="Pause Game (P)" title="Pause Game (P)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#pause"/></svg></button>
+          <button id="btn-restart-hud" type="button" class="hud-control-btn toenow-icon-control" aria-label="Restart Run" title="Restart Run"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#restart"/></svg></button>
         </div>
       </div>
     </div>
 
     <!-- Title Screen Overlay -->
-    <section id="title-screen" class="unified-title-screen" aria-label="Title Screen">
-      <div class="unified-title-card">
-        <div class="unified-category-pill"><span class="unified-category-icon">🖲️</span> PATTERN</div>
-        <h1 class="unified-game-title">BLOCK MATCH</h1>
-        <p class="unified-game-desc">
-          Tap excess blocks to match the target blueprint.
-        </p>
-        <div class="unified-rules-box">
-          <div class="unified-rule-item">
-            <span class="unified-rule-kicker">HOW TO PLAY</span>
-            <span class="unified-rule-text">Compare active board to target blueprint and tap away extra blocks.</span>
-          </div>
-          <div class="unified-rule-item">
-            <span class="unified-rule-kicker">WATCH OUT</span>
-            <span class="unified-rule-text">Watch for flip modifiers in later waves. Don't tap essential core blocks!</span>
-          </div>
-        </div>
-        <div class="unified-records-strip">
-          <div class="unified-record-item">
-            <span class="unified-record-label">BEST SCORE</span>
-            <span id="title-best-score" class="unified-record-val">0</span>
-          </div>
-          <span class="unified-record-sep" aria-hidden="true">·</span>
-          <div class="unified-record-item">
-            <span class="unified-record-label">BEST LEVEL</span>
-            <span id="title-best-level" class="unified-record-val">LVL 1 · BEGINNER</span>
-          </div>
-        </div>
-        <button type="button" class="unified-start-btn" id="btn-start" data-start="true">
-          START GAME
-        </button>
-      </div>
-    </section>
+    <section id="title-screen" class="unified-title-screen" aria-label="Title Screen" data-toenow-screen="title"></section>
 
     <!-- Pause Screen Overlay (Anti-cheat blackout) -->
     <section id="pause-screen" class="overlay-screen unified-pause-screen" aria-label="Pause Screen" hidden>
@@ -591,38 +581,9 @@
     </section>
 
     <!-- Game Over Screen -->
-    <section id="gameover-screen" class="overlay-screen unified-gameover-screen" aria-label="Game Over Screen" hidden>
-      <div class="modal-card">
-        <h2 class="game-title" style="font-size: 2.1rem; color: #ff3b5c;" id="gameover-heading">TIME EXPIRED</h2>
-        <p class="game-subtitle" style="margin-bottom: 10px;" id="gameover-subtitle">Session complete.</p>
-        <div class="stat-grid">
-          <div class="stat-tile">
-            <div class="stat-tile-label">Score</div>
-            <div class="stat-tile-val" style="color: #00f0ff;" id="final-score">0</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-tile-label">Best Score</div>
-            <div class="stat-tile-val" style="color: #fbbf24;" id="final-best">0</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-tile-label">Waves Cleared</div>
-            <div class="stat-tile-val" id="final-waves">0/60</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-tile-label">Peak Combo</div>
-            <div class="stat-tile-val" style="color: #38bdf8;" id="final-combo">x1</div>
-          </div>
-        </div>
-        <div class="btn-stack">
-          <button type="button" class="primary-btn" id="btn-retry" data-start="true">Play Again</button>
-              <button type="button" id="btn-share-score" class="unified-share-btn">
-                <span>⚡</span> SHARE SCORE
-              </button>
-          <button type="button" class="secondary-btn" id="btn-title-gameover">Title Screen</button>
-        </div>
-      </div>
-    </section>
+    <section id="gameover-screen" class="overlay-screen unified-gameover-screen" aria-label="Game Over Screen" hidden data-toenow-screen="gameover"></section>
 
+    <script>ToenowScreens.mount("block-match");</script>
     <script>
       (function () {
         'use strict';
@@ -649,12 +610,19 @@
 
         // --- Native Web Audio API Procedural Synthesizer ---
         var audioCtx = null;
+        var audioOutput = null;
+        var audioEnabled = true;
 
         function ensureAudio() {
+          if (!audioEnabled) return null;
           if (!audioCtx) {
             var AudioContextClass = window.AudioContext || window.webkitAudioContext;
             if (AudioContextClass) {
-              try { audioCtx = new AudioContextClass(); } catch (e) { audioCtx = null; }
+              try {
+                audioCtx = new AudioContextClass();
+                audioOutput = audioCtx.createGain();
+                audioOutput.connect(audioCtx.destination);
+              } catch (e) { audioCtx = null; audioOutput = null; }
             }
           }
           if (audioCtx && audioCtx.state === 'suspended') {
@@ -682,7 +650,7 @@
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
 
           osc.connect(gain);
-          gain.connect(ctx.destination);
+          gain.connect(audioOutput);
           osc.start(now);
           osc.stop(now + 0.09);
 
@@ -694,7 +662,7 @@
           cGain.gain.setValueAtTime(0.11, now);
           cGain.gain.exponentialRampToValueAtTime(0.001, now + 0.024);
           crunch.connect(cGain);
-          cGain.connect(ctx.destination);
+          cGain.connect(audioOutput);
           crunch.start(now);
           crunch.stop(now + 0.026);
         }
@@ -714,7 +682,7 @@
             g.gain.setValueAtTime(0.14, t);
             g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
             osc.connect(g);
-            g.connect(ctx.destination);
+            g.connect(audioOutput);
             osc.start(t);
             osc.stop(t + 0.3);
           }
@@ -734,7 +702,7 @@
             g.gain.setValueAtTime(0.18, t);
             g.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
             osc.connect(g);
-            g.connect(ctx.destination);
+            g.connect(audioOutput);
             osc.start(t);
             osc.stop(t + 0.34);
           }
@@ -760,7 +728,7 @@
 
           osc1.connect(gain);
           osc2.connect(gain);
-          gain.connect(ctx.destination);
+          gain.connect(audioOutput);
           osc1.start(now);
           osc2.start(now);
           osc1.stop(now + 0.31);
@@ -1105,21 +1073,7 @@
         var elBtnEngagePhase = document.getElementById('btn-engage-phase');
 
         var elGameOverScreen = document.getElementById('gameover-screen');
-        var elFinalScore = document.getElementById('final-score');
-        var elFinalBest = document.getElementById('final-best');
-        var elFinalWaves = document.getElementById('final-waves');
-        var elFinalCombo = document.getElementById('final-combo');
-        var elTitleBest = document.getElementById('title-best-score');
-        if (elTitleBest) {
-          elTitleBest.textContent = String(Math.round(state.highScore || 0));
-        const elTitleBestLvl = document.getElementById('title-best-level');
-        if (elTitleBestLvl) {
-          const maxW = parseInt(localStorage.getItem('block_match_best_wave') || '1', 10) || 1;
-          const pInfo = getPhaseForWave(maxW);
-          elTitleBestLvl.textContent = 'LVL ' + pInfo.phase + ' · ' + pInfo.name;
-        }
-        }
-
+          ToenowScreens.updateTitle('block-match', { bestScore: state.highScore, bestWave: parseInt(localStorage.getItem('block_match_best_wave') || '1', 10) });
         // Dynamic Visual Feedback Timers
         var shakeTrauma = 0;
         var electricArcTimer = 0;
@@ -1144,7 +1098,7 @@
           layout.vw = vw;
           layout.vh = vh;
 
-          var topSafe = 78;
+          var topSafe = Math.max(78, document.getElementById('hud-layer').getBoundingClientRect().bottom + 12);
           var bottomSafe = 24;
           var availH = Math.max(240, vh - topSafe - bottomSafe);
           var availW = Math.min(vw * 0.95, vw >= 768 ? 820 : 480);
@@ -1201,15 +1155,7 @@
           document.body.dataset.state = next;
           elTitleScreen.hidden = next !== 'title';
           if (next === 'title') {
-            if (elTitleBest) {
-              elTitleBest.textContent = String(Math.round(state.highScore || 0));
-            }
-            var elTitleBestLvl = document.getElementById('title-best-level');
-            if (elTitleBestLvl) {
-              var maxW = parseInt(localStorage.getItem('block_match_best_wave') || '1', 10) || 1;
-              var pInfo = getPhaseForWave(maxW);
-              elTitleBestLvl.textContent = 'LVL ' + pInfo.phase + ' · ' + pInfo.name;
-            }
+          ToenowScreens.updateTitle('block-match', { bestScore: state.highScore, bestWave: parseInt(localStorage.getItem('block_match_best_wave') || '1', 10) });
           }
           if (elPauseScreen) {
             elPauseScreen.hidden = next !== 'paused';
@@ -1302,19 +1248,10 @@
           syncHud();
           playGlitchBuzz();
 
-          elFinalScore.textContent = String(Math.round(state.score));
-          elFinalBest.textContent = String(Math.round(state.highScore));
-          elFinalWaves.textContent = state.wavesCleared + '/60';
-        const elFinalLvl = document.getElementById('final-level-badge');
-        if (elFinalLvl) {
-          const pInfo = getPhaseForWave(state.wavesCleared || 1);
-          elFinalLvl.textContent = 'LVL ' + pInfo.phase + ' · ' + pInfo.name + ' (' + state.wavesCleared + '/60)';
-        }
-        const prevBW = parseInt(localStorage.getItem('block_match_best_wave') || '1', 10) || 1;
-        if (state.wavesCleared > prevBW) localStorage.setItem('block_match_best_wave', String(state.wavesCleared));
-          elFinalCombo.textContent = 'x' + state.peakCombo;
-
-          setGameMode('gameover');
+          const prevBW = parseInt(localStorage.getItem('block_match_best_wave') || '1', 10) || 1;
+          if (!state.isPractice && state.wavesCleared > prevBW) localStorage.setItem('block_match_best_wave', String(state.wavesCleared));
+          ToenowScreens.updateGameOver('block-match', { score: state.score, bestScore: state.highScore, wave: state.wave, combo: state.peakCombo });
+                    setGameMode('gameover');
 
           // Toenow Game SDK Unified Lifecycle & Hub Contract
           if (toenowSdk) {
@@ -1485,19 +1422,6 @@
           e.currentTarget.blur();
           resumeFromPhaseBriefing();
         });
-        const shareBtn = document.getElementById('btn-share-score');
-        if (shareBtn) {
-          shareBtn.addEventListener('click', () => {
-            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
-              ToenowLevels.shareScore({
-                gameId: 'block-match',
-                gameTitle: 'Block Match',
-                score: typeof score !== 'undefined' ? score : 0,
-                wave: typeof wave !== 'undefined' ? wave : 1
-              });
-            }
-          });
-        }
 
         document.getElementById('btn-retry').addEventListener('click', function (e) {
           e.currentTarget.blur();
@@ -1509,6 +1433,21 @@
         });
 
         var elBtnPauseHud = document.getElementById('btn-pause-hud');
+        var elBtnAudioHud = document.getElementById('btn-audio-hud');
+        elBtnAudioHud.addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          audioEnabled = !audioEnabled;
+          if (audioOutput && audioCtx) {
+            audioOutput.gain.setValueAtTime(audioEnabled ? 1 : 0, audioCtx.currentTime);
+          }
+          if (audioEnabled) ensureAudio();
+          elBtnAudioHud.dataset.muted = String(!audioEnabled);
+          elBtnAudioHud.setAttribute('aria-pressed', String(audioEnabled));
+        });
+        document.getElementById('btn-restart-hud').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          startNewGame(1, state.isPractice);
+        });
         if (elBtnPauseHud) {
           elBtnPauseHud.addEventListener('click', function (e) {
             e.currentTarget.blur();

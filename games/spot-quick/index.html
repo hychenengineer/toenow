@@ -18,7 +18,9 @@
     <script src="../../shared/toenow-i18n-core.js"></script>
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
-    <script src="../../shared/toenow-i18n.js"></script>
+    <script src="../../shared/toenow-i18n-animals.js"></script>
+<script src="../../shared/toenow-i18n.js"></script>
+<script src="../../shared/toenow-animals.js"></script>
     <script src="../../shared/toenow-screen-config.js"></script>
     <script src="../../shared/toenow-screens.js"></script>
     <style>
@@ -368,7 +370,8 @@
         color: var(--bg-void-deep);
       }
     </style>
-  </head>
+  <link rel="stylesheet" href="../../assets/toenow-animals.css">
+</head>
   <body>
     <div class="app-wrapper" id="appWrapper">
       <!-- Top Piped Status Display -->
@@ -439,7 +442,7 @@
     <script>ToenowScreens.mount("spot-quick");</script>
     <script>
 
-        
+
       (function () {
         "use strict";
 
@@ -5005,6 +5008,7 @@
         }
 
         function setupWave(waveNum) {
+          window.ToenowAnimals?.setWave('spot-quick', waveNum);
           state.wave = waveNum;
           const tier = getTierForWave(waveNum);
           state.currentTier = tier;
@@ -5237,6 +5241,7 @@
             state.clarity = 1.0;
             state.mode = "LOCKED_CORRECT";
             state.confirmTimer = 0.38;
+            window.ToenowAnimals?.feedback('spot-quick', true);
 
             playCorrectBlip(state.clarity);
             updateHudDOM();
@@ -5250,6 +5255,7 @@
             state.inputFreezeTimer = 0.30;
             state.timeRemaining = Math.max(0, state.timeRemaining - WRONG_TIME_PENALTY);
 
+            window.ToenowAnimals?.feedback('spot-quick', false);
             playIncorrectBuzz();
             updateHudDOM();
 
@@ -5439,14 +5445,38 @@
           specimenCtx.restore();
         }
 
+        function drawObservationArchive(w, h) {
+          const cx = state.layout.spotlightX, cy = state.layout.spotlightY, r = state.layout.spotlightRadius;
+          ctx.save();
+          window.ToenowAnimals?.drawAnimal?.(ctx, 'owl', Math.min(w - 28, cx + r + 13), Math.max(34, cy - r - 17), 46);
+          if (state.mode === 'LOCKED_CORRECT') {
+            const elapsed = Math.max(0, 1 - state.confirmTimer / .38);
+            ctx.translate(cx + r * .38, cy + r * .65);
+            ctx.rotate(-.18);
+            ctx.globalAlpha = .92;
+            ctx.strokeStyle = '#8bba91'; ctx.fillStyle = '#dce8cf'; ctx.lineWidth = 3;
+            ctx.fillRect(-46, -15, 92, 30); ctx.strokeRect(-46, -15, 92, 30);
+            ctx.fillStyle = '#2e6349'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.fillText(window.ToenowI18n?.language?.startsWith('zh') ? '已歸檔 ✓' : 'FILED ✓', 0, 0);
+          }
+          ctx.restore();
+        }
+
         function drawAnalyticalBackground(w, h, cx, cy, r) {
           const grad = ctx.createRadialGradient(cx, cy, r * 0.15, cx, cy, Math.max(w, h) * 0.85);
-          grad.addColorStop(0, PALETTE.bgMid);
-          grad.addColorStop(1, PALETTE.bgDeep);
+          grad.addColorStop(0, '#a8b8a4');
+          grad.addColorStop(1, '#dce1ca');
           ctx.fillStyle = grad;
           ctx.fillRect(0, 0, w, h);
 
-          ctx.strokeStyle = "rgba(26, 35, 50, 0.45)";
+          ctx.save();
+          ctx.fillStyle = '#f8edda'; ctx.strokeStyle = '#b5a17f'; ctx.lineWidth = 2;
+          ctx.translate(cx, cy); ctx.rotate(-.025);
+          ctx.fillRect(-r - 17, -r - 17, r * 2 + 34, r * 2 + 47);
+          ctx.strokeRect(-r - 17, -r - 17, r * 2 + 34, r * 2 + 47);
+          ctx.restore();
+          ctx.strokeStyle = "rgba(126, 142, 118, 0.15)";
           ctx.lineWidth = 1;
           const step = 32;
           ctx.beginPath();
@@ -5767,6 +5797,10 @@
             state.layout.spotlightRadius
           );
           drawCandidateButtons(w);
+          drawObservationArchive(w, h);
+          window.__OWL_OBSERVATION_STATE = { mode: state.mode, wave: state.wave, specimenCount: SPECIMEN_POOL.length,
+            categories: Array.from(new Set(SPECIMEN_POOL.map(s => s.cluster))),
+            target: state.targetSpecimen.id, candidates: state.candidates.map(c => ({ correct: c.correct, depleted: c.depleted })) };
 
           ctx.restore();
 

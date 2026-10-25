@@ -21,7 +21,9 @@
     <script src="../../shared/toenow-i18n-core.js"></script>
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
-    <script src="../../shared/toenow-i18n.js"></script>
+    <script src="../../shared/toenow-i18n-animals.js"></script>
+<script src="../../shared/toenow-i18n.js"></script>
+<script src="../../shared/toenow-animals.js"></script>
     <script src="../../shared/toenow-screen-config.js"></script>
     <script src="../../shared/toenow-screens.js"></script>
     <style>
@@ -1078,7 +1080,8 @@
         }
       }
     </style>
-  </head>
+  <link rel="stylesheet" href="../../assets/toenow-animals.css">
+</head>
   <body data-state="title" data-wave="1" data-score="0" data-combo="0" data-fever="false">
     <!-- Interactive Canvas Arena -->
     <canvas id="game-canvas" data-testid="quantum-canvas" aria-label="Number Pop Game Arena"></canvas>
@@ -1178,7 +1181,7 @@
             </div>
             <div class="order-directive">
               <span>ORDER: <strong style="color: var(--primary-glow); font-family: var(--font-mono);">LOWEST TO HIGHEST</strong></span>
-              <span id="hud-remaining">4 CORES LEFT</span>
+              <span id="hud-remaining">4 BASKETS LEFT</span>
             </div>
           </div>
         </div>
@@ -1233,7 +1236,7 @@
     <script>ToenowScreens.mount("number-pop");</script>
     <script>
 
-        
+
       (function () {
         'use strict';
 
@@ -2322,6 +2325,7 @@
         applyTheme(game.currentTheme);
 
         function spawnWave(waveNum) {
+          if (window.ToenowAnimals) window.ToenowAnimals.setWave('number-pop', waveNum);
           game.wave = waveNum;
           game.waveMistakes = 0;
           game.poppedInWave = 0;
@@ -2501,7 +2505,7 @@
           }
 
           const rem = game.cores.filter((c) => !c.popped).length;
-          hudRemaining.textContent = rem + (rem === 1 ? ' CORE LEFT' : ' CORES LEFT');
+          hudRemaining.textContent = rem + (rem === 1 ? ' BASKET LEFT' : ' BASKETS LEFT');
 
           syncBodyAttributes();
         }
@@ -2659,6 +2663,8 @@
             core.freezeTimer = 0;
             core.errorFlash = 0;
             core.popped = true;
+            if (window.ToenowAnimals) window.ToenowAnimals.feedback('number-pop', true);
+            harvestPickup = { x: core.x, y: core.y, until: performance.now() + 650 };
             game.combo += 1;
             game.shardsEarnedThisRun += 1;
 
@@ -2744,6 +2750,7 @@
             // If core is currently frozen from a recent misclick, ignore extra mistake spam
             if (core.freezeTimer > 0) return;
 
+            if (window.ToenowAnimals) window.ToenowAnimals.feedback('number-pop', false);
             // MISTAKE: Slight screen shake + mistake sound
             game.combo = 0;
             game.feverTimeLeft = 0;
@@ -2761,7 +2768,7 @@
               core.x,
               core.y - 12,
               'COMBO BROKEN!',
-              'NOT LOWEST CORE',
+              'PICK THE LOWEST BASKET',
               'var(--crimson-glow)'
             );
 
@@ -3190,6 +3197,31 @@
           }
         }
 
+        let harvestPickup = null;
+        function drawHarvestBasket(ctx, x, y, r, error, hovered) {
+          ctx.save();
+          ctx.strokeStyle = error ? '#bc4555' : '#82573b';
+          ctx.lineWidth = hovered ? 4 : 2.5;
+          // The basket stays inside the original circular hit area.
+          ctx.beginPath(); ctx.arc(x, y - r * 0.06, r * 0.75, Math.PI, Math.PI * 2); ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(x-r*.92,y-r*.4); ctx.lineTo(x+r*.92,y-r*.4);
+          ctx.lineTo(x+r*.72,y+r*.76); ctx.lineTo(x-r*.72,y+r*.76); ctx.closePath();
+          ctx.fillStyle = error ? '#eaa79b' : '#d8ad72'; ctx.fill(); ctx.stroke();
+          ctx.strokeStyle = 'rgba(114,78,45,.3)'; ctx.lineWidth = 1;
+          for (let i=-2;i<=2;i++) { ctx.beginPath(); ctx.moveTo(x+i*r*.27,y-r*.35);ctx.lineTo(x+i*r*.22,y+r*.7);ctx.stroke(); }
+          for (let i=0;i<3;i++) { ctx.beginPath();ctx.moveTo(x-r*.78,y+i*r*.22);ctx.lineTo(x+r*.78,y+i*r*.22);ctx.stroke(); }
+          // Carrot tops identify the harvest while leaving the mathematical label clear.
+          for (const side of [-1,1]) {
+            const tipX=x+side*r*.68;
+            ctx.fillStyle='#d98a46';ctx.beginPath();ctx.moveTo(tipX-r*.1,y-r*.48);ctx.lineTo(tipX+r*.1,y-r*.48);ctx.lineTo(tipX,y-r*.18);ctx.closePath();ctx.fill();
+            ctx.strokeStyle='#608652';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(tipX,y-r*.48);ctx.lineTo(tipX-r*.12,y-r*.74);ctx.moveTo(tipX,y-r*.48);ctx.lineTo(tipX+r*.12,y-r*.74);ctx.stroke();
+          }
+          // An opaque label protects fractions, exponents and operations from the weave.
+          ctx.fillStyle = '#26382e';ctx.beginPath();ctx.arc(x,y,r*.69,0,Math.PI*2);ctx.fill();
+          ctx.restore();
+        }
+
         function renderArena() {
           const cw = canvas.clientWidth;
           const ch = canvas.clientHeight;
@@ -3200,7 +3232,7 @@
           ctx.setTransform(canvas.width / viewportW, 0, 0, canvas.height / viewportH, 0, 0);
           ctx.save();
 
-          ctx.fillStyle = '#0a0b10';
+          ctx.fillStyle = '#dce8cf';
           ctx.fillRect(0, 0, viewportW, viewportH);
 
           // Apply Subtle Screen Shake (Triggered ONLY on Mistake, never on correct click or combo)
@@ -3213,33 +3245,13 @@
 
           const isHighCombo = game.combo >= 5;
 
-          // Perspective Cyber Grid (Subtly shifts hue on high combo without shaking)
-          const gridSpacing = 64;
-          const scrollOffset = (game.timeElapsed * 18) % gridSpacing;
-          ctx.lineWidth = 1;
-          const gridColor = isHighCombo
-            ? 'rgba(232, 121, 249, 0.095)'
-            : 'rgba(34, 211, 238, 0.055)';
-          ctx.strokeStyle = gridColor;
-
-          ctx.beginPath();
-          for (let x = scrollOffset; x < viewportW; x += gridSpacing) {
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, viewportH);
-          }
-          for (let y = scrollOffset; y < viewportH; y += gridSpacing) {
-            ctx.moveTo(0, y);
-            ctx.lineTo(viewportW, y);
-          }
-          ctx.stroke();
-
-          // Ambient Quantum Dust
-          for (let i = 0; i < ambientDust.length; i++) {
-            const d = ambientDust[i];
-            ctx.fillStyle = 'hsla(' + d.hue + ', 90%, 70%, ' + d.alpha + ')';
-            ctx.beginPath();
-            ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
-            ctx.fill();
+          // Soft garden paths and planted borders stay outside the number labels.
+          ctx.strokeStyle = 'rgba(132,150,92,.18)'; ctx.lineWidth = 18;
+          for (let y=90;y<viewportH;y+=110) { ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(viewportW,y);ctx.stroke(); }
+          if (harvestPickup && performance.now() < harvestPickup.until && window.ToenowAnimals) {
+            // Rabbit hops to the basket the player actually harvested.
+            const hop = Math.sin((harvestPickup.until-performance.now())/650*Math.PI)*12;
+            window.ToenowAnimals.drawAnimal(ctx,'rabbit',harvestPickup.x,harvestPickup.y-hop,56);
           }
 
           // Render Active Quantum Cores
@@ -3262,33 +3274,7 @@
               drawY += (Math.random() - 0.5) * 4;
             }
 
-            // Outer Energy Aura
-            const grad = ctx.createRadialGradient(drawX, drawY, r * 0.12, drawX, drawY, r * 1.18);
-            grad.addColorStop(0, 'hsla(' + coreHue + ', 95%, 62%, 0.36)');
-            grad.addColorStop(0.7, 'hsla(' + coreHue + ', 90%, 45%, 0.14)');
-            grad.addColorStop(1, 'hsla(' + coreHue + ', 90%, 40%, 0)');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.arc(drawX, drawY, r * 1.18, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Outer Rotating Containment Shell
-            drawPolygon(ctx, drawX, drawY, r, c.sides, c.rotation);
-            ctx.fillStyle = c.errorFlash > 0
-              ? 'rgba(159, 18, 57, 0.78)'
-              : 'rgba(13, 18, 32, 0.88)';
-            ctx.fill();
-
-            ctx.lineWidth = isHovered ? 3.2 : 2.2;
-            ctx.strokeStyle = c.errorFlash > 0
-              ? '#fb7185'
-              : 'hsla(' + coreHue + ', 95%, ' + (isHovered ? '75%' : '62%') + ', 0.95)';
-            if (!IS_HEADLESS) {
-              ctx.shadowColor = 'hsla(' + coreHue + ', 95%, 60%, 0.7)';
-              ctx.shadowBlur = isHovered ? 18 : 10;
-            }
-            ctx.stroke();
-            ctx.shadowBlur = 0;
+            drawHarvestBasket(ctx, drawX, drawY, r, c.errorFlash > 0, isHovered);
 
             // Intuitive Fraction Rim Gauge (Visual Pie Arc along outer rim)
             if (c.fractionGauge !== undefined && c.fractionGauge > 0) {
@@ -3312,23 +3298,6 @@
               ctx.strokeStyle = 'hsla(' + coreHue + ', 95%, 78%, 0.85)';
               ctx.stroke();
               ctx.restore();
-            }
-
-            // Inner Counter-Rotating Ring
-            drawPolygon(ctx, drawX, drawY, r * 0.76, c.sides, -c.rotation * 0.8);
-            ctx.lineWidth = 1.2;
-            ctx.strokeStyle = 'hsla(' + coreHue + ', 90%, 75%, 0.42)';
-            ctx.stroke();
-
-            // Vertex Nodes
-            ctx.fillStyle = 'hsla(' + coreHue + ', 100%, 82%, 0.9)';
-            for (let v = 0; v < c.sides; v++) {
-              const theta = c.rotation + (v * Math.PI * 2) / c.sides;
-              const vx = drawX + Math.cos(theta) * r;
-              const vy = drawY + Math.sin(theta) * r;
-              ctx.beginPath();
-              ctx.arc(vx, vy, 2.4, 0, Math.PI * 2);
-              ctx.fill();
             }
 
             // Typographic Value Label (Vertical Stacked Fraction or Number)

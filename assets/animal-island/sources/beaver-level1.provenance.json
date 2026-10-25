@@ -1,0 +1,9 @@
+{
+  "method": "built-in image_gen",
+  "species": "beaver",
+  "level": 1,
+  "prompt": "Transparent game asset, watercolor storybook miniature. LEVEL ONE STARTER OUTDOOR ACTIVITY SPOT. a beaver at one tree-stump workbench fitting square wood tiles, one very small timber stack and hand tools. CRITICAL: absolutely NO BUILDING, NO HOUSE, NO COTTAGE, NO ROOF, NO CANOPY, NO WALLS, NO ARCHWAY, NO POSTS, NO PAVILION. This is the humble BEGINNING before any architecture is built. Only the animal, simple outdoor work surface and a few activity objects on a small oval grass/earth patch, one tiny shrub and a few flowers. Fine warm ink/pencil outlines and softly painted watercolor, sophisticated all-ages charm, natural sage/cream/terracotta colors. Entire low-profile scene and whole animal visible, centered square image with ample transparent margins, high isometric three-quarter aerial view, no horizon or backdrop, truly transparent background. No words, no numerals, no UI, no frame, no glossy 3D. Keep simple, readable map-marker silhouette.",
+  "original": "C:/Users/HsinYuChen/.codex/generated_images/01a1736e-65e9-72a2-8289-17ffd0814bd9/exec-169d7e3c-60cf-4e34-b7d6-5883c45b1fce.png",
+  "revision": 2,
+  "reason": "First stage must have no architecture, ensuring visible growth into stage-two canopy."
+}

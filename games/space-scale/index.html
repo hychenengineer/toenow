@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Space Scale - Celestial Weight Deductions</title>
+    <title>Space Scale - Fox Parcel Weighhouse</title>
     <meta
       name="description"
       content="A rapid-fire deep-space astrophysics deduction game. Analyze kinetic scales, lever arm moments, and counterweight cancellations to identify target celestial masses before time runs out."
     />
-    <meta property="og:title" content="Space Scale - Celestial Weight Deductions" />
+    <meta property="og:title" content="Space Scale - Fox Parcel Weighhouse" />
     <meta
       property="og:description"
       content="A rapid-fire deep-space astrophysics deduction game. Analyze kinetic scales, lever arm moments, and counterweight cancellations."
@@ -24,7 +24,9 @@
     <script src="../../shared/toenow-i18n-core.js"></script>
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
-    <script src="../../shared/toenow-i18n.js"></script>
+    <script src="../../shared/toenow-i18n-animals.js"></script>
+<script src="../../shared/toenow-i18n.js"></script>
+<script src="../../shared/toenow-animals.js"></script>
     <script src="../../shared/toenow-screen-config.js"></script>
     <script src="../../shared/toenow-screens.js"></script>
     <style>
@@ -957,7 +959,8 @@
         }
       }
     </style>
-  </head>
+  <link rel="stylesheet" href="../../assets/toenow-animals.css">
+</head>
   <body data-state="title" data-wave="1" data-score="0" data-shields="3">
     <!-- Full-Viewport Astrophysics Simulation Canvas -->
     <canvas id="game-canvas" data-testid="game-canvas" aria-label="Space Scale kinetic balance simulation"></canvas>
@@ -1129,12 +1132,12 @@
         const STORAGE_BEST_SCORE = 'grav_anomaly_best_score_v2';
         const STORAGE_BEST_EXP = 'grav_anomaly_best_exp_v2';
 
-        // Celestial Archetypes with 6 completely distinct silhouettes & color palettes
+        // Six parcel appearances. Original IDs and size ranges preserve puzzle generation.
         const ARCHETYPES = [
           {
             id: 'micro_hole',
-            name: 'Void Black Hole',
-            densityDesc: 'Hyper-dense Singularity',
+            name: 'Violet striped parcel',
+            densityDesc: 'Sealed mystery parcel',
             minRadius: 22,
             maxRadius: 26,
             primaryColor: '#a855f7',
@@ -1143,8 +1146,8 @@
           },
           {
             id: 'neutron_star',
-            name: 'Cross-Beam Pulsar',
-            densityDesc: 'Extreme Nuclear Density',
+            name: 'Blue dotted parcel',
+            densityDesc: 'Sealed mystery parcel',
             minRadius: 24,
             maxRadius: 28,
             primaryColor: '#22d3ee',
@@ -1153,8 +1156,8 @@
           },
           {
             id: 'blue_dwarf',
-            name: 'Emerald Crystal',
-            densityDesc: 'Crystalline Core',
+            name: 'Green checked parcel',
+            densityDesc: 'Sealed mystery parcel',
             minRadius: 30,
             maxRadius: 36,
             primaryColor: '#10b981',
@@ -1163,8 +1166,8 @@
           },
           {
             id: 'yellow_sun',
-            name: 'Blazing Sun',
-            densityDesc: 'Solar Corona Star',
+            name: 'Amber striped parcel',
+            densityDesc: 'Sealed mystery parcel',
             minRadius: 34,
             maxRadius: 40,
             primaryColor: '#facc15',
@@ -1173,8 +1176,8 @@
           },
           {
             id: 'gas_giant',
-            name: 'Ringed Saturn',
-            densityDesc: 'Banded Ring Planet',
+            name: 'Amber checked parcel',
+            densityDesc: 'Sealed mystery parcel',
             minRadius: 38,
             maxRadius: 44,
             primaryColor: '#f59e0b',
@@ -1183,8 +1186,8 @@
           },
           {
             id: 'nebula_bubble',
-            name: 'Rose Cloud Cluster',
-            densityDesc: 'Diffuse Gas Cloud',
+            name: 'Rose dotted parcel',
+            densityDesc: 'Sealed mystery parcel',
             minRadius: 42,
             maxRadius: 48,
             primaryColor: '#f43f5e',
@@ -1893,15 +1896,15 @@
           if (currentPuzzle.directive === 'max') {
             directiveActionLabelEl.textContent = '▲ TAP THE HEAVIEST';
             directiveBadgePillEl.textContent = 'HEAVIEST';
-            directiveSubEl.textContent = 'Choose the planet with the MOST weight';
+            directiveSubEl.textContent = 'Choose the parcel with the MOST weight';
           } else if (currentPuzzle.directive === 'min') {
             directiveActionLabelEl.textContent = '▼ TAP THE LIGHTEST';
             directiveBadgePillEl.textContent = 'LIGHTEST';
-            directiveSubEl.textContent = 'Choose the planet with the LEAST weight';
+            directiveSubEl.textContent = 'Choose the parcel with the LEAST weight';
           } else {
             directiveActionLabelEl.textContent = '◆ TAP THE MIDDLE WEIGHT';
             directiveBadgePillEl.textContent = 'MEDIAN';
-            directiveSubEl.textContent = 'Choose the MIDDLE planet (not heaviest, not lightest)';
+            directiveSubEl.textContent = 'Choose the MIDDLE parcel (not heaviest, not lightest)';
           }
 
           hudWaveEl.textContent = 'WAVE ' + wave;
@@ -1935,6 +1938,7 @@
         }
 
         function loadWave(nextWave) {
+          if (window.ToenowAnimals) window.ToenowAnimals.setWave('space-scale', nextWave);
           wave = nextWave;
           currentPuzzle = generateOverhauledPuzzle(wave, Date.now());
           waveTimeSec = currentPuzzle.waveDurationSec;
@@ -2024,6 +2028,7 @@
           if (gameState !== 'playing' || collapseAnim) return;
 
           const isCorrect = bodyId === currentPuzzle.targetBodyId;
+          if (window.ToenowAnimals) window.ToenowAnimals.feedback('space-scale', isCorrect);
 
           if (isCorrect) {
             streak++;
@@ -2299,421 +2304,27 @@
           if (w > 1) loadWave(w);
         }
 
-        // Celestial Body & Counterweight Rendering Helpers (Pure Visual Icons — No Text Labels)
-        function drawCelestialBody(
-          ctx,
-          body,
-          x,
-          y,
-          time,
-          isHovered,
-          collapseFactor
-        ) {
-          ctx.save();
-          ctx.translate(x, y);
-
-          const scale = collapseFactor !== undefined ? collapseFactor : 1;
-          const r = Math.max(6, body.visualRadius * scale);
-          const pulse = 1 + Math.sin(time * 4.2 + body.keyIndex) * 0.04;
-
-          if (isHovered) {
-            ctx.save();
-            ctx.strokeStyle = '#ffffff';
-            ctx.shadowColor = body.primaryColor;
-            ctx.shadowBlur = 14;
-            ctx.lineWidth = 2.5;
-            ctx.setLineDash([6, 4]);
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 1.45 + 10, time * 1.2, time * 1.2 + Math.PI * 2);
-            ctx.stroke();
-            ctx.restore();
+        // Mystery parcel and calibrated counterweight rendering
+        function drawMysteryParcel(ctx, body, x, y, time, isHovered, collapseFactor) {
+          ctx.save();ctx.translate(x,y);
+          // Display size stays independent of the hidden weight, exactly as before.
+          const r=Math.max(6,body.visualRadius*(collapseFactor===undefined?1:collapseFactor));
+          ctx.fillStyle='#f2dfb9';ctx.strokeStyle=isHovered?'#ffffff':body.primaryColor;ctx.lineWidth=isHovered?4:2.5;
+          ctx.beginPath();ctx.rect(-r*.83,-r*.84,r*1.66,r*1.68);ctx.fill();ctx.stroke();
+          // A separate pattern and colour identify each parcel even without colour vision.
+          ctx.save();ctx.beginPath();ctx.rect(-r*.78,-r*.79,r*1.56,r*1.58);ctx.clip();
+          ctx.strokeStyle=body.primaryColor;ctx.fillStyle=body.primaryColor;ctx.lineWidth=2;
+          const pattern = ['micro_hole','yellow_sun'].includes(body.archetype) ? 0 : ['neutron_star','nebula_bubble'].includes(body.archetype) ? 1 : body.archetype ? 2 : (body.keyIndex-1)%3;
+          for(let i=-2;i<=2;i++) {
+            if(pattern===0){ctx.beginPath();ctx.moveTo(-r,r*i*.45-r);ctx.lineTo(r,r*i*.45+r);ctx.stroke();}
+            else if(pattern===1){for(let j=-2;j<=2;j++){ctx.beginPath();ctx.arc(i*r*.38,j*r*.38,r*.065,0,Math.PI*2);ctx.fill();}}
+            else {ctx.beginPath();ctx.moveTo(i*r*.38,-r);ctx.lineTo(i*r*.38,r);ctx.moveTo(-r,i*r*.38);ctx.lineTo(r,i*r*.38);ctx.stroke();}
           }
-
-          // Outer ambient halo
-          const haloGrad = ctx.createRadialGradient(0, 0, r * 0.2, 0, 0, r * 1.75);
-          haloGrad.addColorStop(0, body.primaryColor + '55');
-          haloGrad.addColorStop(0.55, body.secondaryColor + '22');
-          haloGrad.addColorStop(1, 'rgba(5, 7, 14, 0)');
-          ctx.fillStyle = haloGrad;
-          ctx.beginPath();
-          ctx.arc(0, 0, r * 1.75, 0, Math.PI * 2);
-          ctx.fill();
-
-          if (body.archetype === 'micro_hole') {
-            // 1. VOID BLACK HOLE: Pitch-black core + Neon Violet-Magenta Accretion Disk
-            ctx.save();
-            ctx.rotate(-0.38);
-            ctx.scale(1, 0.36);
-
-            // Back & outer neon purple accretion disk
-            const accGrad = ctx.createRadialGradient(0, 0, r * 0.8, 0, 0, r * 2.2);
-            accGrad.addColorStop(0, '#ffffff');
-            accGrad.addColorStop(0.25, '#e879f9');
-            accGrad.addColorStop(0.65, '#9333ea');
-            accGrad.addColorStop(1, 'rgba(147, 51, 234, 0)');
-            ctx.fillStyle = accGrad;
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 2.2, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.strokeStyle = '#f0abfc';
-            ctx.lineWidth = 2.2;
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 1.55, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Orbiting bright accretion sparks
-            for (let k = 0; k < 4; k++) {
-              const kAngle = time * 3.0 + k * (Math.PI / 2);
-              const kx = Math.cos(kAngle) * (r * 1.55);
-              const ky = Math.sin(kAngle) * (r * 1.55);
-              ctx.fillStyle = '#ffffff';
-              ctx.beginPath();
-              ctx.arc(kx, ky, 3.2, 0, Math.PI * 2);
-              ctx.fill();
-            }
-            ctx.restore();
-
-            // Pitch-black event horizon void
-            ctx.fillStyle = '#000000';
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 0.88, 0, Math.PI * 2);
-            ctx.fill();
-
-            // High-contrast neon violet-white event horizon rim
-            ctx.strokeStyle = '#f0abfc';
-            ctx.lineWidth = 2.8;
-            ctx.shadowColor = '#d946ef';
-            ctx.shadowBlur = 12;
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 0.9 * pulse, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-          } else if (body.archetype === 'neutron_star') {
-            // 2. ELECTRIC CYAN CROSS-BEAM PULSAR: Unmistakable X-Shaped 4-Way Laser Star + Radar Rings
-            ctx.save();
-            ctx.rotate(Math.PI / 4 + Math.sin(time * 1.5) * 0.12);
-            const jetLen = r * 2.4;
-            const jetW = r * 0.26;
-
-            // Draw 4 perpendicular X-beams
-            for (let b = 0; b < 4; b++) {
-              ctx.save();
-              ctx.rotate((b * Math.PI) / 2);
-              const beamGrad = ctx.createLinearGradient(0, 0, 0, -jetLen);
-              beamGrad.addColorStop(0, '#ffffff');
-              beamGrad.addColorStop(0.35, '#22d3ee');
-              beamGrad.addColorStop(0.8, 'rgba(6, 182, 212, 0.35)');
-              beamGrad.addColorStop(1, 'rgba(6, 182, 212, 0)');
-              ctx.fillStyle = beamGrad;
-              ctx.beginPath();
-              ctx.moveTo(-jetW * 0.5, 0);
-              ctx.lineTo(jetW * 0.5, 0);
-              ctx.lineTo(jetW * 1.3, -jetLen);
-              ctx.lineTo(-jetW * 1.3, -jetLen);
-              ctx.closePath();
-              ctx.fill();
-              ctx.restore();
-            }
-            ctx.restore();
-
-            // Concentric Cyan Magnetic Rings
-            ctx.strokeStyle = 'rgba(34, 211, 238, 0.75)';
-            ctx.lineWidth = 1.8;
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 1.32, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Bright Cyan-White Core
-            const coreGrad = ctx.createRadialGradient(0, 0, 1, 0, 0, r * 0.85);
-            coreGrad.addColorStop(0, '#ffffff');
-            coreGrad.addColorStop(0.55, '#22d3ee');
-            coreGrad.addColorStop(1, '#0284c7');
-            ctx.fillStyle = coreGrad;
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 0.85, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 0.85, 0, Math.PI * 2);
-            ctx.stroke();
-          } else if (body.archetype === 'gas_giant') {
-            // 3. RINGED SATURN PLANET: Banded Sphere + Wide Tilted Concentric Golden Rings
-            const tilt = -0.34;
-            const ringRx = r * 1.95;
-            const ringRy = r * 0.58;
-
-            // Back Half of Saturn Rings
-            ctx.save();
-            ctx.rotate(tilt);
-            ctx.strokeStyle = '#fb923c';
-            ctx.lineWidth = r * 0.22;
-            ctx.beginPath();
-            ctx.ellipse(0, 0, ringRx * 0.94, ringRy * 0.94, 0, Math.PI, Math.PI * 2);
-            ctx.stroke();
-
-            ctx.strokeStyle = '#fef08a';
-            ctx.lineWidth = r * 0.18;
-            ctx.beginPath();
-            ctx.ellipse(0, 0, ringRx * 0.74, ringRy * 0.74, 0, Math.PI, Math.PI * 2);
-            ctx.stroke();
-            ctx.restore();
-
-            // Striped Planet Sphere
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 0.92, 0, Math.PI * 2);
-            ctx.clip();
-
-            const planetGrad = ctx.createRadialGradient(-r * 0.3, -r * 0.3, r * 0.1, 0, 0, r);
-            planetGrad.addColorStop(0, '#fef3c7');
-            planetGrad.addColorStop(0.45, '#f59e0b');
-            planetGrad.addColorStop(0.85, '#b45309');
-            planetGrad.addColorStop(1, '#78350f');
-            ctx.fillStyle = planetGrad;
-            ctx.fillRect(-r, -r, r * 2, r * 2);
-
-            const bandColors = ['#991b1b', '#fde68a', '#b45309', '#fef3c7', '#7f1d1d'];
-            for (let b = 0; b < bandColors.length; b++) {
-              const by = -r * 0.75 + b * (r * 0.34);
-              ctx.fillStyle = bandColors[b];
-              ctx.globalAlpha = 0.65;
-              ctx.fillRect(-r, by, r * 2, r * 0.16);
-            }
-            ctx.globalAlpha = 1;
-
-            // Great Red Eye Storm
-            ctx.fillStyle = '#dc2626';
-            ctx.strokeStyle = '#fef08a';
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.ellipse(r * 0.2, r * 0.25, r * 0.24, r * 0.14, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-            ctx.restore();
-
-            // Planet rim outline
-            ctx.strokeStyle = '#fde68a';
-            ctx.lineWidth = 1.6;
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 0.92, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Front Half of Saturn Rings
-            ctx.save();
-            ctx.rotate(tilt);
-            ctx.strokeStyle = 'rgba(0, 0, 0, 0.55)';
-            ctx.lineWidth = r * 0.1;
-            ctx.beginPath();
-            ctx.ellipse(0, r * 0.06, ringRx * 0.74, ringRy * 0.74, 0, 0, Math.PI);
-            ctx.stroke();
-
-            ctx.strokeStyle = '#fef08a';
-            ctx.lineWidth = r * 0.18;
-            ctx.beginPath();
-            ctx.ellipse(0, 0, ringRx * 0.74, ringRy * 0.74, 0, 0, Math.PI);
-            ctx.stroke();
-
-            ctx.strokeStyle = '#fb923c';
-            ctx.lineWidth = r * 0.22;
-            ctx.beginPath();
-            ctx.ellipse(0, 0, ringRx * 0.94, ringRy * 0.94, 0, 0, Math.PI);
-            ctx.stroke();
-            ctx.restore();
-          } else if (body.archetype === 'nebula_bubble') {
-            // 4. ROSE-PINK CLOUD CLUSTER: Fluffy Scalloped Cloud + White Twinkling Stars
-            const lobes = 6;
-            const lobeDist = r * 0.48;
-            const lobeR = r * 0.56;
-
-            // Outer glowing pink cloud puffs
-            for (let l = 0; l < lobes; l++) {
-              const ang = (l * Math.PI * 2) / lobes + time * 0.35;
-              const lx = Math.cos(ang) * lobeDist;
-              const ly = Math.sin(ang) * lobeDist;
-              const puffGrad = ctx.createRadialGradient(lx, ly, 1, lx, ly, lobeR);
-              puffGrad.addColorStop(0, '#ffe4e6');
-              puffGrad.addColorStop(0.45, '#fb7185');
-              puffGrad.addColorStop(0.85, '#e11d48');
-              puffGrad.addColorStop(1, 'rgba(225, 29, 72, 0)');
-              ctx.fillStyle = puffGrad;
-              ctx.beginPath();
-              ctx.arc(lx, ly, lobeR, 0, Math.PI * 2);
-              ctx.fill();
-
-              // Crisp cloud lobe rim arc
-              ctx.strokeStyle = 'rgba(255, 228, 230, 0.75)';
-              ctx.lineWidth = 2;
-              ctx.beginPath();
-              ctx.arc(lx, ly, lobeR * 0.78, ang - 1.1, ang + 1.1);
-              ctx.stroke();
-            }
-
-            // Center rose core
-            const centerGrad = ctx.createRadialGradient(0, 0, 2, 0, 0, r * 0.65);
-            centerGrad.addColorStop(0, '#ffffff');
-            centerGrad.addColorStop(0.5, '#fda4af');
-            centerGrad.addColorStop(1, 'rgba(244, 63, 94, 0)');
-            ctx.fillStyle = centerGrad;
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 0.65, 0, Math.PI * 2);
-            ctx.fill();
-
-            // 4 Crisp White 4-Point Stars inside the cloud
-            const starPts = [
-              { x: -r * 0.32, y: -r * 0.22 },
-              { x: r * 0.32, y: -r * 0.22 },
-              { x: 0, y: r * 0.32 },
-              { x: 0, y: -r * 0.02 },
-            ];
-            starPts.forEach((st, idx) => {
-              const sSize = (idx === 3 ? 5.5 : 4.2) * (0.85 + 0.2 * Math.sin(time * 5 + idx));
-              ctx.save();
-              ctx.translate(st.x, st.y);
-              ctx.fillStyle = '#ffffff';
-              ctx.beginPath();
-              ctx.moveTo(0, -sSize * 1.8);
-              ctx.lineTo(sSize * 0.5, -sSize * 0.5);
-              ctx.lineTo(sSize * 1.8, 0);
-              ctx.lineTo(sSize * 0.5, sSize * 0.5);
-              ctx.lineTo(0, sSize * 1.8);
-              ctx.lineTo(-sSize * 0.5, sSize * 0.5);
-              ctx.lineTo(-sSize * 1.8, 0);
-              ctx.lineTo(-sSize * 0.5, -sSize * 0.5);
-              ctx.closePath();
-              ctx.fill();
-              ctx.restore();
-            });
-          } else if (body.archetype === 'yellow_sun') {
-            // 5. BLAZING SPIKY SUN: 12 Sharp Triangular Sunburst Rays + Golden Core
-            const rayCount = 12;
-            ctx.save();
-            ctx.rotate(time * 0.45);
-            for (let i = 0; i < rayCount; i++) {
-              const ang = (i * Math.PI * 2) / rayCount;
-              const isLong = i % 2 === 0;
-              const outerR = r * (isLong ? 1.52 : 1.3);
-              const baseSpread = 0.18;
-
-              ctx.fillStyle = isLong ? '#facc15' : '#f97316';
-              ctx.beginPath();
-              ctx.moveTo(Math.cos(ang - baseSpread) * (r * 0.88), Math.sin(ang - baseSpread) * (r * 0.88));
-              ctx.lineTo(Math.cos(ang) * outerR, Math.sin(ang) * outerR);
-              ctx.lineTo(Math.cos(ang + baseSpread) * (r * 0.88), Math.sin(ang + baseSpread) * (r * 0.88));
-              ctx.closePath();
-              ctx.fill();
-            }
-            ctx.restore();
-
-            // Bright Golden-Orange Sun Disc
-            const sunGrad = ctx.createRadialGradient(-r * 0.2, -r * 0.2, r * 0.1, 0, 0, r * 0.92);
-            sunGrad.addColorStop(0, '#ffffff');
-            sunGrad.addColorStop(0.35, '#fef08a');
-            sunGrad.addColorStop(0.75, '#f59e0b');
-            sunGrad.addColorStop(1, '#dc2626');
-            ctx.fillStyle = sunGrad;
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 0.92, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.strokeStyle = '#fef08a';
-            ctx.lineWidth = 2.2;
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 0.92, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Distinct Dark Sunspots
-            ctx.fillStyle = '#7c2d12';
-            ctx.beginPath();
-            ctx.arc(-r * 0.28, -r * 0.14, r * 0.12, 0, Math.PI * 2);
-            ctx.arc(r * 0.24, r * 0.2, r * 0.1, 0, Math.PI * 2);
-            ctx.fill();
-          } else {
-            // 6. EMERALD HEXAGONAL CRYSTAL GEM (blue_dwarf): Sharp Green Polygon + Orbiting Diamonds
-            const shardCount = 4;
-            ctx.save();
-            for (let s = 0; s < shardCount; s++) {
-              const sAngle = time * 1.4 + s * (Math.PI / 2);
-              const sDist = r * 1.42;
-              const sx = Math.cos(sAngle) * sDist;
-              const sy = Math.sin(sAngle) * sDist;
-
-              ctx.save();
-              ctx.translate(sx, sy);
-              ctx.rotate(sAngle + Math.PI / 4);
-              ctx.fillStyle = '#6ee7b7';
-              ctx.strokeStyle = '#ffffff';
-              ctx.lineWidth = 1.2;
-              ctx.beginPath();
-              ctx.moveTo(0, -5.5);
-              ctx.lineTo(4, 0);
-              ctx.lineTo(0, 5.5);
-              ctx.lineTo(-4, 0);
-              ctx.closePath();
-              ctx.fill();
-              ctx.stroke();
-              ctx.restore();
-            }
-            ctx.restore();
-
-            const sides = 6;
-            const vertices = [];
-            for (let v = 0; v < sides; v++) {
-              const vAngle = (v * Math.PI * 2) / sides - Math.PI / 6;
-              vertices.push({
-                x: Math.cos(vAngle) * r,
-                y: Math.sin(vAngle) * r,
-              });
-            }
-
-            const facetColors = [
-              '#047857',
-              '#10b981',
-              '#059669',
-              '#34d399',
-              '#065f46',
-              '#6ee7b7',
-            ];
-            for (let f = 0; f < sides; f++) {
-              const nextF = (f + 1) % sides;
-              ctx.fillStyle = facetColors[f];
-              ctx.beginPath();
-              ctx.moveTo(0, 0);
-              ctx.lineTo(vertices[f].x, vertices[f].y);
-              ctx.lineTo(vertices[nextF].x, vertices[nextF].y);
-              ctx.closePath();
-              ctx.fill();
-            }
-
-            // Inner hexagon cut lines
-            ctx.strokeStyle = '#d1fae5';
-            ctx.lineWidth = 1.8;
-            for (let v = 0; v < sides; v++) {
-              ctx.beginPath();
-              ctx.moveTo(0, 0);
-              ctx.lineTo(vertices[v].x, vertices[v].y);
-              ctx.stroke();
-            }
-
-            // Crisp outer crystal border
-            ctx.strokeStyle = '#a7f3d0';
-            ctx.lineWidth = 2.6;
-            ctx.beginPath();
-            ctx.moveTo(vertices[0].x, vertices[0].y);
-            for (let v = 1; v < sides; v++) {
-              ctx.lineTo(vertices[v].x, vertices[v].y);
-            }
-            ctx.closePath();
-            ctx.stroke();
-
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 0.2, 0, Math.PI * 2);
-            ctx.fill();
-          }
-
+          ctx.restore();
+          // Crossed packing twine and a large unambiguous identifying tag.
+          ctx.strokeStyle='#9b7551';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,-r*.84);ctx.lineTo(0,r*.84);ctx.moveTo(-r*.83,0);ctx.lineTo(r*.83,0);ctx.stroke();
+          ctx.fillStyle='#fff9e9';ctx.beginPath();ctx.arc(0,0,r*.45,0,Math.PI*2);ctx.fill();
+          ctx.fillStyle='#473c31';ctx.font='bold '+Math.round(r*.65)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(body.symbol,0,1);
           ctx.restore();
         }
 
@@ -2915,7 +2526,7 @@
                 }
 
                 const isHovered = hoveredBodyId === body.id;
-                drawCelestialBody(
+                drawMysteryParcel(
                   ctx,
                   body,
                   ix,
@@ -2958,7 +2569,7 @@
             symbol: 'α',
             keyIndex: 1,
             archetype: 'micro_hole',
-            densityDesc: 'Hyper-dense Singularity',
+            densityDesc: 'Sealed mystery parcel',
             visualRadius: 24,
             primaryColor: '#a855f7',
             secondaryColor: '#e879f9',
@@ -2970,7 +2581,7 @@
             symbol: 'β',
             keyIndex: 2,
             archetype: 'gas_giant',
-            densityDesc: 'Banded Ring Planet',
+            densityDesc: 'Sealed mystery parcel',
             visualRadius: 42,
             primaryColor: '#f59e0b',
             secondaryColor: '#dc2626',
@@ -3070,7 +2681,7 @@
 
           // Render
           ctx.save();
-          ctx.fillStyle = '#05070e';
+          ctx.fillStyle = '#2d4943';
           ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
           if (cameraTrauma > 0.001) {
@@ -3080,7 +2691,10 @@
             ctx.translate(sx, sy);
           }
 
-          // Starfield
+          ctx.fillStyle='rgba(194,160,108,.12)';ctx.fillRect(0,canvasHeight-26,canvasWidth,26);
+          ctx.strokeStyle='rgba(206,177,126,.18)';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(9,140);ctx.lineTo(9,canvasHeight);ctx.moveTo(canvasWidth-9,140);ctx.lineTo(canvasWidth-9,canvasHeight);ctx.stroke();
+          if (gameState !== 'title' && window.ToenowAnimals) window.ToenowAnimals.drawAnimal(ctx,'fox',canvasWidth*.5,canvasHeight-40,62);
+          // Fireflies above the weighhouse
           for (let i = 0; i < STAR_COUNT; i++) {
             const st = stars[i];
             const sy = ((st.y + timeSec * st.speed) % 1) * canvasHeight;

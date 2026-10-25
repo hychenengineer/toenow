@@ -1,0 +1,404 @@
+{
+  "method": "Playwright Edge recordVideo with actual production Start controls and input",
+  "viewport": {
+    "width": 768,
+    "height": 576
+  },
+  "results": [
+    {
+      "id": "ball-track",
+      "status": "PASS",
+      "url": "http://127.0.0.1:8765/games/ball-track/",
+      "startedAt": "2026-10-25T16:47:53.878Z",
+      "viewport": {
+        "width": 768,
+        "height": 576
+      },
+      "actions": [
+        {
+          "action": "Clicked production Start control",
+          "atMs": 1792946874280,
+          "atSeconds": 0.402
+        },
+        {
+          "action": "Followed leaves and selected a remembered otter",
+          "atMs": 1792946882322,
+          "atSeconds": 8.444
+        }
+      ],
+      "trimStartSeconds": 3.644000000000001,
+      "videoBytes": 298514,
+      "posterBytes": 151635,
+      "videoSha256": "635b95c8ab0fa8488f4bc60b14791af017c4b7a43364268a35a22eaf97bcd777",
+      "posterSha256": "2ae080672499794de6f1beb5cf24ae60e3bd5d5cc7c9aa8b5e7ed386df2a9dfc",
+      "originalRecording": "recordings/ball-track.webm",
+      "originalRecordingSha256": "d58bb6c5575ebfb68d8100b9c3da2ddc876082e3ed593ed4080e1240bbd92c11",
+      "media": {
+        "duration": 7,
+        "width": 768,
+        "height": 576,
+        "decodedTime": 0.244114,
+        "readyState": 4
+      },
+      "errors": [],
+      "storageIsolation": "new nonpersistent browser context; no production browser profile"
+    },
+    {
+      "id": "block-match",
+      "status": "PASS",
+      "url": "http://127.0.0.1:8765/games/block-match/",
+      "startedAt": "2026-10-25T16:48:06.264Z",
+      "viewport": {
+        "width": 768,
+        "height": 576
+      },
+      "actions": [
+        {
+          "action": "Clicked production Start control",
+          "atMs": 1792946886612,
+          "atSeconds": 0.348
+        },
+        {
+          "action": "Removed an extra timber tile",
+          "atMs": 1792946887133,
+          "atSeconds": 0.869
+        },
+        {
+          "action": "Removed an extra timber tile",
+          "atMs": 1792946887349,
+          "atSeconds": 1.085
+        }
+      ],
+      "trimStartSeconds": 0.348,
+      "videoBytes": 233697,
+      "posterBytes": 56762,
+      "videoSha256": "cae224f6296ee66abaec8b34098596f122921a201f90670a02b912282d1005e8",
+      "posterSha256": "b02e47dbadae3d5d61755a42a4b563baaf182e20e9d006128e61d0649a7d2166",
+      "originalRecording": "recordings/block-match.webm",
+      "originalRecordingSha256": "77a7f6ab5def41fd4fabfe72c6b0bbb5c3f3bcd8614cb7b1477a4fd6c6d14d51",
+      "media": {
+        "duration": 7,
+        "width": 768,
+        "height": 576,
+        "decodedTime": 0.201223,
+        "readyState": 4
+      },
+      "errors": [],
+      "storageIsolation": "new nonpersistent browser context; no production browser profile"
+    },
+    {
+      "id": "add-up",
+      "status": "PASS",
+      "url": "http://127.0.0.1:8765/games/add-up/",
+      "startedAt": "2026-10-25T16:48:16.363Z",
+      "viewport": {
+        "width": 768,
+        "height": 576
+      },
+      "actions": [
+        {
+          "action": "Clicked production Start control",
+          "atMs": 1792946896789,
+          "atSeconds": 0.426
+        },
+        {
+          "action": "Selected nut bag 1 for exact supply total 20",
+          "atMs": 1792946897355,
+          "atSeconds": 0.992
+        },
+        {
+          "action": "Selected nut bag 2 for exact supply total 20",
+          "atMs": 1792946897612,
+          "atSeconds": 1.249
+        }
+      ],
+      "trimStartSeconds": 0.426,
+      "videoBytes": 335436,
+      "posterBytes": 69460,
+      "videoSha256": "a2db2b8cfeab1c8dba8289037f642ab1a94897e10bb7c82171f3f98754c6dbc7",
+      "posterSha256": "5f2f9dc705f7645ad2bc6ccaf16843b59b5482b848fc9c01b193c12f782f85b0",
+      "originalRecording": "recordings/add-up.webm",
+      "originalRecordingSha256": "721202e003069f80e474c0da8abb03154971cb931d2b9f39a2b3454b4b0cb473",
+      "media": {
+        "duration": 7,
+        "width": 768,
+        "height": 576,
+        "decodedTime": 0.201978,
+        "readyState": 4
+      },
+      "errors": [],
+      "storageIsolation": "new nonpersistent browser context; no production browser profile"
+    },
+    {
+      "id": "space-scale",
+      "status": "PASS",
+      "url": "http://127.0.0.1:8765/games/space-scale/",
+      "startedAt": "2026-10-25T16:48:27.361Z",
+      "viewport": {
+        "width": 768,
+        "height": 576
+      },
+      "actions": [
+        {
+          "action": "Clicked production Start control",
+          "atMs": 1792946907678,
+          "atSeconds": 0.317
+        },
+        {
+          "action": "Selected correct parcel by scale clues",
+          "atMs": 1792946908193,
+          "atSeconds": 0.832
+        }
+      ],
+      "trimStartSeconds": 0.317,
+      "videoBytes": 276754,
+      "posterBytes": 79713,
+      "videoSha256": "ab237740189b4238cca0f184250a06b6b07d87060f04abdd3ba2a892a9e6f6a1",
+      "posterSha256": "1991ba836a0dfd7cd67203f533b7adfbc2d1b3c9679a436b61022f6f4eb8a3c0",
+      "originalRecording": "recordings/space-scale.webm",
+      "originalRecordingSha256": "e0a2147d2150bf501d857e31425a95e240256b685375e1ec8eb6b6ad2b4de5b6",
+      "media": {
+        "duration": 7,
+        "width": 768,
+        "height": 576,
+        "decodedTime": 0.210538,
+        "readyState": 4
+      },
+      "errors": [],
+      "storageIsolation": "new nonpersistent browser context; no production browser profile"
+    },
+    {
+      "id": "spot-quick",
+      "status": "PASS",
+      "url": "http://127.0.0.1:8765/games/spot-quick/",
+      "startedAt": "2026-10-25T16:48:50.144Z",
+      "viewport": {
+        "width": 768,
+        "height": 576
+      },
+      "actions": [
+        {
+          "action": "Clicked production Start control",
+          "atMs": 1792946930462,
+          "atSeconds": 0.318
+        },
+        {
+          "action": "Identified the correct specimen photo",
+          "atMs": 1792946931026,
+          "atSeconds": 0.882
+        }
+      ],
+      "trimStartSeconds": 0.318,
+      "videoBytes": 283431,
+      "posterBytes": 125865,
+      "videoSha256": "2c019e21e42fa2d89a27ae3f9ecc6246b498a9d1075e8a6f12be84880748b76e",
+      "posterSha256": "9e26bf11cc27b86301609cfc8aa356bb8c0fede007c83f66c46243d15bafed97",
+      "originalRecording": "recordings/spot-quick.webm",
+      "originalRecordingSha256": "c3aa98b6e8bfd8b0bd0a6fb1bce9bcdc4c5bb1c1d67c873ef27d01bdc655b82a",
+      "media": {
+        "duration": 7,
+        "width": 768,
+        "height": 576,
+        "decodedTime": 0.211927,
+        "readyState": 4
+      },
+      "errors": [],
+      "storageIsolation": "new nonpersistent browser context; no production browser profile"
+    },
+    {
+      "id": "shadow-match",
+      "status": "PASS",
+      "url": "http://127.0.0.1:8765/games/shadow-match/",
+      "startedAt": "2026-10-25T16:49:02.944Z",
+      "viewport": {
+        "width": 768,
+        "height": 576
+      },
+      "actions": [
+        {
+          "action": "Clicked production Start control",
+          "atMs": 1792946943313,
+          "atSeconds": 0.369
+        },
+        {
+          "action": "Selected the matching moving paper silhouette",
+          "atMs": 1792946943857,
+          "atSeconds": 0.913
+        }
+      ],
+      "trimStartSeconds": 0.369,
+      "videoBytes": 251213,
+      "posterBytes": 138785,
+      "videoSha256": "52d1e06d9e8740936473da4b983d3af9267fa1dd5eb66ec00f07330a9cb4acea",
+      "posterSha256": "741eeccff4ba77d2d55ceb3e9430ddaeba3a6bd39579bd600b5a89eb4d87a79f",
+      "originalRecording": "recordings/shadow-match.webm",
+      "originalRecordingSha256": "296bfa9c4e73a4f3f2ef4fa94c4d6b7891b31264962a4e614d570a1d46f914e0",
+      "media": {
+        "duration": 7,
+        "width": 768,
+        "height": 576,
+        "decodedTime": 0.246489,
+        "readyState": 4
+      },
+      "errors": [],
+      "storageIsolation": "new nonpersistent browser context; no production browser profile"
+    },
+    {
+      "id": "tap-match",
+      "status": "PASS",
+      "url": "http://127.0.0.1:8765/games/tap-match/",
+      "startedAt": "2026-10-25T16:50:04.709Z",
+      "viewport": {
+        "width": 768,
+        "height": 576
+      },
+      "presentationZoom": 1,
+      "actions": [
+        {
+          "action": "Clicked production Start control",
+          "atMs": 1792947005223,
+          "atSeconds": 0.514
+        },
+        {
+          "action": "Collected a matching picture card for Penguin",
+          "atMs": 1792947007713,
+          "atSeconds": 3.004
+        }
+      ],
+      "trimStartSeconds": 0.514,
+      "videoBytes": 249638,
+      "posterBytes": 40198,
+      "videoSha256": "107465f63794eeea8bbd3a6d93a0d96057d5ae73fb79b3b09ddb7d5a36f5249a",
+      "posterSha256": "d6283a900d5a3dc0df08935393b9d4022b0d01e2ab0724281fa9496c44e9fac6",
+      "originalRecording": "recordings/tap-match.webm",
+      "originalRecordingSha256": "931c9488811fb499d57fa0cd745efaa4c74f1d72c0b75a1282a5f86f7c869b3d",
+      "media": {
+        "duration": 7,
+        "width": 768,
+        "height": 576,
+        "decodedTime": 0.201879,
+        "readyState": 4
+      },
+      "errors": [],
+      "storageIsolation": "new nonpersistent browser context; no production browser profile"
+    },
+    {
+      "id": "flash-brain",
+      "status": "PASS",
+      "url": "http://127.0.0.1:8765/games/flash-brain/",
+      "startedAt": "2026-10-25T16:50:15.226Z",
+      "viewport": {
+        "width": 768,
+        "height": 576
+      },
+      "presentationZoom": 1,
+      "actions": [
+        {
+          "action": "Clicked production Start control",
+          "atMs": 1792947015514,
+          "atSeconds": 0.288
+        },
+        {
+          "action": "Recalled a safe animal flowerbed",
+          "atMs": 1792947018117,
+          "atSeconds": 2.891
+        }
+      ],
+      "trimStartSeconds": 0.288,
+      "videoBytes": 190629,
+      "posterBytes": 53769,
+      "videoSha256": "a2fe55a36b52b4b7b6e7749f1a2a40e03d8eaa25f957f659e748fe0d2636ad5c",
+      "posterSha256": "3014899610818271e5aa077fc4c9fe8d079fa718af406391bb46eba2ab425719",
+      "originalRecording": "recordings/flash-brain.webm",
+      "originalRecordingSha256": "d84b37c66c12b5c7be9abd5a4603870af9e24d99345e21c44e5dc14ffc63fcc2",
+      "media": {
+        "duration": 7,
+        "width": 768,
+        "height": 576,
+        "decodedTime": 0.239883,
+        "readyState": 4
+      },
+      "errors": [],
+      "storageIsolation": "new nonpersistent browser context; no production browser profile"
+    },
+    {
+      "id": "animal-rescue-train",
+      "status": "PASS",
+      "url": "http://127.0.0.1:8765/games/animal-rescue-train/",
+      "startedAt": "2026-10-25T16:50:52.370Z",
+      "viewport": {
+        "width": 768,
+        "height": 576
+      },
+      "presentationZoom": 0.6,
+      "actions": [
+        {
+          "action": "Clicked production Start control",
+          "atMs": 1792947052867,
+          "atSeconds": 0.497
+        },
+        {
+          "action": "Selected queue head and boarded a legal carriage",
+          "atMs": 1792947053463,
+          "atSeconds": 1.093
+        }
+      ],
+      "trimStartSeconds": 0.497,
+      "videoBytes": 178937,
+      "posterBytes": 136285,
+      "videoSha256": "d02988561dfb981cd50e024aa5282915eb095c3c2d7ca820631ac85bbc85e727",
+      "posterSha256": "3a3c3748632ce79e1f863a24dfa3ab59638279c4d2f33b3e29373c154f323227",
+      "originalRecording": "recordings/animal-rescue-train.webm",
+      "originalRecordingSha256": "4beb48163ed4e312ee2a792ee67b17a20d8fc4011f98a49c6fc8f0b57425a8c2",
+      "media": {
+        "duration": 7,
+        "width": 768,
+        "height": 576,
+        "decodedTime": 0.247422,
+        "readyState": 4
+      },
+      "errors": [],
+      "storageIsolation": "new nonpersistent browser context; no production browser profile"
+    },
+    {
+      "id": "number-pop",
+      "status": "PASS",
+      "url": "http://127.0.0.1:8765/games/number-pop/",
+      "startedAt": "2026-10-25T16:51:38.804Z",
+      "viewport": {
+        "width": 768,
+        "height": 576
+      },
+      "presentationZoom": 1,
+      "actions": [
+        {
+          "action": "Clicked production Start control",
+          "atMs": 1792947099354,
+          "atSeconds": 0.55
+        },
+        {
+          "action": "Clicked lowest-value harvest basket 1",
+          "atMs": 1792947099873,
+          "atSeconds": 1.069
+        }
+      ],
+      "trimStartSeconds": 0.55,
+      "videoBytes": 389494,
+      "posterBytes": 61551,
+      "videoSha256": "a506ffd2e040ac0bce694600fc6da3c4e81f5984dc35876e1928b434e2b5d2d9",
+      "posterSha256": "bf29643f64515428718d31b8c39c5ec84d426c5a5dfa69718eb35515cbdd51f1",
+      "originalRecording": "recordings/number-pop.webm",
+      "originalRecordingSha256": "6bf3bc612b939b49e067d5f84001c5824faa0c406a724b1adc0030ce6ed3b84d",
+      "media": {
+        "duration": 7,
+        "width": 768,
+        "height": 576,
+        "decodedTime": 0.211123,
+        "readyState": 4
+      },
+      "errors": [],
+      "storageIsolation": "new nonpersistent browser context; no production browser profile"
+    }
+  ],
+  "count": 10
+}

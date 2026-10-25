@@ -1,0 +1,19 @@
+/* Watercolor framing is kept outside the precise, interactive puzzle geometry. */
+body.animal-game { background-color: #f4f0e4; }
+.animal-companion { position: fixed; bottom: max(8px,env(safe-area-inset-bottom)); left: max(8px,env(safe-area-inset-left)); z-index: 65; color: #354d43; font: 13px/1.5 system-ui,sans-serif; }
+.animal-companion[hidden] { display: none !important; }
+.animal-companion-toggle { display: flex; align-items: center; gap: 5px; min-width: 54px; min-height: 44px; padding: 4px 8px; border: 1px solid #b7c4aa; border-radius: 18px; background: #fffaf0f2; box-shadow: 0 2px 8px #29433218; color: #354d43; cursor: pointer; }
+.animal-companion-toggle span { font-size: 26px; }
+.animal-companion-toggle small { font-size: 10px; font-weight: 700; }
+.animal-companion-detail { position: absolute; bottom: 54px; left: 0; width: min(230px,calc(100vw - 32px)); padding: 12px; border: 1px solid #c3cbb3; border-radius: 18px; background: #fffaf2; box-shadow: 0 5px 24px #29433224; }
+.animal-companion-detail[hidden] { display: none; }
+.animal-companion-detail img { display: block; object-fit: contain; margin: auto; }
+.animal-companion-detail strong { display: block; text-align: center; }
+.animal-companion-detail p { margin: 7px 0 0; color: #52665a; font-size: 12px; }
+.animal-companion-status { position: absolute; bottom: 4px; left: calc(100% + 7px); width: max-content; max-width: min(230px,60vw); background: #fffaf2; border-radius: 12px; padding: 7px 10px; box-shadow: 0 2px 8px #29433218; pointer-events: none; }
+.animal-companion-status:empty { display: none; }
+.animal-companion[data-reaction="success"] .animal-companion-toggle { border-color: #638c5d; background: #edf5e3; }
+.animal-companion[data-reaction="retry"] .animal-companion-toggle { border-color: #bc9863; }
+.unified-animal-art { display: block; width: 140px; height: 94px; object-fit: contain; margin: 0 auto 8px; }
+@media(max-width:600px) { .unified-animal-art { width: 110px; height: 75px; } .animal-companion-toggle { min-width: 48px; padding: 3px 6px; } }
+@media(prefers-reduced-motion:reduce) { .animal-companion * { animation: none !important; transition: none !important; } }

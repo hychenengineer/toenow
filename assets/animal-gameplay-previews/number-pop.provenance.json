@@ -1,0 +1,39 @@
+{
+  "id": "number-pop",
+  "status": "PASS",
+  "url": "http://127.0.0.1:8765/games/number-pop/",
+  "startedAt": "2026-10-25T16:51:38.804Z",
+  "viewport": {
+    "width": 768,
+    "height": 576
+  },
+  "presentationZoom": 1,
+  "actions": [
+    {
+      "action": "Clicked production Start control",
+      "atMs": 1792947099354,
+      "atSeconds": 0.55
+    },
+    {
+      "action": "Clicked lowest-value harvest basket 1",
+      "atMs": 1792947099873,
+      "atSeconds": 1.069
+    }
+  ],
+  "trimStartSeconds": 0.55,
+  "videoBytes": 389494,
+  "posterBytes": 61551,
+  "videoSha256": "a506ffd2e040ac0bce694600fc6da3c4e81f5984dc35876e1928b434e2b5d2d9",
+  "posterSha256": "bf29643f64515428718d31b8c39c5ec84d426c5a5dfa69718eb35515cbdd51f1",
+  "originalRecording": "recordings/number-pop.webm",
+  "originalRecordingSha256": "6bf3bc612b939b49e067d5f84001c5824faa0c406a724b1adc0030ce6ed3b84d",
+  "media": {
+    "duration": 7,
+    "width": 768,
+    "height": 576,
+    "decodedTime": 0.211123,
+    "readyState": 4
+  },
+  "errors": [],
+  "storageIsolation": "new nonpersistent browser context; no production browser profile"
+}

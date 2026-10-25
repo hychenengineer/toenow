@@ -21,7 +21,9 @@
     <script src="../../shared/toenow-i18n-core.js"></script>
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
-    <script src="../../shared/toenow-i18n.js"></script>
+    <script src="../../shared/toenow-i18n-animals.js"></script>
+<script src="../../shared/toenow-i18n.js"></script>
+<script src="../../shared/toenow-animals.js"></script>
     <script src="../../shared/toenow-screen-config.js"></script>
     <script src="../../shared/toenow-screens.js"></script>
     <style>
@@ -396,7 +398,8 @@
         transform: scale(0.98);
       }
     </style>
-  </head>
+  <link rel="stylesheet" href="../../assets/toenow-animals.css">
+</head>
   <body>
     <div class="app-wrapper">
       <!-- Top Status HUD -->
@@ -508,7 +511,7 @@
     <script>ToenowScreens.mount("tap-match");</script>
     <script>
 
-        
+
       (function () {
         'use strict';
 
@@ -1041,6 +1044,7 @@
         }
 
         function triggerPenalty(node, reasonLabel, feedbackType) {
+          window.ToenowAnimals?.feedback('tap-match', false);
           state.streak = 0;
           state.faults += 1;
           state.timeLeft = Math.max(0, state.timeLeft - 2.0);
@@ -1108,6 +1112,8 @@
               const pts = computeHitPoints(state.wave, state.streak);
               state.score += pts;
               state.waveHits++;
+              window.ToenowAnimals?.feedback('tap-match', true);
+              penguinCollection.push({ x: hitNode.x, y: hitNode.y, shape: hitNode.shape, color: hitNode.color, glyph: hitNode.glyph, started: performance.now() });
               state.timeLeft = Math.min(getWaveConfig(state.wave).waveTimeSeconds, state.timeLeft + 0.5);
 
               hitNode.status = 'HIT_FEEDBACK';
@@ -1193,6 +1199,8 @@
 
         function prepareWaveBriefing(waveNum) {
           state.wave = waveNum;
+          window.ToenowAnimals?.setWave('tap-match', waveNum);
+          penguinCollection.length = 0;
           const cfg = getWaveConfig(waveNum);
           state.gridSize = cfg.gridSize;
           state.speedLabel = cfg.speedLabel;
@@ -1475,6 +1483,28 @@
         // ==================================================
         // 9. MAIN 60FPS UPDATE & RENDER LOOP
         // ==================================================
+        const penguinCollection = [];
+        function drawPenguinPool(w, h, bannerY) {
+          const keeperX = w - 38, keeperY = bannerY + 70;
+          ctx.save();
+          ctx.fillStyle = '#e7d8b9';
+          ctx.beginPath(); ctx.ellipse(keeperX, keeperY + 17, 31, 8, 0, 0, Math.PI * 2); ctx.fill();
+          window.ToenowAnimals?.drawAnimal?.(ctx, 'penguin', keeperX, keeperY, 44);
+          const now = performance.now();
+          for (let i = penguinCollection.length - 1; i >= 0; i--) {
+            const card = penguinCollection[i], t = Math.min(1, (now - card.started) / 560);
+            if (t >= 1) { penguinCollection.splice(i, 1); continue; }
+            const x = card.x + (keeperX - card.x) * t;
+            const y = card.y + (keeperY - card.y) * t - Math.sin(t * Math.PI) * 45;
+            ctx.save(); ctx.translate(x, y); ctx.rotate(t * .3);
+            ctx.globalAlpha = 1 - t * .5;
+            ctx.fillStyle = '#fff4dc'; ctx.strokeStyle = '#bca47b'; ctx.lineWidth = 2;
+            ctx.fillRect(-17, -21, 34, 42); ctx.strokeRect(-17, -21, 34, 42);
+            drawOuterShape(ctx, 0, 0, 10, card.shape, COLOR_MAP[card.color] || '#496e83', null, 2, false);
+            drawInnerGlyph(ctx, 0, 0, 10, card.glyph, '#425362'); ctx.restore();
+          }
+          ctx.restore();
+        }
         let lastFrameTime = performance.now();
 
         function updateGame(dtMs) {
@@ -1535,19 +1565,21 @@
         }
 
         function renderGame() {
+          window.__PENGUIN_POOL_STATE = { phase: state.phase, wave: state.wave, hits: state.waveHits, faults: state.faults,
+            cardsInFlight: penguinCollection.length, nodes: state.nodes.map(n => ({x:n.x,y:n.y,status:n.status,isTarget:n.isTarget})) };
           const w = state.width;
           const h = state.height;
 
           // 1. Strict full-frame clear on every tick to guarantee zero ghosting
           ctx.clearRect(0, 0, w, h);
 
-          // 2. Deep obsidian void background
-          ctx.fillStyle = '#070a0e';
+          // 2. Watercolor matching pool
+          ctx.fillStyle = '#325b68';
           ctx.fillRect(0, 0, w, h);
 
           // 3. Faint analytical grid coordinates overlaying backdrop
           ctx.save();
-          ctx.strokeStyle = 'rgba(26, 35, 50, 0.42)';
+          ctx.strokeStyle = 'rgba(189, 218, 214, 0.14)';
           ctx.lineWidth = 1;
           const gridStep = 40;
           ctx.beginPath();
@@ -1608,10 +1640,10 @@
             ctx.save();
             ctx.beginPath();
             ctx.arc(x, y, radius, 0, Math.PI * 2);
-            ctx.fillStyle = '#0b0f17';
+            ctx.fillStyle = '#24444e';
             ctx.fill();
             ctx.lineWidth = 1.5;
-            ctx.strokeStyle = '#1a2332';
+            ctx.strokeStyle = '#abc6ba';
             ctx.stroke();
 
             // Corner analytical reticle ticks
@@ -1704,6 +1736,8 @@
               ctx.restore();
             }
           }
+
+          drawPenguinPool(w, h, bannerY);
 
           // 6. Staging "READY -> GO!" Transition Overlay (with frozen timer)
           if (state.phase === 'STAGING') {

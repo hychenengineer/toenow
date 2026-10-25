@@ -116,7 +116,23 @@
     const report = sdk.handleGameOver({ score: scoreBefore + rescued(), wave, isPractice, duration: elapsed() });
     if (report.isValid === false) $('record-notice').textContent = 'This attempt could not be recorded.';
   }
+  function renderStationmaster() {
+    const state = game.state;
+    const stationmaster = $('stationmaster');
+    if (stationmaster) {
+      const zh = window.ToenowI18n?.language?.startsWith('zh');
+      const task = state.status === 'won' ? (zh ? '熊貓站長：旅客都安全到家了！' : 'Panda stationmaster: everyone is safely home!')
+        : state.status === 'lost' ? (zh ? '熊貓站長：試試另一個上車順序。' : 'Panda stationmaster: try another boarding order.')
+        : selected !== null ? (zh ? '熊貓站長：幫這位旅客選一節車廂。' : 'Panda stationmaster: choose a carriage for this passenger.')
+        : (zh ? '熊貓站長：選擇隊伍前方的旅客。' : 'Panda stationmaster: choose a passenger at the front.');
+      if (!stationmaster.querySelector('svg')) stationmaster.innerHTML = face('panda') + '<span></span>';
+      const label = stationmaster.querySelector('span');
+      if (label) label.textContent = task;
+      stationmaster.dataset.status = state.status;
+    }
+  }
   function render(message) {
+    window.ToenowAnimals?.setWave('animal-rescue-train', wave);
     const state = game.state;
     const info = ToenowLevels.getLevelInfo(wave);
     const playing = state.status === 'playing';
@@ -146,6 +162,7 @@
     const reqName = game.level.requiredLastAnimal ? animals[game.level.requiredLastAnimal].name : null;
     const reqPrompt = reqName ? ` ${reqName} must be the last animal to depart.` : '';
     const prompt = selected === null ? ('Choose an animal, then a carriage.' + reqPrompt) : `${animals[state.queues[selected][0]].name} selected from queue ${letter(selected)}. Choose a carriage.`;
+    renderStationmaster();
     $('instruction').textContent = message || (playing ? prompt : state.status === 'won' ? (isLastLevel ? 'All 5 levels complete! Every animal is safely home.' : 'Every animal is safely home.') : (reqName && (state.rescued[game.level.requiredLastAnimal] || 0) >= game.level.goals[game.level.requiredLastAnimal] ? `${reqName} departed too early! ${reqName} must depart last.` : 'Try a different boarding order.'));
     $('undo').disabled = !game.canUndo;
     $('result').hidden = playing; $('result').className = `result ${state.status}`;
@@ -199,8 +216,15 @@
     if (paused || !button || button.disabled || selected === null) return;
     const queue = selected, carIndex = Number(button.dataset.car);
     if (!game.move(queue, carIndex)) return;
+    window.ToenowAnimals?.feedback('animal-rescue-train', game.state.status !== 'lost');
     actions.push([queue, carIndex]); selected = null; render(); reportResult(); persist();
     const departure = game.state.departure;
+    const stationmaster = $('stationmaster');
+    if (stationmaster) {
+      stationmaster.classList.remove('boarding-cheer');
+      void stationmaster.offsetWidth;
+      stationmaster.classList.add('boarding-cheer');
+    }
     if (departure) {
       $('instruction').textContent = `${animals[departure.animal].name} carriage departed! Three rescued; an empty carriage is ready.`;
       const car = document.querySelector(`[data-car="${departure.car}"]`);
@@ -253,6 +277,7 @@
     if (event.data?.type === 'GAME_PAUSE') sdk.pause();
     if (event.data?.type === 'GAME_RESUME') sdk.resume();
   });
+  window.addEventListener('toenow:languagechange', renderStationmaster);
   window.addEventListener('pagehide', () => { if (hasSave) persist(); });
   renderMenu(); render();
 })();

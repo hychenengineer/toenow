@@ -977,3 +977,27 @@ dialog .primary { min-height:44px; border-radius:8px; padding:10px 16px; }
   body[data-tier='4'] .queues { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .car-hint { font-size:9px; }
 }
+
+
+/* Panda writes the live boarding task on the station noticeboard. */
+.stationmaster{display:flex;align-items:center;gap:12px;padding:9px 15px;margin:10px 0;background:#f8f0db;border:2px solid #b8ad8e;border-radius:20px 11px 19px 12px;color:#465445;font-weight:700;box-shadow:0 3px 0 #b7c2a14d}
+.stationmaster svg{width:49px;height:49px;flex:none;transform-origin:bottom center}
+.stationmaster[data-status="won"]{background:#e3ebcf;border-color:#93ad77}
+.stationmaster.boarding-cheer svg{animation:panda-board .55s ease}
+@keyframes panda-board{0%,100%{transform:rotate(0)}30%{transform:rotate(-12deg) translateY(-6px)}65%{transform:rotate(10deg)}}
+@media(prefers-reduced-motion:reduce){.stationmaster.boarding-cheer svg{animation:none}}
+
+/* Warm paper, painted queue signs and wooden carriages at Panda Station. */
+#play-screen{--panel:#fff9ec;--line:#c1b492;--text:#35483e;--muted:#647568;--mint:#427d65;--amber:#91612b;--cyan:#3e7f82;color:var(--text)}
+#play-screen .station.panel{background:linear-gradient(115deg,#fffbef,#f1ecd8);border:2px solid #c9b995;box-shadow:0 7px 22px #62714e1c}
+#play-screen .queue{background:#edeedc;border-color:#bdc5a9}
+#play-screen .head{background:#faf6e8;border-color:#b5bda3}
+#play-screen .head[aria-pressed="true"]{background:#dce9cc;border-color:#598663;box-shadow:0 0 0 2px #b9cda1}
+#play-screen .preview,#play-screen .goal{background:#fbf5e5;border-color:#c7bea5}
+#play-screen .car{background:#d8e3d2;border-color:#8fa48c;box-shadow:inset 0 -7px #b0c5ae,0 4px 0 #9c9c7b}
+#play-screen .car:disabled{opacity:.8}
+#play-screen .car.boardable{background:#e3edcc;box-shadow:inset 0 -7px #b0c5ae,0 0 0 2px #75976b}
+#play-screen .seat{background:#fcf7e7;border-color:#a8b79a}
+#play-screen .instruction{background:#e8edda;border-color:#b4c3a4;color:#3d6955}
+#play-screen .secondary{background:#f7f0da;border-color:#b4b293;color:#40594b}
+#play-screen .rail{border-color:#9e9479;background:repeating-linear-gradient(90deg,transparent 0 18px,#ad9c7b 18px 24px,transparent 24px 42px)}

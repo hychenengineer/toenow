@@ -4,6 +4,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const crypto=require('node:crypto');
 const island=require('../shared/toenow-island.js');
+const animals=require('../shared/toenow-animals.js');
 const root=path.resolve(__dirname,'..');
 
 test('Every island location selects five distinct real illustrated growth assets',()=>{
@@ -11,21 +12,21 @@ test('Every island location selects five distinct real illustrated growth assets
  const sources=new Set();
  for(const location of island.LOCATIONS)for(let level=1;level<=5;level++){
   const asset=island.getBuildingAsset(location.kind,level);
-  assert(asset.endsWith(location.kind+'-level'+level+'.webp'));
+  assert.equal(asset,animals.getBuildingAsset(location.gameId,level));
   const bytes=fs.readFileSync(path.join(root,asset));
   assert.equal(bytes.toString('ascii',0,4),'RIFF');assert.equal(bytes.toString('ascii',8,12),'WEBP');
   sources.add(crypto.createHash('sha256').update(bytes).digest('hex'));
  }
  assert.equal(sources.size,50,'fifty actual illustrations, not reused files');
  assert.equal(island.getBuildingAsset('unknown',2),null);
- assert(island.getBuildingAsset('station',99).endsWith('station-level5.webp'));
- assert(island.getBuildingAsset('station',NaN).endsWith('station-level1.webp'));
+ assert(island.getBuildingAsset('station',99).endsWith('panda-level5.webp'));
+ assert(island.getBuildingAsset('station',NaN).endsWith('panda-level1.webp'));
 });
 
 test('Illustrated landmarks use the actual stage texture and preserve a recoverable vector fallback',()=>{
  const html=island.landmark('observatory',4,'#626ca0');
  assert(html.includes('<img'),'actual image is rendered');
- assert(html.includes('observatory-level4.webp'));
+ assert(html.includes('fox-level4.webp'));
  assert(!html.includes('<svg'),'normal rendering uses illustrated artwork');
  assert.equal(typeof island.landmarkVector,'function');
  assert(island.landmarkVector('observatory',4,'#626ca0').includes('<svg'));

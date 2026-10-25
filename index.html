@@ -19,7 +19,9 @@
   <script src="shared/toenow-i18n-core.js"></script>
   <script src="shared/toenow-i18n-games-a.js"></script>
   <script src="shared/toenow-i18n-games-b.js"></script>
-  <script src="shared/toenow-i18n.js"></script>
+  <script src="shared/toenow-i18n-animals.js"></script>
+<script src="shared/toenow-i18n.js"></script>
+<script src="shared/toenow-animals.js"></script>
   <style>
     :root {
       --bg-primary: #0b0f19;
@@ -1536,6 +1538,7 @@
   <script src="shared/toenow-hub-themes.js"></script>
   <link rel="stylesheet" href="assets/toenow-island.css">
   <script src="shared/toenow-island.js"></script>
+<link rel="stylesheet" href="assets/toenow-animals.css">
 </head>
 <body>
 
@@ -1808,7 +1811,7 @@
         difficulty: 5,
         difficultyMin: 1,
         leaderboard: false,
-        description: 'Plan the queues and rescue every animal. Five difficulty levels, growing stations, and no timer.',
+        description: "Help the panda stationmaster board every animal safely.",
         scoreKey: 'animal_rescue_train_best_score',
         waveKey: 'animal_rescue_train_best_wave'
       },
@@ -1819,7 +1822,7 @@
         icon: '🔢',
         url: 'games/number-pop/index.html',
         difficulty: 4,
-        description: 'Fast-paced number sorting challenge. Click or tap floating numbers from smallest to largest before time runs out!'
+        description: "Collect numbered harvest baskets from lowest to highest with Rabbit."
       },
       {
         id: 'ball-track',
@@ -1828,7 +1831,7 @@
         icon: '🔮',
         url: 'games/ball-track/index.html',
         difficulty: 4,
-        description: 'Track the glowing balls running around the circle. Keep your eyes on them and tap the right spots!'
+        description: "Remember the otters, follow their floating leaves, then find their hiding places."
       },
       {
         id: 'block-match',
@@ -1837,7 +1840,7 @@
         icon: '🖲️',
         url: 'games/block-match/index.html',
         difficulty: 3,
-        description: 'Shatter excess blocks from the active board to match the target blueprint pattern.'
+        description: "Remove extra timber tiles to match Beaver's blueprint."
       },
       {
         id: 'add-up',
@@ -1846,7 +1849,7 @@
         icon: '⚡',
         url: 'games/add-up/index.html',
         difficulty: 3,
-        description: 'Fast-paced mental math reflex drill. Tap floating number balls to add up and match the target sum.'
+        description: "Choose nut bags that add up to Squirrel's supply order."
       },
       {
         id: 'space-scale',
@@ -1855,7 +1858,7 @@
         icon: '⚖️',
         url: 'games/space-scale/index.html',
         difficulty: 4,
-        description: 'Look at the scales. Pick the heaviest, lightest, or middle-weight planet as shown in the instructions.'
+        description: "Read the scales and help Fox sort mysterious parcels by weight."
       },
       {
         id: 'tap-match',
@@ -1864,7 +1867,7 @@
         icon: '🎯',
         url: 'games/tap-match/index.html',
         difficulty: 3,
-        description: 'Follow the prompt and tap the matching pictures before they disappear.'
+        description: "Find matching picture cards and help Penguin collect them."
       },
       {
         id: 'spot-quick',
@@ -1873,7 +1876,7 @@
         icon: '🔬',
         url: 'games/spot-quick/index.html',
         difficulty: 4,
-        description: 'Watch the blurry animal become clearer. Tap the matching animal before time runs out.'
+        description: "Identify blurry photos from every category for Owl's observation journal."
       },
       {
         id: 'shadow-match',
@@ -1882,7 +1885,7 @@
         icon: '👤',
         url: 'games/shadow-match/index.html',
         difficulty: 3,
-        description: 'Look at the moving shapes, then pick the card with the same shapes.'
+        description: "Watch Raccoon's moving paper shapes and find the matching card."
       },
       {
         id: 'flash-brain',
@@ -1891,7 +1894,7 @@
         icon: '🧠',
         url: 'games/flash-brain/index.html',
         difficulty: 4,
-        description: 'Remember where the blocks light up, then tap those spots. Avoid the red blocks!'
+        description: "Remember the animal flowerbeds with Elephant. Recall their positions and avoid thorns."
       }
     ];
 
@@ -2317,8 +2320,8 @@
 
       grid.innerHTML = filtered.map(game => {
         const known = ['animal-rescue-train','number-pop','ball-track','block-match','add-up','space-scale','tap-match','spot-quick','shadow-match','flash-brain'].includes(game.id);
-        const poster = known ? 'assets/gameplay-previews/' + game.id + '-poster.png' : (game.preview || 'assets/number-pop-preview.png');
-        const video = known ? '<video muted playsinline loop preload="none" data-src="assets/gameplay-previews/' + game.id + '.webm" aria-hidden="true"></video>' : '';
+        const poster = known ? 'assets/animal-gameplay-previews/' + game.id + '-poster.png' : (game.preview || 'assets/number-pop-preview.png');
+        const video = known ? '<video muted playsinline loop preload="none" data-src="assets/animal-gameplay-previews/' + game.id + '.webm" aria-hidden="true"></video>' : '';
         return `
           <article class="game-card" data-game-id="${game.id}" data-challenge-category="${game.category}" aria-label="${game.title}">
             <button type="button" class="game-launch" aria-label="Play ${game.title}">

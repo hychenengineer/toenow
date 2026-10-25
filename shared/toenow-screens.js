@@ -16,6 +16,7 @@
   function titleMarkup(id) {
     const c = config(id);
     return `<div class="unified-title-card">
+      <img class="unified-animal-art" data-screen-animal-art src="../../assets/animal-island/${escape(c.animalSpecies || 'owl')}-level1.webp" alt="" width="140" height="94">
       <div class="unified-category-pill"><span class="unified-category-icon">${escape(c.icon)}</span> ${escape(c.category)}</div>
       <h1 id="${escape(c.headingId)}" class="unified-game-title">${escape(c.name)}</h1>
       <p class="unified-game-desc">${escape(c.description)}</p>
@@ -56,6 +57,8 @@
     host.querySelector('[data-screen-record="score"]').textContent = number(data.bestScore).toLocaleString();
     host.querySelector('[data-screen-record="level"]').textContent = levels.getLevelInfo(data.bestWave || 1).badgeText;
     host.querySelector('#title-best-wave').textContent = Math.max(1, number(data.bestWave, 1));
+    const art=host.querySelector('[data-screen-animal-art]');
+    if(art)art.src=`../../assets/animal-island/${config(id).animalSpecies || 'owl'}-level${levels.getLevelInfo(data.bestWave || 1).level}.webp`;
   }
   function renderGameOver(host, id, options = {}) {
     stamp(host, id, 'gameover'); host.innerHTML = gameOverMarkup(id);

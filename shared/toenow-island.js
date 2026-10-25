@@ -1,8 +1,8 @@
 (function (root, factory) {
   'use strict';
-  if (typeof module === 'object' && module.exports) module.exports = factory();
-  else root.ToenowIsland = factory();
-})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  if (typeof module === 'object' && module.exports) module.exports = factory(require('./toenow-animals.js'));
+  else root.ToenowIsland = factory(root.ToenowAnimals);
+})(typeof globalThis !== 'undefined' ? globalThis : this, function (animals) {
   'use strict';
   const LOCATIONS = [
     { gameId: 'animal-rescue-train', name: 'Rescue Harbor', kind: 'station', x: 18, y: 78, color: '#b75b43' },
@@ -16,6 +16,10 @@
     { gameId: 'shadow-match', name: 'Silhouette Ruins', kind: 'temple', x: 49, y: 20, color: '#806398' },
     { gameId: 'flash-brain', name: 'Memory Lighthouse', kind: 'lighthouse', x: 84, y: 78, color: '#4b86a2' }
   ];
+  for (const location of LOCATIONS) {
+    const theme = animals?.getTheme(location.gameId);
+    if (theme) { location.name = theme.place; location.animal = theme.species; }
+  }
   const VIEW_KEY = 'toenow_hub_view_v1';
   function read(storage, key) { try { return storage?.getItem(key); } catch (_) { return null; } }
   function positiveInteger(value, fallback) {
@@ -64,7 +68,9 @@
   }
 
   function getBuildingAsset(kind, level) {
-    if (!LOCATIONS.some(location => location.kind === kind)) return null;
+    const location = LOCATIONS.find(location => location.kind === kind);
+    if (!location) return null;
+    if (animals) return animals.getBuildingAsset(location.gameId, level);
     const value = Number(level);
     const stage = Number.isFinite(value) ? Math.max(1, Math.min(5, Math.trunc(value))) : 1;
     return `assets/island-buildings/${kind}-level${stage}.webp`;
@@ -89,7 +95,7 @@
     const e = source => escapeHTML(t(source));
     host.className = 'island-shell';
     host.setAttribute('data-i18n-ignore', '');
-    host.innerHTML = `<div class="island-topline"><div class="island-intro"><p class="island-eyebrow" data-island-text="YOUR ISLAND / YOUR NEXT DISCOVERY"></p><h1 data-island-text="A little island. A world of challenges."></h1><p class="island-intro-copy" data-island-text="Follow your curiosity. Every place is a challenge, and every new level brings it to life."></p></div><div class="island-view-switch" role="group" aria-label="Hub view"><button type="button" id="islandMapViewBtn" data-view="island" data-island-text="My island"></button><button type="button" id="islandListViewBtn" data-view="list" data-island-text="Game list"></button></div></div><div class="island-map-panel"><div class="island-map-toolbar"><div class="island-counter" aria-live="polite"></div><div class="island-preview-control"><label for="islandStagePreview" data-island-text="Appearance preview"></label><select id="islandStagePreview"><option value="0" data-island-text="My records"></option>${[1,2,3,4,5].map(n=>`<option value="${n}">Level ${n}</option>`).join('')}</select></div></div><p class="island-preview-note" hidden data-island-text="Visual preview only. Your game records stay unchanged."></p><div class="island-map-viewport" role="region" aria-label="Island exploration map" tabindex="0"><div class="island-map-world"><div class="island-map-markers"></div><div class="island-cartouche" aria-hidden="true"><span>TOENOW</span><span data-island-text="EXPLORER'S ISLAND"></span></div></div></div><div class="island-map-bottom"><label for="islandLocationSelect" data-island-text="Travel to a place"></label><select id="islandLocationSelect"></select><span data-island-text="Swipe the map to explore. Select a place to see its challenge."></span></div><div class="island-legend"><span data-island-text="Five stages, one growing landmark"></span><div>${[1,2,3,4,5].map(n=>`<span>LVL ${n}</span>`).join('<span aria-hidden="true">—</span>')}</div><p data-island-text="Landmarks follow your highest level reached in normal play. Practice runs do not advance the island."></p></div></div><dialog class="island-location-dialog" aria-labelledby="islandLocationTitle"><button type="button" class="island-dialog-close" aria-label="Close location">×</button><div class="island-dialog-content"></div><button type="button" class="island-play-button" data-island-text="Enter challenge"></button></dialog>`;
+    host.innerHTML = `<div class="island-topline"><div class="island-intro"><p class="island-eyebrow" data-island-text="ANIMAL FRIENDS / NEW DISCOVERIES"></p><h1 data-island-text="An island of animals. A world to discover."></h1><p class="island-intro-copy" data-island-text="Meet your animal friends. Help with their challenges and watch their homes grow."></p></div><div class="island-view-switch" role="group" aria-label="Hub view"><button type="button" id="islandMapViewBtn" data-view="island" data-island-text="My island"></button><button type="button" id="islandListViewBtn" data-view="list" data-island-text="Game list"></button></div></div><div class="island-map-panel"><div class="island-map-toolbar"><div class="island-counter" aria-live="polite"></div><div class="island-preview-control"><label for="islandStagePreview" data-island-text="Appearance preview"></label><select id="islandStagePreview"><option value="0" data-island-text="My records"></option>${[1,2,3,4,5].map(n=>`<option value="${n}">Level ${n}</option>`).join('')}</select></div></div><p class="island-preview-note" hidden data-island-text="Visual preview only. Your game records stay unchanged."></p><div class="island-map-viewport" role="region" aria-label="Island exploration map" tabindex="0"><div class="island-map-world"><div class="island-map-markers"></div><div class="island-cartouche" aria-hidden="true"><span>TOENOW</span><span data-island-text="EXPLORER'S ISLAND"></span></div></div></div><div class="island-map-bottom"><label for="islandLocationSelect" data-island-text="Travel to a place"></label><select id="islandLocationSelect"></select><span data-island-text="Swipe the map to explore. Select a place to see its challenge."></span></div><div class="island-legend"><span data-island-text="Five stages, one growing landmark"></span><div>${[1,2,3,4,5].map(n=>`<span>LVL ${n}</span>`).join('<span aria-hidden="true">—</span>')}</div><p data-island-text="Animal homes grow with your highest level reached in normal play. Practice runs do not advance the island."></p></div></div><dialog class="island-location-dialog" aria-labelledby="islandLocationTitle"><button type="button" class="island-dialog-close" aria-label="Close location">×</button><div class="island-dialog-content"></div><button type="button" class="island-play-button" data-island-text="Enter challenge"></button></dialog>`;
     const dialog = host.querySelector('dialog');
     const markers = host.querySelector('.island-map-markers');
     const locationSelect = host.querySelector('#islandLocationSelect');

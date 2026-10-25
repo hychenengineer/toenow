@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {LOCATIONS} = require('../shared/toenow-island.js');
 const base = process.env.TOENOW_TEST_URL || 'http://127.0.0.1:8765';
-const output = path.resolve(__dirname,'../artifacts/island-explorer');
+const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'../artifacts/island-explorer');
 (async()=>{
  fs.mkdirSync(output,{recursive:true});
  const browser=await chromium.launch({channel:'msedge',headless:true});
@@ -53,9 +53,19 @@ const output = path.resolve(__dirname,'../artifacts/island-explorer');
       return boxes.flatMap((a,i)=>boxes.slice(i+1).filter(b=>Math.min(a.box.right,b.box.right)-Math.max(a.box.left,b.box.left)>2&&Math.min(a.box.bottom,b.box.bottom)-Math.max(a.box.top,b.box.top)>2).map(b=>[a.id,b.id]));
      });
      assert.deepEqual(overlaps,[],`overlapping map targets at ${width}/${language}/${theme}`);
+     assert(await page.locator('.island-location').evaluateAll(nodes=>nodes.every(node=>{
+      const r=node.getBoundingClientRect(),label=node.querySelector('.island-place-label');
+      return r.width>=44&&r.height>=44&&label.scrollHeight<=label.clientHeight+1;
+     })),'map touch targets stay large and full labels remain readable');
+     if(width<=768)assert(await page.locator('.island-map-viewport').evaluate(node=>node.scrollWidth>node.clientWidth),'small viewports retain map scrolling');
      assert((await page.locator('.island-intro h1').innerText()).includes(language==='en'?'island':'小島'));
      if(width===1440&&language==='zh-Hant')await page.screenshot({path:path.join(output,`island-${theme}-desktop.png`),fullPage:true,animations:'disabled'});
-     checks.push({width,language,theme,status:'PASS'});
+     const rowClearance=await page.locator('.island-location').evaluateAll(nodes=>{
+      const boxes=nodes.map(n=>n.getBoundingClientRect());
+      return Math.min(...boxes.flatMap((a,i)=>boxes.slice(i+1).filter(b=>Math.min(a.right,b.right)-Math.max(a.left,b.left)>2).map(b=>Math.max(a.top,b.top)-Math.min(a.bottom,b.bottom))));
+     });
+     assert(rowClearance>=(width<=768?8:0),`map row clearance at ${width}/${language}/${theme}: ${rowClearance}`);
+     checks.push({width,language,theme,minRowClearance:rowClearance,status:'PASS'});
     }
    }
    if(width===390)await page.screenshot({path:path.join(output,'island-mobile.png'),fullPage:true,animations:'disabled'});
@@ -76,9 +86,9 @@ const output = path.resolve(__dirname,'../artifacts/island-explorer');
   await page.locator('[data-island-game="flash-brain"]').focus();await page.keyboard.press('Enter');
   await page.locator('.island-location-dialog').waitFor({state:'visible'});
   await page.evaluate(()=>ToenowI18n.setLanguage('en'));
-  assert.equal(await page.locator('#islandLocationTitle').innerText(),'Memory Lighthouse');
+  assert.equal(await page.locator('#islandLocationTitle').innerText(),'Elephant Memory Garden');
   await page.evaluate(()=>ToenowI18n.setLanguage('zh-Hant'));
-  assert.equal(await page.locator('#islandLocationTitle').innerText(),'記憶燈塔');
+  assert.equal(await page.locator('#islandLocationTitle').innerText(),'大象記憶花園');
   await readyArt('.island-location-dialog img[data-island-art]');
   await page.screenshot({path:path.join(output,'location-five-stages.png'),animations:'disabled'});
   await page.setViewportSize({width:390,height:900});
@@ -155,7 +165,7 @@ const output = path.resolve(__dirname,'../artifacts/island-explorer');
   assert.deepEqual(await blocked.evaluate(()=>window.__blockedIslandProgress),{level:1,wave:1,bestScore:0,explored:false});
   // A missing image falls back without removing the location or its launcher.
   const fallbackContext=await browser.newContext();await fallbackContext.route('https://**',route=>route.abort());
-  await fallbackContext.route('**/assets/island-buildings/station-level1.webp',route=>route.abort());
+  await fallbackContext.route('**/assets/animal-island/panda-level1.webp',route=>route.abort());
   const fallback=await fallbackContext.newPage();await fallback.goto(base,{waitUntil:'domcontentloaded'});
   await fallback.locator('[data-island-game="animal-rescue-train"] [data-art-fallback="true"]').waitFor();
   await fallback.locator('[data-island-game="animal-rescue-train"]').click();
@@ -163,7 +173,7 @@ const output = path.resolve(__dirname,'../artifacts/island-explorer');
   await fallback.locator('#theaterModal.open').waitFor();
   assert((await fallback.locator('#gameViewer').getAttribute('src')).includes('animal-rescue-train'));
   // Independently decode all fifty shipped assets, not just the default stage.
-  const allAssets=require('../assets/island-buildings/manifest.json').assets.map(asset=>asset.runtime);
+  const allAssets=require('../assets/animal-island/manifest.json').assets.map(asset=>asset.runtime);
   await page.evaluate(async assets=>{
    await Promise.all(assets.map(src=>new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve();img.onerror=()=>reject(Error('Cannot decode '+src));img.src=src;})));
   },allAssets);

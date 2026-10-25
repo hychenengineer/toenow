@@ -30,7 +30,9 @@
     <script src="../../shared/toenow-i18n-core.js"></script>
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
-    <script src="../../shared/toenow-i18n.js"></script>
+    <script src="../../shared/toenow-i18n-animals.js"></script>
+<script src="../../shared/toenow-i18n.js"></script>
+<script src="../../shared/toenow-animals.js"></script>
     <script src="../../shared/toenow-screen-config.js"></script>
     <script src="../../shared/toenow-screens.js"></script>
     <style>
@@ -707,7 +709,8 @@
         }
       }
     </style>
-  </head>
+  <link rel="stylesheet" href="../../assets/toenow-animals.css">
+</head>
   <body data-state="title">
     <div id="game-stage">
       <canvas id="reactor-canvas" data-testid="reactor-canvas" aria-label="Add Up interactive plasma arena"></canvas>
@@ -1479,6 +1482,7 @@
         }
 
         function spawnWaveNodes(waveNum) {
+          if (window.ToenowAnimals) window.ToenowAnimals.setWave('add-up', waveNum);
           const waveData = generateWaveData(waveNum);
           wave = waveData.wave;
           target = waveData.target;
@@ -1649,6 +1653,8 @@
 
           if (currentVal === target && selectedNodes.length >= 2) {
             // EXACT MATCH!
+            if (window.ToenowAnimals) window.ToenowAnimals.feedback('add-up', true);
+            supplyDeliveryUntil = performance.now() + 800;
             const usedCount = selectedNodes.length;
 
             // Score & Time Rules:
@@ -1711,6 +1717,7 @@
             spawnWaveNodes(wave + 1);
           } else if (currentVal > target) {
             // OVERSHOOT -> STEAM VENT & CLEAR!
+            if (window.ToenowAnimals) window.ToenowAnimals.feedback('add-up', false);
             Sfx.playSteamVent();
             spawnSteamPlume(coreX, coreY, coreRadius);
             cameraTrauma = Math.min(1.0, cameraTrauma + 0.55);
@@ -2110,9 +2117,21 @@
         }
 
         // --- Canvas 2D Renderer ---
+        let supplyDeliveryUntil = 0;
+        function drawNutBag(ctx, r, selected, hovered) {
+          ctx.beginPath();ctx.moveTo(-r*.43,-r*.72);ctx.lineTo(r*.43,-r*.72);
+          ctx.bezierCurveTo(r*.18,-r*.32,r*1.1,-r*.1,r*.83,r*.62);
+          ctx.quadraticCurveTo(0,r*1.04,-r*.83,r*.62);
+          ctx.bezierCurveTo(-r*1.1,-r*.1,-r*.18,-r*.32,-r*.43,-r*.72);
+          ctx.closePath();ctx.fillStyle=selected?'#c7b982':'#ead8ac';ctx.fill();
+          ctx.strokeStyle=selected?'#448365':'#9b7752';ctx.lineWidth=selected||hovered?4:2;ctx.stroke();
+          ctx.beginPath();ctx.moveTo(-r*.44,-r*.49);ctx.lineTo(r*.44,-r*.49);ctx.stroke();
+          ctx.fillStyle='#fff8df';ctx.beginPath();ctx.arc(0,2,r*.5,0,Math.PI*2);ctx.fill();
+        }
+
         function renderArena() {
           ctx.save();
-          ctx.fillStyle = '#080b10';
+          ctx.fillStyle = '#e5ddc7';
           ctx.fillRect(0, 0, width, height);
 
           // In title screen state, hide the game arena behind the title card
@@ -2133,35 +2152,9 @@
           const cx = coreX + parallaxX;
           const cy = coreY + parallaxY;
 
-          // 1. Pulsating Containment Rings
-          const pulse = 0.5 + 0.5 * Math.sin(worldTime * 2.2);
-          const ringRadii = [
-            coreRadius * 1.45,
-            coreRadius * 2.15,
-            coreRadius * 3.05,
-            coreRadius * 4.1,
-          ];
-
-          ctx.lineWidth = 1;
-          for (let i = 0; i < ringRadii.length; i++) {
-            const r = ringRadii[i] + pulse * (3 + i * 1.5);
-            ctx.beginPath();
-            ctx.arc(cx, cy, r, 0, Math.PI * 2);
-            ctx.strokeStyle =
-              steamAlertTimer > 0
-                ? 'rgba(244, 63, 94, 0.28)'
-                : 'rgba(34, 211, 238, ' + (0.13 - i * 0.025).toFixed(3) + ')';
-            ctx.stroke();
-          }
-
-          // Crosshairs
-          ctx.strokeStyle = 'rgba(148, 163, 184, 0.05)';
-          ctx.beginPath();
-          ctx.moveTo(0, cy);
-          ctx.lineTo(width, cy);
-          ctx.moveTo(cx, 0);
-          ctx.lineTo(cx, height);
-          ctx.stroke();
+          // Depot floorboards frame the moving supplies without obscuring labels.
+          ctx.strokeStyle='rgba(140,107,70,.13)';ctx.lineWidth=2;
+          for(let y=0;y<height;y+=75){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(width,y);ctx.stroke();}
 
           // 2. Real-time Laser Beams between Selected Nodes
           if (selectedNodes.length >= 2) {
@@ -2263,6 +2256,21 @@
             ctx.restore();
           }
 
+          // 7. Particles
+          for (let i = 0; i < MAX_PARTICLES; i++) {
+            const p = particlePool[i];
+            if (!p.active) continue;
+            const alpha = Math.max(0, p.life / p.maxLife);
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+
+
           // 5. Central Reactor Core
           ctx.save();
           const coreAccent =
@@ -2272,46 +2280,13 @@
                 ? '#67e8f9'
                 : '#22d3ee';
 
-          const grad = ctx.createRadialGradient(cx, cy, coreRadius * 0.2, cx, cy, coreRadius * 1.6);
-          grad.addColorStop(
-            0,
-            steamAlertTimer > 0 ? 'rgba(244, 63, 94, 0.35)' : 'rgba(34, 211, 238, 0.28)'
-          );
-          grad.addColorStop(1, 'rgba(8, 11, 16, 0)');
-          ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.arc(cx, cy, coreRadius * 1.6, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.save();
-          ctx.translate(cx, cy);
-          ctx.rotate(worldTime * 0.45);
-          ctx.strokeStyle = coreAccent;
-          ctx.lineWidth = 2.5;
-          ctx.setLineDash([16, 10]);
-          ctx.beginPath();
-          ctx.arc(0, 0, coreRadius + 8, 0, Math.PI * 2);
-          ctx.stroke();
-          ctx.restore();
-
-          ctx.save();
-          ctx.translate(cx, cy);
-          ctx.rotate(-worldTime * 0.7);
-          ctx.strokeStyle = 'rgba(248, 250, 252, 0.35)';
-          ctx.lineWidth = 1.5;
-          ctx.setLineDash([8, 14]);
-          ctx.beginPath();
-          ctx.arc(0, 0, coreRadius - 6, 0, Math.PI * 2);
-          ctx.stroke();
-          ctx.restore();
-
-          ctx.fillStyle = coreFlashTimer > 0 ? '#164e63' : '#0b131e';
-          ctx.strokeStyle = coreAccent;
-          ctx.lineWidth = 3;
-          ctx.beginPath();
-          ctx.arc(cx, cy, coreRadius, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.stroke();
+          // Wooden order board: the requested total remains at the same position.
+          ctx.fillStyle = '#70523d';ctx.strokeStyle='#b69368';ctx.lineWidth=6;
+          ctx.beginPath();ctx.rect(cx-coreRadius,cy-coreRadius,coreRadius*2,coreRadius*2);ctx.fill();ctx.stroke();
+          if (window.ToenowAnimals) {
+            const delivered = performance.now() < supplyDeliveryUntil;
+            window.ToenowAnimals.drawAnimal(ctx,'squirrel',cx+coreRadius*.83,cy-coreRadius*.83-(delivered?8:0),coreRadius*.7);
+          }
 
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
@@ -2319,7 +2294,7 @@
 
           ctx.fillStyle = '#94a3b8';
           ctx.font = '700 9.5px ' + monoFont;
-          ctx.fillText('TARGET', cx, cy - coreRadius * 0.42);
+          ctx.fillText(window.ToenowI18n ? window.ToenowI18n.t('Supply order') : 'Supply order', cx, cy - coreRadius * 0.42);
 
           ctx.fillStyle = '#f8fafc';
           const targetFontPx = Math.round(coreRadius * 0.56);
@@ -2340,60 +2315,19 @@
             ctx.translate(n.x + parallaxX * 0.4, n.y + parallaxY * 0.4);
             ctx.scale(n.scaleX, n.scaleY);
 
-            const strokeColor = n.selected ? '#f8fafc' : '#22d3ee';
-            const fillColor =
-              n.flash > 0.2
-                ? 'rgba(103, 232, 249, 0.42)'
-                : n.selected
-                  ? 'rgba(8, 145, 178, 0.88)'
-                  : 'rgba(12, 22, 34, 0.92)';
-
-            ctx.beginPath();
-            ctx.arc(0, 0, n.radius + (n.selected ? 6 : 2.5), 0, Math.PI * 2);
-            ctx.fillStyle = n.selected
-              ? 'rgba(103, 232, 249, 0.24)'
-              : 'rgba(34, 211, 238, 0.1)';
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.arc(0, 0, n.radius, 0, Math.PI * 2);
-            ctx.fillStyle = fillColor;
-            ctx.fill();
-            ctx.lineWidth = n.selected || hoveredNode === n ? 3 : 2;
-            ctx.strokeStyle = strokeColor;
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.arc(0, 0, n.radius - 6, 0, Math.PI * 2);
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = 'rgba(248, 250, 252, 0.2)';
-            ctx.stroke();
+            drawNutBag(ctx, n.radius, n.selected, hoveredNode === n);
 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillStyle = '#f8fafc';
+            ctx.fillStyle = '#4d3c29';
             const valFontPx = Math.round(n.radius * 0.54);
             ctx.font = '700 ' + valFontPx + 'px ' + monoFont;
             ctx.fillText(n.label, 0, 2);
 
-            ctx.fillStyle = n.selected ? '#fde047' : '#94a3b8';
+            ctx.fillStyle = n.selected ? '#276448' : '#6e5035';
             ctx.font = '600 8.5px ' + monoFont;
             ctx.fillText('[' + n.id + ']', 0, -n.radius * 0.54);
 
-            ctx.restore();
-          }
-
-          // 7. Particles
-          for (let i = 0; i < MAX_PARTICLES; i++) {
-            const p = particlePool[i];
-            if (!p.active) continue;
-            const alpha = Math.max(0, p.life / p.maxLife);
-            ctx.save();
-            ctx.globalAlpha = alpha;
-            ctx.fillStyle = p.color;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            ctx.fill();
             ctx.restore();
           }
 
@@ -2407,7 +2341,7 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.font = '800 17px ' + monoFont;
-            ctx.fillStyle = '#080b10';
+            ctx.fillStyle = '#e5ddc7';
             ctx.fillText(fc.text, fc.x + 1, fc.y + 1);
             ctx.fillStyle = fc.color;
             ctx.fillText(fc.text, fc.x, fc.y);

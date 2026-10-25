@@ -1,0 +1,38 @@
+{
+  "id": "shadow-match",
+  "status": "PASS",
+  "url": "http://127.0.0.1:8765/games/shadow-match/",
+  "startedAt": "2026-10-25T16:49:02.944Z",
+  "viewport": {
+    "width": 768,
+    "height": 576
+  },
+  "actions": [
+    {
+      "action": "Clicked production Start control",
+      "atMs": 1792946943313,
+      "atSeconds": 0.369
+    },
+    {
+      "action": "Selected the matching moving paper silhouette",
+      "atMs": 1792946943857,
+      "atSeconds": 0.913
+    }
+  ],
+  "trimStartSeconds": 0.369,
+  "videoBytes": 251213,
+  "posterBytes": 138785,
+  "videoSha256": "52d1e06d9e8740936473da4b983d3af9267fa1dd5eb66ec00f07330a9cb4acea",
+  "posterSha256": "741eeccff4ba77d2d55ceb3e9430ddaeba3a6bd39579bd600b5a89eb4d87a79f",
+  "originalRecording": "recordings/shadow-match.webm",
+  "originalRecordingSha256": "296bfa9c4e73a4f3f2ef4fa94c4d6b7891b31264962a4e614d570a1d46f914e0",
+  "media": {
+    "duration": 7,
+    "width": 768,
+    "height": 576,
+    "decodedTime": 0.246489,
+    "readyState": 4
+  },
+  "errors": [],
+  "storageIsolation": "new nonpersistent browser context; no production browser profile"
+}

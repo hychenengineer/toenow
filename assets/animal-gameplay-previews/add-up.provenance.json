@@ -1,0 +1,43 @@
+{
+  "id": "add-up",
+  "status": "PASS",
+  "url": "http://127.0.0.1:8765/games/add-up/",
+  "startedAt": "2026-10-25T16:48:16.363Z",
+  "viewport": {
+    "width": 768,
+    "height": 576
+  },
+  "actions": [
+    {
+      "action": "Clicked production Start control",
+      "atMs": 1792946896789,
+      "atSeconds": 0.426
+    },
+    {
+      "action": "Selected nut bag 1 for exact supply total 20",
+      "atMs": 1792946897355,
+      "atSeconds": 0.992
+    },
+    {
+      "action": "Selected nut bag 2 for exact supply total 20",
+      "atMs": 1792946897612,
+      "atSeconds": 1.249
+    }
+  ],
+  "trimStartSeconds": 0.426,
+  "videoBytes": 335436,
+  "posterBytes": 69460,
+  "videoSha256": "a2db2b8cfeab1c8dba8289037f642ab1a94897e10bb7c82171f3f98754c6dbc7",
+  "posterSha256": "5f2f9dc705f7645ad2bc6ccaf16843b59b5482b848fc9c01b193c12f782f85b0",
+  "originalRecording": "recordings/add-up.webm",
+  "originalRecordingSha256": "721202e003069f80e474c0da8abb03154971cb931d2b9f39a2b3454b4b0cb473",
+  "media": {
+    "duration": 7,
+    "width": 768,
+    "height": 576,
+    "decodedTime": 0.201978,
+    "readyState": 4
+  },
+  "errors": [],
+  "storageIsolation": "new nonpersistent browser context; no production browser profile"
+}

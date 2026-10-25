@@ -16,13 +16,16 @@
   <script src="../../shared/toenow-i18n-core.js"></script>
   <script src="../../shared/toenow-i18n-games-a.js"></script>
   <script src="../../shared/toenow-i18n-games-b.js"></script>
-  <script src="../../shared/toenow-i18n.js"></script>
+  <script src="../../shared/toenow-i18n-animals.js"></script>
+<script src="../../shared/toenow-i18n.js"></script>
+<script src="../../shared/toenow-animals.js"></script>
   <script src="engine.js" defer></script>
   <script src="levels.js" defer></script>
   <script src="puzzles.js" defer></script>
   <script src="picker.js" defer></script>
   <script src="session.js" defer></script>
   <script src="game.js" defer></script>
+<link rel="stylesheet" href="../../assets/toenow-animals.css">
 </head>
 <body data-state="title" data-screen="menu">
   <main class="shell">
@@ -50,6 +53,7 @@
         <div class="station-header"><div><p class="eyebrow" id="level-number"></p><h2 id="level-name"></h2></div><div class="step-counter"><strong id="moves">0</strong><span>moves</span></div></div>
         <div class="goals-header"><h3>Rescue targets</h3><span id="total"></span></div><div id="goals" class="goals"></div>
         <div class="section-label"><h3>Queues</h3><span id="board-size"></span></div><div id="queues" class="queues"></div>
+        <div id="stationmaster" class="stationmaster" aria-live="polite"></div>
         <p id="instruction" class="instruction" role="status" aria-live="polite" aria-atomic="true"></p>
         <div class="section-label"><h3>Carriages</h3><span>3 seats each</span></div><div class="rail-yard"><div class="rail" aria-hidden="true"></div><div id="cars" class="cars"></div></div>
         <section id="result" class="result" aria-live="polite" hidden></section>

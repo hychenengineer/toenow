@@ -64,7 +64,8 @@ html[data-hub-theme] .island-location-dialog .toenow-language-switch { backgroun
 @media(max-width:900px) {
   .island-topline { align-items: flex-start; flex-direction: column; gap: 18px; }
   .island-shell[data-view="list"] .island-topline { align-items: flex-end; }
-  .island-map-world { min-width: 850px; }
+  /* Wrapped animal place names need room between the fixed percentage rows. */
+  .island-map-world { min-width: 1000px; }
   .island-location>.island-landmark { width: 92px; }
   .island-place-label { min-width: 105px; max-width: 145px; }
 }

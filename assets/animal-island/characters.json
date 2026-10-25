@@ -1,0 +1,146 @@
+{
+  "method": "built-in image_gen",
+  "count": 10,
+  "assets": [
+    {
+      "species": "panda",
+      "source": "assets/animal-island/sources/panda-character.png",
+      "runtime": "assets/animal-island/panda-character.webp",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceSha256": "570800a55a2e6d02280b2a8846931994235d8e986d3323ef5e447f09cb9e9254",
+      "runtimeSha256": "0a5db3830b1bdaa44dff222ffcdb9f26da41a716de485ed22d5733d3d6c08034",
+      "sourceBytes": 2277950,
+      "runtimeBytes": 35970,
+      "provenance": "assets/animal-island/sources/panda-character.provenance.json"
+    },
+    {
+      "species": "rabbit",
+      "source": "assets/animal-island/sources/rabbit-character.png",
+      "runtime": "assets/animal-island/rabbit-character.webp",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceSha256": "d420e6fcd643fc8b534894113ba7101fa20b55c1511436a75842d9f24fa51ba3",
+      "runtimeSha256": "96826b5c5b169ff9daa9f8f705ab0b0b8369999983bf86ce54955943bbc78448",
+      "sourceBytes": 1471835,
+      "runtimeBytes": 28856,
+      "provenance": "assets/animal-island/sources/rabbit-character.provenance.json"
+    },
+    {
+      "species": "otter",
+      "source": "assets/animal-island/sources/otter-character.png",
+      "runtime": "assets/animal-island/otter-character.webp",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceSha256": "617120b0c87deeb6d9c3fa015ad72df9e34062cb414cb8b2983da67c90f0f124",
+      "runtimeSha256": "874cad846367bb51f3d74328bd94ae5fb3d3fe8ac1ba99675c3598ac1a8f536e",
+      "sourceBytes": 1578068,
+      "runtimeBytes": 29974,
+      "provenance": "assets/animal-island/sources/otter-character.provenance.json"
+    },
+    {
+      "species": "beaver",
+      "source": "assets/animal-island/sources/beaver-character.png",
+      "runtime": "assets/animal-island/beaver-character.webp",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceSha256": "4a8e05a28d8d1b1d2f982607a164bf5d769a2524a057c9f415d703086718f1c7",
+      "runtimeSha256": "79fd34758c383f8d61dec00548075558a16826cefb6f51422a1e1d525dfdb45e",
+      "sourceBytes": 2128494,
+      "runtimeBytes": 35836,
+      "provenance": "assets/animal-island/sources/beaver-character.provenance.json"
+    },
+    {
+      "species": "squirrel",
+      "source": "assets/animal-island/sources/squirrel-character.png",
+      "runtime": "assets/animal-island/squirrel-character.webp",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceSha256": "876311ecf034503f3b88fae6a1d8689f394e474a73e09417a906fa8444dcd489",
+      "runtimeSha256": "e42df07f37e661eddc7eb299304e9294594787b589751fdb74311f4708843267",
+      "sourceBytes": 2302566,
+      "runtimeBytes": 42770,
+      "provenance": "assets/animal-island/sources/squirrel-character.provenance.json"
+    },
+    {
+      "species": "fox",
+      "source": "assets/animal-island/sources/fox-character.png",
+      "runtime": "assets/animal-island/fox-character.webp",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceSha256": "9f72dae2359418daf694742a871c0b490273a63525ee3b5de5255fc4affc0fef",
+      "runtimeSha256": "730d1449f45f1d28862baccc2b4adf0eff8341ade89ec9cbb832bcdc8db6fc67",
+      "sourceBytes": 1848772,
+      "runtimeBytes": 35198,
+      "provenance": "assets/animal-island/sources/fox-character.provenance.json"
+    },
+    {
+      "species": "penguin",
+      "source": "assets/animal-island/sources/penguin-character.png",
+      "runtime": "assets/animal-island/penguin-character.webp",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceSha256": "e051578d5b6f32a9103dff6b597b2988cc2b6089ec4ab1973467b863ff5aa590",
+      "runtimeSha256": "7fe7638fd93921b8160b3a95115a0f397dd0c21e14a332cb44ba60ddcfe9fb99",
+      "sourceBytes": 1351186,
+      "runtimeBytes": 22864,
+      "provenance": "assets/animal-island/sources/penguin-character.provenance.json"
+    },
+    {
+      "species": "owl",
+      "source": "assets/animal-island/sources/owl-character.png",
+      "runtime": "assets/animal-island/owl-character.webp",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceSha256": "a2d39ecb1c3f18a0f117c5c3e91a719c4f548a702c269f4779e80bd70939bba6",
+      "runtimeSha256": "dc5cca69b4b6c926ad9da4c267041f65b31139829838383c21b253040a9cf349",
+      "sourceBytes": 2009126,
+      "runtimeBytes": 37730,
+      "provenance": "assets/animal-island/sources/owl-character.provenance.json"
+    },
+    {
+      "species": "raccoon",
+      "source": "assets/animal-island/sources/raccoon-character.png",
+      "runtime": "assets/animal-island/raccoon-character.webp",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceSha256": "8b6e0664d8c7983d2862a607a7caf805e4b9d78db08aef11cb5d838f3e5bed89",
+      "runtimeSha256": "bc5e148216e3fb58b449a1267930b01245cc2bdd2d62774023d0c4733578dfb7",
+      "sourceBytes": 2367581,
+      "runtimeBytes": 42286,
+      "provenance": "assets/animal-island/sources/raccoon-character.provenance.json"
+    },
+    {
+      "species": "elephant",
+      "source": "assets/animal-island/sources/elephant-character.png",
+      "runtime": "assets/animal-island/elephant-character.webp",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "sourceSha256": "25babeebfcda955f11288919eaf65c08f6d8b4e94f38a782d69fbee0332ce319",
+      "runtimeSha256": "4433ce27af832fcc1040aec7202614fc1d7b17e89e667835d205e6c1ea8f3720",
+      "sourceBytes": 2286318,
+      "runtimeBytes": 39394,
+      "provenance": "assets/animal-island/sources/elephant-character.provenance.json"
+    }
+  ]
+}

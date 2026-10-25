@@ -1,14 +1,14 @@
-// Data only: game copy and lifecycle adapter IDs. Screen markup lives in toenow-screens.js.
+// Data only. The shared renderer owns every title and result template.
 (function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.ToenowScreenConfig=factory();})(typeof globalThis!=='undefined'?globalThis:this,function(){return {
   "number-pop": {
     "name": "NUMBER POP",
-    "icon": "🔢",
+    "icon": "🐰",
     "category": "NUMBERS",
-    "description": "Tap numbers from smallest to largest before time runs out!",
+    "description": "Collect numbered harvest baskets from lowest to highest with Rabbit.",
     "rules": [
       {
         "label": "HOW TO PLAY",
-        "text": "Find smallest value and tap it (Lowest → Highest sequence)."
+        "text": "Collect numbered harvest baskets from lowest to highest with Rabbit."
       },
       {
         "label": "WATCH OUT",
@@ -27,21 +27,22 @@
       "wave": "go-wave",
       "combo": "go-combo",
       "level": "go-survival-rank"
-    }
+    },
+    "animalSpecies": "rabbit"
   },
   "ball-track": {
     "name": "BALL TRACK",
-    "icon": "🔮",
+    "icon": "🦦",
     "category": "SPACE",
-    "description": "Watch the glowing balls run around the orbit circle, then tap where they stop!",
+    "description": "Remember the otters, follow their floating leaves, then find their hiding places.",
     "rules": [
       {
         "label": "HOW TO PLAY",
-        "text": "Memorize target balls in the queue and track them during circular shuffle."
+        "text": "Remember the otters, follow their floating leaves, then find their hiding places."
       },
       {
         "label": "TIP",
-        "text": "Hold Overdrive during shuffle to accelerate balls and boost score up to 3.5x."
+        "text": "Follow the hidden otters. Their leaves look identical until they are revealed."
       }
     ],
     "titleId": "screen-title",
@@ -56,17 +57,18 @@
       "wave": "go-stat-wave",
       "combo": "go-stat-combo",
       "level": "go-level"
-    }
+    },
+    "animalSpecies": "otter"
   },
   "block-match": {
     "name": "BLOCK MATCH",
-    "icon": "🖲️",
+    "icon": "🦫",
     "category": "PATTERN",
-    "description": "Tap excess blocks to match the target blueprint.",
+    "description": "Remove extra timber tiles to match Beaver's blueprint.",
     "rules": [
       {
         "label": "HOW TO PLAY",
-        "text": "Compare active board to target blueprint and tap away extra blocks."
+        "text": "Remove extra timber tiles to match Beaver's blueprint."
       },
       {
         "label": "WATCH OUT",
@@ -85,17 +87,18 @@
       "wave": "final-waves",
       "combo": "final-combo",
       "level": "final-level-badge"
-    }
+    },
+    "animalSpecies": "beaver"
   },
   "add-up": {
     "name": "ADD UP",
-    "icon": "⚡",
+    "icon": "🐿️",
     "category": "NUMBERS",
-    "description": "Tap floating number balls to add up and match the target sum!",
+    "description": "Choose nut bags that add up to Squirrel's supply order.",
     "rules": [
       {
         "label": "HOW TO PLAY",
-        "text": "Tap 2, 3, or 4 balls that sum to the core target number."
+        "text": "Choose nut bags that add up to Squirrel's supply order."
       },
       {
         "label": "BONUS",
@@ -114,21 +117,22 @@
       "wave": "gameover-waves",
       "combo": "gameover-combo",
       "level": "gameover-level"
-    }
+    },
+    "animalSpecies": "squirrel"
   },
   "space-scale": {
     "name": "SPACE SCALE",
-    "icon": "⚖️",
+    "icon": "🦊",
     "category": "LOGIC",
-    "description": "Watch how scales tilt and deduce target celestial masses before time runs out.",
+    "description": "Read the scales and help Fox sort mysterious parcels by weight.",
     "rules": [
       {
         "label": "HOW TO PLAY",
-        "text": "Analyze lever tilts to find Heaviest, Lightest, or Middle planet."
+        "text": "Read the scales and help Fox sort mysterious parcels by weight."
       },
       {
         "label": "REMEMBER",
-        "text": "Size ≠ Weight! A small Black Hole can be far heavier than a Gas Cloud."
+        "text": "Size does not reveal weight. Use the scales to compare the parcels."
       }
     ],
     "titleId": "title-screen",
@@ -143,17 +147,18 @@
       "wave": "over-wave",
       "combo": "over-combo",
       "level": "over-rank"
-    }
+    },
+    "animalSpecies": "fox"
   },
   "tap-match": {
     "name": "TAP MATCH",
-    "icon": "🎯",
+    "icon": "🐧",
     "category": "SPACE",
-    "description": "Tap matching pictures before they disappear.",
+    "description": "Find matching picture cards and help Penguin collect them.",
     "rules": [
       {
         "label": "HOW TO PLAY",
-        "text": "Look at the target above, then tap matching pictures."
+        "text": "Find matching picture cards and help Penguin collect them."
       },
       {
         "label": "LEVELS",
@@ -172,17 +177,18 @@
       "wave": "summary-wave",
       "combo": "summary-streak",
       "level": "summary-level"
-    }
+    },
+    "animalSpecies": "penguin"
   },
   "spot-quick": {
     "name": "SPOT QUICK",
-    "icon": "🔬",
+    "icon": "🦉",
     "category": "PATTERN",
-    "description": "Guess the blurry picture before time runs out.",
+    "description": "Identify blurry photos from every category for Owl's observation journal.",
     "rules": [
       {
         "label": "HOW TO PLAY",
-        "text": "Watch the picture become clearer, then tap the matching answer."
+        "text": "Identify blurry photos from every category for Owl's observation journal."
       },
       {
         "label": "TIME",
@@ -201,17 +207,18 @@
       "wave": "finalWaveVal",
       "combo": "finalStreakVal",
       "level": "finalTierVal"
-    }
+    },
+    "animalSpecies": "owl"
   },
   "shadow-match": {
     "name": "SHADOW MATCH",
-    "icon": "👤",
+    "icon": "🦝",
     "category": "PATTERN",
-    "description": "Find the card that matches the moving shapes.",
+    "description": "Watch Raccoon's moving paper shapes and find the matching card.",
     "rules": [
       {
         "label": "HOW TO PLAY",
-        "text": "Look at the shapes above, then tap the card with the same shapes."
+        "text": "Watch Raccoon's moving paper shapes and find the matching card."
       },
       {
         "label": "TIP",
@@ -230,21 +237,22 @@
       "wave": "stat-waves-resolved",
       "combo": "stat-peak-combo",
       "level": "gameover-level-reached"
-    }
+    },
+    "animalSpecies": "raccoon"
   },
   "flash-brain": {
     "name": "FLASH BRAIN",
-    "icon": "🧠",
+    "icon": "🐘",
     "category": "MEMORY",
-    "description": "Remember where the blocks light up.",
+    "description": "Remember the animal flowerbeds with Elephant. Recall their positions and avoid thorns.",
     "rules": [
       {
         "label": "HOW TO PLAY",
-        "text": "Wait for GO, then tap the spots that lit up."
+        "text": "Remember the animal flowerbeds with Elephant. Recall their positions and avoid thorns."
       },
       {
         "label": "TIPS",
-        "text": "Tap yellow blocks first. Avoid red blocks: they cost you 3 seconds!"
+        "text": "Remember animal flowerbeds. Tap priority beds first and avoid thorn beds."
       }
     ],
     "titleId": "flash-title-screen",
@@ -259,6 +267,7 @@
       "wave": "flash-wave",
       "combo": "flash-combo",
       "level": "flash-level"
-    }
+    },
+    "animalSpecies": "elephant"
   }
 };});

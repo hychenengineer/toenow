@@ -41,10 +41,10 @@ async function run(){
      assert.equal(await page.evaluate(()=>__animalFeedback.some(x=>x.success)),true);
      await page.evaluate(()=>{window.__stationLanguageRef={svg:document.querySelector('#stationmaster svg'),head:document.querySelector('[data-queue]'),moves:document.querySelector('#moves').textContent}});
      const chinese=await page.evaluate(()=>{ToenowI18n.setLanguage('zh-Hant');return document.querySelector('#stationmaster span').textContent});
-     assert.match(chinese,/熊貓站長/,'Chinese stationmaster text updates synchronously');
+     assert.equal(chinese,'點隊伍最前面的動物','Chinese stationmaster text updates synchronously');
      await page.screenshot({path:path.join(out,`${id}-${size}-language-zh.png`),fullPage:true});
      const english=await page.evaluate(()=>{ToenowI18n.setLanguage('en');return document.querySelector('#stationmaster span').textContent});
-     assert.match(english,/Panda stationmaster/,'English stationmaster text restores synchronously');
+     assert.equal(english,'Tap an animal at the front','English stationmaster text restores synchronously');
      assert.equal(await page.evaluate(()=>__stationLanguageRef.svg===document.querySelector('#stationmaster svg')&&__stationLanguageRef.head===document.querySelector('[data-queue]')&&__stationLanguageRef.moves===document.querySelector('#moves').textContent),true,'Language changes preserve mascot, queue nodes and move count');
      await page.screenshot({path:path.join(out,`${id}-${size}-boarding.png`),fullPage:true});
      // Illegal boarding remains disabled; it cannot change the puzzle.

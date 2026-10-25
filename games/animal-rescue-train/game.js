@@ -123,11 +123,11 @@
     const stationmaster = $('stationmaster');
     if (stationmaster) {
       const zh = window.ToenowI18n?.language?.startsWith('zh');
-      const task = state.status === 'won' ? (zh ? '熊貓站長：旅客都安全到家了！' : 'Panda stationmaster: everyone is safely home!')
-        : state.status === 'lost' ? (zh ? '熊貓站長：試試另一個上車順序。' : 'Panda stationmaster: try another boarding order.')
-        : selected !== null ? (zh ? '熊貓站長：幫這位旅客選一節車廂。' : 'Panda stationmaster: choose a carriage for this passenger.')
-        : (zh ? '熊貓站長：選擇隊伍前方的旅客。' : 'Panda stationmaster: choose a passenger at the front.');
-      if (!stationmaster.querySelector('svg')) stationmaster.innerHTML = face('panda') + '<span></span>';
+      const task = state.status === 'won' ? (zh ? '大家都到家了！' : 'Everyone is home!')
+        : state.status === 'lost' ? (zh ? '試試另一個順序' : 'Try another order')
+        : selected !== null ? (zh ? '點亮起的車廂' : 'Tap a glowing carriage')
+        : (zh ? '點隊伍最前面的動物' : 'Tap an animal at the front');
+      if (!stationmaster.querySelector('svg')) stationmaster.innerHTML = face('panda') + '<span id="instruction" data-i18n-ignore></span>';
       const label = stationmaster.querySelector('span');
       if (label) label.textContent = task;
       stationmaster.dataset.status = state.status;
@@ -142,39 +142,29 @@
     document.body.dataset.tier = info.level;
     $('queues').style.setProperty('--queue-count', state.queues.length);
     $('cars').style.setProperty('--car-count', state.cars.length);
-    $('tier-label').textContent = `${info.badgeText}${isPractice ? ' · PRACTICE' : ''}`;
-    $('board-size').textContent = `${state.queues.length} queues · ${state.cars.length} carriages`;
+    $('tier-label').textContent = isPractice ? 'PRACTICE' : '';
     $('level-number').textContent = `LEVEL ${info.level}`;
-    $('level-name').textContent = levels[levelIndex].name;
     $('moves').textContent = state.moves;
-    const target = Object.values(game.level.goals).reduce((sum, count) => sum + count, 0);
-    $('total').textContent = `${rescued()} / ${target} rescued`;
-    $('goals').innerHTML = Object.entries(game.level.goals).map(([animal, count]) => {
-      const savedCount = state.rescued[animal] || 0;
-      const isReq = game.level.requiredLastAnimal === animal;
-      const labelBadge = isReq ? '<span class="last-animal-badge" style="display:inline-block;margin-left:4px;font-size:0.7em;background:#f59e0b;color:#000;padding:1px 5px;border-radius:4px;font-weight:700;">LAST</span>' : '';
-      return `<div class="goal ${savedCount >= count ? 'done' : ''} ${isReq ? 'required-last-goal' : ''}" aria-label="${animals[animal].name}: ${savedCount} rescued, target ${count}">${face(animal)}<span class="label">${animals[animal].name}${labelBadge}</span><strong>${savedCount} / ${count}</strong>${savedCount >= count ? '<span aria-hidden="true">✓</span>' : ''}</div>`;
-    }).join('');
-    $('queues').innerHTML = state.queues.map((queue, index) => `<div class="queue"><div class="queue-header"><strong>Queue ${letter(index)}</strong><span>${queue.length} left</span></div><button class="head" data-queue="${index}" aria-pressed="${selected === index}" aria-label="Queue ${letter(index)} head: ${queue.length ? animals[queue[0]].name : 'empty'}" ${!playing || !queue.length ? 'disabled' : ''}>${queue.length ? `<span class="head-label">Front</span>${face(queue[0])}<span class="animal-name">${animals[queue[0]].name}</span>` : '<span class="empty-head">All aboard ✓</span>'}</button><p class="preview-label">Next 1 → 2 → 3</p><div class="previews">${[1, 2, 3].map(position => `<span class="preview ${queue[position] ? '' : 'empty'}" role="img" aria-label="${queue[position] ? `Upcoming ${position}: ${animals[queue[position]].name}` : 'No more animals'}">${queue[position] ? face(queue[position]) : '·'}</span>`).join('')}</div></div>`).join('');
+    const required = game.level.requiredLastAnimal;
+    $('goals').hidden = !required;
+    $('goals').innerHTML = required ? `<div class="required-last-goal">${face(required)}<span class="label sr-only">${animals[required].name}</span><span>Last to depart</span></div>` : '';
+    $('queues').innerHTML = state.queues.map((queue, index) => `<div class="queue"><div class="previews">${[3, 2, 1].map(position => `<span class="preview ${queue[position] ? '' : 'empty'}" role="img" aria-label="${queue[position] ? `Upcoming ${position}: ${animals[queue[position]].name}` : 'No more animals'}">${queue[position] ? face(queue[position]) : ''}</span>`).join('')}</div><span class="queue-arrow" aria-hidden="true">↓</span><button class="head" data-queue="${index}" aria-pressed="${selected === index}" aria-label="Queue ${letter(index)} head: ${queue.length ? animals[queue[0]].name : 'empty'}" ${!playing || !queue.length ? 'disabled' : ''}>${queue.length ? face(queue[0]) : '<span class="empty-head" aria-hidden="true">✓</span>'}</button></div>`).join('');
     $('cars').innerHTML = state.cars.map((car, index) => {
       const boardable = selected !== null && RescueTrain.canBoard(state, selected, index);
-      const hint = car.length ? `${animals[car[0]].name} only · needs ${3 - car.length}` : 'Any animal · empty';
-      return `<button class="car ${boardable ? 'boardable' : ''} ${car.length === 3 ? 'full' : ''}" data-car="${index}" aria-label="Carriage ${index + 1}, ${car.length} of 3 seats, ${car.map(animal => animals[animal].name).join(', ') || 'empty'}" ${boardable ? '' : 'disabled'}><span class="car-title"><span>Car ${index + 1}</span><span>${car.length} / 3</span></span><span class="seats">${[0, 1, 2].map(seat => `<span class="seat ${car[seat] ? '' : 'free'}">${car[seat] ? face(car[seat]) : '<span aria-hidden="true">+</span>'}</span>`).join('')}</span><span class="car-hint">${hint}</span></button>`;
+      return `<button class="car ${boardable ? 'boardable' : ''}" data-car="${index}" aria-label="Carriage ${index + 1}, ${car.length} of 3 seats, ${car.map(animal => animals[animal].name).join(', ') || 'empty'}" ${boardable ? '' : 'disabled'}><span class="seats">${[0, 1, 2].map(seat => `<span class="seat ${car[seat] ? '' : 'free'}">${car[seat] ? face(car[seat]) : car.length ? `<span class="seat-ghost" aria-hidden="true">${face(car[0])}</span>` : '<span aria-hidden="true">+</span>'}</span>`).join('')}</span></button>`;
     }).join('');
     const isLastLevel = info.level >= 5;
     const reqName = game.level.requiredLastAnimal ? animals[game.level.requiredLastAnimal].name : null;
-    const reqPrompt = reqName ? ` ${reqName} must be the last animal to depart.` : '';
-    const prompt = selected === null ? ('Choose an animal, then a carriage.' + reqPrompt) : `${animals[state.queues[selected][0]].name} selected from queue ${letter(selected)}. Choose a carriage.`;
     renderStationmaster();
-    $('instruction').textContent = message || (playing ? prompt : state.status === 'won' ? (isLastLevel ? 'All 5 levels complete! Every animal is safely home.' : 'Every animal is safely home.') : (reqName && (state.rescued[game.level.requiredLastAnimal] || 0) >= game.level.goals[game.level.requiredLastAnimal] ? `${reqName} departed too early! ${reqName} must depart last.` : 'Try a different boarding order.'));
+    if (message) $('instruction').textContent = window.ToenowI18n?.t(message) || message;
     $('undo').disabled = !game.canUndo;
     $('result').hidden = playing; $('result').className = `result ${state.status}`;
     if (!playing) {
       if (state.status === 'won') {
         if (isLastLevel && !isPractice) {
-          $('result').innerHTML = `<h3 id="result-title">Game Complete!</h3><p>Outstanding! You completed all 5 levels and rescued ${scoreBefore + rescued()} animals.</p>`;
+          $('result').innerHTML = '<h3 id="result-title">Game Complete!</h3><p>Everyone is safely home!</p>';
         } else {
-          $('result').innerHTML = `<h3 id="result-title">Level cleared!</h3><p>${rescued()} animals rescued. ${isPractice ? 'Practice level completed.' : 'Next level is unlocked!'}</p>`;
+          $('result').innerHTML = `<h3 id="result-title">Level cleared!</h3><p>${isPractice ? 'Practice level completed.' : 'Everyone is safely home!'}</p>`;
         }
       } else {
         const premature = reqName && (state.rescued[game.level.requiredLastAnimal] || 0) >= game.level.goals[game.level.requiredLastAnimal];
@@ -229,15 +219,15 @@
       stationmaster.classList.add('boarding-cheer');
     }
     if (departure) {
-      $('instruction').textContent = `${animals[departure.animal].name} carriage departed! Three rescued; an empty carriage is ready.`;
+      if (game.state.status === 'playing') $('instruction').textContent = window.ToenowI18n?.language?.startsWith('zh') ? '出發囉！繼續接動物上車' : 'All aboard! Pick the next animal';
       const car = document.querySelector(`[data-car="${departure.car}"]`);
-      const ghost = document.createElement('span'); ghost.className = 'departure-ghost'; ghost.setAttribute('aria-hidden', 'true'); ghost.textContent = '+3 rescued →';
+      const ghost = document.createElement('span'); ghost.className = 'departure-ghost'; ghost.setAttribute('aria-hidden', 'true'); ghost.textContent = '🚃 →';
       car.classList.add('departing'); car.append(ghost); ghost.addEventListener('animationend', () => ghost.remove(), { once: true });
     }
     if (event.detail === 0) (document.querySelector('.head:not(:disabled)') || $('undo')).focus({ preventScroll: true });
   });
   $('undo').addEventListener('click', () => {
-    if (!paused && game.undo()) { actions.pop(); selected = null; reported = false; persist(); render('Last move undone. Choose a queue head.'); }
+    if (!paused && game.undo()) { actions.pop(); selected = null; reported = false; persist(); render(); }
   });
   $('restart').addEventListener('click', () => { if (!paused) sdk.restart(); });
   $('next').addEventListener('click', () => {
@@ -262,7 +252,8 @@
   $('btn-share-score').addEventListener('click', () => sdk.share({ gameTitle: 'Animal Rescue Train', score: scoreBefore + rescued(), wave }));
   $('success-menu').addEventListener('click', () => $('menu').click());
   $('success-dialog').addEventListener('cancel', event => event.preventDefault());
-  $('help-content').innerHTML = `<ol class="rules">${$('rules-list').innerHTML}</ol><p class="warning">${$('mixed-warning').textContent}</p>`;
+  $('boarding-example').innerHTML = `${face('cat')}${face('cat')}${face('cat')}<span>→ 🚃</span>`;
+  $('help-content').innerHTML = `<div class="boarding-example" aria-hidden="true">${$('boarding-example').innerHTML}</div><ol class="rules">${$('rules-list').innerHTML}</ol><p class="warning">${$('mixed-warning').textContent}</p>`;
   $('help').addEventListener('click', () => { paused = true; $('help-dialog').showModal(); });
   $('close-help').addEventListener('click', () => sdk.resume());
   $('resume').addEventListener('click', () => sdk.resume());

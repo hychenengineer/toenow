@@ -26,6 +26,7 @@
   <script src="session.js" defer></script>
   <script src="game.js" defer></script>
 <link rel="stylesheet" href="../../assets/toenow-animals.css">
+<link rel="stylesheet" href="simple-board.css">
 </head>
 <body data-state="title" data-screen="menu">
   <main class="shell">
@@ -34,29 +35,29 @@
         <img id="train-title-art" class="unified-animal-art" src="../../assets/animal-island/panda-level1.webp" alt="" width="140" height="94">
         <span class="unified-category-pill">LOGIC · NO TIMER</span>
         <h1 class="unified-game-title">Animal Rescue Train</h1>
-        <p class="unified-game-desc">A little room. A safe way home.</p>
+        <p class="unified-game-desc">Three of a kind. All aboard!</p>
+        <div id="boarding-example" class="boarding-example" aria-hidden="true"></div>
         <div class="unified-records-strip"><div class="unified-record-box"><span class="unified-record-label" id="title-best-score-label">BEST SCORE</span><strong id="title-best-score">0</strong></div><div class="unified-record-box"><span class="unified-record-label" id="title-best-wave-label">BEST LEVEL</span><strong id="title-best-wave">1</strong></div></div>
         <p id="title-best-level" class="record-level">LVL 1 · BEGINNER</p>
-        <section class="start-rules" aria-labelledby="rules-title"><h2 id="rules-title">How to play</h2>
+        <details class="start-rules"><summary id="rules-title">How to play</summary>
           <ol id="rules-list" class="rules"><li><strong>Pick a queue head.</strong> Preview the next three animals.</li><li><strong>Pick a carriage.</strong> Each has three seats.</li><li><strong>Three of a kind depart.</strong> An empty carriage replaces them. Rescue every target.</li></ol>
           <p id="mixed-warning" class="warning">One species per carriage. Empty carriages accept any animal; occupied carriages accept only the same kind.</p>
-        </section>
+          <p class="menu-note">Use PRACTICE to jump straight to any level. Practice does not change best records.</p>
+          <p id="save-notice" class="fineprint">Guest progress is saved in this browser.</p>
+        </details>
         <button id="continue" class="secondary start-button" hidden>Continue last puzzle</button>
         <div class="unified-actions-bar"><button id="btn-start-game" class="unified-start-btn" data-start="true">START GAME</button></div>
-        <p class="menu-note">Use PRACTICE to jump straight to any level. Practice does not change best records.</p>
-        <p id="save-notice" class="fineprint">Guest progress is saved in this browser.</p>
         <button id="exit-title" class="text-button">Back to Hub</button>
       </div>
     </section>
     <section id="play-screen" aria-label="Rescue puzzle" hidden>
-      <div class="play-toolbar"><button id="menu" class="secondary">← Menu</button><span id="tier-label"></span><button id="help" class="secondary" aria-label="Open game instructions">? Help</button></div>
+      <div class="play-toolbar"><button id="menu" class="secondary">← Menu</button><strong class="play-title">Animal Rescue Train</strong><button id="help" class="secondary" aria-label="Open game instructions">? Help</button></div>
       <section class="station panel" aria-label="Rescue station">
-        <div class="station-header"><div><p class="eyebrow" id="level-number"></p><h2 id="level-name"></h2></div><div class="step-counter"><strong id="moves">0</strong><span>moves</span></div></div>
-        <div class="goals-header"><h3>Rescue targets</h3><span id="total"></span></div><div id="goals" class="goals"></div>
-        <div class="section-label"><h3>Queues</h3><span id="board-size"></span></div><div id="queues" class="queues"></div>
-        <div id="stationmaster" class="stationmaster" aria-live="polite"></div>
-        <p id="instruction" class="instruction" role="status" aria-live="polite" aria-atomic="true"></p>
-        <div class="section-label"><h3>Carriages</h3><span>3 seats each</span></div><div class="rail-yard"><div class="rail" aria-hidden="true"></div><div id="cars" class="cars"></div></div>
+        <div class="station-header"><p class="eyebrow" id="level-number"></p><span id="tier-label"></span><span id="moves" class="sr-only" aria-hidden="true">0</span></div>
+        <div id="goals" class="last-rule" hidden></div>
+        <div id="queues" class="queues" role="group" aria-label="Queues"></div>
+        <div id="stationmaster" class="stationmaster" role="status" aria-live="polite" aria-atomic="true"></div>
+        <div class="rail-yard"><div class="rail" aria-hidden="true"></div><div id="cars" class="cars" role="group" aria-label="Carriages"></div></div>
         <section id="result" class="result" aria-live="polite" hidden></section>
         <footer class="controls"><button id="undo" class="secondary" disabled>↶ Undo move</button><button id="restart" aria-label="Restart Run" class="secondary toenow-icon-control" title="Restart Run"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#restart"/></svg></button><button id="next" class="primary" hidden>Next puzzle →</button></footer>
         <button id="btn-share-score" class="text-button" hidden>SHARE SCORE</button>

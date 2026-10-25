@@ -134,6 +134,8 @@
     'Continue last puzzle': '繼續上次的謎題', 'Use PRACTICE to jump straight to any level. Practice does not change best records.': '使用「練習」直接選擇任一難度。練習不會更動最佳紀錄。',
     'Guest progress is saved in this browser.': '訪客進度會儲存在此瀏覽器中。', 'No account needed. Guest progress is saved in this browser.': '無須帳戶。訪客進度會儲存在此瀏覽器中。',
     'Saving is unavailable. Keep this tab open to continue.': '目前無法儲存。請保持此分頁開啟以繼續遊玩。', 'Back to Hub': '返回遊戲中心',
+    'Three of a kind. All aboard!': '同樣動物坐滿三隻，就出發！',
+    'Last to depart': '最後出發', 'Everyone is safely home!': '大家都平安到家了！',
     'Rescue puzzle': '動物救援謎題', '← Menu': '← 選單', '? Help': '？說明', 'Open game instructions': '開啟遊戲說明',
     'Rescue station': '救援車站', 'moves': '步', 'Rescue targets': '救援目標', 'Queues': '隊伍', 'Carriages': '車廂', '3 seats each': '每節三個座位',
     '↶ Undo move': '↶ 復原一步', '↻ Retry puzzle': '↻ 重試謎題', 'Next puzzle →': '下一個謎題 →', 'Play Again ↻': '再玩一次 ↻', 'Next Level →': '下一級 →',

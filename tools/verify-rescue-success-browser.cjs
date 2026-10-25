@@ -48,7 +48,8 @@ async function win(page,touch=false){
   await context.close();console.log('PASS standalone '+lang+' '+width);
  }
  const page=await browser.newPage({viewport:{width:1280,height:900}});page.on('pageerror',e=>errors.push(e.message));await page.goto(base);
+ await page.locator('#islandListViewBtn').click();
  await page.locator('[data-game-id="animal-rescue-train"] .game-launch').click();await page.frameLocator('#gameViewer').locator('#btn-start-game').waitFor({state:'visible'});const frame=page.frames().find(f=>f.url().includes('/games/animal-rescue-train/'));
  await frame.locator('#btn-start-game').click();await win(frame);await frame.locator('#next').click();check((await saved(frame)).wave===6,'Hub iframe next advances level');
  assert.deepEqual(errors,[]);fs.writeFileSync(path.join(out,'browser-results.json'),JSON.stringify({checks:checks.length,passed:checks,errors,physicalIPadSafari:'NOT VERIFIED'},null,2));console.log(JSON.stringify({checks:checks.length,errors}));
-}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
+}finally{let timer;await Promise.race([browser.close(),new Promise(resolve=>{timer=setTimeout(resolve,5000);})]);clearTimeout(timer);}})().then(()=>process.exit(0),e=>{console.error(e);process.exit(1);});

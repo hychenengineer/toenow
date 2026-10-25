@@ -70,9 +70,9 @@ test('Train stationmaster switches language immediately without resetting its pu
  const callbacks={},state={status:'playing',moves:3};
  const context={window:{ToenowI18n:{language:'en'},addEventListener:(name,callback)=>{callbacks[name]=callback}},game:{state},selected:0,$:()=>board};
  vm.runInNewContext(s.slice(start,end)+"\nwindow.addEventListener('toenow:languagechange', renderStationmaster);",context);
- const refresh=callbacks['toenow:languagechange'];refresh();assert.match(label.textContent,/Panda stationmaster: choose a carriage/);
- context.window.ToenowI18n.language='zh-Hant';refresh();assert.match(label.textContent,/熊貓站長：幫這位旅客選一節車廂/);
- context.window.ToenowI18n.language='en';refresh();assert.match(label.textContent,/Panda stationmaster: choose a carriage/);
+ const refresh=callbacks['toenow:languagechange'];refresh();assert.equal(label.textContent,'Tap a glowing carriage');
+ context.window.ToenowI18n.language='zh-Hant';refresh();assert.equal(label.textContent,'點亮起的車廂');
+ context.window.ToenowI18n.language='en';refresh();assert.equal(label.textContent,'Tap a glowing carriage');
  assert.deepEqual(state,{status:'playing',moves:3});assert.equal(context.selected,0);
  assert.ok(s.includes("window.addEventListener('toenow:languagechange', renderStationmaster)"));
 });

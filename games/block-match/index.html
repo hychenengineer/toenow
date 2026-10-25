@@ -42,6 +42,28 @@
         touch-action: none;
       }
 
+      #match-success {
+        position: fixed;
+        inset: 0;
+        z-index: 15;
+        display: grid;
+        place-content: center;
+        pointer-events: none;
+        text-align: center;
+      }
+      #match-success[hidden] { display: none; }
+      .match-success-card {
+        max-width: calc(100vw - 32px);
+        padding: 20px 28px;
+        border: 2px solid #638263;
+        border-radius: 20px;
+        background: #f5faee;
+        color: #285334;
+        box-shadow: 0 8px 32px #28452e55;
+      }
+      .match-success-card strong { display: block; font-size: clamp(24px, 6vw, 34px); }
+      .match-success-card p { margin-top: 6px; font-size: 16px; }
+
       #game-canvas {
         position: fixed;
         inset: 0;
@@ -531,6 +553,13 @@
       </div>
     </div>
 
+    <div id="match-success" role="status" aria-live="polite" aria-atomic="true" hidden>
+      <div class="match-success-card">
+        <strong>✓ <span>Match complete!</span></strong>
+        <p>Great job! Next wave coming up…</p>
+      </div>
+    </div>
+
     <!-- Title Screen Overlay -->
     <section id="title-screen" class="unified-title-screen" aria-label="Title Screen" data-toenow-screen="title"></section>
 
@@ -965,6 +994,7 @@
           timeLeft: INITIAL_TIME_SECONDS,
           elapsedTime: 0,
           freezeTimer: 0,
+          successRemaining: 0,
           pendingBriefing: null
         };
 
@@ -1155,6 +1185,7 @@
 
         function setGameMode(next) {
           gameMode = next;
+          document.getElementById('match-success').hidden = next !== 'playing' || !state.successRemaining;
           document.body.dataset.state = next;
           elTitleScreen.hidden = next !== 'title';
           if (next === 'title') {
@@ -1232,6 +1263,7 @@
           state.pendingBriefing = null;
 
           shakeTrauma = 0;
+          state.successRemaining = 0;
           electricArcTimer = 0;
           redGlitchTimer = 0;
 
@@ -1288,6 +1320,16 @@
           };
         }
 
+        function advanceAfterSuccess() {
+          document.getElementById('match-success').hidden = true;
+          state.wave++;
+          board = generateWaveBoard(state.wave, state.elapsedTime);
+          updateLayout();
+          syncHud();
+          var nextBriefing = PHASE_BRIEFINGS[state.wave];
+          if (nextBriefing) openPhaseBriefing(nextBriefing);
+        }
+
         function hitTestLeftGridPoint(x, y) {
           var b = layout.leftBox;
           var n = board.config.gridSize;
@@ -1309,7 +1351,7 @@
          * Deliberate Single-Cell Tap Handler (No drag/brush slicing).
          */
         function handleSingleCellTap(r, c) {
-          if (gameMode !== 'playing' || state.freezeTimer > 0) return;
+          if (gameMode !== 'playing' || state.freezeTimer > 0 || state.successRemaining > 0) return;
           var n = board.config.gridSize;
           if (r < 0 || r >= n || c < 0 || c >= n) return;
 
@@ -1345,38 +1387,14 @@
               state.score += waveBonus;
               state.timeLeft = Math.min(MAX_TIME_CAP_SECONDS, state.timeLeft + clearTimeBonus);
               state.wavesCleared++;
-              state.wave++;
               state.mistakesInWave = 0;
 
               electricArcTimer = 0.48;
               shakeTrauma = Math.min(1.0, shakeTrauma + 0.45);
               playWaveSurge();
 
-              var clearMsg = isPerfect
-                ? 'PERFECT! +' + clearTimeBonus.toFixed(1) + 's'
-                : 'CLEARED! +' + clearTimeBonus.toFixed(1) + 's';
-              spawnPopup(
-                layout.leftBox.x + layout.leftBox.size * 0.5,
-                layout.leftBox.y + layout.leftBox.size * 0.45,
-                clearMsg,
-                isPerfect ? '#fbbf24' : '#38bdf8'
-              );
-
-              board = generateWaveBoard(state.wave, state.elapsedTime);
-              updateLayout();
-
-              // Check if entering Wave 16, Wave 31, or Wave 46 -> Trigger Staged Phase Transition Briefing!
-              var nextBriefing = PHASE_BRIEFINGS[state.wave];
-              if (nextBriefing) {
-                if (!state.isPractice && state.score > state.highScore) {
-                  state.highScore = state.score;
-                  saveStorage(STORAGE_KEY_SCORE, state.highScore);
-                }
-                saveStorage(STORAGE_KEY_SHARDS, state.totalShards);
-                syncHud();
-                openPhaseBriefing(nextBriefing);
-                return;
-              }
+              state.successRemaining = 1.2;
+              document.getElementById('match-success').hidden = false;
             }
 
             if (state.score > state.highScore) {
@@ -1774,7 +1792,10 @@
           if (redGlitchTimer > 0) redGlitchTimer = Math.max(0, redGlitchTimer - dt);
 
           // Session timer ticks ONLY during active 'playing' state (100% frozen during 'briefing')
-          if (gameMode === 'playing') {
+          if (gameMode === 'playing' && state.successRemaining > 0) {
+            state.successRemaining = Math.max(0, state.successRemaining - dt);
+            if (state.successRemaining === 0) advanceAfterSuccess();
+          } else if (gameMode === 'playing') {
             state.elapsedTime += dt;
             if (state.freezeTimer > 0) {
               state.freezeTimer = Math.max(0, state.freezeTimer - dt);

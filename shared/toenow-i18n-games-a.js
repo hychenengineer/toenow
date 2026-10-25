@@ -2,6 +2,8 @@
   'use strict';
   // Exact visible phrases; numeric puzzle values and operators stay unchanged.
   const entries = {
+    'Match complete!': '配對成功！',
+    'Great job! Next wave coming up…': '做得好！即將進入下一波…',
     'Number Pop': '數字泡泡', 'NUMBER POP': '數字泡泡',
     'Ball Track': '追蹤小球', 'BALL TRACK': '追蹤小球',
     'Block Match': '方塊配對', 'BLOCK MATCH': '方塊配對',

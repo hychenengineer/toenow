@@ -93,6 +93,7 @@
     'PAR CLEAR +1.5s': '標準時間內完成 +1.5 秒', 'YELLOW [1] 1ST! -3.0s': '須先點黃色 [1]！−3.0 秒',
     'DECOY HIT! -3.0s': '點到誘餌！−3.0 秒', 'MISS! -3.0s': '失誤！−3.0 秒', 'TAP YELLOW [1] FIRST!': '先點黃色 [1]！',
     'START TAPPING NOW!': '現在開始點擊！', 'Interactive Neural Matrix Arena': '互動記憶矩陣遊戲區',
+    'Tap yellow 1 first, then the other blocks.': '先點黃色 1，再點其他方塊。',
     'Matrix nodes and sequence are hidden while paused.': '暫停時會隱藏矩陣節點與順序。', 'SYNC CLOCK': '同步計時', 'LEVEL · WAVE': '等級 · 波次',
     'Unmute Audio': '開啟音效', 'Mute Audio': '靜音', 'Restart Matrix': '重新開始矩陣', 'Restart Session [R]': '重新開始本局 [R]',
     'Pause Game': '暫停遊戲', 'Pause Game [P / Esc]': '暫停遊戲 [P / Esc]', '· TAP YELLOW [1] 1ST': '· 先點黃色 [1]',

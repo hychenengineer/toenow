@@ -467,7 +467,7 @@
         </div>
 
         <!-- Detailed Per-Wave Target Briefing Modal -->
-        <div id="modal-wave-brief" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="brief-title">
+        <div id="modal-wave-brief" class="modal-backdrop island-briefing hidden" data-toenow-game="tap-match" role="dialog" aria-modal="true" aria-labelledby="brief-title">
           <div class="modal-card">
             <div id="brief-kicker" class="modal-kicker">WAVE 1 BRIEFING · 3x3 MATRIX</div>
             <h2 id="brief-title" class="modal-title">Target Assignment</h2>
@@ -1141,11 +1141,11 @@
           const ph = previewCanvas.height;
           previewCtx.clearRect(0, 0, pw, ph);
 
-          previewCtx.fillStyle = '#070a0e';
+          previewCtx.fillStyle = '#263d35';
           previewCtx.fillRect(0, 0, pw, ph);
 
           // Subtle analytical grid guidelines
-          previewCtx.strokeStyle = 'rgba(36, 48, 68, 0.4)';
+          previewCtx.strokeStyle = 'rgba(120, 148, 134, 0.25)';
           previewCtx.lineWidth = 1;
           previewCtx.beginPath();
           previewCtx.moveTo(pw / 2, 8);

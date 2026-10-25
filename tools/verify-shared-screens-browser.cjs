@@ -36,6 +36,18 @@ async function instrument(page, id) {
 function structure(el) {
   return [el.tagName, el.className, ...[...el.children].map(structure)];
 }
+async function islandAppearance(host, cardSelector, species, stage) {
+  const appearance = await host.locator(cardSelector).evaluate(card => {
+    const css = getComputedStyle(card);
+    return { background: css.backgroundColor, color: css.color };
+  });
+  const rgb = value => value.match(/[\d.]+/g).slice(0,3).map(Number);
+  assert.ok(rgb(appearance.background).every(n => n > 210), 'Island card uses light paper');
+  assert.ok(rgb(appearance.color).every(n => n < 130), 'Island card uses dark readable ink');
+  const art = host.locator('[data-screen-animal-art]');
+  assert.ok((await art.getAttribute('src')).endsWith(species+'-level'+stage+'.webp'), 'Artwork follows this game and level');
+  await art.evaluate(img => img.decode());
+}
 async function run() {
   const browser = await chromium.launch({channel:'msedge',headless:true});
   const result = { standalone: 0, iframe: 0, practice: 0 };
@@ -52,6 +64,11 @@ async function run() {
         await page.evaluate(({lang,keys})=>{localStorage.setItem(keys.score,'900');localStorage.setItem(keys.wave,'21');ToenowI18n.setLanguage(lang);},{lang,keys:keys[id]});
         const title = page.locator('[data-toenow-screen="title"]');
         await title.waitFor({state:'visible'});
+        await islandAppearance(title,'.unified-title-card',c.animalSpecies,5);
+        if (process.env.TOENOW_SCREENSHOTS) {
+          fs.mkdirSync(process.env.TOENOW_SCREENSHOTS,{recursive:true});
+          await page.screenshot({path:path.join(process.env.TOENOW_SCREENSHOTS,`${id}-${width}-${lang}-title.png`)});
+        }
         assert.equal(await title.getAttribute('data-toenow-screen-owner'),'ToenowScreens');
         assert.equal(await title.locator('[data-screen-record="score"]').innerText(),'900',id+' saved title score');
         assert.equal(await title.locator('[data-screen-record="level"]').innerText(),lang==='en'?'LVL 5 · MASTER':'第 5 級 · 大師',id+' saved title level');
@@ -63,6 +80,16 @@ async function run() {
         await page.evaluate(()=>window.__finishScreenTest());
         const end=page.locator('[data-toenow-screen="gameover"]');
         await end.waitFor({state:'visible'});
+        await islandAppearance(end,'.modal-card',c.animalSpecies,3);
+        const buttons = await end.evaluate(el => {
+          const retry = getComputedStyle(el.querySelector('[data-screen-action="retry"]'));
+          const back = getComputedStyle(el.querySelector('[data-screen-action="title"]'));
+          return { retryImage: retry.backgroundImage, back: back.backgroundColor };
+        });
+        assert.equal(buttons.retryImage,'none',id+' island replay button has no neon gradient');
+        assert.ok(buttons.back.match(/[\d.]+/g).slice(0,3).every(n=>Number(n)>210),id+' paper title button');
+        await page.waitForTimeout(400);
+        if (process.env.TOENOW_SCREENSHOTS) await page.screenshot({path:path.join(process.env.TOENOW_SCREENSHOTS,`${id}-${width}-${lang}-end.png`)});
         assert.equal(await end.getAttribute('data-toenow-screen-owner'),'ToenowScreens');
         const endShape = await end.locator('.modal-card').evaluate(structure);
         if (!endStructure) endStructure=endShape;

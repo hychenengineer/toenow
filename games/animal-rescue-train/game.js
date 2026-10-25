@@ -75,6 +75,8 @@
   }
   function renderMenu() {
     sdk.syncTitleUI();
+    const bestStage = window.ToenowAnimals?.getSavedLevel('animal-rescue-train') || 1;
+    $('train-title-art').src = `../../assets/animal-island/panda-level${bestStage}.webp`;
     $('continue').hidden = !hasSave;
     const info = ToenowLevels.getLevelInfo(wave);
     $('continue').textContent = `Continue Level ${info.level}${isPractice ? ' (practice)' : ''}`;
@@ -136,6 +138,7 @@
     const state = game.state;
     const info = ToenowLevels.getLevelInfo(wave);
     const playing = state.status === 'playing';
+    $('train-result-art').src = `../../assets/animal-island/panda-level${info.level}.webp`;
     document.body.dataset.tier = info.level;
     $('queues').style.setProperty('--queue-count', state.queues.length);
     $('cars').style.setProperty('--car-count', state.cars.length);

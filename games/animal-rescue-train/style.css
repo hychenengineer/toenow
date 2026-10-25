@@ -1001,3 +1001,28 @@ dialog .primary { min-height:44px; border-radius:8px; padding:10px 16px; }
 #play-screen .instruction{background:#e8edda;border-color:#b4c3a4;color:#3d6955}
 #play-screen .secondary{background:#f7f0da;border-color:#b4b293;color:#40594b}
 #play-screen .rail{border-color:#9e9479;background:repeating-linear-gradient(90deg,transparent 0 18px,#ad9c7b 18px 24px,transparent 24px 42px)}
+
+/* The existing train flow shares the island paper and ink palette. */
+#menu-screen, #success-dialog, #result {
+  --text: #304d43; --muted: #52685b; --mint: #3d7059;
+  --amber: #805b2b; --line: #bdcbb6;
+  color: var(--text); color-scheme: light;
+}
+#menu-screen .start-rules { border-color: #bdcbb6; }
+#menu-screen .warning { color: #79572f; background: #f6ebd4; border-color: #d4c5a1; }
+#menu-screen .secondary, #success-dialog .secondary, #success-dialog .text-button {
+  color: #304d43; border-color: #b5c5ac; background: #fff5df;
+}
+#menu-screen .text-button { color: #315e49; }
+#menu-screen .unified-records-strip strong { color: #3d7059; }
+#success-dialog {
+  background: radial-gradient(ellipse at 50% 0, #e6efdd, transparent 55%), #fffaf0;
+  border: 1px solid #bdcbb6; border-radius: 26px; box-shadow: 0 16px 44px #36534426;
+}
+#success-dialog::backdrop { background: #e2ecdedf; backdrop-filter: blur(12px); }
+#success-dialog::before { content: none; }
+#success-dialog .unified-animal-art { width: 160px; height: 100px; }
+#success-dialog .primary { background: #3d7059; color: #fffdf7; border-color: #3d7059; }
+#success-dialog .fineprint { color: #52685b; }
+#result.lost { background: #f6ebd4; border-color: #cfb99a; }
+#result.lost h3 { color: #865236; }

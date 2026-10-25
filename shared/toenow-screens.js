@@ -28,7 +28,7 @@
   function gameOverMarkup(id) {
     const c = config(id);
     const labels = { score: 'SCORE', bestScore: 'BEST SCORE', wave: 'WAVE REACHED', combo: 'PEAK COMBO' };
-    return `<div class="modal-card"><h2 id="screen-gameover-title" data-screen-field="reason" class="toenow-result-heading">TIME EXPIRED</h2><p class="modal-subtitle">Session complete.</p>
+    return `<div class="modal-card"><img class="unified-animal-art" data-screen-animal-art src="../../assets/animal-island/${escape(c.animalSpecies || 'owl')}-level1.webp" alt="" width="140" height="94"><h2 id="screen-gameover-title" data-screen-field="reason" class="toenow-result-heading">TIME EXPIRED</h2><p class="modal-subtitle">Session complete.</p>
       <div class="stat-grid">${Object.keys(labels).map(key => `<div class="stat-tile"><span class="stat-tile-label">${labels[key]}</span><span id="${escape(c.fields[key])}" data-screen-field="${key}" class="stat-tile-value">0</span></div>`).join('')}</div>
       <p id="${escape(c.fields.level)}" data-screen-field="level" class="unified-gameover-subtitle">LVL 1 · BEGINNER</p>
       <div class="modal-actions"><button id="${escape(c.retryId)}" data-screen-action="retry" data-start="true" type="button" class="primary-btn">PLAY AGAIN</button>
@@ -98,6 +98,8 @@
     if (!instance) throw new Error('Screen not mounted: ' + id);
     instance.refreshMembership?.();
     instance.data = normalizeResult(data);
+    const art = instance.host.querySelector('[data-screen-animal-art]');
+    if (art) art.src = `../../assets/animal-island/${config(id).animalSpecies || 'owl'}-level${levels.getLevelInfo(instance.data.wave).level}.webp`;
     for (const [key, value] of Object.entries(instance.data)) {
       const node = instance.host.querySelector('[data-screen-field="' + key + '"]');
       if (node) node.textContent = key === 'combo' ? value == null ? '—' : 'x' + value : typeof value === 'number' ? value.toLocaleString() : value;

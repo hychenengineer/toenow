@@ -1100,3 +1100,103 @@ body[data-state='gameover'] .unified-gameover-screen {
 [data-toenow-screen-owner="ToenowScreens"] .toenow-membership a:focus-visible { outline: 2px solid #67e8f9; outline-offset: 3px; }
 /* Keep long result cards usable on short mobile screens. */
 [data-toenow-screen-owner="ToenowScreens"].unified-gameover-screen .modal-card { max-height: calc(100dvh - 32px); overflow-y: auto; }
+
+/* Island stationery: one shared visual system for every title and result. */
+.unified-title-screen, .unified-gameover-screen, .unified-practice-modal {
+  --island-ink: #304d43;
+  --island-muted: #52685b;
+  --island-accent: #3d7059;
+  --island-wash: #e6efdd;
+  color-scheme: light;
+  color: var(--island-ink) !important;
+  background: radial-gradient(ellipse at 12% 8%, #cbded1 0, transparent 48%), radial-gradient(ellipse at 90% 90%, #c6e2df 0, transparent 48%), #f2efdf !important;
+}
+[data-toenow-game="number-pop"], [data-toenow-game="add-up"] { --island-accent: #7b5931; --island-wash: #f2e6ce; }
+[data-toenow-game="ball-track"], [data-toenow-game="tap-match"] { --island-accent: #316c78; --island-wash: #dceef0; }
+[data-toenow-game="block-match"], [data-toenow-game="space-scale"] { --island-accent: #8a513b; --island-wash: #f4e3d6; }
+[data-toenow-game="spot-quick"], [data-toenow-game="shadow-match"] { --island-accent: #6c5878; --island-wash: #ece3ef; }
+[data-toenow-game="flash-brain"] { --island-accent: #4e6a4c; --island-wash: #e5edda; }
+.unified-title-screen .unified-title-card,
+.unified-gameover-screen .modal-card,
+.unified-practice-modal .unified-practice-card {
+  background: #fffaf0 !important;
+  background-image: radial-gradient(ellipse at 50% 0, var(--island-wash), transparent 48%) !important;
+  color: var(--island-ink) !important;
+  border: 1px solid #bdcbb6 !important;
+  border-radius: 28px 24px 30px 22px !important;
+  box-shadow: 0 16px 44px #36534426, inset 0 0 0 5px #ffffff80 !important;
+  max-height: calc(100dvh - 32px) !important;
+  overflow-y: auto !important;
+  scrollbar-color: #afbea4 #fffaf0;
+}
+.unified-title-screen .unified-title-card::before,
+.unified-gameover-screen .modal-card::before { background: linear-gradient(90deg, transparent, #92b590, transparent) !important; height: 3px !important; }
+.unified-title-screen .unified-game-title,
+.unified-gameover-screen .toenow-result-heading,
+.unified-practice-modal .unified-practice-title {
+  color: var(--island-ink) !important;
+  text-shadow: none !important;
+  letter-spacing: .01em !important;
+}
+.unified-title-screen .unified-game-title { text-transform: none !important; }
+.unified-title-screen .unified-game-desc,
+.unified-title-screen .unified-rule-text,
+.unified-title-screen .unified-record-label,
+.unified-gameover-screen .modal-subtitle,
+.unified-gameover-screen .unified-gameover-subtitle,
+.unified-gameover-screen .stat-tile-label,
+.unified-practice-modal .unified-practice-subtitle,
+.unified-practice-modal .unified-practice-level-range { color: var(--island-muted) !important; }
+.unified-title-screen .unified-category-pill,
+.unified-title-screen .unified-rules-box,
+.unified-title-screen .unified-records-strip,
+.unified-gameover-screen .stat-tile,
+.unified-practice-modal .unified-practice-level-btn,
+.unified-practice-modal .unified-practice-pill,
+.unified-practice-modal .unified-practice-level-num {
+  background: var(--island-wash) !important;
+  border-color: #c6d1bd !important;
+  color: var(--island-ink) !important;
+  box-shadow: none !important;
+}
+.unified-title-screen .unified-rule-kicker,
+.unified-title-screen .unified-record-val,
+.unified-gameover-screen .stat-tile-value,
+.unified-practice-modal .unified-practice-level-name { color: var(--island-accent) !important; }
+.unified-title-screen .unified-record-sep { color: #82977b !important; }
+.unified-title-screen .unified-start-btn,
+.unified-gameover-screen :is(#btn-retry, #btn-try-again, #btn-play-again, #btn-reboot-optics, #retryBtn, [data-start="true"]) {
+  background: var(--island-accent) !important;
+  color: #fffdf7 !important;
+  border: 1px solid var(--island-accent) !important;
+  box-shadow: 0 4px 0 #304d4320, 0 6px 16px #36534418 !important;
+}
+.unified-title-screen .unified-practice-btn,
+.unified-gameover-screen .modal-actions > .unified-share-btn,
+.unified-gameover-screen :is(#btn-gameover-title, #btn-title-gameover, #btn-title-over, #btn-go-title, .secondary-btn),
+.unified-practice-modal .unified-practice-cancel-btn {
+  background: #fff5df !important;
+  color: var(--island-ink) !important;
+  border: 1px solid #b5c5ac !important;
+  box-shadow: 0 3px 0 #36534412 !important;
+}
+.unified-title-screen button:hover,
+.unified-gameover-screen .modal-actions > button:hover,
+.unified-practice-modal button:hover { filter: brightness(.96); }
+.unified-title-screen button:focus-visible,
+.unified-gameover-screen button:focus-visible,
+.unified-practice-modal button:focus-visible { outline: 3px solid #aa7637 !important; outline-offset: 3px !important; }
+.unified-gameover-screen [data-membership-invite] {
+  background: #edf2e4 !important; border-color: #c6d1bd !important; color: var(--island-ink) !important;
+}
+.unified-gameover-screen .toenow-membership h3 { color: var(--island-ink) !important; }
+.unified-gameover-screen .toenow-membership p { color: var(--island-muted) !important; }
+.unified-gameover-screen .toenow-membership a { color: #315e49 !important; }
+.unified-gameover-screen a.toenow-membership-register { background: #fffaf0 !important; border-color: #9eb79b !important; }
+.unified-gameover-screen .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+.unified-title-screen .unified-animal-art,
+.unified-gameover-screen .unified-animal-art { width: 160px; height: 100px; object-fit: contain; flex-shrink: 0; margin: 0 auto 8px; }
+@media(max-width:480px) {
+  .unified-title-screen .unified-animal-art,
+  .unified-gameover-screen .unified-animal-art { width: 126px; height: 80px; }
+}

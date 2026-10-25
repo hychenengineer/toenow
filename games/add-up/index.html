@@ -1377,7 +1377,6 @@
         let pointerX = width * 0.5;
         let pointerY = height * 0.5;
         let hoveredNode = null;
-        let lastPointerDownTs = 0;
 
         let nodes = [];
         let selectedNodes = [];
@@ -1805,13 +1804,10 @@
           }
         }
 
-        canvas.addEventListener('pointerdown', function (e) {
-          lastPointerDownTs = performance.now();
-          handleCanvasPointer(e.clientX, e.clientY);
-        });
-
-        canvas.addEventListener('mousedown', function (e) {
-          if (performance.now() - lastPointerDownTs < 60) return;
+        // Use one input stream: touch can emit a compatibility mousedown on
+        // release, well after pointerdown, which would toggle the same bag twice.
+        const canvasPressEvent = typeof window.PointerEvent === 'function' ? 'pointerdown' : 'mousedown';
+        canvas.addEventListener(canvasPressEvent, function (e) {
           handleCanvasPointer(e.clientX, e.clientY);
         });
 

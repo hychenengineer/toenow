@@ -181,6 +181,7 @@ for (const game of GAMES) {
     sandbox.ToenowScreens = require('./helpers/screen-engine-adapter.cjs').adapter(doc);
     sandbox.scrollTo = () => {};
     sandbox.window = sandbox;
+    if (game.id === 'add-up') sandbox.PointerEvent = function () {};
 
     // Extract inline scripts
     const scriptRegex = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
@@ -275,6 +276,26 @@ for (const game of GAMES) {
       }
     } catch (err) {
       assert.fail(`Runtime error when clicking START in ${game.id}: ${err.message}\n${err.stack}`);
+    }
+
+    if (game.id === 'add-up') {
+      const arena = elements.get('reactor-canvas');
+      const reactor = sandbox.__overclockReactor;
+      const node = reactor.getState().nodes[0];
+      const event = { clientX: node.x, clientY: node.y, button: 0, preventDefault() {} };
+      sandbox.performance.now = () => 1000;
+      arena.dispatchEvent({ ...event, type: 'pointerdown', pointerType: 'touch' });
+      assert.equal(reactor.getState().nodes[0].selected, true, 'Touch selects the bag');
+      // Touch compatibility mouse events arrive on release, possibly long after pointerdown.
+      sandbox.performance.now = () => 1250;
+      arena.dispatchEvent({ ...event, type: 'mousedown' });
+      assert.equal(reactor.getState().nodes[0].selected, true, 'Delayed compatibility mouse event must not deselect');
+      sandbox.performance.now = () => 1260;
+      arena.dispatchEvent({ ...event, type: 'pointerdown', pointerType: 'touch' });
+      assert.equal(reactor.getState().nodes[0].selected, false, 'A second intentional tap still deselects');
+      arena.dispatchEvent({ ...event, type: 'pointerdown', pointerType: 'mouse' });
+      arena.dispatchEvent({ ...event, type: 'mousedown' });
+      assert.equal(reactor.getState().nodes[0].selected, true, 'Mouse selects exactly once');
     }
   });
 }

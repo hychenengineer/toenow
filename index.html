@@ -2892,6 +2892,17 @@
         return;
       }
 
+      if (payload.type === 'GAME_PROGRESS') {
+        if (event.source !== gameViewer.contentWindow || event.origin !== window.location.origin || payload.gameId !== currentMountedGame?.id || payload.isPractice !== false) return;
+        const { gameId, wave, completedLevel } = payload;
+        if (!Number.isSafeInteger(wave) || wave < 1 || !Number.isSafeInteger(completedLevel) || completedLevel < 1 || completedLevel > 5) return;
+        const reached = ToenowLevels.getLevelInfo(wave).level;
+        if (completedLevel !== (gameId === 'animal-rescue-train' ? reached : reached - 1)) return;
+        exploration?.complete({ gameId, wave, completedLevel, isPractice: false });
+        renderBentoGrid();
+        return;
+      }
+
       if (payload.type === 'GAME_OVER') {
         if (event.source !== gameViewer.contentWindow || event.origin !== window.location.origin || payload.gameId !== currentMountedGame?.id) return;
         const { gameId, category, score, isPractice } = payload;

@@ -2,6 +2,7 @@
   'use strict';
   // Display strings only. Game IDs, stored records and animal identifiers stay unchanged.
   const entries = {
+    'Next place': '下一個地點',
     'Welcome to TOENOW': '歡迎來到 TOENOW', 'Your adventure starts here.': '你的探索，從這裡開始。',
     'Create account': '建立帳號', 'Continue as a guest': '以訪客繼續',
     'Guest progress is saved in this browser.': '訪客進度會儲存在目前的瀏覽器。',

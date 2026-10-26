@@ -1400,6 +1400,7 @@
               state.score += waveBonus;
               state.timeLeft = Math.min(MAX_TIME_CAP_SECONDS, state.timeLeft + clearTimeBonus);
               state.wavesCleared++;
+              if (!state.isPractice && !window.ToenowTutorials?.isActive('block-match')) toenowSdk?.reportProgress({ wave: state.wave + 1 });
               state.mistakesInWave = 0;
 
               electricArcTimer = 0.48;

@@ -13,6 +13,7 @@
   }
 })(typeof self !== 'undefined' ? self : this, function (ToenowLevels, ToenowSecurity, ToenowPlatform) {
   'use strict';
+  var instances = {};
 
   var LEVELS = ToenowLevels ? ToenowLevels.LEVELS : [
     { level: 1, name: 'Beginner', badgeText: 'LVL 1 · BEGINNER', minWave: 1, maxWave: 5, startWave: 1 },
@@ -61,6 +62,8 @@
       wave: this.gameId.replace(/-/g, '_') + '_best_wave'
     };
     this.isPractice = false;
+    this.runActive = false;
+    instances[this.gameId] = this;
     this.runStartTime = Date.now();
     this.platform = ToenowPlatform ? new ToenowPlatform(this.config) : null;
   }
@@ -179,6 +182,7 @@
   };
 
   ToenowGameSDK.prototype.reportGameOver = function (options) {
+    this.runActive = false;
     options = options || {};
     var rawScore = Math.max(0, Math.round(Number(options.score) || 0));
     var rawWave = Math.max(1, Math.round(Number(options.wave) || 1));
@@ -257,12 +261,40 @@
   ToenowGameSDK.prototype.startRun = function (options) {
     this.runStartTime = Date.now();
     options = options || {};
+    this.runActive = true;
+    this.runStartWave = Math.max(1, Number(options.wave) || 1);
+    this.progressLevel = 0;
     this.setPracticeMode(options.isPractice !== undefined ? options.isPractice : this.isPractice);
     try {
       if (typeof window !== 'undefined' && window.ToenowAnalytics) {
         window.ToenowAnalytics.startGame(this.gameId, { wave: options.wave || 1, isPractice: this.isPractice });
       }
     } catch (_) {}
+  };
+
+  ToenowGameSDK.getInstance = function (gameId) { return instances[gameId] || null; };
+  ToenowGameSDK.prototype.reportProgress = function (options) {
+    options = options || {};
+    var wave = options.wave;
+    if (!this.runActive || this.isPractice || !Number.isSafeInteger(wave) || wave < 1) return null;
+    var completed = getLevelInfo(wave).level - 1;
+    // The rescue train has one puzzle per tier and reports its actual clear.
+    if (this.gameId === 'animal-rescue-train' && Number.isSafeInteger(options.completedLevel)) completed = options.completedLevel;
+    if (completed < 1 || completed > 5 || completed <= this.progressLevel ||
+      (this.gameId !== 'animal-rescue-train' && wave <= this.runStartWave)) return null;
+    this.progressLevel = completed;
+    try {
+      if (typeof localStorage !== 'undefined') {
+        var saved; try { saved = JSON.parse(localStorage.getItem('toenow_game_milestones_v1') || '{}'); } catch (_) {}
+        if (!saved || typeof saved !== 'object' || Array.isArray(saved)) saved = {};
+        saved[this.gameId] = Math.max(Number(saved[this.gameId]) || 0, completed);
+        localStorage.setItem('toenow_game_milestones_v1', JSON.stringify(saved));
+        if (wave > this.loadBestWave()) localStorage.setItem(this.keys.wave, String(wave));
+      }
+    } catch (_) {}
+    var payload = { type: 'GAME_PROGRESS', gameId: this.gameId, wave: wave, completedLevel: completed, isPractice: false };
+    try { if (typeof window !== 'undefined' && window.parent && window.parent !== window) window.parent.postMessage(payload, '*'); } catch (_) {}
+    return payload;
   };
 
   // Opt-in lifecycle entry points; existing games using reportGameOver stay compatible.

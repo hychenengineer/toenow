@@ -2719,6 +2719,7 @@
             // Check Wave Clear
             const remaining = game.cores.filter((c) => !c.popped).length;
             if (remaining === 0) {
+              if (!game.isPractice && !window.ToenowTutorials?.isActive('number-pop')) toenowSdk?.reportProgress({ wave: game.wave + 1 });
               const flawless = game.waveMistakes === 0;
               sound.playWaveClear(flawless);
               if (flawless) {

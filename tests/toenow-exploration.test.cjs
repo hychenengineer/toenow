@@ -9,6 +9,45 @@ function store(initial = {}) {
 }
 const make = storage => create({ storage, levels, gameIds, random: () => 0.25 });
 
+test('The nearest-neighbour route starts bottom-left with Rabbit and ends top-right with Panda', () => {
+  const locations = require('../shared/toenow-island.js').LOCATIONS;
+  const rabbit = locations.find(l => l.gameId === 'number-pop'), panda = locations.find(l => l.gameId === 'animal-rescue-train');
+  assert.deepEqual([rabbit.x, rabbit.y], [18, 78]);
+  assert.deepEqual([panda.x, panda.y], [81, 18]);
+  assert.deepEqual(make(store()).snapshot().order, ['number-pop', 'space-scale', 'add-up', 'flash-brain', 'ball-track', 'tap-match', 'block-match', 'spot-quick', 'shadow-match', 'animal-rescue-train']);
+});
+test('Updating the old random route preserves its opened buildings and actual completion credit', () => {
+  const storage = store({ [STORAGE_KEY]: JSON.stringify({ version: 1, mode: 'explore', welcomed: true, order: ['number-pop','block-match',...gameIds.filter(id => !['number-pop','block-match'].includes(id))], completed: ['number-pop'], pending: 'block-match' }) });
+  const flow = make(storage);
+  assert(flow.isUnlocked('block-match')); assert(flow.isUnlocked('number-pop'));
+  assert.equal(flow.snapshot().order[1], 'space-scale');
+  assert.equal(flow.complete({ gameId: 'number-pop', wave: 6 }), null);
+});
+test('Saved normal milestones unlock one building even while the iframe remains active', () => {
+  const storage = store(), flow = make(storage); flow.beginRun('number-pop');
+  storage.setItem('toenow_game_milestones_v1', JSON.stringify({ 'number-pop': 1 }));
+  flow.reconcile(); assert.deepEqual(flow.snapshot().unlocked, ['number-pop', 'space-scale']);
+  flow.reconcile(); assert.equal(flow.snapshot().unlocked.length, 2);
+});
+test('The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building', () => {
+  const order = ['number-pop', ...gameIds.filter(id => id !== 'number-pop')];
+  const initial = { [STORAGE_KEY]: JSON.stringify({ version: 1, mode: 'explore', order, completed: [], welcomed: true, pending: null, rejectedWaves: { 'number-pop': 6 } }), qcc_best_wave_v1: '6', qcc_high_score_v1: '3000' };
+  const flow = make(store(initial));
+  assert.deepEqual(flow.snapshot().unlocked, ['number-pop', 'space-scale']);
+  assert.deepEqual(flow.snapshot().completed, ['number-pop']);
+  const impossible = make(store({ ...initial, qcc_high_score_v1: '1000000000000' }));
+  assert.deepEqual(impossible.snapshot().unlocked, ['number-pop']);
+});
+test('Malformed version-2 opened lists never leave a player with zero usable games', () => {
+  const saved = make(store()).snapshot();
+  for (const opened of [[], ['unknown']]) {
+    const flow = make(store({ [STORAGE_KEY]: JSON.stringify({ ...saved, opened, completed: ['space-scale'], pending: 'space-scale' }) }));
+    assert.deepEqual(flow.snapshot().unlocked, ['number-pop']);
+    assert.deepEqual(flow.snapshot().completed, []);
+    assert.equal(flow.snapshot().pending, null);
+  }
+});
+
 test('Fresh and settings-only players start with one persisted rabbit garden', () => {
   for (const settings of [{}, { toenow_language_v1: 'zh-Hant', toenow_user_profile: '{}', toenow_hub_view_v1: 'list' }]) {
     const storage = store(settings), first = make(storage);

@@ -59,7 +59,16 @@
     const status=host.querySelector('[data-animal-status]');
     status.textContent=s.reaction==='success'?label('Collected!','完成收集！'):s.reaction==='retry'?label('Look again. You can do it!','再觀察一下，你可以的！'):'';
   }
-  function setWave(id,wave){if(!getTheme(id))return;const prior=state.get(id),level=levelForWave(wave);if(prior?.level===level)return;const s=prior||{};s.level=level;state.set(id,s);paint(id);}
+  function setWave(id,wave){
+    if(!getTheme(id))return;
+    if(!root?.ToenowTutorials?.isActive(id)){
+      if(id==='flash-brain')root?.FlashMemoryGarden?.reportProgress(wave);
+      else root?.ToenowGameSDK?.getInstance(id)?.reportProgress({wave});
+    }
+    const prior=state.get(id),level=levelForWave(wave);
+    if(prior?.level===level)return;
+    const s=prior||{};s.level=level;state.set(id,s);paint(id);
+  }
   function feedback(id,success){
     if(!getTheme(id))return;
     const s=state.get(id)||{level:1};s.reaction=success?'success':'retry';state.set(id,s);paint(id);

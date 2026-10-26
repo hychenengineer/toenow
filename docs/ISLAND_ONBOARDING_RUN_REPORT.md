@@ -2,7 +2,7 @@
 
 The Hub opens the island directly. New players choose Sign In, Create account or Continue as a guest, with English/Traditional Chinese copy. Guests do not see the welcome repeatedly. Existing local normal-play history, including zero-score attempts, retains access to every game. Existing cloud history is detected after account restoration.
 
-New journeys begin at the existing `number-pop` rabbit garden. The other nine sites are covered in mist. Passing Wave 5 (reaching Wave 6) in each distinct open game unlocks one more site, once. The remaining order is randomized once and stored in `toenow_exploration_v1`. Practice and appearance previews do not advance discovery. Discovery banners, highlighted buildings and routes show the next destination.
+New journeys begin at the `number-pop` rabbit garden at the lower-left dock. As revised on 2026-10-26, the route follows neighbouring locations and ends at Panda Rescue in the upper-right corner. Passing Level 1 in each distinct open game immediately opens one more place, once; practice and appearance previews do not advance discovery. The same storage key `toenow_exploration_v1` now contains version-2 state, preserving previously opened locations. See `ISLAND_ROUTE_FIX_RUN_REPORT.md` for the route, missed-clear recovery and current verification.
 
 ## Verified
 

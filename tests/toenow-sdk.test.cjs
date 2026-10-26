@@ -2,6 +2,32 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const ToenowGameSDK = require('../shared/toenow-sdk.js');
 
+test('SDK publishes a normal level milestone during play without ending the run or writing scores', () => {
+  const previousWindow = global.window, previousStorage = global.localStorage;
+  const values = {}, messages = [];
+  global.localStorage = { getItem: key => values[key] ?? null, setItem: (key, value) => { values[key] = String(value); } };
+  global.window = { parent: { postMessage: payload => messages.push(payload) } };
+  try {
+    const sdk = new ToenowGameSDK({ gameId: 'number-pop' });
+    sdk.startRun({ wave: 1, isPractice: true });
+    assert.equal(sdk.reportProgress({ wave: 6 }), null);
+    assert.equal(messages.length, 0); assert.deepEqual(values, {});
+    sdk.startRun({ wave: 1, isPractice: false });
+    assert.equal(sdk.reportProgress({ wave: 5 }), null);
+    const result = sdk.reportProgress({ wave: 6 });
+    assert.equal(result.type, 'GAME_PROGRESS'); assert.equal(result.completedLevel, 1);
+    assert.equal(messages.length, 1);
+    assert.equal(sdk.reportProgress({ wave: 7 }), null, 'one message per milestone');
+    assert.equal(values.qcc_high_score_v1, undefined, 'progress does not finalize a score');
+    assert.equal(values.qcc_best_wave_v1, '6');
+    assert.equal(JSON.parse(values.toenow_game_milestones_v1)['number-pop'], 1);
+    assert.equal(ToenowGameSDK.getInstance('number-pop'), sdk);
+    const train = new ToenowGameSDK({ gameId: 'animal-rescue-train', hasWaves: false });
+    train.startRun({ wave: 1, isPractice: false });
+    assert.equal(train.reportProgress({ wave: 1, completedLevel: 1 }).completedLevel, 1);
+  } finally { global.window = previousWindow; global.localStorage = previousStorage; }
+});
+
 test('SDK survives a browser denying access to localStorage itself', () => {
   const descriptor = Object.getOwnPropertyDescriptor(global, 'localStorage');
   Object.defineProperty(global, 'localStorage', { configurable: true, get() { throw new Error('Denied'); } });

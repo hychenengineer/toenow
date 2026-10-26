@@ -105,6 +105,7 @@ body[data-exploration="explore"] :is(.hub-theme-control,#openLeaderboardBtn),
 .island-mission,.island-discovery { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px; padding: 14px 18px; border-radius: 16px; border: 1px solid var(--border-glass); background: var(--hub-soft); }
 .island-guidance strong { font-size: 1rem; }
 .island-guidance p { font-size: .82rem; color: var(--text-secondary); line-height: 1.6; margin-top: 3px; }
+.island-next-destination { display: block; color: var(--accent-cyan); font-weight: 700; margin-top: 3px; }
 .island-mission-icon { font-size: 1.8rem; color: var(--accent-cyan); }
 .island-guidance button { border: 0; border-radius: 11px; min-height: 44px; padding: 10px 18px; font: 700 .85rem/1.4 system-ui,sans-serif; cursor: pointer; background: var(--accent-cyan); color: var(--hub-on-accent); }
 .island-guidance button:first-of-type { margin-left: auto; }

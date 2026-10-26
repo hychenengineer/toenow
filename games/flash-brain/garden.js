@@ -4,6 +4,20 @@
   else root.FlashMemoryGarden = api;
 })(globalThis, function (root) {
   'use strict';
+  let progressSdk = null;
+  function reportProgress(wave) {
+    if (!root.document || !root.ToenowGameSDK || root.ToenowTutorials?.isActive('flash-brain')) return;
+    if (root.document.body.dataset.state !== 'playing') {
+      if (progressSdk) progressSdk.runActive = false;
+      return;
+    }
+    if (!progressSdk) progressSdk = new root.ToenowGameSDK({ gameId: 'flash-brain', category: 'memory' });
+    if (!progressSdk.runActive) {
+      const params = new URLSearchParams(root.location.search);
+      progressSdk.startRun({ wave: Math.max(1, Number(params.get('wave')) || 1), isPractice: params.get('practice') === '1' });
+    }
+    progressSdk.reportProgress({ wave });
+  }
   // Untapped beds stay identical throughout recall: art never leaks a hidden target.
   function isAnimalVisible(cell, phase, shell) {
     return shell === 'playing' && (cell.type === 'TARGET' || cell.type === 'PRIORITY') &&
@@ -33,5 +47,5 @@
     root.ToenowAnimals?.setWave?.('flash-brain', wave);
     if (status !== 'IGNORED') root.ToenowAnimals?.feedback?.('flash-brain', status !== 'MISTAKE');
   }
-  return { isAnimalVisible, drawCell, feedback };
+  return { isAnimalVisible, drawCell, feedback, reportProgress };
 });

@@ -122,6 +122,7 @@
     if (tutorialActive()) return;
     if (game.state.status === 'playing' || reported) return;
     reported = true;
+    if (game.state.status === 'won') sdk.reportProgress({ wave, completedLevel: ToenowLevels.getLevelInfo(wave).level });
     const report = sdk.handleGameOver({ score: scoreBefore + rescued(), wave, isPractice, duration: elapsed() });
     if (report.isValid === false) $('record-notice').textContent = 'This attempt could not be recorded.';
   }

@@ -5,12 +5,12 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function (animals) {
   'use strict';
   const LOCATIONS = [
-    { gameId: 'animal-rescue-train', name: 'Rescue Harbor', kind: 'station', x: 18, y: 78, color: '#b75b43' },
-    { gameId: 'number-pop', name: 'Melody Garden', kind: 'music', x: 40, y: 78, color: '#957131' },
+    { gameId: 'animal-rescue-train', name: 'Rescue Harbor', kind: 'station', x: 81, y: 18, color: '#b75b43' },
+    { gameId: 'number-pop', name: 'Melody Garden', kind: 'music', x: 18, y: 78, color: '#957131' },
     { gameId: 'ball-track', name: 'Orbit Terrace', kind: 'orbit', x: 79, y: 45, color: '#396e96' },
     { gameId: 'block-match', name: 'Mosaic Workshop', kind: 'workshop', x: 24, y: 46, color: '#af6a80' },
     { gameId: 'add-up', name: 'Sum Conservatory', kind: 'garden', x: 62, y: 78, color: '#5c8050' },
-    { gameId: 'space-scale', name: 'Star Observatory', kind: 'observatory', x: 81, y: 18, color: '#626ca0' },
+    { gameId: 'space-scale', name: 'Star Observatory', kind: 'observatory', x: 40, y: 78, color: '#626ca0' },
     { gameId: 'tap-match', name: 'Echo Courtyard', kind: 'arch', x: 51, y: 48, color: '#32847d' },
     { gameId: 'spot-quick', name: 'Forest Lookout', kind: 'lookout', x: 24, y: 20, color: '#6e8450' },
     { gameId: 'shadow-match', name: 'Silhouette Ruins', kind: 'temple', x: 49, y: 20, color: '#806398' },
@@ -134,9 +134,16 @@
       const nextPlace = LOCATIONS.find(l => l.gameId === nextId);
       const allOpen = journey && journey.unlocked.length >= LOCATIONS.filter(l => findGame(l.gameId)).length;
       const pendingPlace = LOCATIONS.find(l => l.gameId === journey?.pending);
+      const nextLockedPlace = LOCATIONS.find(l => l.gameId === journey?.order.find(id => !journey.unlocked.includes(id)));
       guidance.hidden = !exploring;
       guidance.innerHTML = !exploring ? '' : pendingPlace ? `<div class="island-discovery" role="status"><span class="island-mission-icon" aria-hidden="true">✦</span><div><strong>${e('A new place awaits!')}</strong><p>${e(pendingPlace.name)} · ${e('Your next adventure is ready.')}</p></div><button type="button" class="island-discovery-go">${e('Explore now')}</button><button type="button" class="island-discovery-later">${e('Later')}</button></div>` : `<div class="island-mission"><span class="island-mission-icon" aria-hidden="true">⚑</span><div><strong>${e(allOpen ? 'All places discovered!' : journey.unlocked.length === 1 ? 'Your first mission' : 'Your next discovery')}</strong><p>${e(allOpen ? 'Keep playing to help every home grow.' : 'Complete Level 1 to discover a new place.')}</p></div>${nextPlace ? `<button type="button" class="island-mission-go">${e('Start exploring')}</button>` : ''}</div>`;
       const previousPlace = LOCATIONS.find(l => l.gameId === journey?.completed[journey.completed.length - 1]);
+      const missionCopy = guidance.querySelector('.island-mission p');
+      if (missionCopy && nextLockedPlace) {
+        const destination = doc.createElement('span'); destination.className = 'island-next-destination';
+        destination.textContent = `${t('Next place')}: ${t(nextLockedPlace.name)}`;
+        missionCopy.appendChild(destination);
+      }
       routes.innerHTML = pendingPlace && previousPlace ? `<path d="M ${previousPlace.x} ${previousPlace.y} Q ${previousPlace.x} ${pendingPlace.y} ${pendingPlace.x} ${pendingPlace.y}"/>` : '';
       host.dataset.view = view;
       host.querySelector('.island-map-panel').hidden = view !== 'island';

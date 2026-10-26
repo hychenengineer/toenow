@@ -325,7 +325,7 @@
       /* Clean Bottom HUD: ONLY Overdrive Button & Bet Multiplier Readout (No Tab Prompts) */
       #btn-confirm-memory[hidden] {display:none;}
       body[data-phase='memorize'] #btn-overdrive {display:none;}
-      body[data-tutorial='ball-track'] .bottom-hud {bottom:168px;}
+      body[data-tutorial='ball-track'] .bottom-hud {bottom:14px;}
       body[data-tutorial='ball-track'] #overdrive-mult-readout {display:none;}
       body[data-tutorial='ball-track'] .overdrive-btn {padding:12px 16px;}
       .bottom-hud {

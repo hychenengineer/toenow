@@ -82,9 +82,6 @@
         const width=Math.max(20,rect.width),height=Math.max(20,rect.height);
         Object.assign(highlight.style,{left:rect.x+'px',top:rect.y+'px',width:width+'px',height:height+'px'});
       }
-      // Put the compact instruction panel on the opposite edge to the real target.
-      const top=rect&&rect.y+rect.height/2>win.innerHeight/2;
-      coach.dataset.edge=guide.edge||(top?'top':'bottom');
     }
     function frame(){render();if(current?.active)raf=win.requestAnimationFrame(frame);}
     function open(start=false,options={}){

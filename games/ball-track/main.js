@@ -324,12 +324,15 @@ ToenowScreens.mount("ball-track");
           const hudEl = document.getElementById('hud-top');
           const measuredHudBottom =
             hudEl && state.mode !== 'title' ? hudEl.getBoundingClientRect().bottom : 0;
-          const hudTopClearance = Math.max(isMobile ? 148 : 118, measuredHudBottom + 10);
+          let hudTopClearance = Math.max(isMobile ? 148 : 118, measuredHudBottom + 10);
           const bottomHud = document.getElementById('bottom-hud');
           const coach = document.getElementById('toenow-tutorial');
-          const bottomTop = Math.min(bottomHud?.getBoundingClientRect().top ?? viewportHeight,coach?.getBoundingClientRect().top ?? viewportHeight);
+          const coachBox = coach?.getBoundingClientRect();
+          const topCoach = coachBox && coachBox.top < viewportHeight / 2;
+          if (topCoach) hudTopClearance = Math.max(hudTopClearance, coachBox.bottom + 12);
+          const bottomTop = Math.min(bottomHud?.getBoundingClientRect().top ?? viewportHeight,coachBox && !topCoach ? coachBox.top : viewportHeight);
           const hudBottomClearance = Math.max(isMobile ? 84 : 90,viewportHeight-bottomTop+12);
-          const availH = Math.max(200, viewportHeight - hudTopClearance - hudBottomClearance);
+          const availH = Math.max(coachBox ? 80 : 200, viewportHeight - hudTopClearance - hudBottomClearance);
 
           const stageW = Math.min(viewportWidth * 0.94, 580);
           const stageRight = viewportWidth * 0.5 + stageW * 0.5;
@@ -1696,4 +1699,3 @@ ToenowScreens.mount("ball-track");
 
         requestAnimationFrame(frameLoop);
       })();
-    

@@ -11,6 +11,7 @@ const tutorialKey=id=>'toenow_tutorial_'+id+'_v2';
 const shotDir='artifacts/in-game-tutorials';
 const widths=process.env.TOENOW_TEST_WIDTHS?process.env.TOENOW_TEST_WIDTHS.split(',').map(Number):[390,1100];
 const languages=process.env.TOENOW_TEST_LANGS?process.env.TOENOW_TEST_LANGS.split(','):['en','zh-Hant'];
+const height=Number(process.env.TOENOW_TEST_HEIGHT||850);
 async function closeContext(context){let timer;await Promise.race([context.close(),new Promise(r=>timer=setTimeout(r,5000))]);clearTimeout(timer);}
 async function storage(page){return page.evaluate(()=>Object.fromEntries(Object.keys(localStorage).filter(k=>!k.startsWith('toenow_tutorial_')).sort().map(k=>[k,localStorage.getItem(k)])));}
 async function ready(page,id,lang='en'){
@@ -25,6 +26,20 @@ async function ready(page,id,lang='en'){
   },id);
 }
 async function setup(context,id){
+  await context.addInitScript(()=>{
+    window.__coachShifts=[];window.__coachSamples=0;let baseline;
+    function sample(){
+      const coach=document.getElementById('toenow-tutorial'),prompt=document.getElementById('tutorial-instruction');
+      if(coach&&prompt){
+        const values=[coach,prompt].flatMap(el=>{const r=el.getBoundingClientRect();return [r.x,r.y,r.width,r.height];});
+        if(!baseline)baseline=values;
+        else if(values.some((n,i)=>Math.abs(n-baseline[i])>.5))window.__coachShifts.push(values);
+        window.__coachSamples++;
+      }else baseline=null;
+      requestAnimationFrame(sample);
+    }
+    requestAnimationFrame(sample);
+  });
   await context.addInitScript(({id,key})=>{
     if(key){if(localStorage.getItem(key.score)===null)localStorage.setItem(key.score,'17');if(localStorage.getItem(key.wave)===null)localStorage.setItem(key.wave,'2');}
     localStorage.setItem('tutorial-preserved-fixture','keep');
@@ -36,6 +51,8 @@ async function setup(context,id){
   },{id,key:keys[id]});
 }
 async function assertProtected(page){
+  assert.ok(await page.evaluate(()=>__coachSamples)>0,'coach geometry sampled');
+  assert.deepEqual(await page.evaluate(()=>__coachShifts),[],'tutorial card and message stay in one fixed position');
   assert.deepEqual(await page.evaluate(()=>__lessonWrites),[],'tutorial wrote game storage');
   assert.deepEqual(await page.evaluate(()=>__lessonReports),[],'tutorial reported game results');
   const score=page.locator('#hud-score,#hudScoreText,[data-testid="hud-score"]');
@@ -64,7 +81,7 @@ async function complete(page,id,mobile=false){
   fs.mkdirSync(shotDir,{recursive:true});const browser=await chromium.launch({channel:'msedge',headless:true});let count=0;
   try{
     for(const id of ids)for(const width of widths)for(const lang of languages){
-      const context=await browser.newContext({viewport:{width,height:850},hasTouch:width===390});await setup(context,id);
+      const context=await browser.newContext({viewport:{width,height},hasTouch:width<900});await setup(context,id);
       const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
       await ready(page,id,lang);const before=await storage(page);
       await page.locator('#'+startId(id)).click();await page.locator('#toenow-tutorial').waitFor({state:'visible'});
@@ -89,6 +106,7 @@ async function complete(page,id,mobile=false){
       assert.deepEqual(errors,[],id+' runtime errors');count++;
       console.log(`PASS ${id} ${width} ${lang}: ${taps} real game taps, score0, records protected, normal start, replay/cancel`);await closeContext(context);
     }
+    if(process.env.TOENOW_TUTORIAL_LAYOUT_ONLY){console.log(JSON.stringify({realGameLessons:count,height}));return;}
     for(const id of ids){
       const context=await browser.newContext({viewport:{width:390,height:850}});await setup(context,id);const page=await context.newPage();await ready(page,id);
       await page.locator('#'+startId(id)).click();await page.locator('#toenow-tutorial').waitFor({state:'visible'});await page.locator('[data-tutorial-cancel]').click();

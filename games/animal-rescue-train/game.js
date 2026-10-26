@@ -310,7 +310,15 @@
     },
     getGuide() {
       const target = selected === null ? document.querySelector('[data-queue="0"]') : document.querySelector('[data-car="0"]');
-      const box = (target || $('cars')).getBoundingClientRect();
+      const element = target || $('cars');
+      const coachBottom = document.getElementById('toenow-tutorial')?.getBoundingClientRect().bottom || 0;
+      let box = element.getBoundingClientRect();
+      if (box.top < coachBottom + 12 || box.bottom > window.innerHeight - 12) {
+        // Scroll the real queue/carriage into view while the instruction stays fixed.
+        element.style.scrollMarginTop = (coachBottom + 12) + 'px';
+        element.scrollIntoView({ block: 'center', behavior: 'instant' });
+        box = element.getBoundingClientRect();
+      }
       return { prompt: selected === null ? 'Tap the cat at the front of the queue.' : 'Tap the carriage. Three matching animals depart together.',
         rect: { x: box.left, y: box.top, width: box.width, height: box.height } };
     }

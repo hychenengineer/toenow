@@ -1053,8 +1053,9 @@ const IS_HEADLESS =
             nodes = nodes.slice(0, 3);
             nodes.forEach((node, i) => {
               const orbit = computeNodeOrbitPosition(i, 3);
-              node.x = orbit.x;
-              node.y = Math.max((width < 820 ? 110 : 88) + orbit.radius, Math.min(height - 24 - orbit.radius, orbit.y));
+              // Keep every teaching choice below the fixed instruction panel.
+              node.x = width * (i + 1) / 4;
+              node.y = Math.min(height - 24 - orbit.radius, height * 0.78);
               node.radius = orbit.radius;
               node.value = [2, 3, 7][i];
               node.label = String(node.value);
@@ -1118,4 +1119,3 @@ const IS_HEADLESS =
         }
         requestAnimationFrame(frame);
       })();
-    

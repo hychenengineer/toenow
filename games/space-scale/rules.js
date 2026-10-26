@@ -89,19 +89,19 @@ function createRng(seed) {
             scaleCount = wave <= 2 ? 1 : 2;
             bodyCount = scaleCount === 1 ? 2 : 3;
           } else if (level === 2) {
-            // Level 2: 2 comparisons with asymmetric arm
+            // Level 2: 2 comparisons with equal arms
             scaleCount = 2;
             bodyCount = 3;
           } else if (level === 3) {
-            // Level 3: 3 comparisons with asymmetric arm
+            // Level 3: 3 comparisons with equal arms
             scaleCount = 3;
             bodyCount = 4;
           } else if (level === 4) {
-            // Level 4: 4 comparisons with asymmetric arm
+            // Level 4: 4 comparisons with equal arms
             scaleCount = 4;
             bodyCount = 5;
           } else {
-            // Level 5: 5 or 6 comparisons with asymmetric arm
+            // Level 5: 5 or 6 comparisons with equal arms
             scaleCount = wave <= 14 ? 5 : 6;
             bodyCount = 6;
           }
@@ -135,13 +135,13 @@ function createRng(seed) {
           if (bodyCount === 2) {
             massesByRank = [100, 50];
           } else if (bodyCount === 3) {
-            massesByRank = [160, 90, 35]; // r1(90) on 1x (torque 90) > r2(35) on 2x (torque 70)
+            massesByRank = [160, 90, 35];
           } else if (bodyCount === 4) {
-            massesByRank = [180, 110, 65, 25]; // r2(65) on 1x > r3(25) on 2x
+            massesByRank = [180, 110, 65, 25];
           } else if (bodyCount === 5) {
-            massesByRank = [220, 150, 95, 55, 20]; // r3(55) on 1x > r4(20) on 2x
+            massesByRank = [220, 150, 95, 55, 20];
           } else {
-            massesByRank = [260, 190, 130, 85, 50, 20]; // r4(50) on 1x > r5(20) on 2x
+            massesByRank = [260, 190, 130, 85, 50, 20];
           }
 
           const shuffledArchetypes = shuffleArray(ARCHETYPES, rng);
@@ -199,16 +199,16 @@ function createRng(seed) {
           const targetBodyId = getBodyByRank(targetRank).id;
 
           const scales = [];
-          const makeScaleObj = (id, type, leftItems, rightItems, leftDist, rightDist, equality) => {
-            const lTorque = leftItems.reduce((s, it) => s + it.mass, 0) * leftDist;
-            const rTorque = rightItems.reduce((s, it) => s + it.mass, 0) * rightDist;
+          const makeScaleObj = (id, type, leftItems, rightItems, equality) => {
+            const lTorque = leftItems.reduce((s, it) => s + it.mass, 0);
+            const rTorque = rightItems.reduce((s, it) => s + it.mass, 0);
             return {
               id,
               type,
               leftItems,
               rightItems,
-              leftDistance: leftDist,
-              rightDistance: rightDist,
+              leftDistance: 1,
+              rightDistance: 1,
               leftTorque: lTorque,
               rightTorque: rTorque,
               targetAngle: equality ? 0 : computeTorqueTiltAngle(lTorque, rTorque),
@@ -228,25 +228,6 @@ function createRng(seed) {
               'simple',
               [{ type: 'body', id: left.id, bodyId: left.id, mass: left.mass }],
               [{ type: 'body', id: right.id, bodyId: right.id, mass: right.mass }],
-              1.0,
-              1.0,
-              false
-            );
-          };
-
-          const makeLever = (id, shortBody, longBody, sDist = 1.0, lDist = 2.0) => {
-            const flip = rng() < 0.5;
-            const left = flip ? longBody : shortBody;
-            const right = flip ? shortBody : longBody;
-            const leftD = flip ? lDist : sDist;
-            const rightD = flip ? sDist : lDist;
-            return makeScaleObj(
-              id,
-              'lever_asymmetric',
-              [{ type: 'body', id: left.id, bodyId: left.id, mass: left.mass }],
-              [{ type: 'body', id: right.id, bodyId: right.id, mass: right.mass }],
-              leftD,
-              rightD,
               false
             );
           };
@@ -266,24 +247,23 @@ function createRng(seed) {
               scales.push(makeSimple('scale-1', r0, r1), makeSimple('scale-2', r1, r2));
             }
           } else if (level === 2 && r2) {
-            // Level 2: 2 comparisons, with asymmetric arm (arm 不一样: 1× vs 2×)
-            // r1 on 1× arm tilts down over r2 on 2× arm (torque 90 > 70)
-            scales.push(makeLever('scale-1', r1, r2, 1.0, 2.0));
+            // Level 2: 2 comparisons with equal arms.
+            scales.push(makeSimple('scale-1', r1, r2));
             scales.push(makeSimple('scale-2', r0, r1));
           } else if (level === 3 && r2 && r3) {
-            // Level 3: 3 comparisons, with asymmetric arm
-            scales.push(makeLever('scale-1', r2, r3, 1.0, 2.0));
+            // Level 3: 3 comparisons, with equal arms
+            scales.push(makeSimple('scale-1', r2, r3));
             scales.push(makeSimple('scale-2', r0, r1));
             scales.push(makeSimple('scale-3', r1, r2));
           } else if (level === 4 && r2 && r3 && r4) {
-            // Level 4: 4 comparisons, with asymmetric arm
-            scales.push(makeLever('scale-1', r3, r4, 1.0, 2.0));
+            // Level 4: 4 comparisons, with equal arms
+            scales.push(makeSimple('scale-1', r3, r4));
             scales.push(makeSimple('scale-2', r0, r1));
             scales.push(makeSimple('scale-3', r1, r2));
             scales.push(makeSimple('scale-4', r2, r3));
           } else if (level === 5 && r2 && r3 && r4 && r5) {
-            // Level 5: 5 or 6 comparisons, with asymmetric arm
-            scales.push(makeLever('scale-1', r4, r5, 1.0, 2.0));
+            // Level 5: 5 or 6 comparisons, with equal arms
+            scales.push(makeSimple('scale-1', r4, r5));
             scales.push(makeSimple('scale-2', r0, r1));
             scales.push(makeSimple('scale-3', r1, r2));
             scales.push(makeSimple('scale-4', r2, r3));

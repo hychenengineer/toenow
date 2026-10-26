@@ -73,14 +73,10 @@ function drawScale(
           const cosA = Math.cos(angle);
           const sinA = Math.sin(angle);
 
-          // Normalize arm length if asymmetric (1d vs 2d) so total width never overflows slot
-          const totalDist = scale.leftDistance + scale.rightDistance;
-          const armNorm = totalDist > 2.2 ? 2.1 / totalDist : 1.0;
-          const leftArmLen = baseBeamHalf * scale.leftDistance * armNorm;
-          const rightArmLen = baseBeamHalf * scale.rightDistance * armNorm;
-
-          // Shift fulcrum horizontally so the midpoint between left & right pans is centered at slotCx
-          const cx = slotCx - (rightArmLen - leftArmLen) * 0.5 * cosA;
+          // Every comparison uses the same arm length on both sides.
+          const leftArmLen = baseBeamHalf;
+          const rightArmLen = baseBeamHalf;
+          const cx = slotCx;
           const cy = slotCy;
 
           const leftPivotX = cx - cosA * leftArmLen;
@@ -119,34 +115,6 @@ function drawScale(
           ctx.moveTo(leftPivotX, leftPivotY);
           ctx.lineTo(rightPivotX, rightPivotY);
           ctx.stroke();
-
-          // Lever Arm Distance Tick Marks & Visual Notches (arm 不一样: 1× vs 2×)
-          if (scale.type === 'lever_asymmetric') {
-            ctx.save();
-            ctx.font = '700 ' + Math.max(9, Math.round(11 * sf)) + 'px "JetBrains Mono", monospace';
-            ctx.fillStyle = '#fbbf24';
-            ctx.textAlign = 'center';
-
-            const leftDistLabel = scale.leftDistance > 1.2 ? '2× ARM' : '1×';
-            const rightDistLabel = scale.rightDistance > 1.2 ? '2× ARM' : '1×';
-
-            ctx.fillText(leftDistLabel, (cx + leftPivotX) / 2, (cy + leftPivotY) / 2 - 10 * sf);
-            ctx.fillText(rightDistLabel, (cx + rightPivotX) / 2, (cy + rightPivotY) / 2 - 10 * sf);
-
-            // Draw a distinct yellow notch tick mark at the 1x halfway mark on the 2x arm
-            const longPivotX = scale.leftDistance > 1.2 ? leftPivotX : rightPivotX;
-            const longPivotY = scale.leftDistance > 1.2 ? leftPivotY : rightPivotY;
-            const notchX = (cx + longPivotX) / 2;
-            const notchY = (cy + longPivotY) / 2;
-
-            ctx.strokeStyle = '#fbbf24';
-            ctx.lineWidth = 2 * sf;
-            ctx.beginPath();
-            ctx.moveTo(notchX, notchY - 7 * sf);
-            ctx.lineTo(notchX, notchY + 7 * sf);
-            ctx.stroke();
-            ctx.restore();
-          }
 
           // Central Fulcrum Node
           ctx.fillStyle = '#0f172a';

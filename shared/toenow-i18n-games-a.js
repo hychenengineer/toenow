@@ -180,7 +180,7 @@
     'Choose the MIDDLE planet (not heaviest, not lightest)': '選擇重量居中的行星（既非最重，也非最輕）',
     'Energy shields depleted.': '能量護盾已耗盡。', 'SHIELDS EXHAUSTED': '護盾耗盡',
     'MISSION CLOCK EXPIRED': '任務時間已到', 'All 3 Energy Shields depleted under mass anomalies.': '3 層能量護盾因質量異常而全部耗盡。',
-    '10-minute mission duration expired.': '10 分鐘任務時間已到。', '2× ARM': '2 倍力臂',
+    '10-minute mission duration expired.': '10 分鐘任務時間已到。',
     'Number Pop Game Arena': '數字泡泡遊戲區', 'Ball Track Game Board': '追蹤小球遊戲盤面',
     'Block Match Workboard': '方塊配對操作盤', 'Add Up interactive plasma arena': '加總挑戰互動電漿區',
     'Floating Number Balls': '漂浮數字球', 'Containment time remaining': '封鎖剩餘時間',

@@ -56,6 +56,30 @@ test('Mystery parcel directive is decided by hidden mass across the unchanged ti
     assert.ok(puzzle.bodies.every(b=>Number.isFinite(b.visualRadius)&&b.visualRadius>0));
   }
 });
+
+test('Every scale has equal arms and its visible comparisons uniquely determine the answer', () => {
+  const rules = require('../games/space-scale/rules.js');
+  for (const wave of [1, 3, 6, 11, 16, 21, 35]) for (let seed = 1; seed <= 40; seed++) {
+    const puzzle = rules.generateOverhauledPuzzle(wave, seed);
+    const lighter = new Map(puzzle.bodies.map(body => [body.id, new Set()]));
+    for (const scale of puzzle.scales) {
+      assert.equal(scale.leftDistance, 1);
+      assert.equal(scale.rightDistance, 1);
+      assert.equal(scale.type, 'simple');
+      const left = scale.leftItems[0], right = scale.rightItems[0];
+      assert.equal(Math.sign(scale.targetAngle), Math.sign(right.mass - left.mass));
+      const [heavy, light] = scale.targetAngle < 0 ? [left, right] : [right, left];
+      lighter.get(heavy.bodyId).add(light.bodyId);
+    }
+    const reach = id => {
+      const seen = new Set(), pending = [...lighter.get(id)];
+      while (pending.length) { const next = pending.pop(); if (seen.has(next)) continue; seen.add(next); pending.push(...lighter.get(next)); }
+      return seen.size;
+    };
+    const rank = puzzle.directive === 'max' ? puzzle.bodies.length - 1 : puzzle.directive === 'min' ? 0 : Math.floor(puzzle.bodies.length / 2);
+    assert.deepEqual(puzzle.bodies.filter(body => reach(body.id) === rank).map(body => body.id), [puzzle.targetBodyId]);
+  }
+});
 test('Supply bag labels render after spark particles in dark ink',()=>{
  const html=read('add-up'),render=html.slice(html.indexOf('function renderArena()'),html.indexOf('// Test & inspection hook'));
  assert.ok(render.indexOf('// 7. Particles')<render.indexOf('drawNutBag(scene.ctx, n.radius'));

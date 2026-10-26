@@ -141,8 +141,8 @@ var isHeadless = Boolean(navigator.webdriver || /HeadlessChrome/i.test(navigator
         var dustParticles = [];
         for (var d = 0; d < DUST_COUNT; d++) {
           dustParticles.push({
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * (window.ToenowTutorials?.getViewport?.().width || window.innerWidth),
+            y: Math.random() * (window.ToenowTutorials?.getViewport?.().height || window.innerHeight),
             size: 1 + Math.random() * 2,
             vy: -10 - Math.random() * 18,
             alpha: 0.14 + Math.random() * 0.3
@@ -184,16 +184,16 @@ var isHeadless = Boolean(navigator.webdriver || /HeadlessChrome/i.test(navigator
 
         // Layout Metrics
         var layout = {
-          vw: window.innerWidth,
-          vh: window.innerHeight,
+          vw: (window.ToenowTutorials?.getViewport?.().width || window.innerWidth),
+          vh: (window.ToenowTutorials?.getViewport?.().height || window.innerHeight),
           leftBox: { x: 0, y: 0, size: 300, cellSize: 80, pad: 16, gap: 8 },
           rightBox: { x: 0, y: 0, size: 220, cellSize: 60, pad: 14, gap: 6 }
         };
 
         function updateLayout() {
           var dpr = isHeadless ? 1 : Math.min(window.devicePixelRatio || 1, 2);
-          var vw = window.innerWidth;
-          var vh = window.innerHeight;
+          var vw = (window.ToenowTutorials?.getViewport?.().width || window.innerWidth);
+          var vh = (window.ToenowTutorials?.getViewport?.().height || window.innerHeight);
           canvas.width = Math.floor(vw * dpr);
           canvas.height = Math.floor(vh * dpr);
           ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -201,18 +201,19 @@ var isHeadless = Boolean(navigator.webdriver || /HeadlessChrome/i.test(navigator
           layout.vw = vw;
           layout.vh = vh;
 
-          var topSafe = Math.max(78, document.getElementById('hud-layer').getBoundingClientRect().bottom + 12);
+          var topSafe = Math.max(78, document.getElementById('hud-layer').getBoundingClientRect().bottom - canvas.getBoundingClientRect().top + 12);
           var bottomSafe = 24;
-          var availH = Math.max(240, vh - topSafe - bottomSafe);
+          var teaching = Boolean(window.ToenowTutorials?.isActive?.('block-match'));
+          var availH = Math.max(teaching ? 1 : 240, vh - topSafe - bottomSafe);
           var availW = Math.min(vw * 0.95, vw >= 768 ? 820 : 480);
 
           var n = board ? board.config.gridSize : 3;
 
-          if (vw >= 768 && availH >= 360) {
+          if ((vw >= 768 && availH >= 360) || (teaching && availH < 320)) {
             var gap = Math.min(48, Math.max(24, Math.floor(availW * 0.05)));
             // Both boards have equal size: leftSize === rightSize
             var maxBoardSize = Math.min(availH * 0.82, (availW - gap) * 0.48, 420);
-            var boardSize = Math.max(180, Math.floor(maxBoardSize));
+            var boardSize = Math.max(teaching ? 48 : 180, Math.floor(maxBoardSize));
             var totalW = boardSize * 2 + gap;
             var startX = Math.floor((vw - totalW) * 0.5);
             var centerY = topSafe + Math.floor(availH * 0.52);
@@ -748,4 +749,3 @@ var isHeadless = Boolean(navigator.webdriver || /HeadlessChrome/i.test(navigator
 
         window.requestAnimationFrame(frame);
       })();
-    

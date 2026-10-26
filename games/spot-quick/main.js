@@ -216,7 +216,8 @@ ToenowScreens.mount("spot-quick");
           const rect = canvasStage.getBoundingClientRect();
           const dpr = Math.min(window.devicePixelRatio || 1, 2);
           const w = Math.max(260, Math.floor(rect.width));
-          const h = Math.max(340, Math.floor(rect.height));
+          const teaching = Boolean(window.ToenowTutorials?.isActive?.('spot-quick'));
+          const h = Math.max(teaching ? 1 : 340, Math.floor(rect.height));
 
           if (canvas.width !== Math.floor(w * dpr) || canvas.height !== Math.floor(h * dpr)) {
             canvas.width = Math.floor(w * dpr);
@@ -237,9 +238,9 @@ ToenowScreens.mount("spot-quick");
           // Safe Bounds: Central spotlight sits strictly below hudBottom + 20px
           const minSpotlightTop = 22;
           const maxSpotlightBottom = gridTop - 18;
-          const availableSpotlightH = Math.max(120, maxSpotlightBottom - minSpotlightTop);
+          const availableSpotlightH = Math.max(teaching ? 40 : 120, maxSpotlightBottom - minSpotlightTop);
           const maxDiameter = Math.min(w - 28, availableSpotlightH);
-          const radius = Math.max(56, Math.min(132, Math.floor(maxDiameter / 2)));
+          const radius = Math.max(teaching ? 20 : 56, Math.min(132, Math.floor(maxDiameter / 2)));
 
           const spotlightX = Math.floor(w / 2);
           const spotlightY = Math.floor(minSpotlightTop + availableSpotlightH / 2);
@@ -706,4 +707,3 @@ ToenowScreens.mount("spot-quick");
           }
         });
       })();
-    

@@ -304,6 +304,12 @@ const IS_HEADLESS =
           const count = nodes.length;
           for (let i = 0; i < count; i++) {
             const orbit = computeNodeOrbitPosition(i, count);
+            if (window.ToenowTutorials?.isActive?.('add-up')) {
+              nodes[i].x = width * (i + 1) / (count + 1);
+              nodes[i].y = Math.min(height - 24 - orbit.radius, height * 0.82);
+              nodes[i].radius = orbit.radius;
+              continue;
+            }
             nodes[i].x = orbit.x;
             nodes[i].y = orbit.y;
             nodes[i].radius = orbit.radius;

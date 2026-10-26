@@ -417,12 +417,12 @@ const pauseScoreEl = document.getElementById('pause-score');
         }
 
         // Resize handling
-        let canvasWidth = window.innerWidth;
-        let canvasHeight = window.innerHeight;
+        let canvasWidth = (window.ToenowTutorials?.getViewport?.().width || window.innerWidth);
+        let canvasHeight = (window.ToenowTutorials?.getViewport?.().height || window.innerHeight);
 
         function resizeCanvas() {
-          canvasWidth = window.innerWidth;
-          canvasHeight = window.innerHeight;
+          canvasWidth = (window.ToenowTutorials?.getViewport?.().width || window.innerWidth);
+          canvasHeight = (window.ToenowTutorials?.getViewport?.().height || window.innerHeight);
           const dpr = IS_HEADLESS ? 1 : Math.min(window.devicePixelRatio || 1, 2);
           canvas.width = Math.floor(canvasWidth * dpr);
           canvas.height = Math.floor(canvasHeight * dpr);

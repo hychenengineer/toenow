@@ -189,9 +189,10 @@ ToenowScreens.mount("tap-match");
         function layoutMatrixGeometry() {
           const stageRect = canvas.parentElement.getBoundingClientRect();
           const hudRect = hudContainer.getBoundingClientRect();
+          const teaching = Boolean(window.ToenowTutorials?.isActive?.('tap-match'));
 
           state.width = Math.max(280, Math.floor(stageRect.width));
-          state.height = Math.max(320, Math.floor(stageRect.height));
+          state.height = Math.max(teaching ? 1 : 320, Math.floor(stageRect.height));
           state.dpr = Math.min(window.devicePixelRatio || 1, 2);
 
           canvas.width = state.width * state.dpr;
@@ -206,7 +207,7 @@ ToenowScreens.mount("tap-match");
           const padX = 14;
           const padBottom = 16;
           const availW = state.width - padX * 2;
-          const availH = Math.max(200, state.height - minSafeTop - padBottom);
+          const availH = Math.max(teaching ? 1 : 200, state.height - minSafeTop - padBottom);
 
           const matrixSide = Math.min(availW, availH);
           const cellSpan = matrixSide / state.gridSize;
@@ -790,4 +791,3 @@ btnReset.addEventListener('click', () => {
           loop(t);
         });
       })();
-    

@@ -105,8 +105,8 @@ ToenowScreens.mount("ball-track");
         const iconSoundOff = document.getElementById('icon-sound-off');
 
         // --- Viewport & Strict 1:1 Circular Geometry ---
-        let viewportWidth = window.innerWidth;
-        let viewportHeight = window.innerHeight;
+        let viewportWidth = (window.ToenowTutorials?.getViewport?.().width || window.innerWidth);
+        let viewportHeight = (window.ToenowTutorials?.getViewport?.().height || window.innerHeight);
         let dpr = Math.min(window.devicePixelRatio || 1, 2);
         let hexPatternCanvas = null;
         function buildHexPattern() {
@@ -139,8 +139,8 @@ ToenowScreens.mount("ball-track");
         }
 
         function resizeCanvas() {
-          viewportWidth = window.innerWidth;
-          viewportHeight = window.innerHeight;
+          viewportWidth = (window.ToenowTutorials?.getViewport?.().width || window.innerWidth);
+          viewportHeight = (window.ToenowTutorials?.getViewport?.().height || window.innerHeight);
           dpr = Math.min(window.devicePixelRatio || 1, 2);
           canvas.width = Math.floor(viewportWidth * dpr);
           canvas.height = Math.floor(viewportHeight * dpr);
@@ -322,17 +322,14 @@ ToenowScreens.mount("ball-track");
         function getPlayboardGeometry() {
           const isMobile = viewportWidth < 520;
           const hudEl = document.getElementById('hud-top');
+          const canvasTop = canvas.getBoundingClientRect().top;
           const measuredHudBottom =
-            hudEl && state.mode !== 'title' ? hudEl.getBoundingClientRect().bottom : 0;
+            hudEl && state.mode !== 'title' ? hudEl.getBoundingClientRect().bottom - canvasTop : 0;
           let hudTopClearance = Math.max(isMobile ? 148 : 118, measuredHudBottom + 10);
           const bottomHud = document.getElementById('bottom-hud');
-          const coach = document.getElementById('toenow-tutorial');
-          const coachBox = coach?.getBoundingClientRect();
-          const topCoach = coachBox && coachBox.top < viewportHeight / 2;
-          if (topCoach) hudTopClearance = Math.max(hudTopClearance, coachBox.bottom + 12);
-          const bottomTop = Math.min(bottomHud?.getBoundingClientRect().top ?? viewportHeight,coachBox && !topCoach ? coachBox.top : viewportHeight);
+          const bottomTop = bottomHud ? bottomHud.getBoundingClientRect().top - canvasTop : viewportHeight;
           const hudBottomClearance = Math.max(isMobile ? 84 : 90,viewportHeight-bottomTop+12);
-          const availH = Math.max(coachBox ? 80 : 200, viewportHeight - hudTopClearance - hudBottomClearance);
+          const availH = Math.max(window.ToenowTutorials?.isActive?.('ball-track') ? 80 : 200, viewportHeight - hudTopClearance - hudBottomClearance);
 
           const stageW = Math.min(viewportWidth * 0.94, 580);
           const stageRight = viewportWidth * 0.5 + stageW * 0.5;

@@ -8,7 +8,7 @@ const base=process.env.TOENOW_TEST_URL||'http://127.0.0.1:8766';
 const ids=Object.keys(catalog).filter(id=>!process.env.TOENOW_TEST_GAMES||process.env.TOENOW_TEST_GAMES.split(',').includes(id));
 const startId=id=>screens[id]?.startId||'btn-start-game',titleId=id=>screens[id]?.titleId||'menu-screen';
 const tutorialKey=id=>'toenow_tutorial_'+id+'_v2';
-const shotDir='artifacts/in-game-tutorials';
+const shotDir=process.env.TOENOW_TUTORIAL_SHOTS||'artifacts/in-game-tutorials';
 const widths=process.env.TOENOW_TEST_WIDTHS?process.env.TOENOW_TEST_WIDTHS.split(',').map(Number):[390,1100];
 const languages=process.env.TOENOW_TEST_LANGS?process.env.TOENOW_TEST_LANGS.split(','):['en','zh-Hant'];
 const height=Number(process.env.TOENOW_TEST_HEIGHT||850);
@@ -50,7 +50,24 @@ async function setup(context,id){
     window.addEventListener('message',e=>{if(window.ToenowTutorials?.isActive(id)&&['GAME_OVER','SCORE_UPDATE'].includes(e.data?.type))window.__lessonReports.push(e.data.type);});
   },{id,key:keys[id]});
 }
+async function assertLayout(page){
+  const layout=await page.evaluate(()=>{
+    const coach=document.getElementById('toenow-tutorial').getBoundingClientRect();
+    const game=document.getElementById('toenow-tutorial-game');
+    if(!game)return {missing:true};
+    const r=game.getBoundingClientRect();
+    const overlap=b=>Math.min(coach.right,b.right)-Math.max(coach.left,b.left)>1&&Math.min(coach.bottom,b.bottom)-Math.max(coach.top,b.top)>1;
+    const controls=[...game.querySelectorAll('.island-hud-task,.bottom-hud,.overdrive-btn')].filter(n=>n.getClientRects().length&&getComputedStyle(n).visibility!=='hidden');
+    const blocked=controls.filter(n=>{const b=n.getBoundingClientRect();return overlap(b)||b.left<r.left-1||b.right>r.right+1||b.top<r.top-1||b.bottom>r.bottom+1;}).map(n=>n.className);
+    return {missing:false,overlap:overlap(r),blocked,inBounds:r.left>=0&&r.top>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1};
+  });
+  assert.equal(layout.missing,false,'game needs its own reserved tutorial region');
+  assert.equal(layout.overlap,false,'coach overlaps game region');
+  assert.equal(layout.inBounds,true,'game region outside viewport');
+  assert.deepEqual(layout.blocked,[],'coach blocks instructions or acceleration controls');
+}
 async function assertProtected(page){
+  await assertLayout(page);
   assert.ok(await page.evaluate(()=>__coachSamples)>0,'coach geometry sampled');
   assert.deepEqual(await page.evaluate(()=>__coachShifts),[],'tutorial card and message stay in one fixed position');
   assert.deepEqual(await page.evaluate(()=>__lessonWrites),[],'tutorial wrote game storage');
@@ -63,7 +80,15 @@ async function complete(page,id,mobile=false){
   while(!(await page.evaluate(()=>ToenowTutorials.getState()?.complete))){
     await page.waitForFunction(()=>{const s=ToenowTutorials.getState();return s?.complete||s?.guide?.action||s?.guide?.rect&&!s.guide.waiting;},{},{timeout:20000});
     const state=await page.evaluate(()=>ToenowTutorials.getState());if(state.complete)break;
-    if(await page.locator('[data-tutorial-advance]').isVisible()){await page.locator('[data-tutorial-advance]').click();continue;}
+    if(await page.locator('[data-tutorial-advance]').isVisible()){
+      await page.locator('[data-tutorial-advance]').click();
+      if(id==='ball-track'){
+        const boost=page.locator('#btn-overdrive');await boost.waitFor({state:'visible'});await assertProtected(page);
+        const box=await boost.boundingBox();await page.mouse.move(box.x+box.width/2,box.y+box.height/2);
+        await page.mouse.down();await page.waitForTimeout(200);await page.mouse.up();
+      }
+      continue;
+    }
     const r=state.guide.rect;
     const x=r.x+r.width/2,y=r.y+r.height/2;
     assert.ok(x>=0&&x<page.viewportSize().width&&y>=0&&y<page.viewportSize().height,id+' real target outside viewport');
@@ -80,7 +105,7 @@ async function complete(page,id,mobile=false){
 (async()=>{
   fs.mkdirSync(shotDir,{recursive:true});const browser=await chromium.launch({channel:'msedge',headless:true});let count=0;
   try{
-    for(const id of ids)for(const width of widths)for(const lang of languages){
+    for(const id of process.env.TOENOW_TUTORIAL_RESIZE_ONLY?[]:ids)for(const width of widths)for(const lang of languages){
       const context=await browser.newContext({viewport:{width,height},hasTouch:width<900});await setup(context,id);
       const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
       await ready(page,id,lang);const before=await storage(page);
@@ -97,6 +122,7 @@ async function complete(page,id,mobile=false){
       await page.locator('[data-tutorial-finish]').click();await page.waitForTimeout(100);
       if(id==='flash-brain'){await page.locator('[data-tutorial-finish]').waitFor({state:'visible'});await page.locator('[data-tutorial-finish]').click();}
       assert.equal(await page.locator('#toenow-tutorial').count(),0);
+      assert.equal(await page.locator('#toenow-tutorial-game').count(),0,'closing restores original game roots');
       await ready(page,id,lang);await page.locator('#'+startId(id)).click();await page.waitForTimeout(100);
       if(id==='flash-brain'){await page.locator('[data-tutorial-finish]').waitFor({state:'visible'});await page.locator('[data-tutorial-finish]').click();}
       assert.equal(await page.locator('#toenow-tutorial').count(),0,id+' returning player repeated tutorial');
@@ -107,6 +133,19 @@ async function complete(page,id,mobile=false){
       console.log(`PASS ${id} ${width} ${lang}: ${taps} real game taps, score0, records protected, normal start, replay/cancel`);await closeContext(context);
     }
     if(process.env.TOENOW_TUTORIAL_LAYOUT_ONLY){console.log(JSON.stringify({realGameLessons:count,height}));return;}
+    for(const id of ids){
+      const context=await browser.newContext({viewport:{width:390,height:850}}),page=await context.newPage();
+      await ready(page,id);await page.locator('[data-tutorial-replay]').click();
+      for(const viewport of [{width:667,height:375},{width:568,height:320},{width:844,height:390},{width:390,height:850}]){
+        await page.setViewportSize(viewport);await page.waitForTimeout(200);await assertLayout(page);
+        const sizes=await page.evaluate(()=>({engine:ToenowTutorials.getViewport(),region:{width:document.getElementById('toenow-tutorial-game').clientWidth,height:document.getElementById('toenow-tutorial-game').clientHeight}}));
+        assert.deepEqual(sizes.engine,sizes.region,id+' engine viewport did not resize');
+      }
+      await page.keyboard.press('Escape');assert.equal(await page.locator('#toenow-tutorial-game').count(),0);
+      assert.deepEqual(await page.evaluate(()=>ToenowTutorials.getViewport()),{width:390,height:850});
+      await closeContext(context);console.log('PASS '+id+': live portrait/landscape resize and original viewport restored');
+    }
+    if(process.env.TOENOW_TUTORIAL_RESIZE_ONLY)return;
     for(const id of ids){
       const context=await browser.newContext({viewport:{width:390,height:850}});await setup(context,id);const page=await context.newPage();await ready(page,id);
       await page.locator('#'+startId(id)).click();await page.locator('#toenow-tutorial').waitFor({state:'visible'});await page.locator('[data-tutorial-cancel]').click();

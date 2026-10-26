@@ -221,7 +221,7 @@ const pauseScore = document.getElementById('pause-score');
           if (hudTopContainer) {
             const rect = hudTopContainer.getBoundingClientRect();
             if (rect && rect.bottom > 0) {
-              return Math.min(viewportH * 0.45, Math.ceil(rect.bottom + 20));
+              return Math.min(viewportH * 0.45, Math.ceil(rect.bottom - canvas.getBoundingClientRect().top + 20));
             }
           }
           return (viewportW < 450 ? 128 : 142) + 20;

@@ -10,13 +10,10 @@
     const ids = [...new Set(gameIds)];
     const first = ids.includes('number-pop') ? 'number-pop' : ids[0];
     const route = [first];
-    const remaining = locations.filter(place => ids.includes(place.gameId) && ![first, 'animal-rescue-train'].includes(place.gameId));
-    while (remaining.length) {
-      const prior = locations.find(place => place.gameId === route[route.length - 1]);
-      remaining.sort((a, b) => Math.hypot(a.x - prior.x, a.y - prior.y) - Math.hypot(b.x - prior.x, b.y - prior.y) || a.gameId.localeCompare(b.gameId));
-      route.push(remaining.shift().gameId);
+    // Keep the established route independent of visual landmark placement.
+    for (const id of ['number-pop', 'space-scale', 'add-up', 'flash-brain', 'ball-track', 'tap-match', 'block-match', 'spot-quick', 'shadow-match', 'animal-rescue-train']) {
+      if (ids.includes(id) && !route.includes(id)) route.push(id);
     }
-    if (ids.includes('animal-rescue-train')) route.push('animal-rescue-train');
     for (const id of ids) if (!route.includes(id)) route.push(id);
     const read = key => { try { return storage?.getItem(key); } catch (_) { return null; } };
     const parse = key => { try { return JSON.parse(read(key)); } catch (_) { return null; } };

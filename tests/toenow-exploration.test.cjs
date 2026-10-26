@@ -9,11 +9,30 @@ function store(initial = {}) {
 }
 const make = storage => create({ storage, levels, gameIds, random: () => 0.25 });
 
-test('The nearest-neighbour route starts bottom-left with Rabbit and ends top-right with Panda', () => {
+test('Moving map landmarks preserves the existing route and earned discoveries', () => {
+  const locations = require('../shared/toenow-island.js').LOCATIONS;
+  const storage = store(), before = make(storage);
+  before.chooseGuest(); before.complete({ gameId: 'number-pop', wave: 6 });
+  const saved = before.snapshot();
+  const coordinates = locations.map(location => [location.x, location.y]);
+  try {
+    locations.find(location => location.gameId === 'block-match').x = 19;
+    locations.find(location => location.gameId === 'block-match').y = 75;
+    const after = make(storage).snapshot();
+    assert.deepEqual(after.order, saved.order);
+    assert.deepEqual(after.opened, saved.opened);
+    assert.deepEqual(after.completed, saved.completed);
+    assert.equal(after.pending, saved.pending);
+  } finally {
+    locations.forEach((location, index) => { [location.x, location.y] = coordinates[index]; });
+  }
+});
+
+test('The established route starts bottom-left with Rabbit and ends top-right with Panda', () => {
   const locations = require('../shared/toenow-island.js').LOCATIONS;
   const rabbit = locations.find(l => l.gameId === 'number-pop'), panda = locations.find(l => l.gameId === 'animal-rescue-train');
-  assert.deepEqual([rabbit.x, rabbit.y], [18, 78]);
-  assert.deepEqual([panda.x, panda.y], [81, 18]);
+  assert(rabbit.x < 35 && rabbit.y > 60);
+  assert(panda.x > 70 && panda.y < 30);
   assert.deepEqual(make(store()).snapshot().order, ['number-pop', 'space-scale', 'add-up', 'flash-brain', 'ball-track', 'tap-match', 'block-match', 'spot-quick', 'shadow-match', 'animal-rescue-train']);
 });
 test('Updating the old random route keeps completion credit and uses the earned fixed route', () => {

@@ -5,16 +5,16 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function (animals) {
   'use strict';
   const LOCATIONS = [
-    { gameId: 'animal-rescue-train', name: 'Rescue Harbor', kind: 'station', x: 81, y: 18, color: '#b75b43' },
-    { gameId: 'number-pop', name: 'Melody Garden', kind: 'music', x: 18, y: 78, color: '#957131' },
-    { gameId: 'ball-track', name: 'Orbit Terrace', kind: 'orbit', x: 79, y: 45, color: '#396e96' },
-    { gameId: 'block-match', name: 'Mosaic Workshop', kind: 'workshop', x: 24, y: 46, color: '#af6a80' },
-    { gameId: 'add-up', name: 'Sum Conservatory', kind: 'garden', x: 62, y: 78, color: '#5c8050' },
-    { gameId: 'space-scale', name: 'Star Observatory', kind: 'observatory', x: 40, y: 78, color: '#626ca0' },
-    { gameId: 'tap-match', name: 'Echo Courtyard', kind: 'arch', x: 51, y: 48, color: '#32847d' },
-    { gameId: 'spot-quick', name: 'Forest Lookout', kind: 'lookout', x: 24, y: 20, color: '#6e8450' },
-    { gameId: 'shadow-match', name: 'Silhouette Ruins', kind: 'temple', x: 49, y: 20, color: '#806398' },
-    { gameId: 'flash-brain', name: 'Memory Lighthouse', kind: 'lighthouse', x: 84, y: 78, color: '#4b86a2' }
+    { gameId: 'animal-rescue-train', name: 'Rescue Harbor', kind: 'station', x: 84, y: 18, color: '#b75b43' },
+    { gameId: 'number-pop', name: 'Melody Garden', kind: 'music', x: 21, y: 70, color: '#957131' },
+    { gameId: 'ball-track', name: 'Orbit Terrace', kind: 'orbit', x: 81, y: 47, color: '#396e96' },
+    { gameId: 'block-match', name: 'Mosaic Workshop', kind: 'workshop', x: 24, y: 47, color: '#af6a80' },
+    { gameId: 'add-up', name: 'Sum Conservatory', kind: 'garden', x: 61, y: 78, color: '#5c8050' },
+    { gameId: 'space-scale', name: 'Star Observatory', kind: 'observatory', x: 43, y: 76, color: '#626ca0' },
+    { gameId: 'tap-match', name: 'Echo Courtyard', kind: 'arch', x: 53, y: 52, color: '#32847d' },
+    { gameId: 'spot-quick', name: 'Forest Lookout', kind: 'lookout', x: 26, y: 18, color: '#6e8450' },
+    { gameId: 'shadow-match', name: 'Silhouette Ruins', kind: 'temple', x: 39, y: 35, color: '#806398' },
+    { gameId: 'flash-brain', name: 'Memory Lighthouse', kind: 'lighthouse', x: 80, y: 69, color: '#4b86a2' }
   ];
   for (const location of LOCATIONS) {
     const theme = animals?.getTheme(location.gameId);
@@ -118,7 +118,7 @@
       const locked = !unlocked(selectedId);
       host.querySelector('.island-play-button').hidden = locked;
       if (locked) {
-        host.querySelector('.island-dialog-content').innerHTML = `<div class="island-locked-detail" aria-hidden="true">☁</div><p class="island-detail-eyebrow">${e('Still in the mist')}</p><h2 id="islandLocationTitle">${e(location.name)}</h2><p class="island-detail-description">${e('Complete Level 1 in an open game to reveal another place.')}</p><p class="island-real-progress">${e('Pass Wave 5 in normal play to unlock one new place.')}</p>`;
+        host.querySelector('.island-dialog-content').innerHTML = `<div class="island-locked-detail" aria-hidden="true">☁</div><h2 id="islandLocationTitle">${e(location.name)}</h2><p class="island-detail-description">${e('Complete Level 1 in an open game to reveal another place.')}</p><p class="island-real-progress">${e('Pass Wave 5 in normal play to unlock one new place.')}</p>`;
         return;
       }
       const p = getProgress(selectedId, storage, levels);
@@ -163,7 +163,7 @@
       markers.innerHTML = visible.map(l=>{
         const game = findGame(l.gameId), p=getProgress(l.gameId,storage,levels), stage=preview||p.level;
         const locked = !unlocked(l.gameId);
-        if (locked) return `<button type="button" class="island-location is-locked" data-island-game="${l.gameId}" data-stage="1" data-locked="true" style="left:${l.x}%;top:${l.y}%;--place-color:${l.color}" aria-label="${e(l.name)} · ${e('Still in the mist')}"><span class="island-mist-art" aria-hidden="true">${landmark(l.kind,1,l.color)}</span><span class="island-mist-cloud" aria-hidden="true"></span><span class="island-lock" aria-hidden="true">🔒</span><span class="island-locked-label">${e('Still in the mist')}</span></button>`;
+        if (locked) return `<button type="button" class="island-location is-locked" data-island-game="${l.gameId}" data-stage="1" data-locked="true" style="left:${l.x}%;top:${l.y}%;--place-color:${l.color}" aria-label="${e(l.name)} · ${e('Still in the mist')}"><span class="island-mist-art" aria-hidden="true">${landmark(l.kind,1,l.color)}</span><span class="island-mist-cloud" aria-hidden="true"></span><span class="island-lock" aria-hidden="true">🔒</span></button>`;
         return `<button type="button" class="island-location ${p.explored?'is-explored':''} ${l.gameId === nextId && exploring ? 'is-next' : ''} ${l.gameId === journey?.pending ? 'is-discovered' : ''}" aria-disabled="false" data-island-game="${l.gameId}" data-stage="${stage}" style="left:${l.x}%;top:${l.y}%;--place-color:${l.color}" aria-label="${e(l.name)} · ${e(game.title)} · ${e(p.explored?'Highest level reached':'Not yet explored')}${p.explored?' '+p.level:''}">${landmark(l.kind,stage,l.color)}<span class="island-place-label">${e(l.name)}<small>${e(game.title)}</small><span class="island-stage-dots" aria-hidden="true">${[1,2,3,4,5].map(n=>`<i class="${n<=stage?'is-filled':''}"></i>`).join('')}<b>${preview?e('Preview'):p.explored?'LVL '+p.level:e('Explore')}</b></span></span></button>`;
       }).join('');
       locationSelect.innerHTML = visible.map(l=>`<option value="${l.gameId}">${e(l.name)} · ${e(findGame(l.gameId).title)}</option>`).join('');

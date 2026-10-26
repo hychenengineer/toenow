@@ -4,7 +4,8 @@
   else root.ToenowExploration = factory(root.ToenowIsland.LOCATIONS, root.ToenowSecurity?.GAME_PLAUSIBILITY_PROFILES);
 })(typeof globalThis !== 'undefined' ? globalThis : this, function (locations, profiles) {
   'use strict';
-  const STORAGE_KEY = 'toenow_exploration_v1';
+  const STORAGE_KEY = 'toenow_exploration_v3';
+  const LEGACY_STORAGE_KEY = 'toenow_exploration_v1';
   function create({ storage, levels, gameIds, ownerId = `${Date.now()}-${Math.random()}` }) {
     const ids = [...new Set(gameIds)];
     const first = ids.includes('number-pop') ? 'number-pop' : ids[0];
@@ -25,6 +26,10 @@
       const value = parse('toenow_game_scores');
       return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
     };
+    const legacyGuards = () => {
+      const saved = parse(LEGACY_STORAGE_KEY);
+      return valid(saved) && saved.version < 3 ? saved : {};
+    };
     function hasHistory() {
       const all = records();
       return ids.some(id => {
@@ -35,7 +40,7 @@
       });
     }
     function valid(value) {
-      return [1, 2].includes(value?.version) && ['legacy', 'explore'].includes(value.mode) &&
+      return [1, 2, 3].includes(value?.version) && ['legacy', 'explore'].includes(value.mode) &&
         Array.isArray(value.order) && value.order.length === ids.length && new Set(value.order).size === ids.length &&
         value.order.every(id => ids.includes(id)) && value.order[0] === (ids.includes('number-pop') ? 'number-pop' : ids[0]) &&
         Array.isArray(value.completed) && value.completed.every(id => ids.includes(id)) &&
@@ -43,35 +48,47 @@
           Object.values(value.activeRuns).every(run => typeof run === 'string' ? ids.includes(run) : run && ids.includes(run.gameId) && typeof run.ownerId === 'string' && Number.isFinite(run.startedAt)));
     }
     let volatile = false;
-    let state = parse(STORAGE_KEY);
+    // Older tabs understand only versions 1/2 and can keep writing their old
+    // state. Import it once into a separate key so they cannot revert this policy.
+    let state = read(STORAGE_KEY) === null ? parse(LEGACY_STORAGE_KEY) : parse(STORAGE_KEY);
     if (!valid(state)) {
-      const legacy = hasHistory();
-      state = { version: 2, mode: legacy ? 'legacy' : 'explore', order: [...route], opened: [first], completed: [], welcomed: legacy, pending: null, createdAt: Date.now() };
-      persist();
+      state = { version: 3, mode: 'explore', order: [...route], opened: [first], completed: [], welcomed: hasHistory(), pending: null, createdAt: Date.now() };
+      migrate(true);
     } else migrate();
-    function migrate() {
-      if (state.version === 2 && state.order.join('|') === route.join('|') && Array.isArray(state.opened) &&
-        state.opened.includes(first) && state.opened.every(id => ids.includes(id)) && new Set(state.opened).size === state.opened.length) return;
-      const priorOpen = Array.isArray(state.opened) ? state.opened : state.order.slice(0, Math.min(ids.length, new Set(state.completed).size + 1));
-      state.opened = [...new Set([first, ...priorOpen.filter(id => ids.includes(id))])];
-      // Version 1 could quarantine a legitimate normal save when the iframe
-      // closed before GAME_OVER arrived. Credit only previously open places,
-      // and retain the existing score-per-wave bound for impossible records.
-      if (state.version === 1 && state.mode === 'explore') {
-        const all = records();
-        for (const id of priorOpen) {
+    function earnedOpen() {
+      const gap = route.findIndex(id => !state.completed.includes(id));
+      return route.slice(0, gap < 0 ? route.length : gap + 1);
+    }
+    function migrate(importRecords = false) {
+      const priorVersion = state.version, wasLegacy = state.mode === 'legacy';
+      if (priorVersion < 3) state.importedRunIds = Object.keys(state.activeRuns || {});
+      const knownOpen = Array.isArray(state.opened) ? state.opened : state.order.slice(0, state.completed.length + 1);
+      if (priorVersion < 3 && !wasLegacy) state.completed = state.completed.filter(id => knownOpen.includes(id));
+      state.completed = [...new Set(state.completed)].filter(id => ids.includes(id));
+      if (importRecords || priorVersion < 3 || wasLegacy) {
+        const all = records(), milestones = parse('toenow_game_milestones_v1');
+        for (const id of ids) {
+          if (state.completed.includes(id)) continue;
+          const milestone = milestones?.[id];
+          if (Number.isSafeInteger(milestone) && milestone >= 1 && milestone <= 5) { state.completed.push(id); continue; }
+          const active = Object.values(state.activeRuns || {}).some(run => (typeof run === 'string' ? run : run?.gameId) === id);
+          if (active) continue;
           const keys = levels.GAME_STORAGE_KEYS[id];
           const wave = Math.max(...[all[id]?.maxWave, read(keys?.wave)].filter(validWave).map(number), 1);
           const score = Math.max(Number(all[id]?.bestScore) || 0, Number(read(keys?.score)) || 0);
           const cap = profiles?.[id]?.maxPtsPerWave;
           const bonus = wave > 10 ? 1 + (wave - 10) * .15 : 1;
-          if (wave < levels.LEVELS[1].startWave || !cap || !Number.isFinite(score) || score > wave * cap * bonus || state.completed.includes(id)) continue;
+          if (wave < levels.LEVELS[1].startWave || !cap || !Number.isFinite(score) || score > wave * cap * bonus) continue;
+          if (priorVersion >= 2 && wave <= (state.rejectedWaves?.[id] || 0)) continue;
           state.completed.push(id);
-          const next = route.find(candidate => !state.opened.includes(candidate));
-          if (next) { state.opened.push(next); state.pending = next; }
         }
       }
-      state.order = [...route]; state.version = 2; persist();
+      const opened = earnedOpen();
+      const changed = importRecords || priorVersion !== 3 || wasLegacy || state.order.join('|') !== route.join('|') ||
+        !Array.isArray(state.opened) || state.opened.join('|') !== opened.join('|');
+      state.order = [...route]; state.opened = opened; state.mode = 'explore'; state.version = 3;
+      if (!opened.includes(state.pending)) state.pending = null;
+      if (changed) persist();
     }
     function persist() { try { storage?.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) { volatile = true; } }
     function reload() {
@@ -80,16 +97,16 @@
       if (volatile) return;
       const saved = parse(STORAGE_KEY);
       if (valid(saved)) { state = saved; migrate(); }
-      state.completed = [...new Set(state.completed)].filter(id => state.opened.includes(id));
+      state.completed = [...new Set(state.completed)].filter(id => ids.includes(id));
       if (!state.opened.includes(state.pending)) state.pending = null;
     }
-    const unlocked = () => state.mode === 'legacy' ? [...state.order] : state.order.filter(id => state.opened.includes(id));
+    const unlocked = () => state.order.filter(id => state.opened.includes(id));
     const api = {
       snapshot() { reload(); return { ...state, order: [...state.order], opened: [...state.opened], completed: [...state.completed], unlocked: unlocked() }; },
       isUnlocked(id) { reload(); return unlocked().includes(id); },
       beginRun(gameId) {
         reload();
-        if (state.mode === 'legacy' || !unlocked().includes(gameId)) return null;
+        if (!unlocked().includes(gameId)) return null;
         const runId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
         if (!state.activeRuns || typeof state.activeRuns !== 'object') state.activeRuns = {};
         state.activeRuns[runId] = { gameId, ownerId, startedAt: Date.now() };
@@ -103,11 +120,12 @@
           persist();
         }
         const cleared = Number.isSafeInteger(completedLevel) && completedLevel >= 1 && completedLevel <= 5;
-        if (state.mode === 'legacy' || isPractice || !Number.isSafeInteger(wave) || (!cleared && wave < levels.LEVELS[1].startWave) ||
+        if (isPractice || !Number.isSafeInteger(wave) || (!cleared && wave < levels.LEVELS[1].startWave) ||
           !unlocked().includes(gameId) || state.completed.includes(gameId)) return null;
-        state.completed.push(gameId);
-        const next = state.order.find(id => !state.opened.includes(id)) || null;
-        if (next) { state.opened.push(next); state.pending = next; }
+        const previous = new Set(state.opened);
+        state.completed.push(gameId); state.opened = earnedOpen();
+        const next = state.opened.find(id => !previous.has(id) && !state.completed.includes(id)) || null;
+        if (next) state.pending = next;
         persist(); return next;
       },
       reject({ gameId, wave, runId }) {
@@ -139,6 +157,7 @@
         reload();
         recoverRuns(false);
         const all = records(), added = [];
+        const older = legacyGuards();
         const savedMilestones = parse('toenow_game_milestones_v1');
         for (const id of unlocked()) {
           const completedLevel = savedMilestones?.[id];
@@ -149,10 +168,11 @@
           }
           // Iframe games save before reporting. Other Hub tabs must wait for
           // the accepted/rejected outcome, rather than trust an in-flight write.
-          if (Object.values(state.activeRuns || {}).some(run => (typeof run === 'string' ? run : run?.gameId) === id)) continue;
+          if ([...Object.values(state.activeRuns || {}), ...Object.values(older.activeRuns || {})]
+            .some(run => (typeof run === 'string' ? run : run?.gameId) === id)) continue;
           const keys = levels.GAME_STORAGE_KEYS[id];
           const wave = Math.max(...[all[id]?.maxWave, read(keys?.wave)].filter(validWave).map(number), 1);
-          if (wave <= (state.rejectedWaves?.[id] || 0)) continue;
+          if (wave <= Math.max(state.rejectedWaves?.[id] || 0, older.rejectedWaves?.[id] || 0)) continue;
           const next = api.complete({ gameId: id, wave });
           if (next) added.push(next);
         }
@@ -160,11 +180,24 @@
       },
       chooseGuest() { reload(); state.welcomed = true; persist(); },
       dismissDiscovery() { reload(); state.pending = null; persist(); },
-      adoptLegacy() { reload(); state.mode = 'legacy'; state.welcomed = true; state.pending = null; persist(); }
+      // Compatibility for older cached Hub code; never restores all-access mode.
+      adoptLegacy() { reload(); api.reconcile(); }
     };
     function recoverRuns(owned) {
+      const older = legacyGuards();
       for (const [runId, run] of Object.entries(state.activeRuns || {})) {
-        if (typeof run === 'string' || (owned && run.ownerId === ownerId) ||
+        if (state.importedRunIds?.includes(runId) && !older.activeRuns?.[runId]) {
+          const gameId = typeof run === 'string' ? run : run.gameId;
+          const accepted = older.verifiedWaves?.[gameId];
+          if (Number.isSafeInteger(accepted) && accepted >= 1) {
+            if (!state.verifiedWaves) state.verifiedWaves = {};
+            state.verifiedWaves[gameId] = Math.max(state.verifiedWaves[gameId] || 1, accepted);
+            persist();
+            if (older.completed?.includes(gameId)) api.complete({ gameId, wave: accepted });
+          }
+        }
+        if ((state.importedRunIds?.includes(runId) && !older.activeRuns?.[runId]) ||
+          typeof run === 'string' || (owned && run.ownerId === ownerId) ||
           (run.closedAt && Date.now() - run.closedAt >= 2000) || Date.now() - run.startedAt > 12 * 60 * 60 * 1000) api.endRun(runId);
       }
     }

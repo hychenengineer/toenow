@@ -129,10 +129,10 @@
       const focusedGameId = doc.activeElement?.closest('[data-island-game]')?.dataset.islandGame;
       const journey = exploration?.snapshot();
       const exploring = journey?.mode === 'explore';
-      host.dataset.journey = exploring ? 'explore' : 'open';
       const nextId = journey?.unlocked.find(id => !journey.completed.includes(id));
       const nextPlace = LOCATIONS.find(l => l.gameId === nextId);
       const allOpen = journey && journey.unlocked.length >= LOCATIONS.filter(l => findGame(l.gameId)).length;
+      host.dataset.journey = exploring ? (allOpen ? 'complete' : 'explore') : 'open';
       const pendingPlace = LOCATIONS.find(l => l.gameId === journey?.pending);
       const nextLockedPlace = LOCATIONS.find(l => l.gameId === journey?.order.find(id => !journey.unlocked.includes(id)));
       guidance.hidden = !exploring;

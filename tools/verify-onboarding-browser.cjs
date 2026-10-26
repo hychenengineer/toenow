@@ -13,6 +13,7 @@ const output = path.resolve(__dirname, '../artifacts/island-onboarding');
   const page = await context.newPage();
   page.on('pageerror', error => errors.push(error.message));
   page.setDefaultTimeout(10000);
+  page.setDefaultNavigationTimeout(30000);
   try {
     await page.goto(base, { waitUntil: 'domcontentloaded' });
     await page.evaluate(async () => {
@@ -94,7 +95,7 @@ const output = path.resolve(__dirname, '../artifacts/island-onboarding');
     await page.reload({ waitUntil: 'domcontentloaded' });
     assert.equal(await page.locator('.island-location:not(.is-locked)').count(), 1, 'rejected result remains excluded after reload');
     await observer.bringToFront();
-    await observer.waitForFunction(() => JSON.parse(localStorage.getItem('toenow_exploration_v1')).rejectedWaves['number-pop'] === 6);
+    await observer.waitForFunction(() => JSON.parse(localStorage.getItem('toenow_exploration_v3')).rejectedWaves['number-pop'] === 6);
     assert.equal(await observer.locator('.island-location:not(.is-locked)').count(), 1, 'second tab must not unlock rejected result');
     await page.bringToFront();
     await finish(5);
@@ -105,7 +106,7 @@ const output = path.resolve(__dirname, '../artifacts/island-onboarding');
     await observer.waitForFunction(() => document.querySelectorAll('.island-location:not(.is-locked)').length === 2);
     await observer.close(); await page.bringToFront();
     assert.equal(await page.locator('.island-discovery').isVisible(), true);
-    const unlocked = await page.evaluate(() => JSON.parse(localStorage.getItem('toenow_exploration_v1')).pending);
+    const unlocked = await page.evaluate(() => JSON.parse(localStorage.getItem('toenow_exploration_v3')).pending);
     await page.waitForFunction(() => document.querySelectorAll('#toastContainer .toast-msg').length === 0);
     await page.screenshot({ path: path.join(output, 'discovery-desktop.png'), fullPage: true });
     await page.setViewportSize({ width: 390, height: 900 });
@@ -118,13 +119,28 @@ const output = path.resolve(__dirname, '../artifacts/island-onboarding');
     assert.equal(await page.locator(`[data-island-game="${unlocked}"]`).getAttribute('aria-disabled'), 'false');
     await finish(11);
     assert.equal(await page.locator('.island-location:not(.is-locked)').count(), 2);
-    // Existing zero-score player keeps all ten entries and gets no welcome interruption.
+    // Returning players automatically use exploration without losing saved scores.
     const legacy = await browser.newContext();
     await legacy.route('https://**', route => route.abort());
     await legacy.addInitScript(() => localStorage.setItem('toenow_game_scores', JSON.stringify({ 'flash-brain': { lastScore: 0, maxWave: 1 } })));
     const old = await legacy.newPage(); await old.goto(base, { waitUntil: 'domcontentloaded' });
     assert.equal(await old.locator('#islandWelcome[open]').count(), 0);
-    assert.equal(await old.locator('.island-location:not(.is-locked)').count(), 10);
+    assert.equal(await old.locator('.island-location:not(.is-locked)').count(), 1);
+    await old.evaluate(() => {
+      const saved = JSON.parse(localStorage.getItem('toenow_exploration_v3'));
+      saved.version = 2; saved.mode = 'legacy'; saved.opened = saved.order.slice(); saved.completed = [];
+      localStorage.setItem('toenow_exploration_v1', JSON.stringify(saved));
+      localStorage.removeItem('toenow_exploration_v3');
+      localStorage.setItem('qcc_best_wave_v1', '6'); localStorage.setItem('qcc_high_score_v1', '3000');
+    });
+    await old.reload({ waitUntil: 'domcontentloaded' });
+    assert.equal(await old.locator('.island-location:not(.is-locked)').count(), 2);
+    assert.equal(await old.locator('[data-island-game="space-scale"]').getAttribute('aria-disabled'), 'false');
+    assert.equal(await old.evaluate(() => JSON.parse(localStorage.getItem('toenow_exploration_v3')).mode), 'explore');
+    assert.equal(await old.evaluate(() => localStorage.getItem('qcc_high_score_v1')), '3000');
+    assert.equal(await old.evaluate(() => JSON.parse(localStorage.getItem('toenow_game_scores'))['flash-brain'].lastScore), 0);
+    await old.reload({ waitUntil: 'domcontentloaded' });
+    assert.equal(await old.locator('.island-location:not(.is-locked)').count(), 2);
     await legacy.close();
     // Local provider stub verifies restored sessions and request options without
     // signing in, creating an account or sending any mail to the real service.
@@ -150,7 +166,8 @@ const output = path.resolve(__dirname, '../artifacts/island-onboarding');
     assert.equal(await restored.tab.locator('.island-location:not(.is-locked)').count(), 1, 'new signed-in account still explores');
     await restored.ctx.close();
     const cloud = await authFixture({ user: { id: 'test-only', email: 'explorer@example.invalid' }, rows: [{ game_id: 'flash-brain', score: 100, created_at: '2026-01-01T00:00:00Z' }] });
-    await cloud.tab.waitForFunction(() => document.querySelectorAll('.island-location:not(.is-locked)').length === 10);
+    await cloud.tab.waitForFunction(() => JSON.parse(localStorage.getItem('toenow_game_scores') || '{}')['flash-brain']?.bestScore === 100);
+    assert.equal(await cloud.tab.locator('.island-location:not(.is-locked)').count(), 1, 'cloud scores alone do not bypass the route');
     assert.equal(await cloud.tab.locator('#islandWelcome[open]').count(), 0);
     await cloud.ctx.close();
     const choices = await authFixture();
@@ -166,6 +183,6 @@ const output = path.resolve(__dirname, '../artifacts/island-onboarding');
     await choices.ctx.close();
     assert.deepEqual(errors, []);
     fs.writeFileSync(path.join(output, 'results.json'), JSON.stringify({ status: 'PASS', checks, practice: 'PASS', normalWaveBoundary: 'PASS', duplicate: 'PASS', legacy: 'PASS', reload: 'PASS', messageSource: 'PASS', rejectedResult: 'PASS', authWithLocalStub: 'PASS', liveAuth: 'NOT VERIFIED', errors }, null, 2));
-    console.log('PASS: welcome EN/ZH at 4 widths; sign-in/register/guest; locked entry/deep link; real practice/Wave5/Wave6/duplicate/rejected results; discovery/reload; legacy; message source; restored/new/cloud accounts and auth mode options with local provider stub.');
+    console.log('PASS: welcome EN/ZH at 4 widths; sign-in/register/guest; real practice/Wave5/Wave6/duplicate/rejected results; discovery/reload; automatic legacy-to-exploration migration retaining scores; restored/cloud accounts cannot bypass the route.');
   } finally { let timer; await Promise.race([browser.close(), new Promise(resolve => { timer = setTimeout(resolve, 5000); })]); clearTimeout(timer); }
 })().then(() => process.exit(0), error => { console.error(error); process.exit(1); });

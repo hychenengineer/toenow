@@ -1,14 +1,14 @@
 # Island onboarding verification — 2026-10-25
 
-The Hub opens the island directly. New players choose Sign In, Create account or Continue as a guest, with English/Traditional Chinese copy. Guests do not see the welcome repeatedly. Existing local normal-play history, including zero-score attempts, retains access to every game. Existing cloud history is detected after account restoration.
+The Hub opens the island directly. New players choose Sign In, Create account or Continue as a guest, with English/Traditional Chinese copy. Guests do not see the welcome repeatedly. Revised 2026-10-26: existing players also migrate to progressive discovery, retaining scores and credit for completed levels. Score-only local/cloud history does not grant all locations. See `ISLAND_PLAYER_MIGRATION_RUN_REPORT.md` for the current policy.
 
-New journeys begin at the `number-pop` rabbit garden at the lower-left dock. As revised on 2026-10-26, the route follows neighbouring locations and ends at Panda Rescue in the upper-right corner. Passing Level 1 in each distinct open game immediately opens one more place, once; practice and appearance previews do not advance discovery. The same storage key `toenow_exploration_v1` now contains version-2 state, preserving previously opened locations. See `ISLAND_ROUTE_FIX_RUN_REPORT.md` for the route, missed-clear recovery and current verification.
+Journeys begin at the `number-pop` rabbit garden at the lower-left dock. The route follows neighbouring locations and ends at Panda Rescue in the upper-right corner. Passing Level 1 in each distinct open game opens the next place; practice and appearance previews do not advance discovery. Version-3 discovery uses `toenow_exploration_v3` and automatically imports older progress without allowing older tabs to restore all-access policy.
 
 ## Verified
 
 - **PASS** `npm test`: 145 tests, zero failures.
 - **PASS** `tools/verify-onboarding-browser.cjs`: welcome EN/ZH at 1440/768/390/320 widths; sign-in/register/guest; returning guests; locked map/deep links; production number-pop practice, Wave 5, Wave 6, duplicate and rejected results; reload and discovery actions; real two-tab storage refresh; old zero-score players. Local provider stubs check restored/new accounts, cloud history and email account-creation options without contacting authentication providers.
-- **PASS** `tools/verify-island-browser.cjs`: 30 size/theme/language combinations, ten locations, all five art stages, real game launching, normal/practice records, keyboard/dialog actions, reload/storage events and art fallback. Uses an explicit legacy-access fixture to exercise the complete island.
+- **PASS** `tools/verify-island-browser.cjs`: 30 size/theme/language combinations, ten locations, all five art stages, real game launching, normal/practice records, keyboard/dialog actions, reload/storage events and art fallback. The fixture now earns the complete route through level completions.
 - **PASS** `tools/verify-shared-screens-browser.cjs`: 36 standalone combinations, 9 iframe and 9 practice checks.
 - **PASS** Desktop/mobile screenshots inspected under `artifacts/island-onboarding/`; no horizontal page overflow in the welcome matrix.
 - **PASS** Independent code review findings addressed with regression tests: readable-but-unwritable storage, rejected-record reconciliation, two-tab ordering, replay guard lifetime and iframe reload recovery.
@@ -21,7 +21,7 @@ New journeys begin at the `number-pop` rabbit garden at the lower-left dock. As 
 
 ## Progress storage and interrupted runs
 
-Discovery state remains browser-local. Current cloud integration retains score synchronization; this change does not add a cloud unlock-order schema. When this browser has no journey yet, older cloud score rows preserve returning-account access to the complete island.
+Discovery state remains browser-local. Current cloud integration retains score synchronization; this change does not add a cloud unlock-order schema. Older cloud score rows alone do not prove a level completion or grant access to the complete island.
 
 Active iframe writes are excluded from reconciliation until a validated result arrives. Run guards survive replay and are removed after the frame unloads. Tab ownership recovers guards on reload; pagehide marks closed runs for recovery and expired crashed-tab guards are also recoverable. An interrupted or rejected raw record above the last accepted wave is excluded from discovery without deleting its score/wave save. A later verified Hub result may complete the same wave; a later standalone record must exceed the excluded wave.
 

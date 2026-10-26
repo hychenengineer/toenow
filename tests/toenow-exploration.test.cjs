@@ -16,10 +16,10 @@ test('The nearest-neighbour route starts bottom-left with Rabbit and ends top-ri
   assert.deepEqual([panda.x, panda.y], [81, 18]);
   assert.deepEqual(make(store()).snapshot().order, ['number-pop', 'space-scale', 'add-up', 'flash-brain', 'ball-track', 'tap-match', 'block-match', 'spot-quick', 'shadow-match', 'animal-rescue-train']);
 });
-test('Updating the old random route preserves its opened buildings and actual completion credit', () => {
+test('Updating the old random route keeps completion credit and uses the earned fixed route', () => {
   const storage = store({ [STORAGE_KEY]: JSON.stringify({ version: 1, mode: 'explore', welcomed: true, order: ['number-pop','block-match',...gameIds.filter(id => !['number-pop','block-match'].includes(id))], completed: ['number-pop'], pending: 'block-match' }) });
   const flow = make(storage);
-  assert(flow.isUnlocked('block-match')); assert(flow.isUnlocked('number-pop'));
+  assert(!flow.isUnlocked('block-match')); assert(flow.isUnlocked('number-pop')); assert(flow.isUnlocked('space-scale'));
   assert.equal(flow.snapshot().order[1], 'space-scale');
   assert.equal(flow.complete({ gameId: 'number-pop', wave: 6 }), null);
 });
@@ -41,7 +41,7 @@ test('The old delayed-result bug recovers a plausible saved Rabbit completion wi
 test('Malformed version-2 opened lists never leave a player with zero usable games', () => {
   const saved = make(store()).snapshot();
   for (const opened of [[], ['unknown']]) {
-    const flow = make(store({ [STORAGE_KEY]: JSON.stringify({ ...saved, opened, completed: ['space-scale'], pending: 'space-scale' }) }));
+    const flow = make(store({ [STORAGE_KEY]: JSON.stringify({ ...saved, version: 2, opened, completed: ['space-scale'], pending: 'space-scale' }) }));
     assert.deepEqual(flow.snapshot().unlocked, ['number-pop']);
     assert.deepEqual(flow.snapshot().completed, []);
     assert.equal(flow.snapshot().pending, null);
@@ -58,15 +58,51 @@ test('Fresh and settings-only players start with one persisted rabbit garden', (
     assert.equal(make(storage).snapshot().welcomed, true);
   }
 });
-test('Actual legacy history retains all games, including zero-score attempts', () => {
+test('Existing score-only and zero-score attempts enter exploration without losing records', () => {
   for (const records of [
     { qcc_high_score_v1: '120' }, { flash_brain_best_wave_v1: '6' },
     { toenow_game_scores: JSON.stringify({ 'number-pop': { lastScore: 0, maxWave: 1 } }) }
   ]) {
-    const state = make(store(records)).snapshot();
-    assert.equal(state.mode, 'legacy'); assert.equal(state.unlocked.length, 10); assert(state.welcomed);
+    const storage = store(records), state = make(storage).snapshot();
+    assert.equal(state.mode, 'explore'); assert.deepEqual(state.unlocked, ['number-pop']); assert(state.welcomed);
+    for (const [key, value] of Object.entries(records)) assert.equal(storage.getItem(key), value);
   }
   assert.equal(make(store({ toenow_game_scores: '{bad', qcc_high_score_v1: 'NaN' })).snapshot().unlocked.length, 1);
+});
+test('Persisted legacy access migrates once to version 3 and cannot be restored by cloud sign-in', () => {
+  for (const version of [1, 2]) {
+    const storage = store({
+      [STORAGE_KEY]: JSON.stringify({ version, mode: 'legacy', order: ['number-pop',...gameIds.filter(id => id !== 'number-pop')], opened: [...gameIds], completed: [], welcomed: true, pending: null }),
+      qcc_best_wave_v1: '6', qcc_high_score_v1: '3000',
+      animal_rescue_train_guest_v2: '{"saved":"keep"}'
+    });
+    const flow = make(storage);
+    assert.equal(flow.snapshot().version, 3); assert.equal(flow.snapshot().mode, 'explore');
+    assert.deepEqual(flow.snapshot().unlocked, ['number-pop','space-scale']);
+    flow.adoptLegacy(); assert.deepEqual(flow.snapshot().unlocked, ['number-pop','space-scale']);
+    assert.equal(storage.getItem('qcc_high_score_v1'), '3000');
+    assert.equal(storage.getItem('animal_rescue_train_guest_v2'), '{"saved":"keep"}');
+    assert.deepEqual(make(storage).snapshot().unlocked, ['number-pop','space-scale']);
+  }
+});
+test('Returning players open only the contiguous cleared route while keeping later-game credit', () => {
+  const storage = store({ qcc_best_wave_v1: '6', space_scale_best_wave: '6', flash_brain_best_wave_v1: '6' });
+  const flow = make(storage);
+  assert.deepEqual(flow.snapshot().unlocked, ['number-pop','space-scale','add-up']);
+  assert(flow.snapshot().completed.includes('flash-brain'));
+  flow.complete({ gameId: 'add-up', wave: 6 });
+  assert.deepEqual(flow.snapshot().unlocked, ['number-pop','space-scale','add-up','flash-brain','ball-track']);
+});
+test('An older open tab cannot overwrite the migrated exploration policy', () => {
+  const old = JSON.stringify({ version: 2, mode: 'legacy', order: ['number-pop',...gameIds.filter(id => id !== 'number-pop')], completed: [], opened: [...gameIds], welcomed: true });
+  const storage = store({ toenow_exploration_v1: old, qcc_best_wave_v1: '6', qcc_high_score_v1: '3000' });
+  const flow = make(storage);
+  assert.deepEqual(flow.snapshot().unlocked, ['number-pop','space-scale']);
+  assert.equal(storage.getItem('toenow_exploration_v1'), old, 'old save remains intact');
+  storage.setItem('toenow_exploration_v1', old);
+  assert.equal(flow.snapshot().mode, 'explore');
+  assert.deepEqual(make(storage).snapshot().unlocked, ['number-pop','space-scale']);
+  assert.equal(JSON.parse(storage.getItem(STORAGE_KEY)).version, 3);
 });
 test('Only an unlocked game reaching Wave 6 in normal play opens one new place once', () => {
   const storage = store(), flow = make(storage);
@@ -167,4 +203,46 @@ test('Corrupt nested run metadata cannot crash the saved journey', () => {
   saved.activeRuns = { broken: null };
   storage.setItem(STORAGE_KEY, JSON.stringify(saved));
   assert.equal(make(storage).snapshot().unlocked.length, 1);
+});
+
+test('Older tabs still guard raw saves after the policy has migrated', () => {
+  const storage = store(), flow = make(storage);
+  const old = { ...flow.snapshot(), version: 2, mode: 'legacy', activeRuns: {
+    older: { gameId: 'number-pop', ownerId: 'older-tab', startedAt: Date.now() }
+  } };
+  storage.setItem('toenow_exploration_v1', JSON.stringify(old));
+  storage.setItem('qcc_best_wave_v1', '6');
+  flow.reconcile(); assert.equal(flow.snapshot().unlocked.length, 1);
+  old.rejectedWaves = { 'number-pop': 6 }; old.activeRuns = {};
+  storage.setItem('toenow_exploration_v1', JSON.stringify(old));
+  flow.reconcile(); assert.equal(flow.snapshot().unlocked.length, 1);
+  assert(flow.complete({ gameId: 'number-pop', wave: 6 }));
+});
+
+test('Imported iframe guards settle when an older tab closes its run', () => {
+  const storage = store(), old = { ...make(storage).snapshot(), version: 2, activeRuns: {
+    older: { gameId: 'number-pop', ownerId: 'older-tab', startedAt: Date.now() }
+  } };
+  storage.setItem('toenow_exploration_v1', JSON.stringify(old));
+  delete storage.values[STORAGE_KEY];
+  const flow = make(storage);
+  storage.setItem('qcc_best_wave_v1', '6');
+  old.activeRuns = {}; old.rejectedWaves = { 'number-pop': 6 };
+  storage.setItem('toenow_exploration_v1', JSON.stringify(old));
+  flow.reconcile(); assert.equal(Object.keys(flow.snapshot().activeRuns).length, 0);
+  assert.equal(flow.snapshot().unlocked.length, 1);
+});
+
+test('A validated older-tab result settles an imported guard and earns the next place', () => {
+  const storage = store(), old = { ...make(storage).snapshot(), version: 2,
+    rejectedWaves: { 'number-pop': 6 }, activeRuns: {
+    older: { gameId: 'number-pop', ownerId: 'older-tab', startedAt: Date.now() }
+  } };
+  storage.setItem('toenow_exploration_v1', JSON.stringify(old));
+  delete storage.values[STORAGE_KEY];
+  const flow = make(storage);
+  storage.setItem('qcc_best_wave_v1', '6');
+  old.activeRuns = {}; old.completed = ['number-pop']; old.verifiedWaves = { 'number-pop': 6 };
+  storage.setItem('toenow_exploration_v1', JSON.stringify(old));
+  flow.reconcile(); assert.equal(flow.snapshot().unlocked.length, 2);
 });

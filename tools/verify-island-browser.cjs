@@ -3,6 +3,15 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {LOCATIONS} = require('../shared/toenow-island.js');
+const fixtureValues = {};
+const fixtureJourney = require('../shared/toenow-exploration.js').create({
+  storage: { getItem:key=>fixtureValues[key]??null, setItem:(key,value)=>{fixtureValues[key]=String(value);} },
+  levels: require('../shared/toenow-levels.js'), gameIds: LOCATIONS.map(l=>l.gameId)
+});
+fixtureJourney.chooseGuest();
+for (const id of fixtureJourney.snapshot().order.slice(0,-1)) fixtureJourney.complete({gameId:id,wave:6});
+fixtureJourney.dismissDiscovery();
+const completeJourney = fixtureJourney.snapshot();
 const base = process.env.TOENOW_TEST_URL || 'http://127.0.0.1:8765';
 const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'../artifacts/island-explorer');
 (async()=>{
@@ -12,11 +21,9 @@ const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'.
  try{
   const context=await browser.newContext();
   await context.addInitScript(() => localStorage.setItem('toenow_tutorial_number-pop_v2','completed'));
-  // This matrix covers existing players' complete island and art previews.
+  // This matrix covers players who earned the complete island and art previews.
   // Fresh-player locking and the welcome are exercised by verify-onboarding-browser.
-  await context.addInitScript(ids => localStorage.setItem('toenow_exploration_v1', JSON.stringify({
-    version:1, mode:'legacy', order:['number-pop',...ids.filter(id=>id!=='number-pop')], completed:[], welcomed:true, pending:null
-  })), LOCATIONS.map(l=>l.gameId));
+  await context.addInitScript(state => localStorage.setItem('toenow_exploration_v3', JSON.stringify(state)), completeJourney);
   await context.route('https://**',route=>route.abort());
   const page=await context.newPage();
   page.setDefaultTimeout(10000);page.setDefaultNavigationTimeout(30000);
@@ -30,7 +37,7 @@ const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'.
   assert.equal(await page.locator('.island-map-markers img[data-island-art]').count(),10,'all ten map landmarks use illustrated art');
   assert.equal(await page.locator('.island-location').count(),10);
   assert.equal(await page.locator('#hubListView').isVisible(),false);
-  assert.equal(await page.locator('.island-counter').innerText(),'0 / 10 places explored');
+  assert.equal(await page.locator('.island-counter').innerText(),'10 / 10 places open');
   const initial=await page.evaluate(()=>JSON.stringify({...localStorage}));
   for(const stage of [1,2,3,4,5]){
    await page.locator('#islandStagePreview').selectOption(String(stage));
@@ -137,7 +144,7 @@ const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'.
   await normal.locator('[data-toenow-screen="gameover"]').waitFor({state:'visible'});
   await page.locator('#closeTheaterBtn').click();
   await page.waitForFunction(()=>document.querySelector('[data-island-game="number-pop"]').dataset.stage==='3');
-  assert.equal(await page.locator('.island-counter').innerText(),'1 / 10 個地點已探索');
+  assert.equal(await page.locator('.island-counter').innerText(),'10 / 10 個地點已開放');
   await page.reload({waitUntil:'domcontentloaded'});
   assert.equal(await page.locator('[data-island-game="number-pop"]').getAttribute('data-stage'),'3');
   // Standalone/canonical record updates also refresh the parent map via storage events.
@@ -171,7 +178,7 @@ const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'.
   assert.deepEqual(await blocked.evaluate(()=>window.__blockedIslandProgress),{level:1,wave:1,bestScore:0,explored:false});
   // A missing image falls back without removing the location or its launcher.
   const fallbackContext=await browser.newContext();await fallbackContext.route('https://**',route=>route.abort());
-  await fallbackContext.addInitScript(() => localStorage.setItem('toenow_game_scores',JSON.stringify({'animal-rescue-train':{lastScore:0,maxWave:1}})));
+  await fallbackContext.addInitScript(state => localStorage.setItem('toenow_exploration_v3', JSON.stringify(state)), completeJourney);
   await fallbackContext.route('**/assets/animal-island/panda-level1.webp',route=>route.abort());
   const fallback=await fallbackContext.newPage();await fallback.goto(base,{waitUntil:'domcontentloaded'});
   await fallback.locator('[data-island-game="animal-rescue-train"] [data-art-fallback="true"]').waitFor();

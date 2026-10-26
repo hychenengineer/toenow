@@ -63,7 +63,7 @@ const output = path.resolve(__dirname, '../artifacts/island-progression');
       const grid = __CHIP_DEFRAG__.getState().board.activeGrid;
       grid.forEach((row, r) => row.forEach((value, c) => { if (value === 2) __CHIP_DEFRAG__.clickCell(r, c); }));
     });
-    await blockPage.waitForFunction(() => JSON.parse(localStorage.getItem('toenow_exploration_v1')).completed.includes('block-match'), null, { timeout: 3000 });
+    await blockPage.waitForFunction(() => JSON.parse(localStorage.getItem('toenow_exploration_v3')).completed.includes('block-match'), null, { timeout: 3000 });
     assert.equal(await block.evaluate(() => __CHIP_DEFRAG__.getState().wave), 5);
     assert.equal(await blockPage.locator('.island-location:not(.is-locked)').count(), 8);
     await blockContext.close();

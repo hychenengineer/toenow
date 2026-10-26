@@ -715,6 +715,7 @@
       }
     </style>
   <link rel="stylesheet" href="../../assets/toenow-animals.css">
+<link rel="stylesheet" href="../../assets/toenow-game-hud.css">
 </head>
   <body data-state="title">
     <main id="viewport-shell">
@@ -723,21 +724,63 @@
         <canvas id="game-canvas" data-testid="eclipse-canvas"></canvas>
 
         <!-- ZONE 1: Top 15% Telemetry HUD Band -->
-        <section id="hud-zone" aria-label="Optical Telemetry HUD">
+        <section id="hud-zone" aria-label="Optical Telemetry HUD"><div class="island-live-hud" data-metrics="3"><div class="island-hud-metric"><span class="island-hud-label">TIME</span><span id="hud-timer" aria-live="off" class="island-hud-value">60.0s</span></div><div class="island-hud-metric"><span class="island-hud-label">SCORE</span><span id="hud-score" class="hud-hero-num island-hud-value">000000</span></div><div class="island-hud-metric"><span class="island-hud-label">COMBO</span><span id="hud-combo" class="combo-readout island-hud-value">1x</span></div><div class="island-hud-controls"><button
+                  type="button"
+                  id="btn-mute"
+                  class="icon-btn"
+                  tabindex="-1"
+                  aria-label="Toggle Audio Mute (M)"
+                  title="Mute / Unmute [M]"
+                >
+                  <svg id="icon-sound-on" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                  </svg>
+                  <svg id="icon-sound-off" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                  </svg>
+                </button><button
+                  type="button"
+                  id="btn-pause"
+                  class="icon-btn"
+                  tabindex="-1"
+                  aria-label="Pause Game (P)"
+                  title="Pause [P]"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="6" y="4" width="4" height="16"></rect>
+                    <rect x="14" y="4" width="4" height="16"></rect>
+                  </svg>
+                </button><button
+                  type="button"
+                  id="btn-restart-quick"
+                  class="icon-btn"
+                  tabindex="-1"
+                  aria-label="Restart Run (R)"
+                  title="Restart [R]"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                    <path d="M3 3v5h5"></path>
+                  </svg>
+                </button></div></div><div class="island-hud-legacy" aria-hidden="true">
           <div class="hud-top-row">
             <div class="hud-cluster-left">
               <div class="hud-metric-block">
                 <span class="hud-kicker">SCORE</span>
-                <span id="hud-score" class="hud-hero-num">000000</span>
+
               </div>
               <div class="hud-metric-block">
                 <span class="hud-kicker">COMBO</span>
-                <span id="hud-combo" class="combo-readout">1x</span>
+
               </div>
             </div>
 
             <div class="hud-cluster-center">
-              <span id="hud-timer" aria-live="off">60.0s</span>
+
               <div class="timer-bar-track">
                 <div id="hud-timer-bar"></div>
               </div>
@@ -756,51 +799,9 @@
               </div>
 
               <div class="hud-utility-btns">
-                <button
-                  type="button"
-                  id="btn-mute"
-                  class="icon-btn"
-                  tabindex="-1"
-                  aria-label="Toggle Audio Mute (M)"
-                  title="Mute / Unmute [M]"
-                >
-                  <svg id="icon-sound-on" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-                  </svg>
-                  <svg id="icon-sound-off" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
-                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                    <line x1="23" y1="9" x2="17" y2="15"></line>
-                    <line x1="17" y1="9" x2="23" y2="15"></line>
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  id="btn-pause"
-                  class="icon-btn"
-                  tabindex="-1"
-                  aria-label="Pause Game (P)"
-                  title="Pause [P]"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="6" y="4" width="4" height="16"></rect>
-                    <rect x="14" y="4" width="4" height="16"></rect>
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  id="btn-restart-quick"
-                  class="icon-btn"
-                  tabindex="-1"
-                  aria-label="Restart Run (R)"
-                  title="Restart [R]"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                    <path d="M3 3v5h5"></path>
-                  </svg>
-                </button>
+
+
+
               </div>
             </div>
           </div>
@@ -809,7 +810,7 @@
             <span id="hud-status-text">TRACKING SILHOUETTES</span>
             <span id="hud-feedback-tag">PAR 5.0s</span>
           </div>
-        </section>
+        </div></section>
 
         <!-- ZONE 2: Middle 42% Optical Projection Chamber -->
         <section id="chamber-zone" aria-label="Optical Backlight Projection Chamber"></section>

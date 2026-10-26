@@ -901,18 +901,40 @@
       }
     </style>
   <link rel="stylesheet" href="../../assets/toenow-animals.css">
+<link rel="stylesheet" href="../../assets/toenow-game-hud.css">
 </head>
   <body data-mode="title" data-phase="idle">
     <div id="app-shell">
       <canvas id="game-canvas" aria-label="Ball Track Game Board"></canvas>
 
       <!-- Responsive Top HUD -->
-      <header class="hud-wrapper" id="hud-top">
+      <header class="hud-wrapper" id="hud-top"><div class="island-live-hud" data-metrics="2"><div class="island-hud-metric"><span class="island-hud-label">TIME</span><span class="hud-phase-timer island-hud-value" id="hud-timer">--</span></div><div class="island-hud-metric"><span class="island-hud-label">SCORE</span><span class="hud-value island-hud-value" id="hud-score">0</span></div><div class="island-hud-controls"><button class="icon-btn" id="btn-mute" type="button" title="Mute / Unmute Audio (M)" aria-label="Toggle Mute">
+              <svg id="icon-sound-on" viewBox="0 0 24 24">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+              </svg>
+              <svg id="icon-sound-off" viewBox="0 0 24 24" style="display: none">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+              </svg>
+            </button><button class="icon-btn" id="btn-pause" type="button" title="Pause Game (P)" aria-label="Pause Game">
+              <svg viewBox="0 0 24 24">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+            </button><button class="icon-btn" id="btn-restart-hud" type="button" title="Restart Run (R)" aria-label="Restart Run">
+              <svg viewBox="0 0 24 24">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+              </svg>
+            </button></div></div><div class="island-hud-legacy" aria-hidden="true"><div class="island-hud-task"><span class="hud-phase-title" id="hud-phase-text">STANDBY</span></div><div class="island-hud-task"><span class="hud-wave-target-indicator" id="hud-wave-target">WAVE 1 | TARGET: 1</span></div>
         <div class="hud-top">
           <div class="hud-cluster hud-cluster-left">
             <div class="hud-pill">
               <span class="hud-label">Score</span>
-              <span class="hud-value" id="hud-score">0</span>
+
             </div>
             <div class="hud-pill">
               <span class="hud-label">Speed</span>
@@ -926,37 +948,13 @@
               <span class="hud-label">Best</span>
               <span class="hud-value" id="hud-best">0</span>
             </div>
-            <div class="hud-pill shield-pill" id="hud-shields-pill" aria-label="Shield Vitality">
-              <span class="hud-label">Shields</span>
-              <div class="shield-icons-row" id="hud-shields-row"></div>
-            </div>
+
           </div>
 
           <div class="hud-cluster hud-cluster-right">
-            <button class="icon-btn" id="btn-mute" type="button" title="Mute / Unmute Audio (M)" aria-label="Toggle Mute">
-              <svg id="icon-sound-on" viewBox="0 0 24 24">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-              </svg>
-              <svg id="icon-sound-off" viewBox="0 0 24 24" style="display: none">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <line x1="23" y1="9" x2="17" y2="15"></line>
-                <line x1="17" y1="9" x2="23" y2="15"></line>
-              </svg>
-            </button>
-            <button class="icon-btn" id="btn-pause" type="button" title="Pause Game (P)" aria-label="Pause Game">
-              <svg viewBox="0 0 24 24">
-                <rect x="6" y="4" width="4" height="16"></rect>
-                <rect x="14" y="4" width="4" height="16"></rect>
-              </svg>
-            </button>
-            <button class="icon-btn" id="btn-restart-hud" type="button" title="Restart Run (R)" aria-label="Restart Run">
-              <svg viewBox="0 0 24 24">
-                <polyline points="23 4 23 10 17 10"></polyline>
-                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-              </svg>
-            </button>
+
+
+
           </div>
         </div>
 
@@ -964,19 +962,22 @@
         <div class="hud-phase-bar">
           <div class="hud-phase-header">
             <div class="hud-phase-left">
-              <span class="hud-phase-title" id="hud-phase-text">STANDBY</span>
-              <span class="hud-phase-timer" id="hud-timer">--</span>
+
+
             </div>
-            <span class="hud-wave-target-indicator" id="hud-wave-target">WAVE 1 | TARGET: 1</span>
+
           </div>
           <div class="hud-gauge-track">
             <div class="hud-gauge-fill" id="hud-gauge-fill"></div>
           </div>
         </div>
-      </header>
+      </div></header>
 
       <!-- Clean Bottom HUD: ONLY Overdrive Hold Prompt & Bet Multiplier Readout -->
-      <div class="bottom-hud" id="bottom-hud">
+      <div class="bottom-hud" id="bottom-hud"><div class="island-hud-task"><div class="hud-pill shield-pill" id="hud-shields-pill" aria-label="Shield Vitality">
+              <span class="hud-label">Shields</span>
+              <div class="shield-icons-row" id="hud-shields-row"></div>
+            </div></div>
         <button class="overdrive-btn" id="btn-overdrive" type="button" aria-label="Hold Shift for Overdrive">
           <span id="overdrive-btn-label">HOLD [SHIFT] FOR OVERDRIVE</span>
         </button>

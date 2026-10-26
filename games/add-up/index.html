@@ -713,6 +713,7 @@
       }
     </style>
   <link rel="stylesheet" href="../../assets/toenow-animals.css">
+<link rel="stylesheet" href="../../assets/toenow-game-hud.css">
 </head>
   <body data-state="title">
     <div id="game-stage">
@@ -723,13 +724,62 @@
       <div id="accessible-node-bank" class="sr-only-nodes" role="group" aria-label="Floating Number Balls"></div>
 
       <!-- Playing HUD -->
-      <div id="hud-layer">
+      <div id="hud-layer"><div class="island-live-hud" data-metrics="2"><div class="island-hud-metric"><span class="island-hud-label">TIME</span><span id="hud-timer" class="timer-readout island-hud-value" data-critical="false">60s</span></div><div class="island-hud-metric"><span class="island-hud-label">SCORE</span><div id="hud-score" class="hud-hero-num island-hud-value">0</div></div><div class="island-hud-controls"><button
+              type="button"
+              id="btn-clear-selection"
+              class="icon-btn"
+              tabindex="-1"
+              aria-label="Clear selected balls"
+              title="Clear Selection [Space]"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+              <span class="icon-btn-key">SPC</span>
+            </button><button
+              type="button"
+              id="btn-mute"
+              class="icon-btn"
+              tabindex="-1"
+              aria-label="Toggle audio mute"
+              title="Mute Audio [M]"
+            >
+              <svg id="svg-mute-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+              </svg>
+            </button><button
+              type="button"
+              id="btn-pause"
+              class="icon-btn"
+              tabindex="-1"
+              aria-label="Pause game"
+              title="Pause [P]"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="6" y="4" width="4" height="16" rx="1" />
+                <rect x="14" y="4" width="4" height="16" rx="1" />
+              </svg>
+            </button><button
+              type="button"
+              id="btn-restart-hud"
+              class="icon-btn"
+              tabindex="-1"
+              aria-label="Restart game"
+              title="Restart [R]"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                <path d="M3 3v5h5" />
+              </svg>
+            </button></div></div><div class="island-hud-legacy" aria-hidden="true">
         <div class="hud-top-bar">
           <!-- Top-Left: Score & Wave -->
           <div class="hud-cluster-left">
             <div class="hud-module">
               <span class="hud-kicker">SCORE</span>
-              <div id="hud-score" class="hud-hero-num">0</div>
+
               <div class="hud-sub-row">BEST <span id="hud-best">0</span></div>
             </div>
             <div class="hud-module">
@@ -743,7 +793,7 @@
           <div class="hud-cluster-center">
             <div class="timer-header">
               <span class="hud-kicker">TIME REMAINING</span>
-              <span id="hud-timer" class="timer-readout" data-critical="false">60s</span>
+
             </div>
 
             <div class="bar-track" aria-label="Containment time remaining">
@@ -754,62 +804,13 @@
 
           <!-- Top-Right: Utility Controls -->
           <div class="hud-cluster-right">
-            <button
-              type="button"
-              id="btn-clear-selection"
-              class="icon-btn"
-              tabindex="-1"
-              aria-label="Clear selected balls"
-              title="Clear Selection [Space]"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-              <span class="icon-btn-key">SPC</span>
-            </button>
-            <button
-              type="button"
-              id="btn-mute"
-              class="icon-btn"
-              tabindex="-1"
-              aria-label="Toggle audio mute"
-              title="Mute Audio [M]"
-            >
-              <svg id="svg-mute-icon" viewBox="0 0 24 24" aria-hidden="true">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-              </svg>
-            </button>
-            <button
-              type="button"
-              id="btn-pause"
-              class="icon-btn"
-              tabindex="-1"
-              aria-label="Pause game"
-              title="Pause [P]"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <rect x="6" y="4" width="4" height="16" rx="1" />
-                <rect x="14" y="4" width="4" height="16" rx="1" />
-              </svg>
-            </button>
-            <button
-              type="button"
-              id="btn-restart-hud"
-              class="icon-btn"
-              tabindex="-1"
-              aria-label="Restart game"
-              title="Restart [R]"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                <path d="M3 3v5h5" />
-              </svg>
-            </button>
+
+
+
+
           </div>
         </div>
-      </div>
+      </div></div>
 
       <!-- Simple & Clean Title Screen Overlay -->
       <section id="title-screen" class="overlay-screen unified-title-screen" aria-label="Add Up Title Screen" data-toenow-screen="title"></section>

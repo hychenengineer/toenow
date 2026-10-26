@@ -1084,6 +1084,7 @@
       }
     </style>
   <link rel="stylesheet" href="../../assets/toenow-animals.css">
+<link rel="stylesheet" href="../../assets/toenow-game-hud.css">
 </head>
   <body data-state="title" data-wave="1" data-score="0" data-combo="0" data-fever="false">
     <!-- Interactive Canvas Arena -->
@@ -1091,33 +1092,7 @@
 
     <!-- Live Playing HUD -->
     <div id="hud-layer">
-      <div id="hud-top-container" class="hud-top-container">
-        <div class="hud-top-bar">
-          <!-- Tier 1 Left: Score & Combo -->
-          <div class="hud-cluster hud-left">
-            <div class="hud-stat-block">
-              <span class="hud-kicker">SCORE</span>
-              <span id="hud-score" class="hud-hero-num">0</span>
-            </div>
-            <div class="hud-divider"></div>
-            <div class="hud-stat-block">
-              <span id="hud-combo-label" class="hud-kicker">COMBO · 1X</span>
-              <div class="combo-value-row">
-                <span id="hud-combo" class="hud-hero-num">0x</span>
-                <div class="combo-pips-row" id="hud-combo-pips" aria-hidden="true">
-                  <span class="combo-pip"></span>
-                  <span class="combo-pip"></span>
-                  <span class="combo-pip"></span>
-                  <span class="combo-pip"></span>
-                  <span class="combo-pip"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tier 1 Right: Utility Controls -->
-          <div class="hud-right">
-            <button
+      <div id="hud-top-container" class="hud-top-container"><div class="island-live-hud" data-metrics="3"><div class="island-hud-metric"><span class="island-hud-label">TIME</span><span id="hud-timer" class="timer-readout island-hud-value">60.0s</span></div><div class="island-hud-metric"><span class="island-hud-label">SCORE</span><span id="hud-score" class="hud-hero-num island-hud-value">0</span></div><div class="island-hud-metric"><span class="island-hud-label">COMBO</span><span id="hud-combo" class="hud-hero-num island-hud-value">0x</span></div><div class="island-hud-controls"><button
               type="button"
               id="btn-mute"
               class="icon-btn"
@@ -1135,8 +1110,7 @@
                 <line x1="23" y1="9" x2="17" y2="15"></line>
                 <line x1="17" y1="9" x2="23" y2="15"></line>
               </svg>
-            </button>
-            <button
+            </button><button
               type="button"
               id="btn-pause"
               class="icon-btn"
@@ -1148,8 +1122,7 @@
                 <rect x="6" y="4" width="4" height="16" rx="1"></rect>
                 <rect x="14" y="4" width="4" height="16" rx="1"></rect>
               </svg>
-            </button>
-            <button
+            </button><button
               type="button"
               id="btn-restart-hud"
               class="icon-btn"
@@ -1161,7 +1134,35 @@
                 <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
                 <path d="M3 3v5h5"></path>
               </svg>
-            </button>
+            </button></div></div><div class="island-hud-legacy" aria-hidden="true">
+        <div class="hud-top-bar">
+          <!-- Tier 1 Left: Score & Combo -->
+          <div class="hud-cluster hud-left">
+            <div class="hud-stat-block">
+              <span class="hud-kicker">SCORE</span>
+
+            </div>
+            <div class="hud-divider"></div>
+            <div class="hud-stat-block">
+              <span id="hud-combo-label" class="hud-kicker">COMBO · 1X</span>
+              <div class="combo-value-row">
+
+                <div class="combo-pips-row" id="hud-combo-pips" aria-hidden="true">
+                  <span class="combo-pip"></span>
+                  <span class="combo-pip"></span>
+                  <span class="combo-pip"></span>
+                  <span class="combo-pip"></span>
+                  <span class="combo-pip"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tier 1 Right: Utility Controls -->
+          <div class="hud-right">
+
+
+
           </div>
 
           <!-- Tier 2 Full-Width: Wave & Countdown Timer -->
@@ -1172,7 +1173,7 @@
                 <span aria-hidden="true" style="color: #475569;">·</span>
                 <span id="hud-wave-tier" class="wave-tier-label">SINGLE-DIGIT INTEGERS</span>
               </div>
-              <span id="hud-timer" class="timer-readout">60.0s</span>
+
             </div>
             <div class="timer-bar-track">
               <div id="hud-timer-bar" class="timer-bar-fill"></div>
@@ -1191,7 +1192,7 @@
 
         <!-- Critical Overload Singularity Warning Banner -->
         <div id="singularity-warning-banner">WARNING: QUANTUM SINGULARITY DETECTED · CRITICAL 2.8X TIME DRAIN</div>
-      </div>
+      </div></div>
     </div>
 
     <!-- TITLE SCREEN OVERLAY (Unified Universal Design) -->

@@ -521,16 +521,17 @@
       }
     </style>
   <link rel="stylesheet" href="../../assets/toenow-animals.css">
+<link rel="stylesheet" href="../../assets/toenow-game-hud.css">
 </head>
   <body data-state="title">
     <canvas id="game-canvas" data-testid="game-canvas" aria-label="Block Match Workboard"></canvas>
 
     <!-- Top HUD: stats and game controls -->
-    <div id="hud-layer">
+    <div id="hud-layer"><div class="island-live-hud" data-metrics="3"><div class="island-hud-metric"><span class="island-hud-label">TIME</span><span class="hud-value island-hud-value" id="hud-timer">100.0s</span></div><div class="island-hud-metric"><span class="island-hud-label">SCORE</span><span class="hud-value island-hud-value" id="hud-score">0</span></div><div class="island-hud-metric"><span class="island-hud-label">COMBO</span><span class="hud-value amber island-hud-value" id="hud-combo">x1</span></div><div class="island-hud-controls"><button id="btn-audio-hud" type="button" class="hud-control-btn toenow-icon-control" aria-label="Toggle Audio" aria-pressed="true" title="Toggle Audio" data-muted="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use class="control-sound-on" href="../../assets/toenow-control-icons.svg#sound-on"/><use class="control-sound-off" href="../../assets/toenow-control-icons.svg#sound-off"/></svg></button><button id="btn-pause-hud" type="button" class="hud-control-btn toenow-icon-control" aria-label="Pause Game (P)" title="Pause Game (P)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#pause"/></svg></button><button id="btn-restart-hud" type="button" class="hud-control-btn toenow-icon-control" aria-label="Restart Run" title="Restart Run"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#restart"/></svg></button></div></div><div class="island-hud-legacy" aria-hidden="true">
       <div class="hud-bar" aria-live="polite">
         <div class="hud-stat">
           <span class="hud-kicker">Score</span>
-          <span class="hud-value" id="hud-score">0</span>
+
         </div>
         <div class="hud-stat">
           <span class="hud-kicker">Wave</span>
@@ -542,19 +543,19 @@
         </div>
         <div class="hud-stat">
           <span class="hud-kicker">Combo</span>
-          <span class="hud-value amber" id="hud-combo">x1</span>
+
         </div>
         <div class="hud-stat">
           <span class="hud-kicker">Timer</span>
-          <span class="hud-value" id="hud-timer">100.0s</span>
+
         </div>
         <div class="hud-controls">
-          <button id="btn-audio-hud" type="button" class="hud-control-btn toenow-icon-control" aria-label="Toggle Audio" aria-pressed="true" title="Toggle Audio" data-muted="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use class="control-sound-on" href="../../assets/toenow-control-icons.svg#sound-on"/><use class="control-sound-off" href="../../assets/toenow-control-icons.svg#sound-off"/></svg></button>
-          <button id="btn-pause-hud" type="button" class="hud-control-btn toenow-icon-control" aria-label="Pause Game (P)" title="Pause Game (P)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#pause"/></svg></button>
-          <button id="btn-restart-hud" type="button" class="hud-control-btn toenow-icon-control" aria-label="Restart Run" title="Restart Run"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#restart"/></svg></button>
+
+
+
         </div>
       </div>
-    </div>
+    </div></div>
 
     <div id="match-success" role="status" aria-live="polite" aria-atomic="true" hidden>
       <div class="match-success-card">

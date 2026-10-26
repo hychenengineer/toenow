@@ -963,6 +963,7 @@
       }
     </style>
   <link rel="stylesheet" href="../../assets/toenow-animals.css">
+<link rel="stylesheet" href="../../assets/toenow-game-hud.css">
 </head>
   <body data-state="title" data-wave="1" data-score="0" data-shields="3">
     <!-- Full-Viewport Astrophysics Simulation Canvas -->
@@ -975,14 +976,41 @@
     </div>
 
     <!-- Live Playing HUD -->
-    <div id="hud-layer" aria-live="polite">
+    <div id="hud-layer" aria-live="polite"><div class="island-live-hud" data-metrics="3"><div class="island-hud-metric"><span class="island-hud-label">TIME</span><span id="hud-timer" class="hud-value island-hud-value">10:00</span></div><div class="island-hud-metric"><span class="island-hud-label">SCORE</span><span id="hud-score" class="hud-value island-hud-value">0</span></div><div class="island-hud-metric"><span class="island-hud-label">COMBO</span><span id="hud-combo" class="island-hud-value">0x</span></div><div class="island-hud-controls"><button id="btn-mute" type="button" class="icon-btn" aria-label="Toggle Audio Mute (M)" title="Mute / Unmute [M]" tabindex="-1">
+              <svg id="icon-sound-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+              </svg>
+              <svg id="icon-sound-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+              </svg>
+            </button><button id="btn-pause" type="button" class="icon-btn" aria-label="Pause Game (P)" title="Pause [P / Esc]" tabindex="-1">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+            </button><button id="btn-restart-hud" type="button" class="icon-btn" aria-label="Restart Run (R)" title="Instant Restart [R]" tabindex="-1">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+            </button></div><div class="island-hud-task"><div id="directive-banner" class="directive-banner" data-directive="max">
+            <div class="directive-pill-row">
+              <span id="directive-action-label" class="directive-action-label">▲ FIND THE HEAVIEST</span>
+              <span id="directive-badge-pill" class="directive-badge-pill">MAX MASS</span>
+            </div>
+            <span id="directive-sub" class="directive-sub">TAP THE CELESTIAL BODY WITH GREATEST GRAVITATIONAL WEIGHT</span>
+          </div></div></div><div class="island-hud-legacy" aria-hidden="true">
       <div class="hud-top-bar">
         <!-- Left Cluster: Score, Synapse EXP & Rank -->
         <div class="hud-cluster-left">
           <div class="hud-score-row">
             <div class="hud-stat">
               <span class="hud-kicker">SCORE</span>
-              <span id="hud-score" class="hud-value">0</span>
+
             </div>
             <div class="hud-stat" style="align-items: flex-end">
               <span class="hud-kicker">BEST</span>
@@ -1003,13 +1031,7 @@
 
         <!-- Center Cluster: Directive Banner & Dynamic Wave Timer -->
         <div class="hud-cluster-center">
-          <div id="directive-banner" class="directive-banner" data-directive="max">
-            <div class="directive-pill-row">
-              <span id="directive-action-label" class="directive-action-label">▲ FIND THE HEAVIEST</span>
-              <span id="directive-badge-pill" class="directive-badge-pill">MAX MASS</span>
-            </div>
-            <span id="directive-sub" class="directive-sub">TAP THE CELESTIAL BODY WITH GREATEST GRAVITATIONAL WEIGHT</span>
-          </div>
+
           <div class="wave-timer-track" role="progressbar" aria-label="Wave decision timer">
             <div id="hud-wave-bar" class="wave-timer-fill"></div>
           </div>
@@ -1049,40 +1071,19 @@
           <!-- Mission Clock -->
           <div class="hud-stat" style="align-items: flex-end">
             <span class="hud-kicker">MISSION CLOCK</span>
-            <span id="hud-timer" class="hud-value">10:00</span>
+
           </div>
 
           <div class="utility-buttons">
-            <button id="btn-mute" type="button" class="icon-btn" aria-label="Toggle Audio Mute (M)" title="Mute / Unmute [M]" tabindex="-1">
-              <svg id="icon-sound-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-              </svg>
-              <svg id="icon-sound-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <line x1="23" y1="9" x2="17" y2="15"></line>
-                <line x1="17" y1="9" x2="23" y2="15"></line>
-              </svg>
-            </button>
-            <button id="btn-pause" type="button" class="icon-btn" aria-label="Pause Game (P)" title="Pause [P / Esc]" tabindex="-1">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="6" y="4" width="4" height="16"></rect>
-                <rect x="14" y="4" width="4" height="16"></rect>
-              </svg>
-            </button>
-            <button id="btn-restart-hud" type="button" class="icon-btn" aria-label="Restart Run (R)" title="Instant Restart [R]" tabindex="-1">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                <path d="M3 3v5h5"></path>
-              </svg>
-            </button>
+
+
+
           </div>
         </div>
       </div>
 
       <!-- Bottom Dock Removed: Pure Direct Planet Visual Selection -->
-    </div>
+    </div></div>
 
     <!-- Title Screen Overlay -->
     <section id="title-screen" class="overlay-screen unified-title-screen" aria-label="Title Screen" data-toenow-screen="title"></section>
@@ -1756,6 +1757,7 @@
         const ctx = canvas.getContext('2d');
 
         const hudScoreEl = document.getElementById('hud-score');
+        const hudComboEl = document.getElementById('hud-combo');
         const hudBestEl = document.getElementById('hud-best');
         const hudRankEl = document.getElementById('hud-rank');
         const hudExpEl = document.getElementById('hud-exp');
@@ -1965,6 +1967,7 @@
           isPracticeMode = Boolean(isPractice);
           score = 0;
           streak = 0;
+          hudComboEl.textContent = '0x';
           peakStreak = 0;
           shields = MAX_SHIELDS;
           globalTimeSec = 600.0; // 10-Minute Session
@@ -2043,6 +2046,7 @@
 
           if (isCorrect) {
             streak++;
+            hudComboEl.textContent = streak + 'x';
             peakStreak = Math.max(peakStreak, streak);
             const tierBase = wave <= 3 ? 120 : wave <= 6 ? 200 : 320;
             const speedRatio = Math.max(0, waveTimeSec / currentPuzzle.waveDurationSec);
@@ -2089,6 +2093,7 @@
           } else {
             // Wrong selection or wave timeout -> Consume 1 Shield
             streak = 0;
+            hudComboEl.textContent = '0x';
             shields--;
             updateShieldsUI();
             cameraTrauma = 0.95;

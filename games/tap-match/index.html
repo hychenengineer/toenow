@@ -402,35 +402,36 @@
       }
     </style>
   <link rel="stylesheet" href="../../assets/toenow-animals.css">
+<link rel="stylesheet" href="../../assets/toenow-game-hud.css">
 </head>
   <body>
     <div class="app-wrapper">
       <!-- Top Status HUD -->
-      <header id="hud-container" aria-label="Game Status HUD">
+      <header id="hud-container" aria-label="Game Status HUD"><div class="island-live-hud" data-metrics="3"><div class="island-hud-metric"><span class="island-hud-label">TIME</span><span id="hud-time" class="island-hud-value">65</span></div><div class="island-hud-metric"><span class="island-hud-label">SCORE</span><span id="hud-score" class="hud-value island-hud-value">0</span></div><div class="island-hud-metric"><span class="island-hud-label">COMBO</span><span id="hud-streak" class="island-hud-value">0</span></div><div class="island-hud-controls"><button type="button" id="btn-audio" class="hud-btn toenow-icon-control" aria-label="Toggle Audio" title="Toggle Audio" aria-pressed="true" data-muted="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use class="control-sound-on" href="../../assets/toenow-control-icons.svg#sound-on"/><use class="control-sound-off" href="../../assets/toenow-control-icons.svg#sound-off"/></svg></button><button type="button" id="btn-pause-hud" class="hud-btn toenow-icon-control" aria-label="Pause Game (P)" title="Pause Game (P)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#pause"/></svg></button><button type="button" id="btn-reset" class="hud-btn toenow-icon-control" aria-label="Restart Run" title="Restart Run"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#restart"/></svg></button></div><div class="island-hud-task"><span id="hud-target" class="hud-highlight-white">DIAMOND</span></div></div><div class="island-hud-legacy" aria-hidden="true">
         <div class="hud-piped-bar">
           <span class="hud-segment">WAVE <span id="hud-wave">1</span></span>
           <span class="hud-pipe">|</span>
-          <span class="hud-target-segment">TARGET: <span id="hud-target" class="hud-highlight-white">DIAMOND</span></span>
+          <span class="hud-target-segment">TARGET: </span>
           <span class="hud-pipe">|</span>
-          <span class="hud-segment">STREAK: <span id="hud-streak">0</span></span>
+          <span class="hud-segment">STREAK: </span>
           <span class="hud-pipe">|</span>
-          <span class="hud-segment">TIME: <span id="hud-time">65</span>s</span>
+          <span class="hud-segment">TIME: s</span>
         </div>
         <div class="hud-sub-bar">
           <div class="hud-sub-group">
-            <span>SCORE <span id="hud-score" class="hud-value">0</span></span>
+            <span>SCORE </span>
             <span class="hud-sep">·</span>
             <span>HITS <span id="hud-hits" class="hud-value">0/20</span></span>
             <span class="hud-sep">·</span>
             <span>FAULTS <span id="hud-faults" class="hud-value">0/5</span></span>
           </div>
           <div class="hud-controls">
-            <button type="button" id="btn-audio" class="hud-btn toenow-icon-control" aria-label="Toggle Audio" title="Toggle Audio" aria-pressed="true" data-muted="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use class="control-sound-on" href="../../assets/toenow-control-icons.svg#sound-on"/><use class="control-sound-off" href="../../assets/toenow-control-icons.svg#sound-off"/></svg></button>
-            <button type="button" id="btn-pause-hud" class="hud-btn toenow-icon-control" aria-label="Pause Game (P)" title="Pause Game (P)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#pause"/></svg></button>
-            <button type="button" id="btn-reset" class="hud-btn toenow-icon-control" aria-label="Restart Run" title="Restart Run"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#restart"/></svg></button>
+
+
+
           </div>
         </div>
-      </header>
+      </div></header>
 
       <!-- Main Playable Stage -->
       <main class="canvas-stage">

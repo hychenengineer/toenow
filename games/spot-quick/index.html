@@ -374,25 +374,26 @@
       }
     </style>
   <link rel="stylesheet" href="../../assets/toenow-animals.css">
+<link rel="stylesheet" href="../../assets/toenow-game-hud.css">
 </head>
   <body>
     <div class="app-wrapper" id="appWrapper">
       <!-- Top Piped Status Display -->
-      <header class="hud-header" id="hudHeader">
+      <header class="hud-header" id="hudHeader"><div class="island-live-hud" data-metrics="3"><div class="island-hud-metric"><span class="island-hud-label">TIME</span><span id="live-time" class="island-hud-value">60.0s</span></div><div class="island-hud-metric"><span class="island-hud-label">SCORE</span><strong class="hud-score-val island-hud-value" id="hudScoreText">0</strong></div><div class="island-hud-metric"><span class="island-hud-label">COMBO</span><span id="live-combo" class="island-hud-value">0x</span></div><div class="island-hud-controls"><button id="btnAudioHud" type="button" class="toenow-icon-control" aria-label="Toggle Audio" title="Toggle Audio" aria-pressed="true" data-muted="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use class="control-sound-on" href="../../assets/toenow-control-icons.svg#sound-on"/><use class="control-sound-off" href="../../assets/toenow-control-icons.svg#sound-off"/></svg></button><button id="btnPauseHud" type="button" class="toenow-icon-control" aria-label="Pause Game (P)" title="Pause Game (P)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#pause"/></svg></button><button id="btnRestartHud" type="button" class="toenow-icon-control" aria-label="Restart Run" title="Restart Run"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#restart"/></svg></button></div></div><div class="island-hud-legacy" aria-hidden="true">
         <div class="hud-piped-bar" id="hudPipedText">
           WAVE 1 | CLARITY: 0% | STREAK: 0 | TIME: 60.0s
         </div>
         <div class="hud-sub-bar">
-          <span>SCORE: <strong class="hud-score-val" id="hudScoreText">0</strong></span>
+          <span>SCORE: </span>
           <span>TIER: <strong class="hud-cat-val" id="hudCatText">L1 NOVICE</strong></span>
           <span class="hud-tier-val" id="hudTierText">+100 PTS · +2.0s</span>
           <div class="hud-controls">
-            <button id="btnAudioHud" type="button" class="toenow-icon-control" aria-label="Toggle Audio" title="Toggle Audio" aria-pressed="true" data-muted="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use class="control-sound-on" href="../../assets/toenow-control-icons.svg#sound-on"/><use class="control-sound-off" href="../../assets/toenow-control-icons.svg#sound-off"/></svg></button>
-            <button id="btnPauseHud" type="button" class="toenow-icon-control" aria-label="Pause Game (P)" title="Pause Game (P)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#pause"/></svg></button>
-            <button id="btnRestartHud" type="button" class="toenow-icon-control" aria-label="Restart Run" title="Restart Run"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#restart"/></svg></button>
+
+
+
           </div>
         </div>
-      </header>
+      </div></header>
 
       <!-- Main Canvas & Synchronized Hit Layer -->
       <main class="canvas-stage" id="canvasStage">
@@ -5151,6 +5152,8 @@
             "s";
 
           hudScoreText.textContent = String(state.score);
+          document.getElementById("live-time").textContent = window.ToenowTutorials?.isActive("spot-quick") ? "∞" : timeStr + "s";
+          document.getElementById("live-combo").textContent = state.streak + "x";
           hudCatText.textContent = "L" + tier.level + " " + tier.name;
 
           if (state.inputFreezeTimer > 0) {

@@ -47,13 +47,8 @@ async function lesson(page, kind, lang, finish=true) {
   await page.locator('[data-tutorial-finish]').click();
 }
 async function ready(page) {
-  await page.locator('[data-tutorial-finish]').waitFor({ state: 'visible' });
-  assert.match(await page.locator('#tutorial-instruction').innerText(), /Ready to begin|準備好了嗎/);
-  const time = await page.evaluate(() => __lessonEngineState.globalTimeRemaining);
-  await page.waitForTimeout(1200);
-  assert.equal(await page.evaluate(() => __lessonEngineState.globalTimeRemaining), time);
-  await page.locator('[data-tutorial-finish]').click();
   await page.waitForFunction(() => __lessonEngineState.phase === 'PHASE_FLASH');
+  assert.equal(await page.locator('#toenow-tutorial').count(), 0, 'formal play must start without a ready tutorial');
 }
 (async () => {
   fs.mkdirSync(output, { recursive: true });
@@ -103,11 +98,9 @@ async function ready(page) {
       assert.equal(await page.locator('[data-tutorial-advance]').isVisible(), false, 'learned rules must not interrupt again');
       await page.goto(base+'/games/flash-brain/');
       await page.locator('.unified-start-btn').click();
-      await page.locator('[data-tutorial-finish]').waitFor({state:'visible'});
-      await page.keyboard.press('Escape');
+      await ready(page);
+      await page.goto(base + '/games/flash-brain/');
       await page.locator('.unified-start-btn').waitFor({state:'visible'});
-      await page.waitForTimeout(800);
-      assert.equal(await page.evaluate(()=>document.body.dataset.state),'title','cancel ready must return to title');
       await page.locator('[data-tutorial-replay]').click();
       await lesson(page,'basic',lang,false);
       await lesson(page,'thorns',lang,false);
@@ -140,7 +133,7 @@ async function ready(page) {
       }
       assert.deepEqual(errors, []);
       await context.close();
-      console.log(`PASS ${width}/${lang}: basic, retry, ready, thorn/priority lessons, practice, progress and phase prompts`);
+      console.log(`PASS ${width}/${lang}: basic, retry, no startup popup, thorn/priority lessons, practice, progress and phase prompts`);
     }
   } finally {
     let cleanupTimer;

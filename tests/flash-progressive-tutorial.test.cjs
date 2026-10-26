@@ -32,15 +32,15 @@ test('basic memory holds until confirmation and never introduces thorns or prior
   assert.equal(run.state.waveState.tappedTargetsCount, 0);
 });
 
-test('first formal run waits for a ready action without changing the timer', () => {
+test('formal starts and restarts do not open a ready tutorial or change the run', () => {
   const run = fixture(); run.api.prepare(run.state); run.api.beforeStep(run.state, 'playing');
-  assert.deepEqual(run.calls, ['ready']);
+  assert.deepEqual(run.calls, []);
   assert.equal(run.state.globalTimeRemaining, 42);
-  assert.equal(run.adapter().getGuide().done, true);
-  run.end();
+  assert.equal(run.state.phase, 'PHASE_PRE_FLASH');
+  run.api.prepare(run.state);
   assert.equal(run.state.waveState.config.preFlashDuration, .65);
   run.api.beforeStep(run.state, 'playing');
-  assert.deepEqual(run.calls, ['ready']);
+  assert.deepEqual(run.calls, []);
 });
 
 test('new rules use actual configuration, restore the run and remember completion independently', () => {
@@ -62,13 +62,13 @@ test('new rules use actual configuration, restore the run and remember completio
   run.api.handleResult({ status: 'WAVE_CLEARED' }, run.state);
   assert.equal(run.completed, true);
   run.adapter().markLesson('priority', 'completed'); run.end();
-  run.api.beforeStep(run.state, 'playing'); assert.equal(run.calls[2], 'ready'); run.end();
-  original.config.wave = 22; run.api.beforeStep(run.state, 'playing'); assert.equal(run.calls.length, 3);
+  run.api.beforeStep(run.state, 'playing'); assert.equal(run.calls.length, 2);
+  original.config.wave = 22; run.api.beforeStep(run.state, 'playing'); assert.equal(run.calls.length, 2);
   assert.equal(Object.keys(run.values).some(key => /best|score|wave/.test(key)), false);
 });
 
-test('canceling readiness returns to title instead of starting unconfirmed',()=>{
-  const run=fixture();run.api.prepare(run.state);run.api.beforeStep(run.state,'playing');run.end(false);
+test('canceling an explicitly opened basic tutorial returns to title',()=>{
+  const run=fixture();run.begin({replay:true});run.end(false);
   assert.equal(run.stopped,1);
   assert.match(run.api.phasePrompt('PHASE_BREACH',false),/Missed/);
 });

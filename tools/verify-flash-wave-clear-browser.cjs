@@ -14,7 +14,7 @@ const base=process.env.TOENOW_TEST_URL||'http://127.0.0.1:8765';
       await context.route('**/games/flash-brain/tutorial.js',route=>route.fulfill({contentType:'application/javascript',body:fs.readFileSync(path.resolve(__dirname,'../games/flash-brain/tutorial.js'),'utf8')+'\nconst step=FlashBrainTutorial.beforeStep;FlashBrainTutorial.beforeStep=(state,shell)=>{window.__clearState=state;step(state,shell);};'}));
       const page=await context.newPage(),errors=[];page.on('pageerror',error=>errors.push(error.message));
       async function clearWave(host=page){
-        await host.locator('[data-tutorial-finish]').click();
+        assert.equal(await host.locator('#toenow-tutorial').count(),0);
         await host.waitForFunction(()=>__clearState.phase==='PHASE_INPUT');
         const points=await host.evaluate(()=>{
           const state=__clearState,box=document.querySelector('canvas').getBoundingClientRect();
@@ -52,7 +52,8 @@ const base=process.env.TOENOW_TEST_URL||'http://127.0.0.1:8765';
       await clearWave(frame);
       await frame.getByTestId('telemetry-hud').locator('button').nth(1).click();
       await frame.locator('.flash-wave-clear').waitFor({state:'hidden'});
-      await frame.locator('[data-tutorial-finish]').waitFor({state:'visible'});
+      await frame.waitForFunction(()=>__clearState.phase==='PHASE_FLASH');
+      assert.equal(await frame.locator('#toenow-tutorial').count(),0);
       assert.deepEqual(errors,[]);
       await context.close();console.log(`PASS ${width}/${lang}: clear notice, timer/input protection, pause/resume, next wave, rule transition and iframe restart`);
     }

@@ -1268,47 +1268,7 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* ==========================================
-       TOAST NOTIFICATION
-       ========================================== */
     #authModal { z-index: 140; }
-    .toast-container {
-      position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
-      z-index: 120;
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-      max-width: 400px;
-      pointer-events: none;
-    }
-
-    .toast-msg {
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid var(--border-glow);
-      border-left: 4px solid var(--accent-cyan);
-      color: var(--text-primary);
-      padding: 0.9rem 1.15rem;
-      border-radius: 12px;
-      font-size: 0.84rem;
-      line-height: 1.4;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(12px);
-      pointer-events: auto;
-      animation: toastSlideIn 260ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    @keyframes toastSlideIn {
-      from {
-        opacity: 0;
-        transform: translateY(14px) scale(0.97);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
 
     /* ==========================================
        AUTH MODAL STYLES
@@ -1729,9 +1689,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Toast Container -->
-  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
   <!-- ==========================================
        AUTHENTICATION MODAL
@@ -2551,7 +2508,6 @@
           gameViewer.src = targetUrl;
         }
       }, 40);
-      showToast(`Restarted ${currentMountedGame.title} environment.`);
     }
 
     function toggleTheaterFullscreen() {
@@ -2979,7 +2935,6 @@
           if (!plausibility.isValid) {
             exploration?.reject({ gameId, wave, runId: currentExplorationRun });
             console.warn(`[Security Alert] Implausible game telemetry flagged for ${gameId}:`, plausibility);
-            showToast(`Telemetry Warning: Score verification anomaly detected (${plausibility.reason})`);
             return;
           }
         }
@@ -3046,13 +3001,11 @@
 
               if (scoreErr) {
                 console.error('[Toenow Matrix] Error persisting score to cloud:', scoreErr);
-                showToast(`Cloud Sync Notice: ${scoreErr.message || 'Score rejected by server'}`);
               } else {
                 console.log('[Toenow Matrix] Verified score persisted to cloud:', scoreData);
               }
             } else if (sessionErr) {
               console.error('[Toenow Matrix] Could not create game session:', sessionErr);
-              showToast(`Session Error: ${sessionErr.message}`);
             }
           } catch (cloudErr) {
             console.warn('[Toenow Matrix] Cloud sync notice:', cloudErr);
@@ -3062,24 +3015,8 @@
     });
 
     /* ============================================================================
-       8. UI EVENT BINDINGS & TOAST HELPER
+       8. UI EVENT BINDINGS
        ============================================================================ */
-    function showToast(message) {
-      const container = document.getElementById('toastContainer');
-      if (!container) return;
-      const toast = document.createElement('div');
-      toast.className = 'toast-msg';
-      toast.textContent = message;
-      container.appendChild(toast);
-
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateY(8px)';
-        toast.style.transition = '220ms ease';
-        setTimeout(() => toast.remove(), 230);
-      }, 4200);
-    }
-
     function initHubInteractions() {
       // Category Filter Tabs
       const tabsContainer = document.getElementById('categoryTabs');
@@ -3202,7 +3139,9 @@
       // 1-Click Google Sign In
       googleLoginBtn.addEventListener('click', async () => {
         if (!supabaseClient) {
-          showToast('Authentication engine unavailable.');
+          authStatusMsg.className = 'auth-status-msg error';
+          authStatusMsg.style.display = 'block';
+          authStatusMsg.textContent = t('Authentication engine unavailable.');
           return;
         }
         try {
@@ -3256,7 +3195,6 @@
       signOutBtn.addEventListener('click', async () => {
         if (!supabaseClient) return;
         await supabaseClient.auth.signOut();
-        showToast('Signed out of Toenow Matrix. Operating in Guest mode.');
         if (profileDrawer.classList.contains('open')) closeProfileDrawer();
       });
 
@@ -3460,7 +3398,6 @@
           const profile = await fetchCloudProfile(session.user.id);
           updateUIWithUser(session.user, profile);
           await syncUserScoresFromCloud(session.user.id);
-          showToast(`Welcome to Toenow Matrix, ${session.user.email}! Records synced.`);
         } else if (event === 'SIGNED_OUT') {
           updateUIWithUser(null, null);
         }
@@ -3507,14 +3444,10 @@
       // Deep link challenge handler (?play=gameId&challenge=score)
       const params = new URLSearchParams(window.location.search);
       const playId = params.get('play');
-      const challengeScore = params.get('challenge');
       if (playId) {
         const game = GAMES_CONFIG.find(g => g.id === playId);
         if (game) {
           openTheaterModal(game);
-          if (challengeScore) {
-            showToast(`Challenge Accepted: Beat ${Number(challengeScore).toLocaleString()} pts in ${game.title}!`);
-          }
         }
       }
     })();

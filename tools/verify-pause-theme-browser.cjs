@@ -26,7 +26,7 @@ async function run() {
           await page.evaluate(() => ToenowGameSDK.getInstance('animal-rescue-train').pause());
         } else {
           await page.locator('#' + catalog[id].startId).click();
-          if (id === 'flash-brain') await page.locator('[data-tutorial-finish]').click();
+          if (id === 'flash-brain') assert.equal(await page.locator('#toenow-tutorial').count(), 0);
           if (id === 'tap-match') await page.locator('#btn-begin-wave').click();
           const pauseSelector = id === 'flash-brain' ? '.island-hud-controls button:last-child' :
             id === 'spot-quick' ? '#btnPauseHud' :

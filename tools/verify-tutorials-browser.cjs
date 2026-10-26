@@ -120,11 +120,11 @@ async function complete(page,id,mobile=false){
       const scoreBefore=await page.locator('#tutorial-instruction').innerText();
       await page.waitForTimeout(300);assert.equal(await page.locator('#tutorial-instruction').innerText(),scoreBefore);
       await page.locator('[data-tutorial-finish]').click();await page.waitForTimeout(100);
-      if(id==='flash-brain'){await page.locator('[data-tutorial-finish]').waitFor({state:'visible'});await page.locator('[data-tutorial-finish]').click();}
+      if(id==='flash-brain')assert.equal(await page.locator('#toenow-tutorial').count(),0,'no extra startup tutorial');
       assert.equal(await page.locator('#toenow-tutorial').count(),0);
       assert.equal(await page.locator('#toenow-tutorial-game').count(),0,'closing restores original game roots');
       await ready(page,id,lang);await page.locator('#'+startId(id)).click();await page.waitForTimeout(100);
-      if(id==='flash-brain'){await page.locator('[data-tutorial-finish]').waitFor({state:'visible'});await page.locator('[data-tutorial-finish]').click();}
+      if(id==='flash-brain')assert.equal(await page.locator('#toenow-tutorial').count(),0,'no extra startup tutorial');
       assert.equal(await page.locator('#toenow-tutorial').count(),0,id+' returning player repeated tutorial');
       await ready(page,id,lang);await page.locator('[data-tutorial-replay]').click();await page.locator('#toenow-tutorial').waitFor({state:'visible'});
       await page.keyboard.press('Escape');await page.locator('#'+startId(id)).waitFor({state:'visible'});

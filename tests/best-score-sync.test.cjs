@@ -125,8 +125,8 @@ test('Hub postMessage GAME_OVER listener ignores practice mode runs and never ov
   const indexHtml = readSource(path.join(__dirname, '..', 'index.html'), 'utf8');
   assert.ok(indexHtml.includes('if (isPractice)'), 'Hub message handler must explicitly inspect isPractice flag');
   assert.ok(
-    indexHtml.includes('Practice mode not recorded'),
-    'Hub message handler must display toast and return early on practice runs'
+    /if \(isPractice\)\s*\{\s*return;\s*\}/.test(indexHtml),
+    'Hub message handler must return before persistence on practice runs'
   );
 });
 

@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const base = process.env.TOENOW_TEST_URL || 'http://127.0.0.1:8765';
-const output = path.resolve(__dirname, '../artifacts/island-onboarding');
+const output = path.resolve(__dirname, '..', process.env.TOENOW_ONBOARDING_SHOTS || 'artifacts/island-onboarding');
 (async () => {
   fs.mkdirSync(output, { recursive: true });
   const browser = await chromium.launch({ channel: 'msedge', headless: true });
@@ -79,6 +79,7 @@ const output = path.resolve(__dirname, '../artifacts/island-onboarding');
       await frame.locator('[data-toenow-screen="gameover"]').waitFor({ state: 'visible' });
       // Allow postMessage processing before closing the actual iframe.
       await page.waitForFunction(() => !document.getElementById('gamesBentoGrid').innerHTML.includes('undefined'));
+      assert.equal(await page.locator('#toastContainer, .toast-container, .toast-msg').count(), 0, 'game results must not create corner notifications');
       await page.locator('#closeTheaterBtn').click();
       await page.waitForFunction(() => getComputedStyle(document.getElementById('theaterModal')).opacity === '0');
     }
@@ -108,7 +109,7 @@ const output = path.resolve(__dirname, '../artifacts/island-onboarding');
     await observer.close(); await page.bringToFront();
     assert.equal(await page.locator('.island-discovery').isVisible(), true);
     const unlocked = await page.evaluate(() => JSON.parse(localStorage.getItem('toenow_exploration_v3')).pending);
-    await page.waitForFunction(() => document.querySelectorAll('#toastContainer .toast-msg').length === 0);
+    assert.equal(await page.locator('#toastContainer, .toast-container, .toast-msg').count(), 0);
     await page.screenshot({ path: path.join(output, 'discovery-desktop.png'), fullPage: true });
     await page.setViewportSize({ width: 390, height: 900 });
     await page.screenshot({ path: path.join(output, 'discovery-mobile.png'), fullPage: true });

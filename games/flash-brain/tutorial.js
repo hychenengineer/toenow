@@ -1,6 +1,6 @@
 (function(win){
   'use strict';
-  const id='flash-brain',seen=new Map(),handled=new WeakMap(),readyRuns=new WeakSet();
+  const id='flash-brain',seen=new Map(),handled=new WeakMap();
   let shell=null,engine=null,release=null,lesson=null,saved=null,replayQueue=[];
   const active=()=>!!win.ToenowTutorials?.isActive(id);
   const key=name=>'toenow_flash_lesson_'+name+'_v1';
@@ -30,7 +30,6 @@
   function getGuide(){
     const state=engine?.getState(),wave=state?.waveState;
     if(!wave)return {waiting:true};
-    if(lesson==='ready')return {done:true,completePrompt:'Ready to begin? Memorize the beds, then tap their positions.',finishLabel:'Start challenge',badge:'Ready when you are — timer paused'};
     if(state.phase==='PHASE_FLASH')return {prompt:rememberPrompt(),waiting:true,
       action:{label:'I remember',run(){if(state.phase!=='PHASE_FLASH')return;state.phase='PHASE_INPUT';state.phaseElapsed=0;state.inputElapsed=0;engine.sync();}}};
     const target=wave.cells.find(cell=>!cell.tapped&&cell.type==='PRIORITY')||wave.cells.find(cell=>!cell.tapped&&cell.type==='TARGET');
@@ -50,12 +49,11 @@
         if(!options.lesson){saved=null;shell.start();return;}
         const state=engine.getState();
         saved={waveState:state.waveState,score:state.score,combo:state.combo,phase:state.phase,phaseElapsed:state.phaseElapsed,inputElapsed:state.inputElapsed};
-        if(lesson==='ready')state.phase='PHASE_PRE_FLASH';
-        else{state.waveState={...state.waveState,config:{...state.waveState.config}};resetBoard(state);}
+        state.waveState={...state.waveState,config:{...state.waveState.config}};resetBoard(state);
         engine.sync();
       },
       stop(confirmed=false){
-        if(saved){const state=engine.getState(),cancelReady=lesson==='ready'&&!confirmed;Object.assign(state,saved);state.phaseElapsed=0;saved=null;lesson=null;if(cancelReady)shell.stop();else engine.sync();}
+        if(saved){const state=engine.getState();Object.assign(state,saved);state.phaseElapsed=0;saved=null;lesson=null;engine.sync();}
         else{shell.stop();lesson=null;}
       },
       markLesson,getGuide
@@ -66,16 +64,15 @@
     bindEngine(value){engine=value;register();return()=>{if(engine===value){engine=null;release?.();release=null;}};},
     prepare(state){
       if(active()){if(lesson==='basic')resetBoard(state);return;}
-      readyRuns.add(state);
     },
     beforeStep(state,shellState){
       if(shellState!=='playing'||active()||state.phase!=='PHASE_PRE_FLASH')return;
       const wave=state.waveState;
       let prompted=handled.get(wave);if(!prompted){prompted=new Set();handled.set(wave,prompted);}
       const next=wave.config.decoyCount>0&&!learned('thorns')&&!prompted.has('thorns')?'thorns':
-        wave.config.priorityAnchorCount>0&&!learned('priority')&&!prompted.has('priority')?'priority':readyRuns.has(state)?'ready':null;
+        wave.config.priorityAnchorCount>0&&!learned('priority')&&!prompted.has('priority')?'priority':null;
       if(next&&win.ToenowTutorials?.showLesson(id,next)){
-        prompted.add(next);if(next==='ready')readyRuns.delete(state);
+        prompted.add(next);
       }
     },
     phasePrompt(phase,priorityPending){

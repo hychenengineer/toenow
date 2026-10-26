@@ -44,7 +44,7 @@ function structure(el) {
   return [el.tagName, el.className, ...[...el.children].map(structure)];
 }
 async function confirmReady(host,id) {
-  if(id==='flash-brain'){await host.locator('[data-tutorial-finish]').waitFor({state:'visible'});await host.locator('[data-tutorial-finish]').click();}
+  if(id==='flash-brain')assert.equal(await host.locator('#toenow-tutorial').count(),0,'no startup tutorial for returning players');
 }
 async function islandAppearance(host, cardSelector, species, stage) {
   const appearance = await host.locator(cardSelector).evaluate(card => {

@@ -20,9 +20,10 @@
       <div class="unified-category-pill"><span class="unified-category-icon">${escape(c.icon)}</span> ${escape(c.category)}</div>
       <h1 id="${escape(c.headingId)}" class="unified-game-title">${escape(c.name)}</h1>
       <p class="unified-game-desc">${escape(c.description)}</p>
-      <div class="unified-rules-box">${c.rules.map(rule => `<div class="unified-rule-item"><span class="unified-rule-kicker">${escape(rule.label)}</span><span class="unified-rule-text">${escape(rule.text)}</span></div>`).join('')}</div>
+      <details class="tutorial-rules-details"><summary>More rules</summary><div class="unified-rules-box">${c.rules.map(rule => `<div class="unified-rule-item"><span class="unified-rule-kicker">${escape(rule.label)}</span><span class="unified-rule-text">${escape(rule.text)}</span></div>`).join('')}</div></details>
       <div class="unified-records-strip"><div class="unified-record-item"><span class="unified-record-label">BEST SCORE</span><span id="title-best-score" data-screen-record="score" class="unified-record-val">0</span></div><span class="unified-record-sep" aria-hidden="true">·</span><div class="unified-record-item"><span class="unified-record-label">BEST LEVEL</span><span id="title-best-level" data-screen-record="level" class="unified-record-val">LVL 1 · BEGINNER</span></div><span id="title-best-wave" hidden>1</span></div>
       <div class="unified-actions-bar"><button id="${escape(c.startId)}" type="button" class="unified-start-btn" data-start="true">START GAME</button></div>
+      <button type="button" class="toenow-tutorial-replay" data-tutorial-replay>Play tutorial</button>
     </div>`;
   }
   function gameOverMarkup(id) {

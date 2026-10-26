@@ -90,3 +90,69 @@ html[data-hub-theme] .island-location-dialog .toenow-language-switch { backgroun
   .island-dialog-content h2 { font-size: 1.5rem; }
 }
 @media(prefers-reduced-motion:reduce) { .island-location>.island-landmark { transition: none; } }
+
+/* The island is the landing page; the long introduction remains accessible. */
+.island-shell { padding-top: 14px; }
+.island-topline { margin-bottom: 10px; justify-content: flex-end; }
+.island-intro { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+body[data-exploration="explore"] .category-tabs,
+body[data-exploration="explore"] :is(.hub-theme-control,#openLeaderboardBtn),
+.island-shell[data-journey="explore"] :is(.island-view-switch,.island-preview-control,.island-map-bottom,.island-legend) { display: none; }
+.island-shell[data-journey="explore"] .island-topline { margin: 0; }
+.island-shell[data-journey="explore"] .island-map-toolbar { justify-content: center; padding: 10px; }
+.island-shell[data-journey="explore"] .island-counter { color: var(--accent-cyan); }
+.island-guidance { background: var(--bg-elevated); padding: 0 16px 12px; }
+.island-mission,.island-discovery { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px; padding: 14px 18px; border-radius: 16px; border: 1px solid var(--border-glass); background: var(--hub-soft); }
+.island-guidance strong { font-size: 1rem; }
+.island-guidance p { font-size: .82rem; color: var(--text-secondary); line-height: 1.6; margin-top: 3px; }
+.island-mission-icon { font-size: 1.8rem; color: var(--accent-cyan); }
+.island-guidance button { border: 0; border-radius: 11px; min-height: 44px; padding: 10px 18px; font: 700 .85rem/1.4 system-ui,sans-serif; cursor: pointer; background: var(--accent-cyan); color: var(--hub-on-accent); }
+.island-guidance button:first-of-type { margin-left: auto; }
+.island-guidance .island-discovery-later { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-glass); }
+.island-discovery { border-color: #d4b468; background: #fff7de; color: #4c4023; }
+.island-discovery p { color: #71613b; }
+.island-discovery-route { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.island-discovery-route path { stroke: #ffeda6; stroke-width: .45; stroke-dasharray: .6 .9; stroke-linecap: round; fill: none; filter: drop-shadow(0 1px 2px #6d5622); }
+.island-location.is-next>.island-landmark { filter: drop-shadow(0 0 7px #d5b2ff) drop-shadow(0 0 3px #fff); }
+.island-location.is-next .island-place-label { border: 2px solid #9572d1; }
+.island-location.is-discovered>.island-landmark { filter: drop-shadow(0 0 9px #ffe281) drop-shadow(0 0 3px #fff); }
+.island-location.is-discovered .island-place-label { border-color: #c49d42; }
+.island-location.is-locked { min-height: 130px; justify-content: center; filter: none; }
+.island-mist-art { display: block; opacity: .18; filter: grayscale(1) blur(1px); }
+.island-mist-art .island-landmark { width: 105px; height: 92px; }
+.island-mist-cloud { position: absolute; inset: 7px -13px 12px; border-radius: 50%; background: radial-gradient(ellipse at 35% 46%,#fffefafa 8%,#f9faf6eb 40%,#f2f6f1aa 60%,#ffffff00 74%); filter: blur(6px); pointer-events: none; }
+.island-lock { position: absolute; top: 40%; font-size: 21px; opacity: .65; }
+.island-locked-label { position: relative; color: #4e5d58; font-size: .66rem; font-weight: 700; background: #fffdf4df; padding: 5px 10px; border-radius: 10px; }
+.island-locked-detail { text-align: center; font-size: 90px; color: #a5b8b2; margin: 20px; }
+.game-card.is-locked .game-launch { filter: grayscale(1); opacity: .45; }
+.island-welcome { width: min(410px,calc(100vw - 32px)); box-sizing: border-box; margin: auto; padding: 28px; border: 1px solid #e0d8ef; border-radius: 25px; text-align: center; background: #fffdf8; color: #25233d; box-shadow: 0 24px 90px #17383b66; max-height: calc(100dvh - 32px); overflow-y: auto; }
+.island-welcome::backdrop { background: #122d4259; backdrop-filter: blur(2px); }
+.welcome-character { width: 112px; height: 104px; object-fit: contain; display: block; margin: 0 auto 8px; }
+.welcome-eyebrow { color: #7661a7; font-size: .68rem; font-weight: 800; letter-spacing: .18em; margin-bottom: 8px; }
+.island-welcome h1 { font-size: clamp(1.4rem,4vw,1.8rem); letter-spacing: -.03em; line-height: 1.35; }
+#welcomeDescription { color: #716a7e; margin: 10px 0 22px; font-size: .93rem; line-height: 1.6; }
+.welcome-actions { display: grid; gap: 10px; }
+.welcome-actions button { width: 100%; min-height: 48px; border: 1px solid #7052b4; border-radius: 11px; background: #694bc1; color: #fff; padding: 11px; font: 700 .94rem/1.4 system-ui,sans-serif; cursor: pointer; }
+.welcome-actions #welcomeRegisterBtn { background: #ede5fb; color: #553c98; border-color: #ede5fb; }
+.welcome-actions #welcomeGuestBtn { background: #fffdf8; color: #553c98; }
+.welcome-actions button:hover { filter: brightness(.96); }
+.welcome-actions button:focus-visible { outline: 3px solid #aa8cdd; outline-offset: 3px; }
+.welcome-note { color: #827889; font-size: .73rem; line-height: 1.6; margin-top: 17px; }
+.island-welcome .toenow-language-switch { background: #f1ebfa; color: #654c9e; border-color: #d7c9ed; }
+@media(max-width:540px) {
+  body[data-exploration="explore"] .header-inner { align-items: center; gap: 8px; }
+  body[data-exploration="explore"] .brand-domain { display: none; }
+  body[data-exploration="explore"] .action-bar { flex: 0 1 auto; margin-left: auto; gap: 6px; justify-content: flex-end; }
+  body[data-exploration="explore"] .profile-trigger { padding: 5px; min-width: 44px; min-height: 44px; }
+  body[data-exploration="explore"] .profile-trigger .profile-meta { display: none; }
+  body[data-exploration="explore"] .toenow-language-switch[data-placement="header"] { min-width: 74px; }
+  .island-shell { padding-top: 12px; }
+  .island-shell[data-journey="explore"] .island-map-viewport { max-height: min(620px,calc(100dvh - 290px)); min-height: 300px; }
+  .island-guidance { padding: 0 10px 10px; }
+  .island-mission,.island-discovery { padding: 12px; gap: 8px; }
+  .island-mission-icon { display: none; }
+  .island-guidance strong { font-size: .91rem; }
+  .island-guidance p { font-size: .75rem; }
+  .island-guidance button:first-of-type { margin-left: 0; }
+  .island-welcome { padding: 22px; }
+}

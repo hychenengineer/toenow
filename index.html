@@ -1538,6 +1538,7 @@
   <script src="shared/toenow-hub-themes.js"></script>
   <link rel="stylesheet" href="assets/toenow-island.css">
   <script src="shared/toenow-island.js"></script>
+  <script src="shared/toenow-exploration.js"></script>
 <link rel="stylesheet" href="assets/toenow-animals.css">
 </head>
 <body>
@@ -1738,8 +1739,8 @@
     <div class="auth-dialog">
       <div class="auth-header">
         <div class="auth-title-group">
-          <h2>Access Toenow Matrix</h2>
-          <p>Sync your cognitive radar stats and claim high score rankings</p>
+          <h2 id="authHeading">Sign In / Register</h2>
+          <p>Save your scores and continue your island adventure.</p>
         </div>
         <button type="button" class="icon-close-btn" id="closeAuthBtn" aria-label="Close Auth Modal">✕</button>
       </div>
@@ -1776,6 +1777,19 @@
       </div>
     </div>
   </div>
+
+  <dialog id="islandWelcome" class="island-welcome" aria-labelledby="welcomeHeading" data-i18n-ignore>
+    <img src="assets/animal-island/rabbit-character.webp" alt="" class="welcome-character">
+    <p class="welcome-eyebrow">TOENOW</p>
+    <h1 id="welcomeHeading"></h1>
+    <p id="welcomeDescription"></p>
+    <div class="welcome-actions">
+      <button type="button" id="welcomeSigninBtn"></button>
+      <button type="button" id="welcomeRegisterBtn"></button>
+      <button type="button" id="welcomeGuestBtn"></button>
+    </div>
+    <p id="welcomeGuestNote" class="welcome-note"></p>
+  </dialog>
 
   <!-- ==========================================
        APPLICATION LOGIC
@@ -2297,6 +2311,12 @@
        ============================================================================ */
     let gamePreviewController = null;
     let islandExplorer = null;
+    let exploration = null;
+    let currentExplorationRun = null;
+    function refreshExploration() {
+      exploration?.reconcile();
+      renderBentoGrid();
+    }
     function renderBentoGrid() {
       gamePreviewController?.destroy();
       gamePreviewController = null;
@@ -2319,17 +2339,18 @@
       }
 
       grid.innerHTML = filtered.map(game => {
+        const locked = exploration && !exploration.isUnlocked(game.id);
         const known = ['animal-rescue-train','number-pop','ball-track','block-match','add-up','space-scale','tap-match','spot-quick','shadow-match','flash-brain'].includes(game.id);
         const poster = known ? 'assets/animal-gameplay-previews/' + game.id + '-poster.png' : (game.preview || 'assets/number-pop-preview.png');
         const video = known ? '<video muted playsinline loop preload="none" data-src="assets/animal-gameplay-previews/' + game.id + '.webm" aria-hidden="true"></video>' : '';
         return `
-          <article class="game-card" data-game-id="${game.id}" data-challenge-category="${game.category}" aria-label="${game.title}">
+          <article class="game-card ${locked ? 'is-locked' : ''}" data-game-id="${game.id}" data-challenge-category="${game.category}" aria-label="${game.title}">
             <button type="button" class="game-launch" aria-label="Play ${game.title}">
               <img src="${poster}" alt="${game.title}" loading="lazy" decoding="async">
               ${video}
             </button>
             <div class="game-tile-caption">
-              <h2>${game.title}</h2>
+              <h2>${locked ? '🔒 ' : ''}${game.title}</h2>
               ${known ? '<button type="button" class="game-preview-button">Preview</button>' : ''}
               <button type="button" class="card-share-btn" data-share-game="${game.id}" title="Share challenge" aria-label="Share ${game.title}">↗</button>
             </div>
@@ -2388,8 +2409,13 @@
     const theaterStage = document.getElementById('theaterStage');
 
     function openTheaterModal(game) {
+      if (exploration && !exploration.isUnlocked(game.id)) {
+        islandExplorer?.showLocation(game.id);
+        return;
+      }
       gamePreviewController?.stop();
       currentMountedGame = game;
+      currentExplorationRun = exploration?.beginRun(game.id) || null;
       theaterIcon.textContent = game.icon;
       theaterTitle.textContent = game.title;
       theaterUrl.textContent = game.url;
@@ -2443,9 +2469,17 @@
       theaterModal.classList.remove('open');
       theaterModal.setAttribute('aria-hidden', 'true');
       // Immediately terminate animation loops and audio threads
+      const endedExplorationRun = currentExplorationRun;
+      currentExplorationRun = null;
+      gameViewer.addEventListener('load', () => {
+        exploration?.endRun(endedExplorationRun);
+        refreshExploration();
+      }, { once: true });
       gameViewer.src = 'about:blank';
       theaterUrl.textContent = 'about:blank';
       currentMountedGame = null;
+      refreshExploration();
+      if (exploration?.snapshot().mode === 'explore') islandExplorer?.focusNext();
 
       if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
@@ -2859,6 +2893,7 @@
       }
 
       if (payload.type === 'GAME_OVER') {
+        if (event.source !== gameViewer.contentWindow || event.origin !== window.location.origin || payload.gameId !== currentMountedGame?.id) return;
         const { gameId, category, score, isPractice } = payload;
         if (!gameId || typeof score !== 'number') return;
         if (isPractice) {
@@ -2880,6 +2915,7 @@
             durationSec: durationSec
           });
           if (!plausibility.isValid) {
+            exploration?.reject({ gameId, wave, runId: currentExplorationRun });
             console.warn(`[Security Alert] Implausible game telemetry flagged for ${gameId}:`, plausibility);
             showToast(`Telemetry Warning: Score verification anomaly detected (${plausibility.reason})`);
             return;
@@ -2887,6 +2923,7 @@
         }
 
         const { isNewBest, bestScore, numericScore } = saveGameScore(gameId, category, score, wave);
+        exploration?.complete({ gameId, wave, isPractice, runId: currentExplorationRun });
 
         // Also ensure game's internal localStorage reflects the highest score and wave
         try {
@@ -3036,7 +3073,24 @@
       const authStatusMsg = document.getElementById('authStatusMsg');
       const signOutBtn = document.getElementById('signOutBtn');
 
-      const openAuthModal = () => {
+      const welcome = document.getElementById('islandWelcome');
+      let authMode = 'register', returnToWelcome = false;
+      const t = source => window.ToenowI18n?.t(source) || source;
+      function updateWelcomeCopy() {
+        const copy = { welcomeHeading: 'Welcome to TOENOW', welcomeDescription: 'Your adventure starts here.',
+          welcomeSigninBtn: 'Sign In', welcomeRegisterBtn: 'Create account', welcomeGuestBtn: 'Continue as a guest',
+          welcomeGuestNote: 'Guest progress is saved in this browser.' };
+        for (const [id, text] of Object.entries(copy)) document.getElementById(id).textContent = t(text);
+      }
+      window.showIslandWelcome = () => {
+        updateWelcomeCopy();
+        if (exploration && !exploration.snapshot().welcomed && !currentAuthUser && !authModal.classList.contains('open') && !welcome.open) welcome.showModal();
+      };
+      const openAuthModal = (mode = 'register') => {
+        authMode = mode === 'signin' ? 'signin' : 'register';
+        const heading = document.getElementById('authHeading');
+        heading.setAttribute('data-i18n-ignore', '');
+        heading.textContent = t(authMode === 'signin' ? 'Sign In' : 'Create account');
         authStatusMsg.className = 'auth-status-msg';
         authStatusMsg.style.display = 'none';
         authModal.classList.add('open');
@@ -3046,14 +3100,37 @@
       const closeAuthModal = () => {
         authModal.classList.remove('open');
         authModal.setAttribute('aria-hidden', 'true');
+        if (returnToWelcome) { returnToWelcome = false; window.showIslandWelcome(); }
       };
 
-      window.ToenowAccount.open = () => {
+      window.ToenowAccount.open = (mode) => {
         if (profileDrawer.classList.contains('open')) closeProfileDrawer();
-        openAuthModal();
+        openAuthModal(mode);
       };
+      for (const [id, mode] of [['welcomeSigninBtn', 'signin'], ['welcomeRegisterBtn', 'register']]) {
+        document.getElementById(id).addEventListener('click', () => {
+          returnToWelcome = true; welcome.close(); openAuthModal(mode);
+          document.getElementById('authEmailInput').focus();
+        });
+      }
+      const continueGuest = () => {
+        exploration?.chooseGuest(); welcome.close();
+        islandExplorer?.focusNext();
+      };
+      document.getElementById('welcomeGuestBtn').addEventListener('click', continueGuest);
+      welcome.addEventListener('cancel', event => { event.preventDefault(); continueGuest(); });
+      window.addEventListener('toenow:languagechange', () => {
+        updateWelcomeCopy();
+        document.getElementById('authHeading').textContent = t(authMode === 'signin' ? 'Sign In' : 'Create account');
+      });
+      window.addEventListener('toenow-auth-change', () => {
+        if (currentAuthUser) {
+          exploration?.chooseGuest(); welcome.close(); returnToWelcome = false;
+          authModal.classList.remove('open'); authModal.setAttribute('aria-hidden', 'true');
+        }
+      });
       const authRequest = new URLSearchParams(window.location.search).get('auth');
-      if (authRequest === 'register' || authRequest === 'signin') openAuthModal();
+      if (authRequest === 'register' || authRequest === 'signin') { returnToWelcome = true; openAuthModal(authRequest); }
 
       document.getElementById('signInRegisterBtn').addEventListener('click', () => {
         if (profileDrawer.classList.contains('open')) closeProfileDrawer();
@@ -3100,7 +3177,8 @@
           const { error } = await supabaseClient.auth.signInWithOtp({
             email: email,
             options: {
-              emailRedirectTo: window.location.origin
+              emailRedirectTo: window.location.origin,
+              shouldCreateUser: authMode === 'register'
             }
           });
           if (error) throw error;
@@ -3165,6 +3243,7 @@
             leaderboardModal.classList.remove('open');
             leaderboardModal.setAttribute('aria-hidden', 'true');
           }
+          if (authModal.classList.contains('open')) closeAuthModal();
         }
       });
     }
@@ -3247,6 +3326,16 @@
           const cloudScoresMap = {};
 
           if (!error && data && data.length > 0) {
+            const journey = exploration?.snapshot();
+            // Cloud scores predate a fresh browser's local journey: keep returning
+            // account holders' existing access even though cloud rows lack waves.
+            if (journey?.mode === 'explore' && data.some(item =>
+              GAMES_CONFIG.some(game => game.id === item.game_id) &&
+              Number.isFinite(Number(item.score)) && Number(item.score) >= 0 &&
+              Date.parse(item.created_at) < journey.createdAt)) {
+              exploration.adoptLegacy();
+              document.body.dataset.exploration = 'legacy';
+            }
             data.forEach(item => {
               const gameId = item.game_id;
               const numericScore = Math.round(Number(item.score) || 0);
@@ -3257,6 +3346,7 @@
                 const gameCfg = GAMES_CONFIG.find(g => g.id === gameId);
                 const category = gameCfg?.category || 'puzzle';
                 localScores[gameId] = {
+                  ...localScores[gameId],
                   bestScore: numericScore,
                   lastScore: numericScore,
                   category: category,
@@ -3308,6 +3398,7 @@
       // Check current session
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (session?.user) {
+        updateUIWithUser(session.user, null);
         const profile = await fetchCloudProfile(session.user.id);
         updateUIWithUser(session.user, profile);
         await syncUserScoresFromCloud(session.user.id);
@@ -3318,6 +3409,7 @@
       // Realtime Auth State Listener
       supabaseClient.auth.onAuthStateChange(async (event, session) => {
         if (event === 'SIGNED_IN' && session?.user) {
+          updateUIWithUser(session.user, null);
           const profile = await fetchCloudProfile(session.user.id);
           updateUIWithUser(session.user, profile);
           await syncUserScoresFromCloud(session.user.id);
@@ -3330,6 +3422,17 @@
 
     // Boot Toenow Hub
     (function bootstrapToenow() {
+      if (window.ToenowExploration) {
+        let storage; try { storage = window.localStorage; } catch (_) {}
+        let ownerId;
+        try {
+          ownerId = sessionStorage.getItem('toenow_exploration_tab_v1');
+          if (!ownerId) { ownerId = `${Date.now()}-${Math.random()}`; sessionStorage.setItem('toenow_exploration_tab_v1', ownerId); }
+        } catch (_) {}
+        exploration = window.ToenowExploration.create({ storage, levels: ToenowLevels, gameIds: GAMES_CONFIG.map(game => game.id), ownerId });
+        exploration.reconcile();
+        document.body.dataset.exploration = exploration.snapshot().mode;
+      }
       const profile = getUserProfile();
       updateCompositeStat(profile);
       renderBentoGrid();
@@ -3341,10 +3444,18 @@
         listHost: document.getElementById('hubListView'),
         games: GAMES_CONFIG,
         levels: ToenowLevels,
-        openGame: openTheaterModal
+        openGame: openTheaterModal,
+        exploration
       });
       discoverAdditionalGames();
-      initAuthListener();
+      const authReady = initAuthListener().catch(() => {});
+      Promise.race([authReady, new Promise(resolve => setTimeout(resolve, 2000))]).then(() => window.showIslandWelcome?.());
+      window.addEventListener('focus', refreshExploration);
+      window.addEventListener('storage', refreshExploration);
+      window.addEventListener('pagehide', () => exploration?.suspendRun(currentExplorationRun));
+      window.addEventListener('pageshow', event => {
+        if (event.persisted && currentMountedGame) currentExplorationRun = exploration?.beginRun(currentMountedGame.id) || null;
+      });
 
       // Deep link challenge handler (?play=gameId&challenge=score)
       const params = new URLSearchParams(window.location.search);

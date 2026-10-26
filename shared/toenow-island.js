@@ -83,14 +83,14 @@
   }
 
   function mount(options) {
-    const { host, listHost, levels, openGame } = options;
+    const { host, listHost, levels, openGame, exploration } = options;
     if (!host) return null;
     const doc = host.ownerDocument, root = doc.defaultView;
     let storage; try { storage = root.localStorage; } catch (_) {}
     let games = options.games, category = 'all', preview = 0;
     let selectedId = LOCATIONS[0].gameId;
     let dialogInvoker = null, launchingGame = false;
-    let view = read(storage, VIEW_KEY) === 'list' ? 'list' : 'island';
+    let view = exploration ? 'island' : read(storage, VIEW_KEY) === 'list' ? 'list' : 'island';
     const t = source => root.ToenowI18n?.t(source) || source;
     const e = source => escapeHTML(t(source));
     host.className = 'island-shell';
@@ -100,17 +100,44 @@
     const markers = host.querySelector('.island-map-markers');
     const locationSelect = host.querySelector('#islandLocationSelect');
     const previewSelect = host.querySelector('#islandStagePreview');
+    const guidance = doc.createElement('div');
+    guidance.className = 'island-guidance';
+    host.querySelector('.island-map-viewport').before(guidance);
+    const routes = doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    routes.setAttribute('class', 'island-discovery-route');
+    routes.setAttribute('viewBox', '0 0 100 100');
+    routes.setAttribute('preserveAspectRatio', 'none');
+    routes.setAttribute('aria-hidden', 'true');
+    host.querySelector('.island-map-world').prepend(routes);
+    const unlocked = id => !exploration || exploration.isUnlocked(id);
     const findGame = id => games.find(game => game.id === id);
     const visibleLocations = () => LOCATIONS.filter(place => { const game = findGame(place.gameId); return game && (category === 'all' || game.category === category); });
     function renderDetail() {
       const location = LOCATIONS.find(l => l.gameId === selectedId), game = findGame(selectedId);
       if (!location || !game) return;
+      const locked = !unlocked(selectedId);
+      host.querySelector('.island-play-button').hidden = locked;
+      if (locked) {
+        host.querySelector('.island-dialog-content').innerHTML = `<div class="island-locked-detail" aria-hidden="true">☁</div><p class="island-detail-eyebrow">${e('Still in the mist')}</p><h2 id="islandLocationTitle">${e(location.name)}</h2><p class="island-detail-description">${e('Complete Level 1 in an open game to reveal another place.')}</p><p class="island-real-progress">${e('Pass Wave 5 in normal play to unlock one new place.')}</p>`;
+        return;
+      }
       const p = getProgress(selectedId, storage, levels);
       const displayLevel = preview || p.level;
       host.querySelector('.island-dialog-content').innerHTML = `<div class="island-detail-art" data-stage="${displayLevel}">${landmark(location.kind,displayLevel,location.color)}</div><p class="island-detail-eyebrow">${e('A place to discover')} · ${e(game.title)}</p><h2 id="islandLocationTitle">${e(location.name)}</h2><p class="island-detail-description">${e(game.description || '')}</p><p class="island-real-progress">${p.explored ? `${e('Highest level reached')}: LVL ${p.level} · ${e('Wave')} ${p.wave}` : e('Not yet explored. Your first adventure starts at Level 1.')}</p><div class="island-stage-gallery" aria-label="${e('Five landmark stages')}">${[1,2,3,4,5].map(n=>`<div class="island-stage-card ${n===displayLevel?'is-current':''}" data-stage="${n}">${landmark(location.kind,n,location.color)}<span>LVL ${n}</span><small>${e(levels.LEVELS[n-1].name)}</small></div>`).join('')}</div><p class="island-detail-footnote">${e(preview ? 'Visual preview only. Your game records stay unchanged.' : 'Reach the next level in normal play to grow this landmark.')}</p>`;
     }
     function render() {
       const focusedGameId = doc.activeElement?.closest('[data-island-game]')?.dataset.islandGame;
+      const journey = exploration?.snapshot();
+      const exploring = journey?.mode === 'explore';
+      host.dataset.journey = exploring ? 'explore' : 'open';
+      const nextId = journey?.unlocked.find(id => !journey.completed.includes(id));
+      const nextPlace = LOCATIONS.find(l => l.gameId === nextId);
+      const allOpen = journey && journey.unlocked.length >= LOCATIONS.filter(l => findGame(l.gameId)).length;
+      const pendingPlace = LOCATIONS.find(l => l.gameId === journey?.pending);
+      guidance.hidden = !exploring;
+      guidance.innerHTML = !exploring ? '' : pendingPlace ? `<div class="island-discovery" role="status"><span class="island-mission-icon" aria-hidden="true">✦</span><div><strong>${e('A new place awaits!')}</strong><p>${e(pendingPlace.name)} · ${e('Your next adventure is ready.')}</p></div><button type="button" class="island-discovery-go">${e('Explore now')}</button><button type="button" class="island-discovery-later">${e('Later')}</button></div>` : `<div class="island-mission"><span class="island-mission-icon" aria-hidden="true">⚑</span><div><strong>${e(allOpen ? 'All places discovered!' : journey.unlocked.length === 1 ? 'Your first mission' : 'Your next discovery')}</strong><p>${e(allOpen ? 'Keep playing to help every home grow.' : 'Complete Level 1 to discover a new place.')}</p></div>${nextPlace ? `<button type="button" class="island-mission-go">${e('Start exploring')}</button>` : ''}</div>`;
+      const previousPlace = LOCATIONS.find(l => l.gameId === journey?.completed[journey.completed.length - 1]);
+      routes.innerHTML = pendingPlace && previousPlace ? `<path d="M ${previousPlace.x} ${previousPlace.y} Q ${previousPlace.x} ${pendingPlace.y} ${pendingPlace.x} ${pendingPlace.y}"/>` : '';
       host.dataset.view = view;
       host.querySelector('.island-map-panel').hidden = view !== 'island';
       if (listHost) listHost.hidden = view !== 'list';
@@ -125,10 +152,12 @@
       if (!visible.some(l=>l.gameId===selectedId)) selectedId = visible[0]?.gameId || LOCATIONS[0].gameId;
       const all = LOCATIONS.filter(l=>findGame(l.gameId));
       const explored = all.filter(l=>getProgress(l.gameId,storage,levels).explored).length;
-      host.querySelector('.island-counter').textContent = `${explored} / ${all.length} ${t('places explored')}`;
+      host.querySelector('.island-counter').textContent = exploring ? `${journey.unlocked.length} / ${all.length} ${t('places open')}` : `${explored} / ${all.length} ${t('places explored')}`;
       markers.innerHTML = visible.map(l=>{
         const game = findGame(l.gameId), p=getProgress(l.gameId,storage,levels), stage=preview||p.level;
-        return `<button type="button" class="island-location ${p.explored?'is-explored':''}" data-island-game="${l.gameId}" data-stage="${stage}" style="left:${l.x}%;top:${l.y}%;--place-color:${l.color}" aria-label="${e(l.name)} · ${e(game.title)} · ${e(p.explored?'Highest level reached':'Not yet explored')}${p.explored?' '+p.level:''}">${landmark(l.kind,stage,l.color)}<span class="island-place-label">${e(l.name)}<small>${e(game.title)}</small><span class="island-stage-dots" aria-hidden="true">${[1,2,3,4,5].map(n=>`<i class="${n<=stage?'is-filled':''}"></i>`).join('')}<b>${preview?e('Preview'):p.explored?'LVL '+p.level:e('Explore')}</b></span></span></button>`;
+        const locked = !unlocked(l.gameId);
+        if (locked) return `<button type="button" class="island-location is-locked" data-island-game="${l.gameId}" data-stage="1" data-locked="true" style="left:${l.x}%;top:${l.y}%;--place-color:${l.color}" aria-label="${e(l.name)} · ${e('Still in the mist')}"><span class="island-mist-art" aria-hidden="true">${landmark(l.kind,1,l.color)}</span><span class="island-mist-cloud" aria-hidden="true"></span><span class="island-lock" aria-hidden="true">🔒</span><span class="island-locked-label">${e('Still in the mist')}</span></button>`;
+        return `<button type="button" class="island-location ${p.explored?'is-explored':''} ${l.gameId === nextId && exploring ? 'is-next' : ''} ${l.gameId === journey?.pending ? 'is-discovered' : ''}" aria-disabled="false" data-island-game="${l.gameId}" data-stage="${stage}" style="left:${l.x}%;top:${l.y}%;--place-color:${l.color}" aria-label="${e(l.name)} · ${e(game.title)} · ${e(p.explored?'Highest level reached':'Not yet explored')}${p.explored?' '+p.level:''}">${landmark(l.kind,stage,l.color)}<span class="island-place-label">${e(l.name)}<small>${e(game.title)}</small><span class="island-stage-dots" aria-hidden="true">${[1,2,3,4,5].map(n=>`<i class="${n<=stage?'is-filled':''}"></i>`).join('')}<b>${preview?e('Preview'):p.explored?'LVL '+p.level:e('Explore')}</b></span></span></button>`;
       }).join('');
       locationSelect.innerHTML = visible.map(l=>`<option value="${l.gameId}">${e(l.name)} · ${e(findGame(l.gameId).title)}</option>`).join('');
       locationSelect.value = selectedId;
@@ -159,7 +188,10 @@
       const place=event.target.closest('[data-island-game]');
       if(place){showLocation(place.dataset.islandGame,place);return;}
       if(event.target.closest('.island-dialog-close'))dialog.close();
-      if(event.target.closest('.island-play-button')){const game=findGame(selectedId);launchingGame=true;dialog.close();if(game)openGame(game);}
+      if(event.target.closest('.island-play-button')){const game=findGame(selectedId);if(!unlocked(selectedId))return;launchingGame=true;dialog.close();if(game)openGame(game);}
+      if(event.target.closest('.island-mission-go')) { focusNext(); const id = exploration?.snapshot().unlocked.find(id => !exploration.snapshot().completed.includes(id)); if(id)showLocation(id,event.target); }
+      if(event.target.closest('.island-discovery-go')) { const id = exploration.snapshot().pending; exploration.dismissDiscovery();render();focusPlace(id);showLocation(id,markers.querySelector(`[data-island-game="${id}"]`)); }
+      if(event.target.closest('.island-discovery-later')) { exploration.dismissDiscovery();render();focusNext(); }
       if(event.target===dialog) {
         const box=dialog.getBoundingClientRect();
         if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)dialog.close();
@@ -184,15 +216,39 @@
       container.outerHTML = landmarkVector(kind, level, color).replace('<svg ', '<svg data-art-fallback="true" ');
     }
     const languageChanged=()=>render();
+    function centerPlace(id) {
+      const node = markers.querySelector(`[data-island-game="${id}"]`);
+      if (!node) return;
+      const viewport = host.querySelector('.island-map-viewport');
+      viewport.scrollLeft = node.offsetLeft - viewport.clientWidth / 2;
+      viewport.scrollTop = node.offsetTop - viewport.clientHeight / 2;
+      return node;
+    }
+    function focusPlace(id) { centerPlace(id)?.focus({preventScroll:true}); }
+    function resizeMap() {
+      const journey = exploration?.snapshot();
+      if (journey?.mode === 'explore') centerPlace(journey.pending || journey.unlocked.find(id => !journey.completed.includes(id)) || 'number-pop');
+    }
+    function focusNext() {
+      const journey = exploration?.snapshot();
+      const id = journey?.pending || journey?.unlocked.find(id => !journey.completed.includes(id)) || 'number-pop';
+      focusPlace(id);
+    }
     host.addEventListener('click',click);host.addEventListener('change',change);
     host.addEventListener('error',recoverArt,true);
     dialog.addEventListener('close',dialogClosed);
     root.addEventListener('toenow:languagechange',languageChanged);
     root.addEventListener('storage',storageChanged);
+    root.addEventListener('resize',resizeMap);
     render();
+    if (exploration?.snapshot().mode === 'explore') root.requestAnimationFrame(() => {
+      // Position the mobile map without stealing focus from welcome/auth dialogs.
+      const active = doc.activeElement; focusNext(); active?.focus({preventScroll:true});
+    });
     return {
+      showLocation, focusNext,
       refresh(next={}){if(next.games)games=next.games;if(next.category)category=next.category;render();},
-      destroy(){dialog.removeEventListener('close',dialogClosed);dialog.close();host.removeEventListener('click',click);host.removeEventListener('change',change);host.removeEventListener('error',recoverArt,true);root.removeEventListener('toenow:languagechange',languageChanged);root.removeEventListener('storage',storageChanged);host.replaceChildren();if(listHost)listHost.hidden=false;}
+      destroy(){dialog.removeEventListener('close',dialogClosed);dialog.close();host.removeEventListener('click',click);host.removeEventListener('change',change);host.removeEventListener('error',recoverArt,true);root.removeEventListener('toenow:languagechange',languageChanged);root.removeEventListener('storage',storageChanged);root.removeEventListener('resize',resizeMap);host.replaceChildren();if(listHost)listHost.hidden=false;}
     };
   }
   return {LOCATIONS,getProgress,getBuildingAsset,landmark,landmarkVector,mount};

@@ -2,6 +2,18 @@
   'use strict';
   // Display strings only. Game IDs, stored records and animal identifiers stay unchanged.
   const entries = {
+    'Welcome to TOENOW': '歡迎來到 TOENOW', 'Your adventure starts here.': '你的探索，從這裡開始。',
+    'Create account': '建立帳號', 'Continue as a guest': '以訪客繼續',
+    'Guest progress is saved in this browser.': '訪客進度會儲存在目前的瀏覽器。',
+    'Save your scores and continue your island adventure.': '儲存你的成績，繼續探索小島。',
+    'Your first mission': '第一個任務', 'Your next discovery': '下一個新發現',
+    'Complete Level 1 to discover a new place.': '完成 Level 1，探索新地點。',
+    'Pass Wave 5 in normal play to unlock one new place.': '在正式遊玩通過第 5 波，即可開放一個新地點。',
+    'Start exploring': '開始探索', 'A new place awaits!': '新地點解鎖！',
+    'Your next adventure is ready.': '新的冒險，準備出發。', 'Explore now': '前往探索',
+    'Later': '稍後探索', 'places open': '個地點已開放', 'Still in the mist': '尚在薄霧之中',
+    'Complete Level 1 in an open game to reveal another place.': '在已開放的遊戲完成 Level 1，就能揭開下一個地點。',
+    'All places discovered!': '所有地點都已開放！', 'Keep playing to help every home grow.': '繼續挑戰，讓每個動物的家慢慢成長。',
     'Island explorer': '小島探險', 'YOUR ISLAND / YOUR NEXT DISCOVERY': '你的小島 / 下一個新發現',
     'A little island. A world of challenges.': '一座小島，藏著一整個世界的挑戰。',
     'Follow your curiosity. Every place is a challenge, and every new level brings it to life.': '跟著好奇心出發。每個地點都是一個挑戰，每次抵達新的 Level，都讓它更有生氣。',

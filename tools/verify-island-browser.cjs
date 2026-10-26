@@ -11,6 +11,12 @@ const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'.
  const errors=[],checks=[];
  try{
   const context=await browser.newContext();
+  await context.addInitScript(() => localStorage.setItem('toenow_tutorial_number-pop_v2','completed'));
+  // This matrix covers existing players' complete island and art previews.
+  // Fresh-player locking and the welcome are exercised by verify-onboarding-browser.
+  await context.addInitScript(ids => localStorage.setItem('toenow_exploration_v1', JSON.stringify({
+    version:1, mode:'legacy', order:['number-pop',...ids.filter(id=>id!=='number-pop')], completed:[], welcomed:true, pending:null
+  })), LOCATIONS.map(l=>l.gameId));
   await context.route('https://**',route=>route.abort());
   const page=await context.newPage();
   page.setDefaultTimeout(10000);page.setDefaultNavigationTimeout(30000);
@@ -148,7 +154,7 @@ const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'.
   await other.close();
   await page.locator('[data-category="math"]').click();assert.equal(await page.locator('.island-location').count(),2);
   await page.locator('#islandListViewBtn').click();assert.equal(await page.locator('.game-card:visible').count(),2);
-  await page.reload({waitUntil:'domcontentloaded'});assert.equal(await page.locator('#hubListView').isVisible(),true);
+  await page.reload({waitUntil:'domcontentloaded'});assert.equal(await page.locator('#hubListView').isVisible(),false,'landing opens the island');
   await page.locator('#islandMapViewBtn').click();assert.equal(await page.locator('.island-location').count(),10);
   await page.locator('#islandStagePreview').selectOption('5');
   await readyArt();
@@ -165,6 +171,7 @@ const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'.
   assert.deepEqual(await blocked.evaluate(()=>window.__blockedIslandProgress),{level:1,wave:1,bestScore:0,explored:false});
   // A missing image falls back without removing the location or its launcher.
   const fallbackContext=await browser.newContext();await fallbackContext.route('https://**',route=>route.abort());
+  await fallbackContext.addInitScript(() => localStorage.setItem('toenow_game_scores',JSON.stringify({'animal-rescue-train':{lastScore:0,maxWave:1}})));
   await fallbackContext.route('**/assets/animal-island/panda-level1.webp',route=>route.abort());
   const fallback=await fallbackContext.newPage();await fallback.goto(base,{waitUntil:'domcontentloaded'});
   await fallback.locator('[data-island-game="animal-rescue-train"] [data-art-fallback="true"]').waitFor();

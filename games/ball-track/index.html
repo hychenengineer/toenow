@@ -25,6 +25,7 @@
     <script src="../../shared/toenow-platform.js"></script>
     <script src="../../shared/toenow-analytics.js"></script>
     <script src="../../shared/toenow-sdk.js"></script>
+    <script src="../../shared/toenow-time.js"></script>
     <script src="../../shared/toenow-i18n-core.js"></script>
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
@@ -974,9 +975,8 @@
       </div></header>
 
       <!-- Clean Bottom HUD: ONLY Overdrive Hold Prompt & Bet Multiplier Readout -->
-      <div class="bottom-hud" id="bottom-hud"><div class="island-hud-task"><div class="hud-pill shield-pill" id="hud-shields-pill" aria-label="Shield Vitality">
-              <span class="hud-label">Shields</span>
-              <div class="shield-icons-row" id="hud-shields-row"></div>
+      <div class="bottom-hud" id="bottom-hud"><div class="island-hud-task"><div class="hud-pill shield-pill" id="hud-time-rules" aria-label="Time adjustments">
+              <span class="hud-label">Right +3s · Wrong -5s</span>
             </div></div>
         <button class="overdrive-btn" id="btn-overdrive" type="button" aria-label="Hold Shift for Overdrive">
           <span id="overdrive-btn-label">HOLD [SHIFT] FOR OVERDRIVE</span>
@@ -1002,11 +1002,11 @@
           </p>
 
           <div class="perk-grid">
-            <button class="perk-card" id="perk-btn-shield" type="button">
-              <div class="perk-icon">+1</div>
+            <button class="perk-card" id="perk-btn-time" type="button">
+              <div class="perk-icon">+10s</div>
               <div class="perk-card-info">
-                <div class="perk-card-name">Quantum Shield</div>
-                <div class="perk-card-desc">Gain +1 Shield charge.</div>
+                <div class="perk-card-name">Extra Time</div>
+                <div class="perk-card-desc">Recover up to 10 seconds.</div>
               </div>
             </button>
 
@@ -1014,7 +1014,7 @@
               <div class="perk-icon">2x</div>
               <div class="perk-card-info">
                 <div class="perk-card-name">Double Surge</div>
-                <div class="perk-card-desc">Double the score if cleared without using shields.</div>
+                <div class="perk-card-desc">Double the score if cleared without mistakes.</div>
               </div>
             </button>
 
@@ -1048,8 +1048,8 @@
               <span class="unified-pause-stat-val" id="pause-stat-wave">1</span>
             </div>
             <div class="unified-pause-stat-box">
-              <span class="unified-pause-stat-label">Shields</span>
-              <span class="unified-pause-stat-val" id="pause-stat-shields">3</span>
+              <span class="unified-pause-stat-label">TIME</span>
+              <span class="unified-pause-stat-val" id="pause-stat-time">60.0s</span>
             </div>
           </div>
 
@@ -1518,10 +1518,10 @@
             currentTotalScore,
             overdriveMultiplier,
             hasDoubleSurge,
-            shieldsLostThisWave,
+            mistakesThisWave,
           } = params;
 
-          const doubleSurgeTriggered = Boolean(hasDoubleSurge && shieldsLostThisWave === 0);
+          const doubleSurgeTriggered = Boolean(hasDoubleSurge && mistakesThisWave === 0);
           const surgeMult = doubleSurgeTriggered ? 2.0 : 1.0;
           const odMult = Math.max(1.0, Math.min(3.5, overdriveMultiplier));
 
@@ -1645,7 +1645,6 @@
         const hudMultEl = document.getElementById('hud-mult');
         const hudOverdriveMultEl = document.getElementById('hud-overdrive-mult');
         const hudBestEl = document.getElementById('hud-best');
-        const hudShieldsRowEl = document.getElementById('hud-shields-row');
         const hudPhaseTextEl = document.getElementById('hud-phase-text');
         const hudTimerEl = document.getElementById('hud-timer');
         const hudWaveTargetEl = document.getElementById('hud-wave-target');
@@ -1663,13 +1662,13 @@
         const screenGameoverEl = document.getElementById('screen-gameover');
 
         const perkSubtitleEl = document.getElementById('perk-subtitle');
-        const perkBtnShield = document.getElementById('perk-btn-shield');
+        const perkBtnTime = document.getElementById('perk-btn-time');
         const perkBtnSurge = document.getElementById('perk-btn-surge');
         const perkBtnCalm = document.getElementById('perk-btn-calm');
 
         const pauseStatScoreEl = document.getElementById('pause-stat-score');
         const pauseStatWaveEl = document.getElementById('pause-stat-wave');
-        const pauseStatShieldsEl = document.getElementById('pause-stat-shields');
+        const pauseStatTimeEl = document.getElementById('pause-stat-time');
 
         const btnStartGame = document.getElementById('btn-start-game');
         const btnResumeGame = document.getElementById('btn-resume-game');
@@ -1683,29 +1682,10 @@
         const iconSoundOn = document.getElementById('icon-sound-on');
         const iconSoundOff = document.getElementById('icon-sound-off');
 
-        // --- Shield SVG Helper: Depleted shields render as EMPTY hollow grey/cyan outlines (never red) ---
-        function renderShieldIcons(activeShields, maxShields = 3) {
-          const totalToRender = Math.max(maxShields, activeShields);
-          let html = '';
-          for (let i = 0; i < totalToRender; i++) {
-            const isActive = i < activeShields;
-            const cls = isActive ? 'shield-pip active' : 'shield-pip depleted';
-            const fill = isActive ? 'rgba(34, 211, 238, 0.28)' : 'transparent';
-            const stroke = isActive ? '#22d3ee' : 'rgba(148, 163, 184, 0.55)';
-            html += `<span class="${cls}" data-shield-index="${i}">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 2L4 5.5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5.5L12 2z" fill="${fill}" stroke="${stroke}" stroke-width="2" stroke-linejoin="round"/>
-              </svg>
-            </span>`;
-          }
-          hudShieldsRowEl.innerHTML = html;
-        }
-
         // --- Viewport & Strict 1:1 Circular Geometry ---
         let viewportWidth = window.innerWidth;
         let viewportHeight = window.innerHeight;
         let dpr = Math.min(window.devicePixelRatio || 1, 2);
-
         let hexPatternCanvas = null;
         function buildHexPattern() {
           const pCanvas = document.createElement('canvas');
@@ -1846,11 +1826,10 @@
           waveAwardedSoFar: 0,
           streak: 0,
           currentMult: 1,
-          shields: 3,
-          maxShields: 3,
-          shieldsLostThisWave: 0,
+          runTimeSec: ToenowTime.START_SECONDS,
+          mistakesThisWave: 0,
           bonusTimeBufferMs: 0,
-          // Active Run Perks (Quantum Shield, Double Surge, Calm Drift)
+          // Active Run Perks (Extra Time, Double Surge, Calm Drift)
           perkDoubleSurge: false,
           perkCalmDriftCount: 0,
           pendingNextWave: 4,
@@ -2121,6 +2100,19 @@
           waveBannerEl.classList.toggle('go-mode', phase === 'go_banner');
         }
 
+        function syncRunTime() {
+          hudTimerEl.textContent = window.ToenowTutorials?.isActive?.('ball-track') ? '∞' : state.runTimeSec.toFixed(1) + 's';
+        }
+
+        function endTimedRun() {
+          if (state.mode !== 'playing' || window.ToenowTutorials?.isActive?.('ball-track')) return;
+          state.runTimeSec = 0;
+          syncRunTime();
+          saveRecords(state.score, state.wave);
+          state.frozenSnapshot = { score: Math.round(state.score), wave: state.wave, best: Math.round(bestScore), reason: 'TIME EXPIRED' };
+          showGameOverModal();
+        }
+
         function updateHudReadouts() {
           hudScoreEl.textContent = String(Math.round(state.score));
           hudMultEl.textContent = state.currentMult.toFixed(1).replace(/\.0$/, '') + 'x';
@@ -2129,7 +2121,7 @@
           ToenowScreens.updateTitle('ball-track', { bestScore: bestScore, bestWave: bestWave });
           // Exact required indicator format: "WAVE [X] | TARGET: [Y]"
           hudWaveTargetEl.textContent = `WAVE ${state.wave} | TARGET: ${state.config.targetCount}`;
-          renderShieldIcons(state.shields, state.maxShields);
+          syncRunTime();
         }
 
         // Overdrive State Setter (100% Silent — Zero Audio Oscillator)
@@ -2145,7 +2137,7 @@
         function setFrozenTimerHud(phaseLabel, colorHex = '#22d3ee') {
           hudPhaseTextEl.textContent = phaseLabel;
           hudPhaseTextEl.style.color = colorHex;
-          hudTimerEl.textContent = (state.config.selectDurationMs / 1000).toFixed(1) + 's';
+          syncRunTime();
           hudGaugeFillEl.style.transform = 'scaleX(1)';
           hudGaugeFillEl.style.backgroundColor = colorHex;
         }
@@ -2160,7 +2152,7 @@
             state.perkCalmDriftCount
           );
           state.bonusTimeBufferMs = 0;
-          state.shieldsLostThisWave = 0;
+          state.mistakesThisWave = 0;
           state.waveStartScore = state.score;
           state.waveAwardedSoFar = 0;
 
@@ -2346,10 +2338,10 @@
           state.score = 0;
           state.streak = 0;
           state.currentMult = 1;
-          state.shields = 3;
+          state.runTimeSec = ToenowTime.START_SECONDS;
           state.isPractice = Boolean(isPractice);
-          state.maxShields = 3;
-          state.shieldsLostThisWave = 0;
+
+          state.mistakesThisWave = 0;
           state.bonusTimeBufferMs = 0;
           state.perkDoubleSurge = false;
           state.perkCalmDriftCount = 0;
@@ -2378,9 +2370,8 @@
           if (document.activeElement && typeof document.activeElement.blur === 'function') {
             document.activeElement.blur();
           }
-          if (perkType === 'shield') {
-            state.shields += 1;
-            state.maxShields = Math.max(state.maxShields, state.shields);
+          if (perkType === 'time') {
+            state.runTimeSec = Math.min(60, state.runTimeSec + 10);
           } else if (perkType === 'surge') {
             state.perkDoubleSurge = true;
           } else if (perkType === 'calm') {
@@ -2414,52 +2405,28 @@
             shell.scaleX = 0.94;
             shell.scaleY = 0.94;
 
-            state.shields = Math.max(0, state.shields - 1);
-            state.shieldsLostThisWave += 1;
+            state.runTimeSec = ToenowTime.wrong(state.runTimeSec);
+            state.mistakesThisWave += 1;
             state.streak = 0;
             state.currentMult = 1;
             state.hitstopMs = 45;
             state.trauma = Math.min(1, state.trauma + 0.35);
 
             audio.playShieldCrackleAlarm();
-            renderShieldIcons(state.shields, state.maxShields);
+            syncRunTime();
             updateHudReadouts();
 
             spawnPopup(
               shell.x,
               shell.y - 44,
-              'EMPTY · -1 SHIELD',
-              state.shields > 0 ? `${state.shields} SHIELD${state.shields > 1 ? 'S' : ''} LEFT` : 'SHIELDS DEPLETED',
+              'WRONG · -5s',
+              state.runTimeSec.toFixed(1) + 's',
               '#f43f5e'
             );
 
-            if (state.shields <= 0) {
-              for (const s of state.shells) {
-                if (s.hasCore && !s.picked) {
-                  s.revealedState = 'missed';
-                  s.shieldOpen = 1;
-                }
-              }
-              audio.playDefeatBuzz();
-              saveRecords(state.score, state.wave);
+            if (state.runTimeSec <= 0) { endTimedRun(); return; }
 
-              state.frozenSnapshot = {
-                score: Math.round(state.score),
-                wave: state.wave,
-                best: Math.round(bestScore),
-                reason: 'All shields depleted during target selection.',
-              };
-
-              hudPhaseTextEl.textContent = 'SHIELDS DEPLETED';
-              hudPhaseTextEl.style.color = '#f43f5e';
-              hudGaugeFillEl.style.backgroundColor = '#f43f5e';
-              state.phaseElapsedMs = 0;
-              state.phaseDurationMs = 600;
-              setBodyState('playing', 'defeat_beat');
-              return;
-            }
-
-            hudPhaseTextEl.textContent = `SHIELD LOST · ${state.shields} LEFT`;
+            hudPhaseTextEl.textContent = 'WRONG · -5s';
             hudPhaseTextEl.style.color = '#f43f5e';
             return;
           }
@@ -2473,6 +2440,7 @@
           shell.scaleX = 1.14;
           shell.scaleY = 0.88;
 
+          state.runTimeSec = ToenowTime.correct(state.runTimeSec);
           state.streak += 1;
           const mult = calculateSpeedMultiplier(
             remainingMs,
@@ -2488,7 +2456,7 @@
             currentTotalScore: state.waveStartScore,
             overdriveMultiplier: state.overdriveMultiplier,
             hasDoubleSurge: state.perkDoubleSurge,
-            shieldsLostThisWave: state.shieldsLostThisWave,
+            mistakesThisWave: state.mistakesThisWave,
           });
 
           const totalTargets = Math.max(1, state.config.targetCount);
@@ -2548,78 +2516,9 @@
           }
         }
 
-        function handleSelectionTimeout() {
-          const pickedTargets = state.shells.filter((s) => s.hasCore && s.picked).length;
-          const totalTargets = state.config.targetCount;
-
-          // Partial Success (Soft Failure) if at least 1 target was found on a multi-target wave
-          if (pickedTargets >= 1 && totalTargets > 1) {
-            audio.playPartialDecryptChime();
-            state.bonusTimeBufferMs += 1500;
-            saveRecords(state.score, state.wave);
-            updateHudReadouts();
-
-            for (const s of state.shells) {
-              if (s.hasCore && !s.picked) {
-                s.revealedState = 'missed';
-                s.shieldOpen = 1;
-              }
-            }
-
-            hudPhaseTextEl.textContent = 'PARTIAL CLEAR · +1.5S BONUS';
-            hudPhaseTextEl.style.color = '#fbbf24';
-            hudGaugeFillEl.style.backgroundColor = '#fbbf24';
-            spawnPopup(viewportWidth * 0.5, viewportHeight * 0.45, 'PARTIAL CLEAR', '+1.5S NEXT WAVE', '#fbbf24');
-
-            state.phaseElapsedMs = 0;
-            state.phaseDurationMs = 900;
-            setBodyState('playing', 'resolve');
-            return;
-          }
-
-          // Zero targets found before timeout -> Consume 1 Shield
-          audio.playShieldCrackleAlarm();
-          state.shields = Math.max(0, state.shields - 1);
-          state.shieldsLostThisWave += 1;
-          state.streak = 0;
-          state.currentMult = 1;
-          state.trauma = Math.min(1, state.trauma + 0.5);
-          renderShieldIcons(state.shields, state.maxShields);
-
-          for (const s of state.shells) {
-            if (s.hasCore && !s.picked) {
-              s.revealedState = 'missed';
-              s.shieldOpen = 1;
-            }
-          }
-
-          if (state.shields <= 0) {
-            audio.playDefeatBuzz();
-            saveRecords(state.score, state.wave);
-            state.frozenSnapshot = {
-              score: Math.round(state.score),
-              wave: state.wave,
-              best: Math.round(bestScore),
-              reason: 'Time expired with zero shields left.',
-            };
-            hudPhaseTextEl.textContent = 'SHIELDS DEPLETED';
-            hudPhaseTextEl.style.color = '#f43f5e';
-            state.phaseElapsedMs = 0;
-            state.phaseDurationMs = 600;
-            setBodyState('playing', 'defeat_beat');
-          } else {
-            hudPhaseTextEl.textContent = `TIME UP · ${state.shields} SHIELDS LEFT`;
-            hudPhaseTextEl.style.color = '#f43f5e';
-            spawnPopup(viewportWidth * 0.5, viewportHeight * 0.45, 'SHIELD LOST', 'TIME EXPIRED', '#f43f5e');
-            state.phaseElapsedMs = 0;
-            state.phaseDurationMs = 950;
-            setBodyState('playing', 'resolve');
-          }
-        }
-
         function showGameOverModal() {
           if (Boolean(window.ToenowTutorials?.isActive?.('ball-track'))) return;
-          ToenowScreens.updateGameOver('ball-track', { score: state.frozenSnapshot.score, bestScore: state.frozenSnapshot.best, wave: state.frozenSnapshot.wave, combo: null, reason: 'GAME OVER' });
+          ToenowScreens.updateGameOver('ball-track', { score: state.frozenSnapshot.score, bestScore: state.frozenSnapshot.best, wave: state.frozenSnapshot.wave, combo: null, reason: 'TIME EXPIRED' });
                     setBodyState('gameover', 'idle');
 
           // Toenow Game SDK Unified Lifecycle & Hub Contract
@@ -2653,7 +2552,7 @@
           if (state.mode === 'playing') {
             pauseStatScoreEl.textContent = String(Math.round(state.score));
             pauseStatWaveEl.textContent = String(state.wave);
-            pauseStatShieldsEl.textContent = String(state.shields);
+            pauseStatTimeEl.textContent = state.runTimeSec.toFixed(1) + 's';
             setOverdriveState(false);
             setBodyState('paused', state.phase);
           } else if (state.mode === 'paused') {
@@ -2841,7 +2740,7 @@
           returnToTitle();
         });
 
-        perkBtnShield.addEventListener('click', () => applyPerkChoice('shield'));
+        perkBtnTime.addEventListener('click', () => applyPerkChoice('time'));
         perkBtnSurge.addEventListener('click', () => applyPerkChoice('surge'));
         perkBtnCalm.addEventListener('click', () => applyPerkChoice('calm'));
 
@@ -2896,6 +2795,11 @@
         // --- Simulation Update Loop ---
         function updateSimulation(dtSeconds) {
           if (Boolean(window.ToenowTutorials?.isActive?.('ball-track')) && Boolean(window.ToenowTutorials?.isComplete?.('ball-track'))) return;
+          if (state.mode === 'playing' && !window.ToenowTutorials?.isActive?.('ball-track')) {
+            state.runTimeSec = Math.max(0, state.runTimeSec - dtSeconds);
+            syncRunTime();
+            if (state.runTimeSec <= 0) { endTimedRun(); return; }
+          }
           const realDtMs = dtSeconds * 1000;
           let dtMs = realDtMs;
 
@@ -3201,7 +3105,7 @@
             const totalProgress =
               (state.currentSwapIndex + rawT) / Math.max(1, state.swapSchedule.length);
             hudGaugeFillEl.style.transform = `scaleX(${(1 - totalProgress).toFixed(3)})`;
-            hudTimerEl.textContent = `${state.swapSchedule.length - state.currentSwapIndex}`;
+            syncRunTime();
 
             if (rawT >= 1) {
               active.shellA.x = endA.x;
@@ -3215,20 +3119,8 @@
             }
           } else if (state.phase === 'select') {
             const rem = Math.max(0, state.phaseDurationMs - state.phaseElapsedMs);
-            const ratio = rem / Math.max(1, state.phaseDurationMs);
-            hudTimerEl.textContent = Boolean(window.ToenowTutorials?.isActive?.('ball-track')) ? '∞' : (rem / 1000).toFixed(1) + 's';
-            hudGaugeFillEl.style.transform = `scaleX(${ratio.toFixed(3)})`;
-
-            const secCeil = Math.ceil(rem / 1000);
-            if (secCeil !== state.lastTickSecond && secCeil > 0 && secCeil <= 3) {
-              state.lastTickSecond = secCeil;
-              audio.playTimerTick(secCeil <= 1);
-            }
-
-            if (ratio < 0.3) {
-              hudGaugeFillEl.style.backgroundColor = '#f43f5e';
-              hudPhaseTextEl.style.color = '#f43f5e';
-            }
+            syncRunTime();
+            hudGaugeFillEl.style.transform = `scaleX(${(state.runTimeSec / 60).toFixed(3)})`;
 
             const liveMult = calculateSpeedMultiplier(
               rem,
@@ -3237,9 +3129,7 @@
             );
             hudMultEl.textContent = liveMult.toFixed(1).replace(/\.0$/, '') + 'x';
 
-            if (rem <= 0) {
-              handleSelectionTimeout();
-            }
+
           } else if (state.phase === 'wave_clear') {
             if (state.phaseElapsedMs >= state.phaseDurationMs) {
               if (checkMilestonePerkTrigger(state.wave)) {
@@ -3606,9 +3496,8 @@
             bestScore,
             bestWave,
             streak: state.streak,
-            shields: state.shields,
-            maxShields: state.maxShields,
-            shieldsLostThisWave: state.shieldsLostThisWave,
+            runTimeSec: state.runTimeSec,
+            mistakesThisWave: state.mistakesThisWave,
             perkDoubleSurge: state.perkDoubleSurge,
             perkCalmDriftCount: state.perkCalmDriftCount,
             isOverdrive: state.isOverdrive,

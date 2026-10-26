@@ -42,7 +42,7 @@
       },
       {
         "label": "TIP",
-        "text": "Follow the hidden otters. Their leaves look identical until they are revealed."
+        "text": "Follow the hidden otters. Their leaves look identical until they are revealed. Start with 60 seconds. Right answers add 3 seconds; wrong answers remove 5 seconds. Maximum 60 seconds. No wave time limit."
       }
     ],
     "titleId": "screen-title",
@@ -132,7 +132,7 @@
       },
       {
         "label": "REMEMBER",
-        "text": "Size does not reveal weight. Use the scales to compare the parcels."
+        "text": "Size does not reveal weight. Use the scales to compare the parcels. Start with 60 seconds. Right answers add 3 seconds; wrong answers remove 5 seconds. Maximum 60 seconds. No wave time limit."
       }
     ],
     "titleId": "title-screen",
@@ -162,7 +162,7 @@
       },
       {
         "label": "LEVELS",
-        "text": "The grid gets bigger as you play."
+        "text": "The grid gets bigger as you play. Start with 60 seconds. Right answers add 3 seconds; wrong answers remove 5 seconds. Maximum 60 seconds. No wave time limit."
       }
     ],
     "titleId": "modal-start",

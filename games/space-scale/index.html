@@ -21,6 +21,7 @@
     <script src="../../shared/toenow-platform.js"></script>
     <script src="../../shared/toenow-analytics.js"></script>
     <script src="../../shared/toenow-sdk.js"></script>
+    <script src="../../shared/toenow-time.js"></script>
     <script src="../../shared/toenow-i18n-core.js"></script>
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
@@ -965,18 +966,12 @@
   <link rel="stylesheet" href="../../assets/toenow-animals.css">
 <link rel="stylesheet" href="../../assets/toenow-game-hud.css">
 </head>
-  <body data-state="title" data-wave="1" data-score="0" data-shields="3">
+  <body data-state="title" data-wave="1" data-score="0" >
     <!-- Full-Viewport Astrophysics Simulation Canvas -->
     <canvas id="game-canvas" data-testid="game-canvas" aria-label="Space Scale kinetic balance simulation"></canvas>
 
-    <!-- Synapse EXP Level Up Banner -->
-    <div id="level-up-banner">
-      <div class="levelup-kicker">SYNAPSE PROMOTION</div>
-      <div id="levelup-title" class="levelup-title">Rank Level 2: Gravimetric Scout</div>
-    </div>
-
     <!-- Live Playing HUD -->
-    <div id="hud-layer" aria-live="polite"><div class="island-live-hud" data-metrics="3"><div class="island-hud-metric"><span class="island-hud-label">TIME</span><span id="hud-timer" class="hud-value island-hud-value">10:00</span></div><div class="island-hud-metric"><span class="island-hud-label">SCORE</span><span id="hud-score" class="hud-value island-hud-value">0</span></div><div class="island-hud-metric"><span class="island-hud-label">COMBO</span><span id="hud-combo" class="island-hud-value">0x</span></div><div class="island-hud-controls"><button id="btn-mute" type="button" class="icon-btn" aria-label="Toggle Audio Mute (M)" title="Mute / Unmute [M]" tabindex="-1">
+    <div id="hud-layer" aria-live="polite"><div class="island-live-hud" data-metrics="3"><div class="island-hud-metric"><span class="island-hud-label">TIME</span><span id="hud-timer" class="hud-value island-hud-value">60.0s</span></div><div class="island-hud-metric"><span class="island-hud-label">SCORE</span><span id="hud-score" class="hud-value island-hud-value">0</span></div><div class="island-hud-metric"><span class="island-hud-label">COMBO</span><span id="hud-combo" class="island-hud-value">0x</span></div><div class="island-hud-controls"><button id="btn-mute" type="button" class="icon-btn" aria-label="Toggle Audio Mute (M)" title="Mute / Unmute [M]" tabindex="-1">
               <svg id="icon-sound-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                 <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
@@ -1029,56 +1024,19 @@
           </div>
         </div>
 
-        <!-- Center Cluster: Directive Banner & Dynamic Wave Timer -->
+        <!-- Legacy wave metadata -->
         <div class="hud-cluster-center">
 
-          <div class="wave-timer-track" role="progressbar" aria-label="Wave decision timer">
-            <div id="hud-wave-bar" class="wave-timer-fill"></div>
-          </div>
           <div class="wave-meta-row">
             <span id="hud-wave">WAVE 1</span>
-            <span id="hud-wave-sec">8.0s WINDOW</span>
             <span id="hud-mode">BINARY WARMUP</span>
           </div>
         </div>
 
-        <!-- Right Cluster: 3-Shield Buffer & 10-Minute Mission Clock & Utility Controls -->
+        <!-- Legacy utility cluster -->
         <div class="hud-cluster-right">
-          <!-- 3-Shield Buffer -->
-          <div class="shields-container">
-            <span class="hud-kicker">SHIELDS</span>
-            <div class="shield-pips" id="shield-pips">
-              <div class="shield-pip full" id="shield-1">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"></path>
-                </svg>
-              </div>
-              <div class="shield-pip full" id="shield-2">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"></path>
-                </svg>
-              </div>
-              <div class="shield-pip full" id="shield-3">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"></path>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div class="hud-divider" aria-hidden="true"></div>
-
-          <!-- Mission Clock -->
-          <div class="hud-stat" style="align-items: flex-end">
-            <span class="hud-kicker">MISSION CLOCK</span>
-
-          </div>
-
-          <div class="utility-buttons">
 
 
-
-          </div>
         </div>
       </div>
 
@@ -1110,8 +1068,8 @@
             <span id="pause-wave" class="unified-pause-stat-val">1</span>
           </div>
           <div class="unified-pause-stat-box">
-            <span class="unified-pause-stat-label">SHIELDS</span>
-            <span id="pause-shields" class="unified-pause-stat-val">3/3</span>
+            <span class="unified-pause-stat-label">TIME</span>
+            <span id="pause-time" class="unified-pause-stat-val">60.0s</span>
           </div>
         </div>
 
@@ -1769,19 +1727,15 @@
         const directiveSubEl = document.getElementById('directive-sub');
 
         const hudWaveEl = document.getElementById('hud-wave');
-        const hudWaveSecEl = document.getElementById('hud-wave-sec');
         const hudModeEl = document.getElementById('hud-mode');
-        const hudWaveBarEl = document.getElementById('hud-wave-bar');
         const hudTimerEl = document.getElementById('hud-timer');
         const dockButtonsEl = document.getElementById('dock-buttons');
 
-        const levelUpBannerEl = document.getElementById('level-up-banner');
-        const levelUpTitleEl = document.getElementById('levelup-title');
 
 
         const pauseScoreEl = document.getElementById('pause-score');
         const pauseWaveEl = document.getElementById('pause-wave');
-        const pauseShieldsEl = document.getElementById('pause-shields');
+        const pauseTimeEl = document.getElementById('pause-time');
 
         // State
         let gameState = 'title';
@@ -1796,11 +1750,9 @@
           : null;
         let streak = 0;
         let peakStreak = 0;
-        let shields = 3;
-        const MAX_SHIELDS = 3;
-        let globalTimeSec = 600.0; // 10-Minute Exponential Mission Clock
+        let globalTimeSec = ToenowTime.START_SECONDS;
         let wave = 1;
-        let waveTimeSec = 8.0;
+        let waveElapsedSec = 0;
         let currentPuzzle = generateOverhauledPuzzle(1, 101);
 
         let renderedBodyTargets = [];
@@ -1812,7 +1764,6 @@
         let redFlashAlpha = 0;
         let pointerNormX = 0;
         let pointerNormY = 0;
-        let levelUpTimer = null;
 
         function getSynapseRank(exp) {
           for (let i = SYNAPSE_RANKS.length - 1; i >= 0; i--) {
@@ -1840,22 +1791,7 @@
           }
         }
 
-        function updateShieldsUI() {
-          for (let i = 1; i <= MAX_SHIELDS; i++) {
-            const el = document.getElementById('shield-' + i);
-            if (el) {
-              if (i <= shields) {
-                el.className = 'shield-pip full';
-              } else {
-                el.className = 'shield-pip lost';
-              }
-            }
-          }
-          document.body.dataset.shields = String(shields);
-        }
-
-        function updateExpUI(newExp, showBannerIfLevelUp) {
-          const prevRank = getSynapseRank(totalExp);
+        function updateExpUI(newExp) {
           totalExp = newExp;
           if (!isPracticeMode) localStorage.setItem(STORAGE_BEST_EXP, String(totalExp));
           const currentRank = getSynapseRank(totalExp);
@@ -1872,16 +1808,6 @@
           hudExpEl.textContent = totalExp + ' EXP';
           hudExpFillEl.style.width = (progress * 100).toFixed(1) + '%';
 
-          if (showBannerIfLevelUp && currentRank.level > prevRank.level) {
-            sound.playLevelUp();
-            levelUpTitleEl.textContent =
-              'Rank Level ' + currentRank.level + ': ' + currentRank.title;
-            levelUpBannerEl.classList.add('show');
-            if (levelUpTimer) clearTimeout(levelUpTimer);
-            levelUpTimer = setTimeout(() => {
-              levelUpBannerEl.classList.remove('show');
-            }, 1800);
-          }
         }
 
         function buildDockButtons() {
@@ -1915,24 +1841,8 @@
           hudWaveEl.textContent = 'WAVE ' + wave;
           hudModeEl.textContent = currentPuzzle.modeLabel;
 
-          const waveRatio = Math.max(
-            0,
-            Math.min(1, waveTimeSec / Math.max(0.1, currentPuzzle.waveDurationSec))
-          );
-          hudWaveBarEl.style.transform = 'scaleX(' + waveRatio.toFixed(3) + ')';
-          if (waveRatio < 0.28) {
-            hudWaveBarEl.style.backgroundColor = 'var(--accent-rose)';
-          } else if (waveRatio < 0.52) {
-            hudWaveBarEl.style.backgroundColor = 'var(--accent-amber)';
-          } else {
-            hudWaveBarEl.style.backgroundColor = 'var(--accent-cyan)';
-          }
-          hudWaveSecEl.textContent = window.ToenowTutorials?.isActive?.('space-scale') ? '∞' : waveTimeSec.toFixed(1) + 's WINDOW';
-
-          const mins = Math.floor(globalTimeSec / 60);
-          const secs = Math.floor(globalTimeSec % 60);
-          hudTimerEl.textContent = window.ToenowTutorials?.isActive?.('space-scale') ? '∞' : mins + ':' + (secs < 10 ? '0' : '') + secs;
-          if (globalTimeSec <= 60) {
+          hudTimerEl.textContent = window.ToenowTutorials?.isActive?.('space-scale') ? '∞' : globalTimeSec.toFixed(1) + 's';
+          if (globalTimeSec <= 10) {
             hudTimerEl.style.color = 'var(--accent-rose)';
           } else {
             hudTimerEl.style.color = 'var(--text-primary)';
@@ -1946,7 +1856,7 @@
           if (window.ToenowAnimals) window.ToenowAnimals.setWave('space-scale', nextWave);
           wave = nextWave;
           currentPuzzle = generateOverhauledPuzzle(wave, Boolean(window.ToenowTutorials?.isActive?.('space-scale')) ? 1234 : Date.now());
-          waveTimeSec = currentPuzzle.waveDurationSec;
+          waveElapsedSec = 0;
           hoveredBodyId = null;
           collapseAnim = null;
 
@@ -1969,12 +1879,10 @@
           streak = 0;
           hudComboEl.textContent = '0x';
           peakStreak = 0;
-          shields = MAX_SHIELDS;
-          globalTimeSec = 600.0; // 10-Minute Session
+          globalTimeSec = ToenowTime.START_SECONDS;
           cameraTrauma = 0;
           redFlashAlpha = 0;
-          updateShieldsUI();
-          updateExpUI(totalExp, false);
+          updateExpUI(totalExp);
           loadWave(startWave);
           setGameState('playing');
         }
@@ -1999,7 +1907,7 @@
             syncPersistentStatsUI();
           }
           const levelInfo = ToenowLevels.getLevelInfo(wave);
-          ToenowScreens.updateGameOver('space-scale', { score: finalScore, bestScore, wave, combo: peakStreak, reason: shields <= 0 ? 'GAME OVER' : 'TIME EXPIRED' });
+          ToenowScreens.updateGameOver('space-scale', { score: finalScore, bestScore, wave, combo: peakStreak, reason: 'TIME EXPIRED' });
                     sound.playGameOver();
           setGameState('gameover');
 
@@ -2045,11 +1953,12 @@
           if (window.ToenowAnimals) window.ToenowAnimals.feedback('space-scale', isCorrect);
 
           if (isCorrect) {
+            globalTimeSec = ToenowTime.correct(globalTimeSec);
             streak++;
             hudComboEl.textContent = streak + 'x';
             peakStreak = Math.max(peakStreak, streak);
             const tierBase = wave <= 3 ? 120 : wave <= 6 ? 200 : 320;
-            const speedRatio = Math.max(0, waveTimeSec / currentPuzzle.waveDurationSec);
+            const speedRatio = Math.max(0, 1 - waveElapsedSec / currentPuzzle.waveDurationSec);
             const speedBonus = Math.round(speedRatio * 110);
             const streakBonus = Math.min(350, (streak - 1) * 40);
             const earnedScore = tierBase + speedBonus + streakBonus;
@@ -2061,7 +1970,7 @@
             }
 
             const expGain = Math.round(100 + streak * 30 + speedRatio * 60);
-            updateExpUI(totalExp + expGain, true);
+            updateExpUI(totalExp + expGain);
 
             let targetX = tapX || canvasWidth * 0.5;
             let targetY = tapY || canvasHeight * 0.5;
@@ -2091,20 +2000,17 @@
 
             syncHudDOM();
           } else {
-            // Wrong selection or wave timeout -> Consume 1 Shield
+            // A wrong answer costs run time.
             streak = 0;
             hudComboEl.textContent = '0x';
-            shields--;
-            updateShieldsUI();
+            globalTimeSec = ToenowTime.wrong(globalTimeSec);
             cameraTrauma = 0.95;
             redFlashAlpha = 0.65;
             sound.playShieldDamage();
             syncHudDOM();
 
-            if (shields <= 0) {
+            if (globalTimeSec <= 0) {
               triggerGameOver();
-            } else if (bodyId === null) {
-              loadWave(wave);
             }
           }
         }
@@ -2203,7 +2109,7 @@
             if (gameState === 'playing') {
               pauseScoreEl.textContent = String(Math.round(score));
               pauseWaveEl.textContent = String(wave);
-              pauseShieldsEl.textContent = shields + ' / ' + MAX_SHIELDS;
+              pauseTimeEl.textContent = globalTimeSec.toFixed(1) + 's';
               setGameState('paused');
             } else if (gameState === 'paused') {
               setGameState('playing');
@@ -2298,7 +2204,7 @@
           if (gameState === 'playing') {
             pauseScoreEl.textContent = String(Math.round(score));
             pauseWaveEl.textContent = String(wave);
-            pauseShieldsEl.textContent = shields + ' / ' + MAX_SHIELDS;
+            pauseTimeEl.textContent = globalTimeSec.toFixed(1) + 's';
             setGameState('paused');
           } else if (gameState === 'paused') {
             setGameState('playing');
@@ -2629,6 +2535,11 @@
 
           cameraTrauma = Math.max(0, cameraTrauma - dt * 2.2);
           redFlashAlpha = Math.max(0, redFlashAlpha - dt * 1.8);
+          if (gameState === 'playing' && !window.ToenowTutorials?.isActive?.('space-scale')) {
+            globalTimeSec = Math.max(0, globalTimeSec - dt);
+            syncHudDOM();
+            if (globalTimeSec <= 0) triggerGameOver();
+          }
 
           if (gameState === 'playing') {
             if (hitstopTimer > 0) {
@@ -2640,15 +2551,10 @@
                 loadWave(wave + 1);
               }
             } else {
-              if (!Boolean(window.ToenowTutorials?.isActive?.('space-scale'))) globalTimeSec = Math.max(0, globalTimeSec - dt);
-              if (!Boolean(window.ToenowTutorials?.isActive?.('space-scale'))) waveTimeSec = Math.max(0, waveTimeSec - dt);
+
+              if (!Boolean(window.ToenowTutorials?.isActive?.('space-scale'))) waveElapsedSec += dt;
               syncHudDOM();
 
-              if (globalTimeSec <= 0) {
-                triggerGameOver();
-              } else if (waveTimeSec <= 0) {
-                handleBodySelection(null);
-              }
             }
 
             // Damped Spring Harmonic Tilting on spawn (settles in ~0.4s)

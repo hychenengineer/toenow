@@ -773,6 +773,16 @@
       font-weight: 700;
     }
 
+    .theater-game-actions { display: flex; gap: 6px; margin-left: auto; }
+    .theater-game-actions[hidden] { display: none; }
+    .theater-game-actions button { width: 44px; height: 44px; padding: 10px; justify-content: center; flex-shrink: 0; }
+    .theater-game-actions svg { width: 20px; height: 20px; }
+    .theater-toolbar:has(.theater-game-actions:not([hidden])) #restartGameBtn { display: none; }
+    @media(max-width:560px) {
+      .theater-toolbar:has(.theater-game-actions:not([hidden])) { padding: 8px 12px; gap: 8px; }
+      .theater-game-info:has(.theater-game-actions:not([hidden])) { width: 100%; gap: 8px; }
+    }
+
     .theater-controls {
       display: flex;
       align-items: center;
@@ -1629,6 +1639,7 @@
       <div class="theater-game-info">
         <span class="theater-game-icon" id="theaterIcon">🎮</span>
         <span class="theater-game-title" id="theaterTitle">Module Title</span>
+        <div class="theater-game-actions" id="theaterGameActions" hidden></div>
       </div>
       <div class="theater-controls">
         <button type="button" class="theater-btn" id="restartGameBtn">
@@ -2399,6 +2410,47 @@
     const theaterIcon = document.getElementById('theaterIcon');
     const theaterTitle = document.getElementById('theaterTitle');
     const theaterStage = document.getElementById('theaterStage');
+    let clearTheaterGameActions = () => {};
+    gameViewer.addEventListener('load', () => {
+      clearTheaterGameActions();
+      const host = document.getElementById('theaterGameActions');
+      host.replaceChildren();
+      host.hidden = true;
+      if (currentMountedGame?.id !== 'number-pop') return;
+      const gameDoc = gameViewer.contentDocument;
+      const controls = gameDoc?.querySelector('.island-hud-controls');
+      if (!controls) return;
+      const originals = [...controls.querySelectorAll('button')];
+      const buttons = originals.map(original => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'theater-btn';
+        button.addEventListener('click', () => original.click());
+        host.appendChild(button);
+        return button;
+      });
+      function syncActions() {
+        host.hidden = !['playing','paused'].includes(gameDoc.body.dataset.state);
+        originals.forEach((original, index) => {
+          const button = buttons[index];
+          button.innerHTML = original.innerHTML;
+          button.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+          button.setAttribute('aria-label', original.getAttribute('aria-label'));
+          button.title = original.title;
+        });
+      }
+      const observer = new MutationObserver(syncActions);
+      observer.observe(controls, { subtree: true, attributes: true, childList: true });
+      observer.observe(gameDoc.body, { attributes: true, attributeFilter: ['data-state'] });
+      controls.style.display = 'none';
+      syncActions();
+      clearTheaterGameActions = () => {
+        observer.disconnect();
+        controls.style.removeProperty('display');
+        host.replaceChildren();
+        host.hidden = true;
+      };
+    });
 
     function openTheaterModal(game) {
       if (exploration && !exploration.isUnlocked(game.id)) {
@@ -2457,6 +2509,7 @@
     }
 
     function closeTheaterModal() {
+      clearTheaterGameActions();
       theaterModal.classList.remove('open');
       theaterModal.setAttribute('aria-hidden', 'true');
       // Immediately terminate animation loops and audio threads
@@ -2493,7 +2546,7 @@
     }
 
     function toggleTheaterFullscreen() {
-      const target = theaterStage || theaterModal;
+      const target = currentMountedGame?.id === 'number-pop' ? theaterModal : theaterStage || theaterModal;
       if (!document.fullscreenElement) {
         if (target.requestFullscreen) {
           target.requestFullscreen().catch(() => {});

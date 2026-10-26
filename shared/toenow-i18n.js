@@ -113,11 +113,11 @@
     let button;
     function placeSwitch() {
       if (!button || !doc.body) return;
-      const dialogs = [...doc.querySelectorAll('dialog[open]')];
-      const dialog = dialogs[dialogs.length - 1];
-      const parent = dialog || doc.querySelector('.site-header .action-bar') || doc.body;
-      const placement = dialog ? 'dialog' : parent === doc.body ? 'floating' : 'header';
-      if (button.dataset.placement !== placement) button.dataset.placement = placement;
+      // Language selection belongs to the Hub header, including while a
+      // game preview or other modal is open. Never move it into game dialogs.
+      const parent = doc.querySelector('.site-header .action-bar');
+      if (!parent) return;
+      if (button.dataset.placement !== 'header') button.dataset.placement = 'header';
       if (button.parentElement !== parent) parent.appendChild(button);
       button.setAttribute('aria-pressed', String(api.language === 'zh-Hant'));
       button.setAttribute('aria-label', api.language === 'en' ? 'Switch to Chinese' : '切換至英文');
@@ -166,16 +166,12 @@
       }
       refresh(api.language, false);
       new root.MutationObserver(records => {
-        let dialogsChanged = false;
         for (const record of records) {
           if (record.type === 'characterData') translateNode(record.target);
-          else if (record.type === 'attributes') {
-            if (record.attributeName === 'open') dialogsChanged = true;
-            else translateNode(record.target);
-          } else record.addedNodes.forEach(translateTree);
+          else if (record.type === 'attributes') translateNode(record.target);
+          else record.addedNodes.forEach(translateTree);
         }
-        if (dialogsChanged) placeSwitch();
-      }).observe(doc.documentElement, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: [...attrNames, 'open'] });
+      }).observe(doc.documentElement, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attrNames });
     }
     if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', boot, { once: true });
     else boot();

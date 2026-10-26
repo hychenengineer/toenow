@@ -18,6 +18,7 @@
     <script src="../../shared/toenow-platform.js"></script>
     <script src="../../shared/toenow-analytics.js"></script>
     <script src="../../shared/toenow-sdk.js"></script>
+    <script src="../../shared/toenow-time.js"></script>
     <script src="../../shared/toenow-i18n-core.js"></script>
     <script src="../../shared/toenow-i18n-games-a.js"></script>
     <script src="../../shared/toenow-i18n-games-b.js"></script>
@@ -423,7 +424,7 @@
             <span class="hud-sep">·</span>
             <span>HITS <span id="hud-hits" class="hud-value">0/20</span></span>
             <span class="hud-sep">·</span>
-            <span>FAULTS <span id="hud-faults" class="hud-value">0/5</span></span>
+            <span>FAULTS <span id="hud-faults" class="hud-value">0</span></span>
           </div>
           <div class="hud-controls">
 
@@ -497,8 +498,8 @@
                 <span id="brief-quota" class="spec-val">20 Matches</span>
               </div>
               <div class="spec-row">
-                <span class="spec-label">WAVE TIMER</span>
-                <span id="brief-time" class="spec-val">65 Seconds</span>
+                <span class="spec-label">TIME REMAINING</span>
+                <span id="brief-time" class="spec-val">60s</span>
               </div>
             </div>
             <div class="action-row">
@@ -538,7 +539,6 @@
           LIME: '#00ff66'
         };
 
-        const MAX_FAULTS = 5;
         const TOUCH_HITBOX_PADDING = 15; // +15px radius per spec
 
         // ==================================================
@@ -729,7 +729,7 @@
           waveHits: 0,
           waveQuota: 20,
           faults: 0,
-          timeLeft: 65,
+          timeLeft: ToenowTime.START_SECONDS,
           stagingTimer: 0,
           stagingDuration: 1.6,
           stagingBeepStep: 0,
@@ -783,32 +783,32 @@
           // Level 5: Master (Waves 21+, 5x5 Matrix, 32+ hits, 400ms reflex window)
           const tierPresets = [
             // Level 1: Beginner (Waves 1-5, 3x3)
-            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'SLOW', activeWindowMs: 2400, spawnIntervalMs: 850, maxConcurrentNodes: 3, waveQuota: 20, waveTimeSeconds: 65 },
-            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'SLOW', activeWindowMs: 2200, spawnIntervalMs: 800, maxConcurrentNodes: 3, waveQuota: 20, waveTimeSeconds: 65 },
-            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'MEDIUM', activeWindowMs: 1900, spawnIntervalMs: 720, maxConcurrentNodes: 3, waveQuota: 21, waveTimeSeconds: 62 },
-            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'MEDIUM', activeWindowMs: 1650, spawnIntervalMs: 640, maxConcurrentNodes: 3, waveQuota: 21, waveTimeSeconds: 60 },
-            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'FAST', activeWindowMs: 1400, spawnIntervalMs: 560, maxConcurrentNodes: 3, waveQuota: 22, waveTimeSeconds: 58 },
+            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'SLOW', activeWindowMs: 2400, spawnIntervalMs: 850, maxConcurrentNodes: 3, waveQuota: 20 },
+            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'SLOW', activeWindowMs: 2200, spawnIntervalMs: 800, maxConcurrentNodes: 3, waveQuota: 20 },
+            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'MEDIUM', activeWindowMs: 1900, spawnIntervalMs: 720, maxConcurrentNodes: 3, waveQuota: 21 },
+            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'MEDIUM', activeWindowMs: 1650, spawnIntervalMs: 640, maxConcurrentNodes: 3, waveQuota: 21 },
+            { level: 1, levelName: 'BEGINNER', gridSize: 3, speedLabel: 'FAST', activeWindowMs: 1400, spawnIntervalMs: 560, maxConcurrentNodes: 3, waveQuota: 22 },
 
             // Level 2: Intermediate (Waves 6-10, 4x4)
-            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'SLOW', activeWindowMs: 2000, spawnIntervalMs: 720, maxConcurrentNodes: 4, waveQuota: 22, waveTimeSeconds: 65 },
-            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'SLOW', activeWindowMs: 1800, spawnIntervalMs: 650, maxConcurrentNodes: 4, waveQuota: 23, waveTimeSeconds: 65 },
-            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'MEDIUM', activeWindowMs: 1600, spawnIntervalMs: 580, maxConcurrentNodes: 4, waveQuota: 24, waveTimeSeconds: 62 },
-            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'MEDIUM', activeWindowMs: 1450, spawnIntervalMs: 520, maxConcurrentNodes: 4, waveQuota: 24, waveTimeSeconds: 60 },
-            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'FAST', activeWindowMs: 1280, spawnIntervalMs: 460, maxConcurrentNodes: 4, waveQuota: 25, waveTimeSeconds: 58 },
+            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'SLOW', activeWindowMs: 2000, spawnIntervalMs: 720, maxConcurrentNodes: 4, waveQuota: 22 },
+            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'SLOW', activeWindowMs: 1800, spawnIntervalMs: 650, maxConcurrentNodes: 4, waveQuota: 23 },
+            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'MEDIUM', activeWindowMs: 1600, spawnIntervalMs: 580, maxConcurrentNodes: 4, waveQuota: 24 },
+            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'MEDIUM', activeWindowMs: 1450, spawnIntervalMs: 520, maxConcurrentNodes: 4, waveQuota: 24 },
+            { level: 2, levelName: 'INTERMEDIATE', gridSize: 4, speedLabel: 'FAST', activeWindowMs: 1280, spawnIntervalMs: 460, maxConcurrentNodes: 4, waveQuota: 25 },
 
             // Level 3: Advanced (Waves 11-15, 5x5)
-            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'SLOW', activeWindowMs: 1850, spawnIntervalMs: 650, maxConcurrentNodes: 5, waveQuota: 25, waveTimeSeconds: 65 },
-            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'SLOW', activeWindowMs: 1650, spawnIntervalMs: 580, maxConcurrentNodes: 5, waveQuota: 26, waveTimeSeconds: 65 },
-            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'MEDIUM', activeWindowMs: 1450, spawnIntervalMs: 520, maxConcurrentNodes: 5, waveQuota: 27, waveTimeSeconds: 62 },
-            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'MEDIUM', activeWindowMs: 1300, spawnIntervalMs: 470, maxConcurrentNodes: 5, waveQuota: 27, waveTimeSeconds: 60 },
-            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'FAST', activeWindowMs: 1150, spawnIntervalMs: 420, maxConcurrentNodes: 5, waveQuota: 28, waveTimeSeconds: 58 },
+            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'SLOW', activeWindowMs: 1850, spawnIntervalMs: 650, maxConcurrentNodes: 5, waveQuota: 25 },
+            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'SLOW', activeWindowMs: 1650, spawnIntervalMs: 580, maxConcurrentNodes: 5, waveQuota: 26 },
+            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'MEDIUM', activeWindowMs: 1450, spawnIntervalMs: 520, maxConcurrentNodes: 5, waveQuota: 27 },
+            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'MEDIUM', activeWindowMs: 1300, spawnIntervalMs: 470, maxConcurrentNodes: 5, waveQuota: 27 },
+            { level: 3, levelName: 'ADVANCED', gridSize: 5, speedLabel: 'FAST', activeWindowMs: 1150, spawnIntervalMs: 420, maxConcurrentNodes: 5, waveQuota: 28 },
 
             // Level 4: Expert (Waves 16-20, 5x5 Rapid)
-            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'RAPID', activeWindowMs: 1050, spawnIntervalMs: 390, maxConcurrentNodes: 5, waveQuota: 28, waveTimeSeconds: 58 },
-            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'RAPID', activeWindowMs: 980, spawnIntervalMs: 360, maxConcurrentNodes: 6, waveQuota: 29, waveTimeSeconds: 56 },
-            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'INTENSE', activeWindowMs: 900, spawnIntervalMs: 330, maxConcurrentNodes: 6, waveQuota: 30, waveTimeSeconds: 55 },
-            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'INTENSE', activeWindowMs: 820, spawnIntervalMs: 300, maxConcurrentNodes: 6, waveQuota: 30, waveTimeSeconds: 55 },
-            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'HYPER', activeWindowMs: 750, spawnIntervalMs: 280, maxConcurrentNodes: 6, waveQuota: 32, waveTimeSeconds: 55 }
+            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'RAPID', activeWindowMs: 1050, spawnIntervalMs: 390, maxConcurrentNodes: 5, waveQuota: 28 },
+            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'RAPID', activeWindowMs: 980, spawnIntervalMs: 360, maxConcurrentNodes: 6, waveQuota: 29 },
+            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'INTENSE', activeWindowMs: 900, spawnIntervalMs: 330, maxConcurrentNodes: 6, waveQuota: 30 },
+            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'INTENSE', activeWindowMs: 820, spawnIntervalMs: 300, maxConcurrentNodes: 6, waveQuota: 30 },
+            { level: 4, levelName: 'EXPERT', gridSize: 5, speedLabel: 'HYPER', activeWindowMs: 750, spawnIntervalMs: 280, maxConcurrentNodes: 6, waveQuota: 32 }
           ];
 
           if (wave <= tierPresets.length) {
@@ -826,7 +826,7 @@
             spawnIntervalMs: Math.max(220, 260 - overWave * 10),
             maxConcurrentNodes: 6,
             waveQuota: Math.min(50, 32 + overWave * 2),
-            waveTimeSeconds: 55
+
           };
         }
 
@@ -1054,7 +1054,7 @@
           window.ToenowAnimals?.feedback('tap-match', false);
           state.streak = 0;
           state.faults += 1;
-          state.timeLeft = Math.max(0, state.timeLeft - 2.0);
+          state.timeLeft = ToenowTime.wrong(state.timeLeft);
 
           if (node) {
             node.status = 'DEPLETED';
@@ -1066,10 +1066,8 @@
           audio.playMiss();
           syncHud();
 
-          if (state.faults >= MAX_FAULTS) {
-            endRun('Maximum fault limit (5/5) reached.');
-          } else if (state.timeLeft <= 0) {
-            endRun('Wave timer depleted after fault penalty.');
+          if (state.timeLeft <= 0) {
+            endRun('TIME EXPIRED');
           }
         }
 
@@ -1122,7 +1120,7 @@
               state.waveHits++;
               if (!tutorialActive()) window.ToenowAnimals?.feedback('tap-match', true);
               penguinCollection.push({ x: hitNode.x, y: hitNode.y, shape: hitNode.shape, color: hitNode.color, glyph: hitNode.glyph, started: performance.now() });
-              state.timeLeft = Math.min(getWaveConfig(state.wave).waveTimeSeconds, state.timeLeft + 0.5);
+              if (!tutorialActive()) state.timeLeft = ToenowTime.correct(state.timeLeft);
 
               hitNode.status = 'HIT_FEEDBACK';
               hitNode.feedbackMs = 240;
@@ -1133,7 +1131,7 @@
               syncHud();
 
               if (tutorialActive()) {
-                state.timeLeft = 65; window.ToenowTutorials.complete('tap-match');
+                state.timeLeft = 60; window.ToenowTutorials.complete('tap-match');
               } else if (state.waveHits >= state.waveQuota) {
                 prepareWaveBriefing(state.wave + 1);
               }
@@ -1219,7 +1217,7 @@
           state.maxConcurrentNodes = cfg.maxConcurrentNodes;
           state.waveQuota = cfg.waveQuota;
           state.waveHits = 0;
-          state.timeLeft = cfg.waveTimeSeconds;
+          // Carry the run clock across waves; briefing never resets it.
           state.spawnCooldown = 250;
           state.guaranteedTargetCounter = 2;
 
@@ -1237,7 +1235,7 @@
           const winSec = (cfg.activeWindowMs / 1000).toFixed(2);
           elBriefGridSpeed.textContent = `${cfg.gridSize}x${cfg.gridSize} · ${cfg.speedLabel} (${winSec}s display)`;
           elBriefQuota.textContent = `${cfg.waveQuota} Valid Hits`;
-          elBriefTime.textContent = `${cfg.waveTimeSeconds} Seconds`;
+          elBriefTime.textContent = `${Math.ceil(state.timeLeft)}s`;
           btnBeginWave.textContent = `[BEGIN WAVE ${waveNum}]`;
 
           renderWaveBriefingPreview();
@@ -1271,6 +1269,7 @@
           state.streak = 0;
           state.peakStreak = 0;
           state.faults = 0;
+          state.timeLeft = ToenowTime.START_SECONDS;
           state.totalTaps = 0;
           state.validHits = 0;
           state.reactionSumMs = 0;
@@ -1284,7 +1283,7 @@
           modalWaveBrief.classList.add('hidden');
           const acc = state.totalTaps > 0 ? Math.round((state.validHits / state.totalTaps) * 100) : 0;
                     saveBestWhackRecords(state.score, state.wave);
-          ToenowScreens.updateGameOver('tap-match', { score: state.score, bestScore: loadBestWhackScore(), wave: state.wave, combo: state.peakStreak, reason: state.faults >= 5 ? 'GAME OVER' : 'TIME EXPIRED' });
+          ToenowScreens.updateGameOver('tap-match', { score: state.score, bestScore: loadBestWhackScore(), wave: state.wave, combo: state.peakStreak, reason: 'TIME EXPIRED' });
           ToenowScreens.updateTitle('tap-match', { bestScore: loadBestWhackScore(), bestWave: loadBestWhackWave() });
           modalGameOver.classList.remove('hidden');
           modalGameOver.classList.add('active');
@@ -1326,7 +1325,7 @@
           elTime.textContent = String(Math.ceil(state.timeLeft)).padStart(2, '0');
           elScore.textContent = state.score.toLocaleString();
           elHits.textContent = `${state.waveHits}/${state.waveQuota}`;
-          elFaults.textContent = `${state.faults}/${MAX_FAULTS}`;
+          elFaults.textContent = String(state.faults);
         }
 
         // ==================================================
@@ -1541,12 +1540,12 @@
             for (const node of state.nodes) if (node.status === 'HIT_FEEDBACK') node.feedbackMs = Math.max(1, node.feedbackMs - dtMs);
             return;
           }
-          // Update wave timer
+          // One run timer, carried across all waves
           state.timeLeft -= dtSec;
           if (state.timeLeft <= 0) {
             state.timeLeft = 0;
             syncHud();
-            endRun(`Wave ${state.wave} time limit expired (${state.waveHits}/${state.waveQuota} hits completed).`);
+            endRun('TIME EXPIRED');
             return;
           }
 
@@ -1924,7 +1923,7 @@
         window.ToenowTutorials?.register?.('tap-match', {
           start() {
             tutorialSnapshot = JSON.parse(JSON.stringify(state));
-            Object.assign(state, { isPractice: true, score: 0, wave: 1, waveHits: 0, waveQuota: 1, faults: 0, streak: 0, peakStreak: 0, timeLeft: 65, gridSize: 3 });
+            Object.assign(state, { isPractice: true, score: 0, wave: 1, waveHits: 0, waveQuota: 1, faults: 0, streak: 0, peakStreak: 0, timeLeft: 60, gridSize: 3 });
             state.target = generateTargetCriteria(1); buildNodeMatrix();
             Object.assign(state.nodes[4], { status: 'ACTIVE', isTarget: true,
               shape: state.target.shape || 'CIRCLE', color: state.target.color || 'CYAN', glyph: state.target.glyph || 'DOT', elapsedMs: 100, durationMs: 2200 });

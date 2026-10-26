@@ -179,6 +179,7 @@ for (const game of GAMES) {
       removeEventListener: function () {}
     };
     sandbox.ToenowScreens = require('./helpers/screen-engine-adapter.cjs').adapter(doc);
+    sandbox.ToenowTime = require('../shared/toenow-time.js');
     sandbox.scrollTo = () => {};
     sandbox.window = sandbox;
     if (game.id === 'add-up') sandbox.PointerEvent = function () {};
@@ -199,7 +200,7 @@ for (const game of GAMES) {
     assert.ok(scriptBlocks.length > 0, `No inline script blocks found in ${game.path}`);
 
     // Execute scripts in isolated function scope with mock window/document
-    const combinedScript = 'const ToenowScreens = window.ToenowScreens;\n' + scriptBlocks.join('\n;\n');
+    const combinedScript = 'const ToenowScreens = window.ToenowScreens; const ToenowTime = window.ToenowTime;\n' + scriptBlocks.join('\n;\n');
     const runner = new Function(
       'window',
       'document',

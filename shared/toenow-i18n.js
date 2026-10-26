@@ -151,16 +151,19 @@
       const script = [...doc.scripts].find(script => /\/toenow-i18n\.js(?:\?|$)/.test(script.src));
       style.href = new URL('../assets/toenow-language.css', script?.src || root.location.href).href;
       doc.head.appendChild(style);
-      button = doc.createElement('button');
-      button.type = 'button';
-      button.className = 'toenow-language-switch';
-      button.dataset.i18nIgnore = '';
-      button.textContent = '中文 / EN';
-      // Game-level Enter/Space shortcuts must not consume native button activation.
-      button.addEventListener('keydown', event => {
-        if (event.key === 'Enter' || event.key === ' ') event.stopPropagation();
-      });
-      button.addEventListener('click', () => api.setLanguage(api.language === 'en' ? 'zh-Hant' : 'en'));
+      // Only the Hub offers language selection; games inherit its preference.
+      if (doc.querySelector('.site-header .action-bar')) {
+        button = doc.createElement('button');
+        button.type = 'button';
+        button.className = 'toenow-language-switch';
+        button.dataset.i18nIgnore = '';
+        button.textContent = '中文 / EN';
+        // Game-level Enter/Space shortcuts must not consume native button activation.
+        button.addEventListener('keydown', event => {
+          if (event.key === 'Enter' || event.key === ' ') event.stopPropagation();
+        });
+        button.addEventListener('click', () => api.setLanguage(api.language === 'en' ? 'zh-Hant' : 'en'));
+      }
       refresh(api.language, false);
       new root.MutationObserver(records => {
         let dialogsChanged = false;

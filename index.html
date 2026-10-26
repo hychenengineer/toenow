@@ -773,16 +773,6 @@
       font-weight: 700;
     }
 
-    .theater-game-url {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-family: monospace;
-      background: rgba(15, 23, 42, 0.8);
-      padding: 0.2rem 0.55rem;
-      border-radius: 6px;
-      border: 1px solid var(--border-glass);
-    }
-
     .theater-controls {
       display: flex;
       align-items: center;
@@ -1639,7 +1629,6 @@
       <div class="theater-game-info">
         <span class="theater-game-icon" id="theaterIcon">🎮</span>
         <span class="theater-game-title" id="theaterTitle">Module Title</span>
-        <span class="theater-game-url" id="theaterUrl">about:blank</span>
       </div>
       <div class="theater-controls">
         <button type="button" class="theater-btn" id="restartGameBtn">
@@ -2409,7 +2398,6 @@
     const gameViewer = document.getElementById('gameViewer');
     const theaterIcon = document.getElementById('theaterIcon');
     const theaterTitle = document.getElementById('theaterTitle');
-    const theaterUrl = document.getElementById('theaterUrl');
     const theaterStage = document.getElementById('theaterStage');
 
     function openTheaterModal(game) {
@@ -2422,7 +2410,6 @@
       currentExplorationRun = exploration?.beginRun(game.id) || null;
       theaterIcon.textContent = game.icon;
       theaterTitle.textContent = game.title;
-      theaterUrl.textContent = game.url;
 
       // Before loading iframe, sync Hub's verified bestScore into the game's internal localStorage
       // so the title menu records strip immediately displays the user's synced best record!
@@ -2480,7 +2467,6 @@
         refreshExploration();
       }, { once: true });
       gameViewer.src = 'about:blank';
-      theaterUrl.textContent = 'about:blank';
       currentMountedGame = null;
       refreshExploration();
       if (exploration?.snapshot().mode === 'explore') islandExplorer?.focusNext();

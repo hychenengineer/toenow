@@ -5,11 +5,11 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const read = id => readSource(`games/${id}/index.html`, 'utf8');
 function fn(html, name, next) { return html.slice(html.indexOf(`function ${name}(`), html.indexOf(`function ${next}(`)); }
-test('Harvest baskets keep numeric labels and the fraction gauge', () => {
+test('Harvest baskets keep numeric labels without the colored fraction rim', () => {
   const html = read('number-pop');
   assert.match(html, /function drawHarvestBasket\(/);
   assert.match(html, /drawCoreValueLabel\(ctx, c, drawX, drawY, r\)/);
-  assert.match(html, /c\.fractionGauge/);
+  assert.doesNotMatch(fs.readFileSync('games/number-pop/renderer.js', 'utf8'), /fractionGauge/);
   assert.doesNotMatch(html, /ToenowAnimals\.feedback\('number-pop', true\)/);
   assert.match(html, /ToenowAnimals\.feedback\('number-pop', false\)/);
 });

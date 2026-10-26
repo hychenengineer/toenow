@@ -159,7 +159,6 @@ function renderArena() {
             const pulse = 1 + Math.sin(c.pulsePhase) * 0.035;
             const r = c.radius * pulse * c.spawnScale;
             const isHovered = scene.game.hoveredCoreId === c.id;
-            const coreHue = c.errorFlash > 0 ? 350 : c.hue;
 
             scene.ctx.save();
 
@@ -172,30 +171,6 @@ function renderArena() {
             }
 
             drawHarvestBasket(scene.ctx, drawX, drawY, r, c.errorFlash > 0, isHovered);
-
-            // Intuitive Fraction Rim Gauge (Visual Pie Arc along outer rim)
-            if (c.fractionGauge !== undefined && c.fractionGauge > 0) {
-              scene.ctx.save();
-              const gaugeRadius = r * 0.96;
-              const startAngle = -Math.PI / 2;
-              const endAngle = startAngle + Math.PI * 2 * c.fractionGauge;
-
-              // Glowing pie wedge fill
-              scene.ctx.beginPath();
-              scene.ctx.moveTo(drawX, drawY);
-              scene.ctx.arc(drawX, drawY, gaugeRadius, startAngle, endAngle);
-              scene.ctx.closePath();
-              scene.ctx.fillStyle = 'hsla(' + coreHue + ', 95%, 65%, 0.16)';
-              scene.ctx.fill();
-
-              // Glowing outer arc stroke
-              scene.ctx.beginPath();
-              scene.ctx.arc(drawX, drawY, gaugeRadius, startAngle, endAngle);
-              scene.ctx.lineWidth = 3.2;
-              scene.ctx.strokeStyle = 'hsla(' + coreHue + ', 95%, 78%, 0.85)';
-              scene.ctx.stroke();
-              scene.ctx.restore();
-            }
 
             // Typographic Value Label (Vertical Stacked Fraction or Number)
             drawCoreValueLabel(scene.ctx, c, drawX, drawY, r);

@@ -75,6 +75,14 @@ var isHeadless = Boolean(navigator.webdriver || /HeadlessChrome/i.test(navigator
 
         var board = generateWaveBoard(1, 0);
         var gameMode = 'title'; // 'title' | 'playing' | 'briefing' | 'gameover'
+        const learnedMirrorLessons = new Set();
+        let mirrorLesson = null, mirrorSnapshot = null, mirrorReady = false;
+        const mirrorKey = lesson => 'toenow_block_lesson_' + lesson + '_v1';
+        function knowsMirrorLesson(lesson) {
+          if (learnedMirrorLessons.has(lesson)) return true;
+          try { return ['completed', 'skipped'].includes(window.localStorage.getItem(mirrorKey(lesson))); }
+          catch (_) { return false; }
+        }
 
         // --- Particle Shards Ring Buffer ---
         var MAX_SHARDS = 300;
@@ -294,6 +302,11 @@ var isHeadless = Boolean(navigator.webdriver || /HeadlessChrome/i.test(navigator
         }
 
         function openPhaseBriefing(spec) {
+          if (knowsMirrorLesson('level-' + spec.phaseNumber)) {
+            state.pendingBriefing = null;
+            setGameMode('playing');
+            return;
+          }
           state.pendingBriefing = spec;
           elBriefingTitle.textContent = spec.title;
           elBriefingBadge.textContent = spec.badge;
@@ -306,6 +319,8 @@ var isHeadless = Boolean(navigator.webdriver || /HeadlessChrome/i.test(navigator
 
         function resumeFromPhaseBriefing() {
           if (gameMode !== 'briefing') return;
+          const lesson = 'level-' + state.pendingBriefing?.phaseNumber;
+          if (state.pendingBriefing && !knowsMirrorLesson(lesson) && window.ToenowTutorials?.showLesson('block-match', lesson)) return;
           state.pendingBriefing = null;
           board.waveStartTime = state.elapsedTime;
           setGameMode('playing');
@@ -320,7 +335,7 @@ var isHeadless = Boolean(navigator.webdriver || /HeadlessChrome/i.test(navigator
             document.activeElement.blur();
           }
           ensureAudio();
-          state.wave = 1;
+          state.wave = Math.max(1, Math.floor(Number(startWave) || 1));
           state.score = 0;
           state.highScore = loadStorage(STORAGE_KEY_SCORE);
           state.totalShards = loadStorage(STORAGE_KEY_SHARDS);
@@ -338,10 +353,14 @@ var isHeadless = Boolean(navigator.webdriver || /HeadlessChrome/i.test(navigator
           electricArcTimer = 0;
           redGlitchTimer = 0;
 
-          board = generateWaveBoard(1, 0);
+          board = generateWaveBoard(state.wave, 0);
           updateLayout();
           syncHud();
           setGameMode('playing');
+          if (!window.ToenowTutorials?.isActive('block-match') && state.wave > 5) {
+            const levelStart = getPhaseForWave(state.wave).phase * 5 - 4;
+            openPhaseBriefing(PHASE_BRIEFINGS[levelStart]);
+          }
           canvas.focus();
         }
 
@@ -424,6 +443,7 @@ var isHeadless = Boolean(navigator.webdriver || /HeadlessChrome/i.test(navigator
          */
         function handleSingleCellTap(r, c) {
           if (gameMode !== 'playing' || state.freezeTimer > 0 || state.successRemaining > 0) return;
+          if (mirrorLesson && !mirrorReady) return;
           if (window.ToenowTutorials?.isActive('block-match') && window.ToenowTutorials?.isComplete('block-match')) return;
           var n = board.config.gridSize;
           if (r < 0 || r >= n || c < 0 || c >= n) return;
@@ -702,7 +722,28 @@ var isHeadless = Boolean(navigator.webdriver || /HeadlessChrome/i.test(navigator
         syncHud();
 
         window.ToenowTutorials?.register('block-match', {
-          start() {
+          start(options = {}) {
+            if (options.lesson) {
+              mirrorLesson = options.lesson;
+              mirrorSnapshot = { state: { ...state }, board, mode: gameMode };
+              mirrorReady = false;
+              const level = Number(mirrorLesson.split('-')[1]);
+              const spec = PHASE_BRIEFINGS[level * 5 - 4];
+              const target = [[1,0,0],[1,1,0],[0,0,0]];
+              board = {
+                config: { ...getWaveConfig(spec.targetWave), gridSize: 3, compassNotch: spec.mode, excessCount: 1 },
+                carvingTargetGrid: target,
+                blueprintGrid: applySpatialTransform(target, spec.mode),
+                activeGrid: target.map(row => row.slice()), remainingExcess: 1,
+                blocksShatteredInWave: 0, waveStartTime: state.elapsedTime
+              };
+              board.activeGrid[2][2] = 2;
+              state.score = 0; state.combo = 1;
+              state.successRemaining = state.freezeTimer = 0;
+              setGameMode('playing');
+              updateLayout(); syncHud();
+              return;
+            }
             startNewGame(1, true);
             board.config = getWaveConfig(1);
             board.config.gridSize = 3;
@@ -715,13 +756,46 @@ var isHeadless = Boolean(navigator.webdriver || /HeadlessChrome/i.test(navigator
             updateLayout();
             syncHud();
           },
-          stop() {
+          stop(confirmed = false) {
+            if (mirrorSnapshot) {
+              const saved = mirrorSnapshot;
+              Object.assign(state, saved.state); board = saved.board;
+              mirrorSnapshot = null; mirrorLesson = null; mirrorReady = false;
+              setGameMode(saved.mode);
+              updateLayout(); syncHud();
+              if (confirmed) resumeFromPhaseBriefing();
+              window.requestAnimationFrame(syncHud);
+              return;
+            }
             state.isPractice = false;
             state.score = state.successRemaining = state.freezeTimer = 0;
             document.getElementById('match-success').hidden = true;
             setGameMode('title');
           },
+          markLesson(lesson, value) {
+            if (!/^level-[2-5]$/.test(lesson)) return;
+            learnedMirrorLessons.add(lesson);
+            try { window.localStorage.setItem(mirrorKey(lesson), value); } catch (_) {}
+          },
           getGuide() {
+            if (mirrorLesson) {
+              const level = Number(mirrorLesson.split('-')[1]);
+              const prompt = level === 2 ? 'Horizontal flip: swap left and right in the blueprint.' :
+                level === 3 ? 'Vertical flip: swap top and bottom in the blueprint.' :
+                level === 4 ? 'Two flips: swap left and right, then top and bottom.' :
+                'A bigger board uses the same two flips: left to right and top to bottom.';
+              const rect = canvas.getBoundingClientRect();
+              if (!mirrorReady) {
+                const box = layout.rightBox;
+                return { prompt, rect: { x: rect.left + box.x, y: rect.top + box.y, width: box.size, height: box.size },
+                  action: { label: 'Try it', run() { mirrorReady = true; } } };
+              }
+              const point = getCellCenter(layout.leftBox, 2, 2), size = layout.leftBox.cellSize;
+              return { prompt: 'Now tap the extra tile on the wooden board.',
+                completePrompt: 'You did it! Use this flip to match the next pattern.',
+                done: board.remainingExcess === 0,
+                rect: { x: rect.left + point.x - size / 2, y: rect.top + point.y - size / 2, width: size, height: size } };
+            }
             if (board.remainingExcess === 0) return { done: true };
             const point = getCellCenter(layout.leftBox, 0, 0);
             const rect = canvas.getBoundingClientRect();

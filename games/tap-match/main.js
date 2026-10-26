@@ -79,6 +79,8 @@ ToenowScreens.mount("tap-match");
 
         const modalStart = document.getElementById('modal-start');
         const modalWaveBrief = document.getElementById('modal-wave-brief');
+        const modalWaveClear = document.getElementById('modal-wave-clear');
+        const btnNextWave = document.getElementById('btn-next-wave');
         const modalGameOver = document.getElementById('modal-gameover');
         const modalPause = document.getElementById('modal-pause');
         const pauseScoreVal = document.getElementById('pause-score-val');
@@ -93,9 +95,6 @@ ToenowScreens.mount("tap-match");
         const elBriefTargetName = document.getElementById('brief-target-name');
         const elBriefRuleDetail = document.getElementById('brief-rule-detail');
         const elBriefRuleSub = document.getElementById('brief-rule-sub');
-        const elBriefGridSpeed = document.getElementById('brief-grid-speed');
-        const elBriefQuota = document.getElementById('brief-quota');
-        const elBriefTime = document.getElementById('brief-time');
 
         // ==================================================
         // 4. GAME STATE & 3x3 -> 4x4 -> 5x5 ESCALATION ENGINE
@@ -351,7 +350,7 @@ ToenowScreens.mount("tap-match");
               if (tutorialActive()) {
                 state.timeLeft = 60; window.ToenowTutorials.complete('tap-match');
               } else if (state.waveHits >= state.waveQuota) {
-                prepareWaveBriefing(state.wave + 1);
+                showWaveClear();
               }
             } else {
               triggerPenalty(hitNode, 'WRONG', 'MISS');
@@ -423,7 +422,31 @@ ToenowScreens.mount("tap-match");
           drawTargetCriteriaPreview(previewCtx, cx, cy, 42, state.target);
         }
 
+        function hideWaveClear() {
+          modalWaveClear.classList.add('hidden');
+          modalWaveClear.setAttribute('aria-hidden', 'true');
+          modalWaveClear.inert = true;
+        }
+
+        function showWaveClear() {
+          state.phase = 'WAVE_CLEAR';
+          const text = `Wave ${state.wave} completed.`;
+          document.getElementById('wave-clear-summary').textContent = window.ToenowI18n?.t(text) || text;
+          modalWaveClear.classList.remove('hidden');
+          modalWaveClear.setAttribute('aria-hidden', 'false');
+          modalWaveClear.inert = false;
+          btnNextWave.focus({ preventScroll: true });
+        }
+
+        function continueAfterWaveClear() {
+          if (state.phase !== 'WAVE_CLEAR') return;
+          hideWaveClear();
+          prepareWaveBriefing(state.wave + 1);
+          btnBeginWave.focus({ preventScroll: true });
+        }
+
         function prepareWaveBriefing(waveNum) {
+          hideWaveClear();
           state.wave = waveNum;
           window.ToenowAnimals?.setWave('tap-match', waveNum);
           penguinCollection.length = 0;
@@ -450,10 +473,6 @@ ToenowScreens.mount("tap-match");
           elBriefRuleDetail.innerHTML = state.target.rulePrimary;
           elBriefRuleSub.textContent = state.target.ruleSecondary;
 
-          const winSec = (cfg.activeWindowMs / 1000).toFixed(2);
-          elBriefGridSpeed.textContent = `${cfg.gridSize}x${cfg.gridSize} · ${cfg.speedLabel} (${winSec}s display)`;
-          elBriefQuota.textContent = `${state.waveQuota} Valid Hits`;
-          elBriefTime.textContent = tutorialActive() ? '∞' : `${Math.ceil(state.timeLeft)}s`;
           btnBeginWave.textContent = `[BEGIN WAVE ${waveNum}]`;
 
           renderWaveBriefingPreview();
@@ -507,6 +526,7 @@ ToenowScreens.mount("tap-match");
 
         function endRun(reasonText) {
           if (tutorialActive()) return;
+          hideWaveClear();
           state.phase = 'GAMEOVER';
           modalWaveBrief.classList.add('hidden');
           const acc = state.totalTaps > 0 ? Math.round((state.validHits / state.totalTaps) * 100) : 0;
@@ -658,8 +678,9 @@ function loop(now) {
 
         function togglePause() {
           if (tutorialActive()) return;
-          if (state.phase === 'PLAYING' || state.phase === 'STAGING') {
+          if (state.phase === 'PLAYING' || state.phase === 'STAGING' || state.phase === 'WAVE_CLEAR') {
             state.previousPhase = state.phase;
+            hideWaveClear();
             state.phase = 'PAUSED';
             document.body.dataset.paused = 'true';
             if (pauseScoreVal) pauseScoreVal.textContent = state.score.toLocaleString();
@@ -672,6 +693,7 @@ function loop(now) {
             document.body.dataset.paused = 'false';
             modalPause.classList.remove('active');
             modalPause.classList.add('hidden');
+            if (state.phase === 'WAVE_CLEAR') showWaveClear();
           }
         }
 
@@ -701,7 +723,7 @@ function loop(now) {
 
         window.addEventListener('keydown', (e) => {
           if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
-            if (state.phase === 'PLAYING' || state.phase === 'STAGING' || state.phase === 'PAUSED') {
+            if (state.phase === 'PLAYING' || state.phase === 'STAGING' || state.phase === 'WAVE_CLEAR' || state.phase === 'PAUSED') {
               e.preventDefault();
               togglePause();
               return;
@@ -736,6 +758,8 @@ function loop(now) {
         btnBeginWave.addEventListener('click', () => {
           launchCurrentWaveFromBriefing();
         });
+
+        btnNextWave.addEventListener('click', continueAfterWaveClear);
 
         btnRetry.addEventListener('click', () => {
           startNewRun();

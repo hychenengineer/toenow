@@ -49,12 +49,16 @@ function loadFunction(game,name,next,env){
 }
 test('timber carving removes only excess cells and preserves required cells with original penalty',()=>{
  const feedback=[];const noop=()=>{};
- const env={Math,gameMode:'playing',state:{freezeTimer:0,score:0,combo:1,peakCombo:1,timeLeft:40,totalShards:0,highScore:99999,mistakesInWave:0},
+ const env={Math,gameMode:'playing',mirrorLesson:null,mirrorReady:false,state:{freezeTimer:0,score:0,combo:1,peakCombo:1,timeLeft:40,totalShards:0,highScore:99999,mistakesInWave:0},
  board:{config:{gridSize:2},activeGrid:[[2,1],[2,0]],remainingExcess:2,blocksShatteredInWave:0},layout:{leftBox:{}},
  window:{ToenowAnimals:{feedback:(...args)=>feedback.push(args)}},getCellCenter:()=>({x:0,y:0}),CORRECT_TAP_TIME_BONUS:.8,MAX_TIME_CAP_SECONDS:100,
  WRONG_TAP_TIME_PENALTY:1.5,MISTAKE_FREEZE_SECONDS:.35,shakeTrauma:0,redGlitchTimer:0,
  spawnShards:noop,spawnPopup:noop,playSiliconTap:noop,saveStorage:noop,syncHud:noop,playGlitchBuzz:noop,STORAGE_KEY_SHARDS:'shards'};
  const tap=loadFunction('block-match','handleSingleCellTap',"// --- Deliberate Single-Cell",env);
+ env.mirrorLesson='level-2';tap(0,0);
+ assert.equal(env.board.activeGrid[0][0],2,'mirror instructions wait for the player to choose Try it');
+ assert.equal(env.state.score,0);assert.equal(env.state.timeLeft,40);
+ env.mirrorLesson=null;
  tap(0,0);assert.equal(env.board.activeGrid[0][0],0);assert.equal(env.state.score,50);assert.equal(env.state.timeLeft,40.8);
  tap(0,1);assert.equal(env.board.activeGrid[0][1],1);assert.equal(env.state.combo,1);assert.equal(env.state.timeLeft,39.3);assert.equal(env.state.freezeTimer,.35);
  assert.deepEqual(feedback,[['block-match',true],['block-match',false]]);

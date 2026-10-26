@@ -247,7 +247,6 @@
         body[data-tutorial='tap-match'] #modal-wave-brief .modal-title { font-size: 20px; margin: 4px 0 8px; }
         body[data-tutorial='tap-match'] #modal-wave-brief .wave-preview-box { padding: 8px; margin-bottom: 8px; }
         body[data-tutorial='tap-match'] #modal-wave-brief #wave-preview-canvas { width: 64px; height: 64px; }
-        body[data-tutorial='tap-match'] #modal-wave-brief .spec-list { margin: 8px 0; padding: 8px 0; gap: 4px; }
         body[data-tutorial='tap-match'] #modal-wave-brief .action-row { margin-top: 8px; }
       }
       .modal-kicker {
@@ -273,37 +272,9 @@
         margin-bottom: 14px;
       }
 
-      .spec-list {
-        border-top: 1px solid var(--hull-dim);
-        border-bottom: 1px solid var(--hull-dim);
-        padding: 10px 0;
-        margin-bottom: 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 7px;
-        font-size: 13px;
-        color: var(--text-primary);
-      }
 
-      .spec-row {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 12px;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 12px;
-        font-variant-numeric: tabular-nums;
-      }
 
-      .spec-label {
-        color: var(--text-muted);
-      }
 
-      .spec-val {
-        color: var(--text-primary);
-        font-weight: 600;
-        text-align: right;
-      }
 
       /* Wave Briefing Visual Showcase */
       .wave-preview-box {

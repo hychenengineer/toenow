@@ -25,11 +25,11 @@
     'Outer shape and inner symbol do not matter (any shape / symbol).': '不限外部形狀及內部符號（任何形狀／符號皆可）。',
     'Color and outer shape do not matter (any color / shape).': '不限顏色及外部形狀（任何顏色／形狀皆可）。',
     'Inner symbol does not matter (any symbol).': '不限內部符號（任何符號皆可）。',
-    'Node color does not matter (any color).': '不限節點顏色（任何顏色皆可）。',
+    'Node color does not matter (any color).': '不限圖案顏色（任何顏色皆可）。',
     'Outer shape does not matter (any shape).': '不限外部形狀（任何形狀皆可）。',
-    'Tap any node with an outer': '點擊外部形狀為', 'shape.': '的節點。',
-    'Tap any node glowing in': '點擊發出以下顏色光芒的節點：',
-    'Tap any node containing an inner': '點擊內部包含', 'symbol.': '符號的節點。',
+    'Tap any node with an outer': '點擊外部形狀為', 'shape.': '的圖案。',
+    'Tap any node glowing in': '點擊以下顏色的圖案：',
+    'Tap any node containing an inner': '點擊內部包含', 'symbol.': '符號的圖案。',
     'Tap only nodes that are both': '只點擊同時符合', 'and': '以及',
     'Tap only': '只點擊', 'nodes with an inner': '且內部符號為',
     'GRID & SPEED': '網格與速度', 'REQUIRED HITS': '所需命中次數', 'WAVE TIMER': '本波時間',
@@ -39,7 +39,7 @@
     'COLOR ONLY': '只看顏色', 'TAP:': '點擊：', 'GO!': '開始！', 'READY': '準備', 'WRONG': '錯誤', 'EXPIRED': '已逾時',
     'CIRCLE': '圓形', 'DIAMOND': '菱形', 'SQUARE': '正方形', 'HEXAGON': '六邊形',
     'DOT': '圓點', 'CROSS': '十字', 'DELTA': '三角', 'SLASH': '斜線',
-    'CYAN': '青色', 'VOLT': '亮黃色', 'MAGENTA': '洋紅色', 'LIME': '萊姆綠',
+    'CYAN': '青色', 'VOLT': '亮黃色', 'MAGENTA': '洋紅色', 'LIME': '亮綠色',
     'SLOW': '慢速', 'MEDIUM': '中速', 'FAST': '快速', 'RAPID': '極速', 'INTENSE': '密集', 'HYPER': '超高速', 'EXTREME': '超高速',
     'BEGINNER': '入門', 'INTERMEDIATE': '中級', 'ADVANCED': '進階', 'EXPERT': '專家', 'MASTER': '大師', 'NOVICE': '新手',
     'Guess the blurry picture before time runs out.': '在時間內，猜猜模糊的圖片是什麼。',
@@ -107,8 +107,19 @@
   Object.assign(entries, specimens);
   const tr = value => entries[value] || (/^MASTER \d+$/.test(value) ? value.replace(/^MASTER /, '大師 ') : value);
   const terms = value => value.split(' + ').map(part => tr(part)).join(' ＋ ');
-  const target = value => value.replace(/\b(CIRCLE|DIAMOND|SQUARE|HEXAGON|DOT|CROSS|DELTA|SLASH|CYAN|VOLT|MAGENTA|LIME)\b/g, tr).replace(/INNER /g,'內部').replace(/ NODE/g,'節點');
+  const target = value => value.replace(/\b(CIRCLE|DIAMOND|SQUARE|HEXAGON|DOT|CROSS|DELTA|SLASH|CYAN|VOLT|MAGENTA|LIME)\b/g, tr).replace(/INNER /g,'內部').replace(/ NODE/g,'圖案');
+  Object.assign(entries, {
+    'Next wave': '下一關',
+    'Horizontal flip: swap left and right in the blueprint.': '水平翻轉：把參考圖案的左右位置對調。',
+    'Vertical flip: swap top and bottom in the blueprint.': '垂直翻轉：把參考圖案的上下位置對調。',
+    'Two flips: swap left and right, then top and bottom.': '雙向翻轉：先對調左右，再對調上下。',
+    'A bigger board uses the same two flips: left to right and top to bottom.': '格子變大了，一樣先對調左右，再對調上下。',
+    'Try it': '試試看',
+    'Now tap the extra tile on the wooden board.': '現在點掉木板上多餘的方塊。',
+    'You did it! Use this flip to match the next pattern.': '學會了！用這個翻轉方式完成接下來的圖案。'
+  });
   const patterns = [
+    [/^Wave (\d+) completed\.$/, n => `第 ${n} 波完成。`],
     [/^Option (\d+)$/, n => `選項 ${n}`],
     [/^(?:Schematic Card|Card) (\d+): (.+)$/, (n,names) => `組合卡片 ${n}：${terms(names)}`],
     [/^(\d+) TARGETS( · 1 PHANTOM)?$/, (n,phantom) => `${n} 個目標${phantom?' · 1 個幻影':''}`],
@@ -132,13 +143,13 @@
     [/^WAVE (\d+) · (\d+x\d+) \((.+)\)$/, (n,grid,speed) => `第 ${n} 波 · ${grid}（${tr(speed)}）`],
     [/^Wave (\d+) time limit expired \((\d+)\/(\d+) hits completed\)\.$/, (n,h,q) => `第 ${n} 波時間到（已完成 ${h}/${q} 次命中）。`],
     [/^(TARGET|TAP): (.+)$/, (label,value) => `${label==='TARGET'?'目標':'點擊'}：${target(value)}`],
-    [/^(?:INNER (DOT|CROSS|DELTA|SLASH)|(CYAN|VOLT|MAGENTA|LIME) NODE)$/, (glyph,color) => glyph?`內部${tr(glyph)}`:`${tr(color)}節點`],
+    [/^(?:INNER (DOT|CROSS|DELTA|SLASH)|(CYAN|VOLT|MAGENTA|LIME) NODE)$/, (glyph,color) => glyph?`內部${tr(glyph)}`:`${tr(color)}圖案`],
     [/^((?:CYAN|VOLT|MAGENTA|LIME) (?:CIRCLE|DIAMOND|SQUARE|HEXAGON|DOT|CROSS|DELTA|SLASH)|(?:CIRCLE|DIAMOND|SQUARE|HEXAGON) \+ (?:DOT|CROSS|DELTA|SLASH))$/, value => target(value)],
-    [/^Tap any node with an outer (.+) shape\.$/, shape => `點擊外部形狀為${target(shape)}的節點。`],
-    [/^Tap any node glowing in (.+)\.$/, color => `點擊發出${target(color)}光芒的節點。`],
-    [/^Tap any node containing an inner (.+) symbol\.$/, glyph => `點擊內部包含${target(glyph)}符號的節點。`],
-    [/^Tap only nodes that are both (.+) and (.+)\.$/, (color,shape) => `只點擊同時符合${target(color)}與${target(shape)}的節點。`],
-    [/^Tap only (.+) nodes with an inner (.+)\.$/, (value,glyph) => `只點擊${target(value)}且內部符號為${target(glyph)}的節點。`],
+    [/^Tap any node with an outer (.+) shape\.$/, shape => `點擊外部形狀為${target(shape)}的圖案。`],
+    [/^Tap any node glowing in (.+)\.$/, color => `點擊${target(color)}的圖案。`],
+    [/^Tap any node containing an inner (.+) symbol\.$/, glyph => `點擊內部包含${target(glyph)}符號的圖案。`],
+    [/^Tap only nodes that are both (.+) and (.+)\.$/, (color,shape) => `只點擊同時符合${target(color)}與${target(shape)}的圖案。`],
+    [/^Tap only (.+) nodes with an inner (.+)\.$/, (value,glyph) => `只點擊${target(value)}且內部符號為${target(glyph)}的圖案。`],
     [/^(\d+) NODES$/, n => `${n} 個節點`]
   ];
   if (typeof module === 'object' && module.exports) module.exports = { entries, patterns };

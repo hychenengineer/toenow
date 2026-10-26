@@ -73,7 +73,6 @@ ToenowScreens.mount("ball-track");
 
         const btnOverdrive = document.getElementById('btn-overdrive');
         const btnConfirmMemory = document.getElementById('btn-confirm-memory');
-        const overdriveMultReadoutEl = document.getElementById('overdrive-mult-readout');
 
         const waveBannerEl = document.getElementById('wave-banner');
         const waveBannerTitleEl = document.getElementById('wave-banner-title');
@@ -579,7 +578,6 @@ ToenowScreens.mount("ball-track");
           state.innerRingAngle = 0;
           state.outerRingAngle = 0;
           btnOverdrive.classList.remove('active');
-          overdriveMultReadoutEl.textContent = 'BET MULTIPLIER: 1.0x -> 3.5x';
           hudOverdriveMultEl.textContent = '1.0x';
 
           const indices = [];

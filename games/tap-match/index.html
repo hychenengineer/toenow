@@ -117,22 +117,18 @@
                 </div>
               </div>
             </div>
-            <div class="spec-list">
-              <div class="spec-row">
-                <span class="spec-label">GRID &amp; SPEED</span>
-                <span id="brief-grid-speed" class="spec-val">3x3 · SLOW (2.2s window)</span>
-              </div>
-              <div class="spec-row">
-                <span class="spec-label">REQUIRED HITS</span>
-                <span id="brief-quota" class="spec-val">20 Matches</span>
-              </div>
-              <div class="spec-row">
-                <span class="spec-label">TIME REMAINING</span>
-                <span id="brief-time" class="spec-val">60s</span>
-              </div>
-            </div>
             <div class="action-row">
               <button type="button" id="btn-begin-wave" class="action-btn">[BEGIN WAVE 1]</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="modal-wave-clear" class="modal-backdrop island-briefing hidden" data-toenow-game="tap-match" role="dialog" aria-modal="true" aria-labelledby="wave-clear-title" aria-hidden="true" inert>
+          <div class="modal-card">
+            <h2 id="wave-clear-title" class="modal-title">Wave cleared!</h2>
+            <p id="wave-clear-summary" class="wave-rule-detail" role="status"></p>
+            <div class="action-row">
+              <button type="button" id="btn-next-wave" class="action-btn">Next wave</button>
             </div>
           </div>
         </div>

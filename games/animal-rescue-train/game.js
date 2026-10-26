@@ -15,6 +15,8 @@
     return `<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">${a.ears}<ellipse cx="32" cy="36" rx="23" ry="22" fill="${a.color}"/>${a.detail}<circle cx="23" cy="34" r="2.5" fill="${animal === 'panda' ? '#fff' : '#29323b'}"/><circle cx="41" cy="34" r="2.5" fill="${animal === 'panda' ? '#fff' : '#29323b'}"/><path d="m29 42 3 3 3-3z" fill="#573e46"/><path d="M32 45v3m-5-1q5 5 10 0" fill="none" stroke="#573e46" stroke-width="1.6" stroke-linecap="round"/></svg>`;
   }
   const $ = id => document.getElementById(id);
+  const tutorialActive = () => Boolean(window.ToenowTutorials?.isActive?.('animal-rescue-train'));
+  let tutorialSnapshot = null;
   const levels = RescueLevels;
   const storageKey = ToenowLevels.GAME_STORAGE_KEYS['animal-rescue-train'].session;
   let puzzleStorage;
@@ -47,6 +49,7 @@
     });
   }
   function syncSuccess() {
+    if (tutorialActive()) { closeSuccess(); return; }
     if (game.state.status !== 'won' || document.body.dataset.screen !== 'play') { closeSuccess(); return; }
     const dialog = $('success-dialog');
     dialog.insertBefore($('result'), $('success-actions'));
@@ -68,6 +71,7 @@
   sdk.setPracticeMode(isPractice);
 
   function persist() {
+    if (tutorialActive()) return;
     hasSave = true;
     try { localStorage.setItem(storageKey, JSON.stringify(RescueSession.saveProgress(levelIndex, game.level, actions, game.canUndo,
       { wave, isPractice, scoreBefore, elapsedMs: elapsed(), reported }))); }
@@ -97,12 +101,14 @@
     }
   }
   function begin(options) {
+    if (tutorialActive()) return;
     wave = Math.max(1, Math.floor(options.wave || 1));
     isPractice = Boolean(options.isPractice);
     scoreBefore = 0; elapsedBank = 0; runStarted = Date.now();
     loadRound();
   }
   function loadRound() {
+    if (tutorialActive()) return;
     closeSuccess();
     if ($('last-animal-dialog').open) $('last-animal-dialog').close();
     sdk.resume();
@@ -113,6 +119,7 @@
   }
   function retry() { sdk.startRun({ wave, isPractice }); loadRound(); }
   function reportResult() {
+    if (tutorialActive()) return;
     if (game.state.status === 'playing' || reported) return;
     reported = true;
     const report = sdk.handleGameOver({ score: scoreBefore + rescued(), wave, isPractice, duration: elapsed() });
@@ -134,7 +141,7 @@
     }
   }
   function render(message) {
-    window.ToenowAnimals?.setWave('animal-rescue-train', wave);
+    if (!tutorialActive()) window.ToenowAnimals?.setWave('animal-rescue-train', wave);
     const state = game.state;
     const info = ToenowLevels.getLevelInfo(wave);
     const playing = state.status === 'playing';
@@ -193,6 +200,7 @@
   $('continue').addEventListener('click', () => { selected = null; sdk.startRun({ wave, isPractice }); showPlay(); });
   $('menu').addEventListener('click', () => {
     closeSuccess();
+    if (tutorialActive()) return;
     sdk.resume(); persist(); selected = null; renderMenu();
     $('play-screen').hidden = true; $('menu-screen').hidden = false;
     document.body.dataset.screen = 'menu'; document.body.dataset.state = 'title';
@@ -200,18 +208,19 @@
   });
   $('queues').addEventListener('click', event => {
     const button = event.target.closest('[data-queue]');
-    if (paused || !button || button.disabled) return;
+    if (paused || !button || button.disabled || (tutorialActive() && window.ToenowTutorials.isComplete('animal-rescue-train'))) return;
     const index = Number(button.dataset.queue); selected = selected === index ? null : index;
     render(); document.querySelector(`[data-queue="${index}"]`)?.focus({ preventScroll: true });
   });
   $('cars').addEventListener('click', event => {
     const button = event.target.closest('[data-car]');
-    if (paused || !button || button.disabled || selected === null) return;
+    if (paused || !button || button.disabled || selected === null || (tutorialActive() && window.ToenowTutorials.isComplete('animal-rescue-train'))) return;
     const queue = selected, carIndex = Number(button.dataset.car);
     if (!game.move(queue, carIndex)) return;
-    window.ToenowAnimals?.feedback('animal-rescue-train', game.state.status !== 'lost');
+    if (!tutorialActive()) window.ToenowAnimals?.feedback('animal-rescue-train', game.state.status !== 'lost');
     actions.push([queue, carIndex]); selected = null; render(); reportResult(); persist();
     const departure = game.state.departure;
+    if (tutorialActive() && departure) window.ToenowTutorials.complete('animal-rescue-train');
     const stationmaster = $('stationmaster');
     if (stationmaster) {
       stationmaster.classList.remove('boarding-cheer');
@@ -227,11 +236,11 @@
     if (event.detail === 0) (document.querySelector('.head:not(:disabled)') || $('undo')).focus({ preventScroll: true });
   });
   $('undo').addEventListener('click', () => {
-    if (!paused && game.undo()) { actions.pop(); selected = null; reported = false; persist(); render(); }
+    if (!tutorialActive() && !paused && game.undo()) { actions.pop(); selected = null; reported = false; persist(); render(); }
   });
-  $('restart').addEventListener('click', () => { if (!paused) sdk.restart(); });
+  $('restart').addEventListener('click', () => { if (!tutorialActive() && !paused) sdk.restart(); });
   $('next').addEventListener('click', () => {
-    if (paused || game.state.status !== 'won') return;
+    if (tutorialActive() || paused || game.state.status !== 'won') return;
     scoreBefore = isPractice ? 0 : scoreBefore + rescued();
     const info = ToenowLevels.getLevelInfo(wave);
     if (!isPractice && info.level >= 5) {
@@ -266,6 +275,7 @@
   ['help-dialog', 'pause-dialog', 'last-animal-dialog'].forEach(id => $(id).addEventListener('close', () => { paused = Boolean($('help-dialog').open || $('pause-dialog').open || $('last-animal-dialog').open); }));
   $('exit-title').addEventListener('click', () => sdk.exitToHub());
   window.addEventListener('message', event => {
+    if (tutorialActive()) return;
     if (event.source !== window.parent || event.origin !== window.location.origin) return;
     if (event.data?.type === 'GAME_RESTART') sdk.restart();
     if (event.data?.type === 'GAME_PAUSE') sdk.pause();
@@ -273,5 +283,36 @@
   });
   window.addEventListener('toenow:languagechange', renderStationmaster);
   window.addEventListener('pagehide', () => { if (hasSave) persist(); });
+  // The tutorial owns only an isolated engine instance. Existing saved progress and
+  // puzzle-picker history stay untouched, including on pagehide.
+  window.ToenowTutorials?.register?.('animal-rescue-train', {
+    start() {
+      tutorialSnapshot = { wave, isPractice, levelIndex, game, actions, scoreBefore,
+        elapsedBank, runStarted, reported, hasSave, selected, paused };
+      closeSuccess();
+      ['pause-dialog', 'help-dialog', 'last-animal-dialog'].forEach(id => { if ($(id).open) $(id).close(); });
+      wave = 1; isPractice = true; levelIndex = 0; actions = []; scoreBefore = 0;
+      elapsedBank = 0; reported = false; selected = null; paused = false;
+      game = new RescueTrain.Game({ id: 'tutorial', queues: [['cat', 'cat', 'cat']], carCount: 1, goals: { cat: 3 } });
+      showPlay();
+    },
+    stop() {
+      closeSuccess();
+      if (tutorialSnapshot) {
+        ({ wave, isPractice, levelIndex, game, actions, scoreBefore, elapsedBank,
+          runStarted, reported, hasSave, selected, paused } = tutorialSnapshot);
+      }
+      tutorialSnapshot = null; selected = null; paused = false;
+      $('play-screen').hidden = true; $('menu-screen').hidden = false;
+      document.body.dataset.screen = 'menu'; document.body.dataset.state = 'title';
+      renderMenu(); render();
+    },
+    getGuide() {
+      const target = selected === null ? document.querySelector('[data-queue="0"]') : document.querySelector('[data-car="0"]');
+      const box = (target || $('cars')).getBoundingClientRect();
+      return { prompt: selected === null ? 'Tap the cat at the front of the queue.' : 'Tap the carriage. Three matching animals depart together.',
+        rect: { x: box.left, y: box.top, width: box.width, height: box.height } };
+    }
+  });
   renderMenu(); render();
 })();

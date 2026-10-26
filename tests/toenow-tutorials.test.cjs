@@ -1,68 +1,60 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
-const {catalog,createProgress,createLesson}=require('../shared/toenow-tutorials.js');
+const {catalog,createProgress,createSession}=require('../shared/toenow-tutorials.js');
 const ids=['number-pop','ball-track','block-match','add-up','space-scale','tap-match','spot-quick','shadow-match','flash-brain','animal-rescue-train'];
-test('all ten games load shared tutorials and provide game-specific interactive examples',()=>{
+test('ten games use the shared coach and register adapters in their own game engines',()=>{
   assert.deepEqual(Object.keys(catalog).sort(),ids.slice().sort());
   for(const id of ids){
     const html=fs.readFileSync(`games/${id}/index.html`,'utf8');
     assert.ok(html.includes('../../shared/toenow-tutorials.js'),id);
-    assert.ok(html.includes('../../assets/toenow-tutorials.css'),id);
-    assert.ok(catalog[id].steps.some(s=>s.answers?.length),id+' has actions');
+    const source=id==='flash-brain'?fs.readFileSync('games/flash-brain/tutorial.js','utf8'):id==='animal-rescue-train'?fs.readFileSync('games/animal-rescue-train/game.js','utf8'):html;
+    assert.match(source,/ToenowTutorials\??\.register(?:\?\.)?\(/,id+' registers real engine');
   }
 });
-test('completion is per game/version and only explicit completion or skipping persists',()=>{
-  const records=new Map();const storage={getItem:k=>records.get(k),setItem:(k,v)=>records.set(k,v)};
+test('v2 completion is isolated per game and old illustration completion does not suppress real teaching',()=>{
+  const records=new Map([['toenow_tutorial_block-match_v1','completed']]);
+  const storage={getItem:k=>records.get(k),setItem:(k,v)=>records.set(k,v)};
   const progress=createProgress(storage);
+  assert.equal(progress.key('block-match'),'toenow_tutorial_block-match_v2');
   assert.equal(progress.shouldShow('block-match'),true);
   assert.throws(()=>progress.mark('block-match','opened'));
-  assert.equal(records.size,0);
-  progress.mark('block-match','completed');
-  assert.equal(createProgress(storage).shouldShow('block-match'),false);
+  progress.mark('block-match','completed');assert.equal(progress.shouldShow('block-match'),false);
   assert.equal(progress.shouldShow('add-up'),true);
-  progress.mark('add-up','skipped');assert.equal(progress.shouldShow('add-up'),false);
-  storage.setItem(progress.key('block-match'),'old-version');
-  assert.equal(createProgress(storage).shouldShow('block-match'),true);
+  progress.mark('add-up','skipped');assert.equal(createProgress(storage).shouldShow('add-up'),false);
 });
-test('storage unavailable or corrupt never blocks starting or replays within this page',()=>{
+test('session activates protection before engine start and retains it throughout cleanup',()=>{
+  const events=[];let run;const progress=createProgress();
+  run=createSession('block-match',{
+    start(){events.push(['start',run.active]);},stop(){events.push(['stop',run.active]);},
+    getGuide(){return {prompt:'Tap away the extra tile',rect:{x:1,y:2,width:3,height:4}};}
+  },progress);
+  run.start();assert.equal(run.active,true);assert.equal(run.done,false);
+  assert.equal(progress.shouldShow('block-match'),true);assert.equal(run.guide().rect.x,1);
+  run.stop();assert.equal(run.active,false);assert.equal(progress.shouldShow('block-match'),true);
+  assert.deepEqual(events,[['start',true],['stop',true]]);
+});
+test('only actual engine completion or explicit skip records teaching as seen',()=>{
+  const progress=createProgress();let stopped=0;
+  const adapter={start(){},stop(){stopped++;},getGuide(){return {};}};
+  const run=createSession('block-match',adapter,progress);run.start();
+  run.complete();run.complete();assert.equal(run.done,true);
+  assert.equal(progress.shouldShow('block-match'),false);assert.equal(stopped,0);
+  run.stop();assert.equal(stopped,1);run.stop();assert.equal(stopped,1);
+  const skip=createSession('add-up',adapter,progress);skip.start();skip.skip();
+  assert.equal(progress.shouldShow('add-up'),false);
+});
+test('unavailable storage does not block teaching or in-page completion',()=>{
   const progress=createProgress({getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}});
-  assert.equal(progress.shouldShow('flash-brain'),true);
-  progress.mark('flash-brain','completed');
-  assert.equal(progress.shouldShow('flash-brain'),false);
-  assert.equal(progress.shouldShow('ball-track'),true);
+  const run=createSession('flash-brain',{start(){},stop(){},getGuide(){return {};}},progress);
+  run.start();run.complete();run.stop();assert.equal(progress.shouldShow('flash-brain'),false);
 });
-test('each lesson rejects mistakes and requires its own ordered actions before success',()=>{
-  for(const id of ids){
-    const lesson=createLesson(id);
-    assert.equal(lesson.done,false);
-    for(const step of catalog[id].steps){
-      const index=lesson.index;
-      assert.equal(lesson.act('wrong'),false,id);
-      assert.equal(lesson.index,index,id);
-      for(const answer of step.answers)assert.equal(lesson.act(answer),true,id);
-    }
-    assert.equal(lesson.done,true,id);
-    assert.equal(lesson.act('wrong'),false,id);
-  }
-});
-test('number ordering and Flash Brain priority cannot be skipped; sums accept either order',()=>{
-  const numbers=createLesson('number-pop');assert.equal(numbers.act('three'),false);
-  numbers.act('one');assert.equal(numbers.act('three'),false);
-  const memory=createLesson('flash-brain');memory.act('remember');
-  assert.equal(memory.act('bed4'),false);memory.act('bed0');memory.act('bed4');assert.equal(memory.done,true);
-  const sum=createLesson('add-up');assert.equal(sum.act('four'),false);sum.act('three');sum.act('two');assert.equal(sum.done,true);
-});
-
-test('every lesson instruction and teaching control has a Traditional Chinese translation',()=>{
+test('shared coach contains no duplicate game renderer or synthetic answer buttons',()=>{
+  const src=fs.readFileSync('shared/toenow-tutorials.js','utf8');
+  assert.doesNotMatch(src,/tutorial-choice|createElementNS|function silhouette|function garden|function draw\(/);
+  assert.match(src,/getGuide/);
   const {createI18n}=require('../shared/toenow-i18n.js');
   const catalogs=['core','games-a','games-b','animals'].map(name=>require('../shared/toenow-i18n-'+name+'.js'));
-  const i18n=createI18n({languages:['zh-TW'],catalogs});
-  const phrases=Object.values(catalog).flatMap(c=>c.steps.map(s=>s.prompt)).concat([
-    'Play tutorial','More rules','Try it — no timer','Close tutorial','Skip tutorial','Back to title',
-    'You did it!','✓ Ready to play!','Follow the glow. Try one tap.','Try the glowing one. No rush!',
-    'Target','Tap away the extra tile','Hide and follow','I remember — hide them',
-    'Queue','Carriage','Flowerbed','Tile','Blurry picture','circle-square','circle-triangle','square-triangle'
-  ]);
-  for(const phrase of phrases)assert.notEqual(i18n.t(phrase),phrase,phrase);
+  const t=createI18n({languages:['zh-TW'],catalogs});
+  for(const c of Object.values(catalog))assert.notEqual(t.t(c.prompt),c.prompt,c.name);
 });

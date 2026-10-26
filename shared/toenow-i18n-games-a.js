@@ -2,6 +2,20 @@
   'use strict';
   // Exact visible phrases; numeric puzzle values and operators stay unchanged.
   const entries = {
+    'Tutorial — no timer, no score': '教學・不限時、不計分',
+    'Tap the other remembered flowerbed.': '再點另一個記住的花圃',
+    'Tap the baskets from smallest to largest: 1, 2, 3.': '從小到大，依序點 1、2、3 的籃子',
+    'Compare both shapes. Tap the extra block to match the target.': '對照兩個圖案，點掉多餘的方塊',
+    'Tap 2, then 3. Their sum matches the target 5.': '點 2，再點 3，加起來就是目標 5',
+    'The lower side is heavier. Tap the heavier parcel.': '較低的一邊較重，點較重的包裹',
+    'The lower side is heavier. Tap the lighter parcel.': '較低的一邊較重，點較輕的包裹',
+    'Tap the card that matches the target above.': '點選符合上方目標的卡片',
+    'Match the picture in the spotlight to a card below.': '看清楚圖片，點選下方相同的卡片',
+    'Look at the shadows above. Tap the card with the same shapes.': '看看上方的影子，點選相同組合的卡片',
+    'Remember the otter, then follow its leaf.': '記住水獺的位置，再跟著葉子看',
+    'Tap the leaf hiding the otter.': '點水獺藏身的葉子',
+    'Tap the cat at the front of the queue.': '點隊伍最前面的貓咪',
+    'Tap the carriage. Three matching animals depart together.': '點車廂，三隻相同動物就會出發',
     'Play tutorial': '玩法教學',
     'More rules': '更多規則',
     'Try it — no timer': '試一次就會・不限時間',

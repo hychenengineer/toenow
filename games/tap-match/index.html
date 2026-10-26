@@ -717,6 +717,8 @@
         // ==================================================
         // 4. GAME STATE & 3x3 -> 4x4 -> 5x5 ESCALATION ENGINE
         // ==================================================
+        const tutorialActive = () => Boolean(window.ToenowTutorials?.isActive?.('tap-match'));
+        let tutorialSnapshot = null;
         const state = {
           phase: 'MENU', // 'MENU' | 'BRIEFING' | 'STAGING' | 'PLAYING' | 'GAMEOVER'
           wave: 1,
@@ -1047,6 +1049,7 @@
         }
 
         function triggerPenalty(node, reasonLabel, feedbackType) {
+          if (tutorialActive()) return;
           window.ToenowAnimals?.feedback('tap-match', false);
           state.streak = 0;
           state.faults += 1;
@@ -1070,6 +1073,7 @@
         }
 
         function handlePointerDown(clientX, clientY) {
+          if (tutorialActive() && window.ToenowTutorials.isComplete('tap-match')) return;
           if (state.phase === 'STAGING') {
             state.stagingTimer = 0;
             state.phase = 'PLAYING';
@@ -1113,21 +1117,23 @@
               }
 
               const pts = computeHitPoints(state.wave, state.streak);
-              state.score += pts;
+              if (!tutorialActive()) state.score += pts;
               state.waveHits++;
-              window.ToenowAnimals?.feedback('tap-match', true);
+              if (!tutorialActive()) window.ToenowAnimals?.feedback('tap-match', true);
               penguinCollection.push({ x: hitNode.x, y: hitNode.y, shape: hitNode.shape, color: hitNode.color, glyph: hitNode.glyph, started: performance.now() });
               state.timeLeft = Math.min(getWaveConfig(state.wave).waveTimeSeconds, state.timeLeft + 0.5);
 
               hitNode.status = 'HIT_FEEDBACK';
               hitNode.feedbackMs = 240;
-              hitNode.feedbackLabel = `+${pts}`;
+              hitNode.feedbackLabel = tutorialActive() ? '✓' : `+${pts}`;
               hitNode.feedbackType = 'HIT';
 
               audio.playHit();
               syncHud();
 
-              if (state.waveHits >= state.waveQuota) {
+              if (tutorialActive()) {
+                state.timeLeft = 65; window.ToenowTutorials.complete('tap-match');
+              } else if (state.waveHits >= state.waveQuota) {
                 prepareWaveBriefing(state.wave + 1);
               }
             } else {
@@ -1252,6 +1258,7 @@
         }
 
         function startNewRun(startWave = 1, isPractice = false) {
+          if (tutorialActive()) return;
           if (toenowSdk) toenowSdk.startRun({ wave: startWave, isPractice });
           state.isPractice = Boolean(isPractice);
           audio.init();
@@ -1271,6 +1278,7 @@
         }
 
         function endRun(reasonText) {
+          if (tutorialActive()) return;
           state.phase = 'GAMEOVER';
           modalWaveBrief.classList.add('hidden');
           const acc = state.totalTaps > 0 ? Math.round((state.validHits / state.totalTaps) * 100) : 0;
@@ -1527,6 +1535,11 @@
 
           if (state.phase !== 'PLAYING') return;
 
+          if (tutorialActive()) {
+            elTime.textContent = '∞';
+            for (const node of state.nodes) if (node.status === 'HIT_FEEDBACK') node.feedbackMs = Math.max(1, node.feedbackMs - dtMs);
+            return;
+          }
           // Update wave timer
           state.timeLeft -= dtSec;
           if (state.timeLeft <= 0) {
@@ -1801,6 +1814,7 @@
         );
 
         function togglePause() {
+          if (tutorialActive()) return;
           if (state.phase === 'PLAYING' || state.phase === 'STAGING') {
             state.previousPhase = state.phase;
             state.phase = 'PAUSED';
@@ -1906,6 +1920,29 @@
           layoutMatrixGeometry();
         });
 
+        window.ToenowTutorials?.register?.('tap-match', {
+          start() {
+            tutorialSnapshot = JSON.parse(JSON.stringify(state));
+            Object.assign(state, { isPractice: true, score: 0, wave: 1, waveHits: 0, waveQuota: 1, faults: 0, streak: 0, peakStreak: 0, timeLeft: 65, gridSize: 3 });
+            state.target = generateTargetCriteria(1); buildNodeMatrix();
+            Object.assign(state.nodes[4], { status: 'ACTIVE', isTarget: true,
+              shape: state.target.shape || 'CIRCLE', color: state.target.color || 'CYAN', glyph: state.target.glyph || 'DOT', elapsedMs: 100, durationMs: 2200 });
+            state.phase = 'PLAYING'; penguinCollection.length = 0;
+            [modalStart, modalGameOver, modalWaveBrief, modalPause].forEach(m => { m.classList.add('hidden'); m.classList.remove('active'); });
+            syncHud(); elTime.textContent = '∞';
+          },
+          stop() {
+            if (tutorialSnapshot) Object.assign(state, tutorialSnapshot);
+            tutorialSnapshot = null; state.phase = 'MENU'; penguinCollection.length = 0;
+            modalStart.classList.remove('hidden'); modalStart.classList.add('active');
+            [modalGameOver, modalWaveBrief, modalPause].forEach(m => { m.classList.add('hidden'); m.classList.remove('active'); });
+            layoutMatrixGeometry(); syncHud();
+          },
+          getGuide() {
+            const node = state.nodes[4], box = canvas.getBoundingClientRect();
+            return { prompt: 'Tap the card that matches the target above.', rect: { x: box.left + node.x - node.radius, y: box.top + node.y - node.radius, width: node.radius * 2, height: node.radius * 2 } };
+          }
+        });
         // Initial setup
         buildNodeMatrix();
         syncHud();

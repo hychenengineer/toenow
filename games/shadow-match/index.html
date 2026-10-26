@@ -1729,6 +1729,7 @@
 
         function saveBestRecords(score, wave) {
           if (state && state.isPractice) return;
+          if (window.ToenowTutorials?.isActive?.('shadow-match')) return;
           try {
             const current = loadBestRecords();
             const newScore = Math.max(current.bestScore, Math.round(score));
@@ -1974,7 +1975,7 @@
           hudComboEl.classList.toggle('combo-hot', state.combo >= 4);
 
           const clampedTime = Math.max(0, state.timeRemaining);
-          hudTimerEl.textContent = clampedTime.toFixed(1) + 's';
+          hudTimerEl.textContent = Boolean(window.ToenowTutorials?.isActive?.('shadow-match')) ? '∞' : clampedTime.toFixed(1) + 's';
           hudTimerEl.classList.toggle('timer-warn', clampedTime < 15.0 && clampedTime >= 5.0);
           hudTimerEl.classList.toggle('timer-critical', clampedTime < 5.0);
 
@@ -2008,7 +2009,7 @@
         }
 
         function startNewRun(startWave = 1, isPractice = false) {
-          if (toenowSdk) toenowSdk.startRun({ wave: startWave, isPractice });
+          if (!Boolean(window.ToenowTutorials?.isActive?.('shadow-match')) && toenowSdk) toenowSdk.startRun({ wave: startWave, isPractice });
           state.isPractice = Boolean(isPractice);
           state.score = 0;
           state.combo = 1;
@@ -2027,6 +2028,7 @@
         }
 
         function triggerGameOver() {
+          if (Boolean(window.ToenowTutorials?.isActive?.('shadow-match'))) return;
           state.timeRemaining = 0;
           syncHUD();
 
@@ -2071,11 +2073,17 @@
         }
 
         function handleCardSelection(cardIdx) {
-          if (state.mode !== 'playing') return;
+          if (state.mode !== 'playing' || (Boolean(window.ToenowTutorials?.isActive?.('shadow-match')) && Boolean(window.ToenowTutorials?.isComplete?.('shadow-match')))) return;
           if (state.transitionType !== 'none') return;
           if (!state.setup || cardIdx < 0 || cardIdx >= state.setup.cards.length) return;
 
           state.selectedCardIndex = cardIdx;
+          if (Boolean(window.ToenowTutorials?.isActive?.('shadow-match'))) {
+            if (state.setup.cards[cardIdx].isCorrect) {
+              sound.playLockSuccess(1); window.ToenowTutorials.complete('shadow-match');
+            } else { sound.playFaultBuzz(); }
+            return;
+          }
           state.totalAttempts += 1;
 
           const chosenCard = state.setup.cards[cardIdx];
@@ -2277,6 +2285,7 @@
         // 7. SIMULATION STEP (CLAMPED DT, 5-TIER MOTION PATTERNS, TIMER)
         // ============================================================================
         function updateSimulation(dt) {
+          if (Boolean(window.ToenowTutorials?.isActive?.('shadow-match')) && Boolean(window.ToenowTutorials?.isComplete?.('shadow-match'))) return;
           // Keep ambient silhouette motion alive on the Title screen background
           if (state.mode === 'title') {
             state.waveElapsed += dt;
@@ -2317,7 +2326,7 @@
           }
 
           // Global 60.0s countdown clock
-          state.timeRemaining = Math.max(0, state.timeRemaining - dt);
+          if (!Boolean(window.ToenowTutorials?.isActive?.('shadow-match'))) state.timeRemaining = Math.max(0, state.timeRemaining - dt);
           state.waveElapsed += dt;
 
           const currentWholeSec = Math.ceil(state.timeRemaining);
@@ -2807,6 +2816,15 @@
             else syncHUD();
           }
         };
+
+        window.ToenowTutorials?.register?.('shadow-match', {
+          start() { startNewRun(1, true); },
+          stop() { state.isPractice = false; state.transitionType = 'none'; setGameState('title'); },
+          getGuide() {
+            const button = state.cardButtons[state.setup?.correctCardIndex], bounds = button?.getBoundingClientRect();
+            return { prompt: 'Look at the shadows above. Tap the card with the same shapes.', rect: bounds ? { x: bounds.left, y: bounds.top, width: bounds.width, height: bounds.height } : null, waiting: !bounds, done: Boolean(window.ToenowTutorials?.isComplete?.('shadow-match')) };
+          }
+        });
 
         // Initialize layout, Wave 1 preview, and handle ?autostart=1
         measureLayout();

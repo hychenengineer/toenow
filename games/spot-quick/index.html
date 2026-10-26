@@ -4881,6 +4881,8 @@
         const CORRECT_TIME_BONUS = 2.0;
         const WRONG_TIME_PENALTY = 1.5;
 
+        const tutorialActive = () => Boolean(window.ToenowTutorials?.isActive?.('spot-quick'));
+        let tutorialSnapshot = null;
         const TIERS = [
           { level: 1, name: "BEGINNER", focusWindow: 10.0 },
           { level: 2, name: "INTERMEDIATE", focusWindow: 20.0 },
@@ -5011,7 +5013,7 @@
         }
 
         function setupWave(waveNum) {
-          window.ToenowAnimals?.setWave('spot-quick', waveNum);
+          if (!tutorialActive()) window.ToenowAnimals?.setWave('spot-quick', waveNum);
           state.wave = waveNum;
           const tier = getTierForWave(waveNum);
           state.currentTier = tier;
@@ -5162,6 +5164,7 @@
         }
 
         function startGame(startWave = 1, isPractice = false) {
+          if (tutorialActive()) return;
           if (toenowSdk) toenowSdk.startRun({ wave: startWave, isPractice });
           state.isPractice = Boolean(isPractice);
           ensureAudioContext();
@@ -5177,6 +5180,7 @@
         }
 
         function triggerGameOver(reasonText) {
+          if (tutorialActive()) return;
           if (state.mode === "GAME_OVER") return;
           state.timeRemaining = 0;
           state.mode = "GAME_OVER";
@@ -5219,6 +5223,13 @@
         }
 
         function handleCandidateSelection(index) {
+          if (tutorialActive()) {
+            if (window.ToenowTutorials.isComplete('spot-quick')) return;
+            const candidate = state.candidates[index];
+            if (!candidate?.correct) { playIncorrectBuzz(); return; }
+            candidate.selectedCorrect = true; state.clarity = 1; state.mode = 'LOCKED_CORRECT';
+            playCorrectBlip(1); updateHudDOM(); window.ToenowTutorials.complete('spot-quick'); return;
+          }
           if (state.mode !== "ACTIVE") return;
           if (state.inputFreezeTimer > 0) return;
 
@@ -5327,6 +5338,7 @@
         });
 
         function togglePause() {
+          if (tutorialActive()) return;
           if (state.mode === "ACTIVE" || state.mode === "STAGING") {
             state.previousMode = state.mode;
             state.mode = "PAUSED";
@@ -5743,7 +5755,9 @@
           lastFrameTime = now;
           const dt = Math.min(0.1, Math.max(0.0, rawDt));
 
-          if (state.mode === "STAGING") {
+          if (tutorialActive()) {
+            state.subjectAngle += state.subjectAngularVel * dt; updateHudDOM(); hudPipedText.textContent = 'LEVEL 1 | TIME: ∞';
+          } else if (state.mode === "STAGING") {
             state.stagingTimer -= dt;
             state.elapsedInWave = 0;
             state.clarity = 0.0;
@@ -5824,6 +5838,25 @@
         updateHudDOM();
           ToenowScreens.updateTitle('spot-quick', { bestScore: loadBestFocusScore(), bestWave: loadBestFocusWave() });
         requestAnimationFrame(gameLoop);
+        window.ToenowTutorials?.register?.('spot-quick', {
+          start() {
+            tutorialSnapshot = { ...state, candidates: state.candidates.map(c => ({ ...c, rect: { ...c.rect } })), layout: { ...state.layout }, lastHistoryIds: [...state.lastHistoryIds] };
+            Object.assign(state, { isPractice: true, score: 0, streak: 0, peakStreak: 0 }); setupWave(1);
+            Object.assign(state, { mode: 'ACTIVE', clarity: 1, subjectAngle: 0, subjectAngularVel: 0, elapsedInWave: state.focusWindow });
+            [briefingModal, gameOverModal].forEach(m => { m.classList.add('hidden'); m.classList.remove('active'); });
+            updateLayoutMetrics(); updateHudDOM();
+          },
+          stop() {
+            if (tutorialSnapshot) Object.assign(state, tutorialSnapshot);
+            tutorialSnapshot = null; state.mode = 'BRIEFING';
+            briefingModal.classList.remove('hidden'); briefingModal.classList.add('active');
+            gameOverModal.classList.add('hidden'); gameOverModal.classList.remove('active'); updateLayoutMetrics(); updateHudDOM();
+          },
+          getGuide() {
+            const c = state.candidates.find(candidate => candidate.correct), box = canvas.getBoundingClientRect();
+            return { prompt: 'Match the picture in the spotlight to a card below.', rect: { x: box.left + c.rect.x, y: box.top + c.rect.y, width: c.rect.w, height: c.rect.h } };
+          }
+        });
       })();
     </script>
   </body>

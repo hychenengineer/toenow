@@ -2490,7 +2490,7 @@
           hudCenterCluster.classList.toggle('breather-mode', isBreatherWave(game.wave));
 
           const clampedTime = Math.max(0, game.timeLeft);
-          hudTimer.textContent = clampedTime.toFixed(1) + 's';
+          hudTimer.textContent = window.ToenowTutorials?.isActive('number-pop') ? '∞' : clampedTime.toFixed(1) + 's';
           hudTimer.classList.toggle('warning', clampedTime <= 20 && clampedTime > 10);
           hudTimer.classList.toggle('critical', clampedTime <= 10 || stageInfo.isCritical);
 
@@ -2527,7 +2527,7 @@
         }
 
         function startGame(startWave = 1, isPractice = false) {
-          if (toenowSdk) toenowSdk.startRun({ wave: startWave, isPractice });
+          if (toenowSdk && !window.ToenowTutorials?.isActive('number-pop')) toenowSdk.startRun({ wave: startWave, isPractice });
           if (document.activeElement && typeof document.activeElement.blur === 'function') {
             document.activeElement.blur();
           }
@@ -2590,6 +2590,7 @@
         }
 
         function triggerGameOver() {
+          if (window.ToenowTutorials?.isActive('number-pop')) return;
           if (game.state === 'gameover') return;
           game.timeLeft = 0;
           sound.stopDrone();
@@ -2656,11 +2657,21 @@
 
         function handleCoreSelection(core) {
           if (!core || core.popped || game.state !== 'playing') return;
+          if (window.ToenowTutorials?.isComplete('number-pop') && window.ToenowTutorials?.isActive('number-pop')) return;
 
           const lowestCore = getLowestUnpoppedCore();
           if (!lowestCore) return;
 
           if (Math.abs(core.value - lowestCore.value) < 1e-6) {
+            if (window.ToenowTutorials?.isActive('number-pop')) {
+              core.popped = true;
+              game.poppedInWave++;
+              sound.playPop(game.poppedInWave, false, 'cyan');
+              spawnShatterBurst(core.x, core.y, core.hue, 20, false);
+              if (!getLowestUnpoppedCore()) window.ToenowTutorials.complete('number-pop');
+              syncHud();
+              return;
+            }
             // CORRECT ASCENDING CLICK (Musical chime + combo bonus, NO screen shake!)
             // Always allow popping the target lowest core immediately even if it had freezeTimer from an earlier misclick
             core.freezeTimer = 0;
@@ -2751,6 +2762,12 @@
             syncHud();
           } else {
             // If core is currently frozen from a recent misclick, ignore extra mistake spam
+            if (window.ToenowTutorials?.isActive('number-pop')) {
+              core.errorFlash = 0.4;
+              core.freezeTimer = 0.35;
+              sound.playMistakeGlitch();
+              return;
+            }
             if (core.freezeTimer > 0) return;
 
             if (window.ToenowAnimals) window.ToenowAnimals.feedback('number-pop', false);
@@ -3432,7 +3449,7 @@
               if (game.waveTransitionTimer <= 0) {
                 spawnWave(game.wave + 1);
               }
-            } else {
+            } else if (!window.ToenowTutorials?.isActive('number-pop')) {
               game.runDuration += dt;
               const decayMultiplier = getTimerDecayMultiplier(game.runDuration);
               game.timeLeft = Math.max(0, game.timeLeft - dt * decayMultiplier);
@@ -3522,6 +3539,42 @@
           },
         };
         window.__TEST_HOOKS__ = window.__QUANTUM_GAME__;
+
+        window.ToenowTutorials?.register('number-pop', {
+          start() {
+            startGame(1, true);
+            game.cores = game.cores.slice(0, 3);
+            const bounds = getArenaBounds();
+            game.cores.forEach((core, i) => {
+              core.value = i + 1;
+              core.label = String(i + 1);
+              core.fractionGauge = null;
+              core.radius = Math.min(42, (bounds.right - bounds.left) / 8);
+              core.x = bounds.left + (bounds.right - bounds.left) * (i + 1) / 4;
+              core.y = bounds.top + (viewportH - bounds.top) * 0.55;
+              core.vx = core.vy = 0;
+            });
+            syncHud();
+          },
+          stop() {
+            sound.stopDrone();
+            game.isPractice = false;
+            game.score = game.combo = game.maxCombo = game.shardsEarnedThisRun = 0;
+            game.waveTransitionTimer = 0;
+            game.cores = [];
+            setScreenState('title');
+          },
+          getGuide() {
+            const core = getLowestUnpoppedCore();
+            if (!core) return { done: true };
+            const rect = canvas.getBoundingClientRect();
+            const sx = rect.width / viewportW, sy = rect.height / viewportH;
+            return { prompt: 'Tap the baskets from smallest to largest: 1, 2, 3.', rect: {
+              x: rect.left + (core.x - core.radius) * sx, y: rect.top + (core.y - core.radius) * sy,
+              width: core.radius * 2 * sx, height: core.radius * 2 * sy
+            }};
+          }
+        });
 
         // Initial Boot
           ToenowScreens.updateTitle('number-pop', { bestScore: loadHighScore(), bestWave: loadBestWave() });

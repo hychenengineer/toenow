@@ -1221,7 +1221,7 @@
           if(window.ToenowAnimals) window.ToenowAnimals.setWave('block-match', state.wave);
           elHudGrid.textContent = n + 'x' + n;
           elHudCombo.textContent = 'x' + state.combo;
-          elHudTimer.textContent = state.timeLeft.toFixed(1) + 's';
+          elHudTimer.textContent = window.ToenowTutorials?.isActive('block-match') ? '∞' : state.timeLeft.toFixed(1) + 's';
           elHudTimer.className = state.timeLeft <= 12 ? 'hud-value danger' : 'hud-value';
         }
 
@@ -1246,7 +1246,7 @@
         }
 
         function startNewGame(startWave = 1, isPractice = false) {
-          if (toenowSdk) toenowSdk.startRun({ wave: startWave, isPractice });
+          if (toenowSdk && !window.ToenowTutorials?.isActive('block-match')) toenowSdk.startRun({ wave: startWave, isPractice });
           state.isPractice = Boolean(isPractice);
           if (document.activeElement && typeof document.activeElement.blur === 'function') {
             document.activeElement.blur();
@@ -1278,6 +1278,7 @@
         }
 
         function triggerGameOver() {
+          if (window.ToenowTutorials?.isActive('block-match')) return;
           state.timeLeft = 0;
           if (!state.isPractice && state.score > state.highScore) {
             state.highScore = state.score;
@@ -1355,6 +1356,7 @@
          */
         function handleSingleCellTap(r, c) {
           if (gameMode !== 'playing' || state.freezeTimer > 0 || state.successRemaining > 0) return;
+          if (window.ToenowTutorials?.isActive('block-match') && window.ToenowTutorials?.isComplete('block-match')) return;
           var n = board.config.gridSize;
           if (r < 0 || r >= n || c < 0 || c >= n) return;
 
@@ -1369,6 +1371,14 @@
             board.activeGrid[r][c] = 0;
             board.remainingExcess--;
             board.blocksShatteredInWave++;
+
+            if (window.ToenowTutorials?.isActive('block-match')) {
+              spawnShards(center.x, center.y, 18, '#00f0ff');
+              playSiliconTap(board.blocksShatteredInWave);
+              if (board.remainingExcess <= 0) window.ToenowTutorials.complete('block-match');
+              syncHud();
+              return;
+            }
 
             var blockScore = Math.round(50 * state.combo);
             state.score += blockScore;
@@ -1410,6 +1420,11 @@
           }
 
           // Tapping an essential core block triggers a 0.35s glitch penalty and resets combo
+          if (window.ToenowTutorials?.isActive('block-match')) {
+            redGlitchTimer = MISTAKE_FREEZE_SECONDS;
+            playGlitchBuzz();
+            return;
+          }
           state.combo = 1;
           state.mistakesInWave++;
           state.timeLeft = Math.max(0, state.timeLeft - WRONG_TAP_TIME_PENALTY);
@@ -1795,7 +1810,9 @@
           if (redGlitchTimer > 0) redGlitchTimer = Math.max(0, redGlitchTimer - dt);
 
           // Session timer ticks ONLY during active 'playing' state (100% frozen during 'briefing')
-          if (gameMode === 'playing' && state.successRemaining > 0) {
+          if (window.ToenowTutorials?.isActive('block-match')) {
+            // Keep rendering the real board and particles without session progression.
+          } else if (gameMode === 'playing' && state.successRemaining > 0) {
             state.successRemaining = Math.max(0, state.successRemaining - dt);
             if (state.successRemaining === 0) advanceAfterSuccess();
           } else if (gameMode === 'playing') {
@@ -1868,6 +1885,37 @@
 
         updateLayout();
         syncHud();
+
+        window.ToenowTutorials?.register('block-match', {
+          start() {
+            startNewGame(1, true);
+            board.config = getWaveConfig(1);
+            board.config.gridSize = 3;
+            board.carvingTargetGrid = [[0,1,0],[1,1,1],[0,1,0]];
+            board.blueprintGrid = board.carvingTargetGrid.map(row => row.slice());
+            board.activeGrid = [[2,1,0],[1,1,1],[0,1,0]];
+            board.remainingExcess = board.config.excessCount = 1;
+            board.blocksShatteredInWave = 0;
+            document.getElementById('match-success').hidden = true;
+            updateLayout();
+            syncHud();
+          },
+          stop() {
+            state.isPractice = false;
+            state.score = state.successRemaining = state.freezeTimer = 0;
+            document.getElementById('match-success').hidden = true;
+            setGameMode('title');
+          },
+          getGuide() {
+            if (board.remainingExcess === 0) return { done: true };
+            const point = getCellCenter(layout.leftBox, 0, 0);
+            const rect = canvas.getBoundingClientRect();
+            const size = layout.leftBox.cellSize;
+            return { prompt: 'Tap away the extra tile', rect: {
+              x: rect.left + point.x - size / 2, y: rect.top + point.y - size / 2, width: size, height: size
+            }};
+          }
+        });
 
         var params = new URLSearchParams(window.location.search);
         if (typeof ToenowLevels !== 'undefined' && ToenowLevels.setupPracticeMode) {

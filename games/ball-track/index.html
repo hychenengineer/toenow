@@ -1092,6 +1092,7 @@
 
         function saveRecords(score, wave) {
           if (state && state.isPractice) return;
+          if (window.ToenowTutorials?.isActive?.('ball-track')) return;
           if (score > bestScore) bestScore = score;
           if (wave > bestWave) bestWave = wave;
           try {
@@ -2336,7 +2337,7 @@
         }
 
         function startNewGame(startWave = 1, isPractice = false) {
-          if (toenowSdk) toenowSdk.startRun({ wave: startWave, isPractice });
+          if (!Boolean(window.ToenowTutorials?.isActive?.('ball-track')) && toenowSdk) toenowSdk.startRun({ wave: startWave, isPractice });
           audio.playUiClick(580);
           if (document.activeElement && typeof document.activeElement.blur === 'function') {
             document.activeElement.blur();
@@ -2391,7 +2392,14 @@
         // --- Capsule Selection (Direct Click / Tap Only) ---
         function handleShellSelection(shell) {
           if (state.mode !== 'playing' || state.phase !== 'select') return;
-          if (!shell || shell.picked) return;
+          if (!shell || shell.picked || (Boolean(window.ToenowTutorials?.isActive?.('ball-track')) && Boolean(window.ToenowTutorials?.isComplete?.('ball-track')))) return;
+          if (Boolean(window.ToenowTutorials?.isActive?.('ball-track'))) {
+            if (!shell.hasCore) { audio.playUiClick(320); return; }
+            shell.picked = true; shell.revealedState = 'correct'; shell.shieldOpen = 1; shell.flash = 0.25;
+            audio.playCorrectTap(1); updateHudReadouts();
+            if (state.shells.every(s => !s.hasCore || s.picked)) window.ToenowTutorials.complete('ball-track');
+            return;
+          }
 
           const remainingMs = Math.max(0, state.phaseDurationMs - state.phaseElapsedMs);
 
@@ -2609,6 +2617,7 @@
         }
 
         function showGameOverModal() {
+          if (Boolean(window.ToenowTutorials?.isActive?.('ball-track'))) return;
           ToenowScreens.updateGameOver('ball-track', { score: state.frozenSnapshot.score, bestScore: state.frozenSnapshot.best, wave: state.frozenSnapshot.wave, combo: null, reason: 'GAME OVER' });
                     setBodyState('gameover', 'idle');
 
@@ -2885,6 +2894,7 @@
 
         // --- Simulation Update Loop ---
         function updateSimulation(dtSeconds) {
+          if (Boolean(window.ToenowTutorials?.isActive?.('ball-track')) && Boolean(window.ToenowTutorials?.isComplete?.('ball-track'))) return;
           const realDtMs = dtSeconds * 1000;
           let dtMs = realDtMs;
 
@@ -3042,7 +3052,7 @@
             }
           }
 
-          state.phaseElapsedMs += dtMs;
+          if (!(Boolean(window.ToenowTutorials?.isActive?.('ball-track')) && state.phase === 'select')) state.phaseElapsedMs += dtMs;
 
           if (state.phase === 'wave_ready') {
             if (state.phaseElapsedMs >= state.phaseDurationMs) {
@@ -3205,7 +3215,7 @@
           } else if (state.phase === 'select') {
             const rem = Math.max(0, state.phaseDurationMs - state.phaseElapsedMs);
             const ratio = rem / Math.max(1, state.phaseDurationMs);
-            hudTimerEl.textContent = (rem / 1000).toFixed(1) + 's';
+            hudTimerEl.textContent = Boolean(window.ToenowTutorials?.isActive?.('ball-track')) ? '∞' : (rem / 1000).toFixed(1) + 's';
             hudGaugeFillEl.style.transform = `scaleX(${ratio.toFixed(3)})`;
 
             const secCeil = Math.ceil(rem / 1000);
@@ -3638,6 +3648,17 @@
             if (target) handleShellSelection(target);
           },
         };
+
+        window.ToenowTutorials?.register?.('ball-track', {
+          start() { startNewGame(1, true); },
+          stop() { state.isPractice = false; returnToTitle(); },
+          getGuide() {
+            if (state.phase !== 'select') return { prompt: 'Remember the otter, then follow its leaf.', rect: null, waiting: true };
+            const target = state.shells.find(s => s.hasCore && !s.picked) || state.shells.find(s => s.hasCore);
+            const bounds = canvas.getBoundingClientRect(), radius = getCapsuleRadius();
+            return { prompt: 'Tap the leaf hiding the otter.', rect: target ? { x: bounds.left + target.x - radius, y: bounds.top + target.y - radius, width: radius * 2, height: radius * 2 } : null, done: Boolean(window.ToenowTutorials?.isComplete?.('ball-track')) };
+          }
+        });
 
         // Initialize
         resizeCanvas();

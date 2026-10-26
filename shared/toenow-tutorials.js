@@ -3,241 +3,154 @@
   else {root.ToenowTutorials=factory(root.ToenowTutorialConfig);root.ToenowTutorials.install(root);}
 })(globalThis,function(catalog){
   'use strict';
-  const VERSION=1;
+  const VERSION=2,adapters=new Map();let current=null,refresh=()=>{};
   function createProgress(storage){
-    const memory=new Map();
-    const key=id=>'toenow_tutorial_'+id+'_v'+VERSION;
-    function status(id){
+    const memory=new Map(),key=id=>'toenow_tutorial_'+id+'_v'+VERSION;
+    return {key,shouldShow(id){
       if(!catalog[id])throw Error('Unknown tutorial: '+id);
-      if(memory.has(id))return memory.get(id);
-      try{return storage?.getItem(key(id));}catch(_){return null;}
-    }
-    return {key,shouldShow(id){return !['completed','skipped'].includes(status(id));},mark(id,value){
+      let value=memory.get(id);if(!value)try{value=storage?.getItem(key(id));}catch(_){}
+      return !['completed','skipped'].includes(value);
+    },mark(id,value){
       if(!catalog[id]||!['completed','skipped'].includes(value))throw Error('Invalid tutorial completion');
       memory.set(id,value);try{storage?.setItem(key(id),value);}catch(_){}
     }};
   }
-  function createLesson(id){
-    const spec=catalog[id];if(!spec)throw Error('Unknown tutorial: '+id);
-    let index=0,accepted=[];
-    return {
-      get index(){return index;},get done(){return index===spec.steps.length;},
-      get step(){return spec.steps[Math.min(index,spec.steps.length-1)];},
-      get accepted(){return accepted.slice();},
-      get next(){return this.step.answers[accepted.length];},
-      act(value){
-        if(this.done)return false;
-        const step=this.step;
-        const valid=step.unordered?step.answers.includes(value)&&!accepted.includes(value):value===step.answers[accepted.length];
-        if(!valid)return false;
-        accepted.push(value);
-        if(accepted.length===step.answers.length){index++;if(!this.done)accepted=[];}
-        return true;
-      }
+  function createSession(id,adapter,progress){
+    if(!catalog[id]||!adapter||!['start','stop','getGuide'].every(k=>typeof adapter[k]==='function'))throw Error('Invalid game tutorial adapter: '+id);
+    let active=false,done=false;
+    return {id,get active(){return active;},get done(){return done;},
+      start(){if(active)return;active=true;adapter.start();},
+      stop(){if(!active)return;adapter.stop();active=false;},
+      complete(){if(!active||done)return;done=true;progress.mark(id,'completed');},
+      skip(){if(active&&!done)progress.mark(id,'skipped');},
+      guide(){return active?adapter.getGuide():null;}
     };
   }
+  function register(id,adapter){
+    if(!catalog[id])throw Error('Unknown tutorial: '+id);
+    adapters.set(id,adapter);return()=>{if(adapters.get(id)===adapter)adapters.delete(id);};
+  }
+  function isActive(id){return !!current?.active&&current.id===id;}
+  function isComplete(id){return isActive(id)&&current.done;}
+  function complete(id){if(!isActive(id))return false;current.complete();refresh();return true;}
+  function getState(){return current?{id:current.id,active:current.active,complete:current.done,guide:current.guide()}:null;}
   function install(win){
-    const id=/\/games\/([^/]+)/.exec(win.location.pathname)?.[1];
-    if(!catalog[id])return;
-    const doc=win.document;
-    let storage;try{storage=win.localStorage;}catch(_){}
+    const id=/\/games\/([^/]+)/.exec(win.location.pathname)?.[1];if(!catalog[id])return;
+    const doc=win.document;let storage;try{storage=win.localStorage;}catch(_){}
     const progress=createProgress(storage);
-    // The tutorial dependency loads before game screen configuration in the head.
-    // Resolve IDs at interaction time, after inline and React title mounts finish.
-    const screen={
-      get startId(){return win.ToenowScreenConfig?.[id]?.startId||'btn-start-game';},
-      get titleId(){return win.ToenowScreenConfig?.[id]?.titleId||'menu-screen';}
-    };
-    let dialog,lesson,pendingStart=false,bypass=false,observationTimer,returnFocus;
+    const screen={get startId(){return win.ToenowScreenConfig?.[id]?.startId||'btn-start-game';},get titleId(){return win.ToenowScreenConfig?.[id]?.titleId||'menu-screen';}};
+    let coach,highlight,prompt,finish,skip,cancel,pendingStart=false,bypass=false,raf,returnFocus;
     const t=value=>win.ToenowI18n?.t(value)||value;
-    function element(tag,className,text){const node=doc.createElement(tag);if(className)node.className=className;if(text)node.textContent=t(text);return node;}
-    function button(text,action,className=''){
-      const node=element('button','tutorial-choice '+className,text);node.type='button';
-      node.dataset.tutorialAction=action;node.addEventListener('click',()=>act(action));return node;
-    }
-    function titleVisible(){const host=doc.getElementById(screen.titleId);return host&&!host.hidden&&host.getClientRects().length>0&&win.getComputedStyle(host).visibility!=='hidden';}
-    function open(start=false){
-      if(dialog?.open)return;
-      pendingStart=start;returnFocus=doc.activeElement;lesson=createLesson(id);
-      dialog=element('dialog','toenow-tutorial');dialog.id='toenow-tutorial';
-      dialog.setAttribute('aria-labelledby','tutorial-heading');
-      dialog.setAttribute('aria-describedby','tutorial-instruction');
-      dialog.addEventListener('cancel',event=>{event.preventDefault();close(false);});
-      // Prevent engine-wide Enter/Space/P/Escape listeners from firing behind the modal.
-      dialog.addEventListener('keydown',event=>event.stopPropagation());
-      doc.body.appendChild(dialog);render();dialog.showModal();
-      dialog.querySelector('[data-tutorial-hint]')?.focus();
-    }
+    function el(tag,className,text){const n=doc.createElement(tag);if(className)n.className=className;if(text)n.textContent=t(text);return n;}
+    function control(text,action,attribute){const n=el('button','tutorial-coach-button',text);n.type='button';n.setAttribute(attribute,'');n.addEventListener('click',action);return n;}
+    function titleVisible(){const n=doc.getElementById(screen.titleId);return n&&!n.hidden&&n.getClientRects().length>0&&win.getComputedStyle(n).visibility!=='hidden';}
     function close(launch){
-      win.clearTimeout(observationTimer);observationTimer=null;
-      dialog?.close();dialog?.remove();dialog=null;
+      if(!current)return;win.cancelAnimationFrame(raf);
+      // The engine must clean up while protection is still enabled.
+      current.stop();current=null;coach?.remove();highlight?.remove();coach=highlight=null;
+      delete doc.body.dataset.tutorial;
       if(launch&&pendingStart){
-        bypass=true;
-        try{doc.getElementById(screen.startId)?.click();}finally{bypass=false;pendingStart=false;}
-      }else{returnFocus?.isConnected&&returnFocus.focus();pendingStart=false;}
-    }
-    function act(action){
-      if(!lesson||lesson.done)return;
-      const oldIndex=lesson.index;
-      if(!lesson.act(action)){
-        const feedback=dialog.querySelector('[data-tutorial-feedback]');feedback.textContent=t('Try the glowing one. No rush!');return;
-      }
-      if(lesson.done)progress.mark(id,'completed');
-      render();
-      // Keep focus inside the new content without jumping to Skip after each action.
-      dialog.querySelector('[data-tutorial-hint], [data-tutorial-finish]')?.focus();
-      if(oldIndex!==lesson.index)dialog.querySelector('#tutorial-instruction')?.scrollIntoView({block:'nearest'});
-    }
-    function hint(node,action){
-      if(!lesson.done&&((lesson.step.unordered&&!lesson.accepted.includes(action))||lesson.next===action))node.dataset.tutorialHint='true';
-      if(lesson.accepted.includes(action)){node.classList.add('tutorial-accepted');node.disabled=true;}
-      if(lesson.done)node.disabled=true;
-      return node;
-    }
-    function choices(stage,items){const grid=element('div','tutorial-choices');for(const [text,action]of items)grid.appendChild(hint(button(text,action),action));stage.appendChild(grid);}
-    function label(stage,text){stage.appendChild(element('p','tutorial-label',text));}
-    function garden(stage,reveal){
-      const grid=element('div','tutorial-grid tutorial-garden');
-      for(let i=0;i<6;i++){
-        const text=reveal?(i===0?'🌼 1':i===4?'🌼':i===2?'🌵':'·'):(lesson.accepted.includes('bed'+i)||lesson.done&&[0,4].includes(i)?'🌼':'▧');
-        const node=hint(button(text,'bed'+i),'bed'+i);node.setAttribute('aria-label',t('Flowerbed')+' '+(i+1));
-        if(reveal){node.disabled=true;if(i===0)node.classList.add('tutorial-priority');}
-        grid.appendChild(node);
-      }
-      stage.appendChild(grid);
-      if(reveal)stage.appendChild(hint(button('I remember — hide them','remember','tutorial-primary'),'remember'));
-    }
-    function silhouette(pair){
-      const svg=doc.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 100 80');svg.setAttribute('aria-hidden','true');
-      for(const shape of pair.split('-')){
-        const node=doc.createElementNS('http://www.w3.org/2000/svg',shape==='triangle'?'polygon':shape==='circle'?'circle':'rect');
-        const attrs=shape==='triangle'?{points:'40,10 86,70 14,70'}:shape==='circle'?{cx:36,cy:37,r:25}:{x:18,y:15,width:55,height:50};
-        for(const [key,value]of Object.entries(attrs))node.setAttribute(key,value);svg.appendChild(node);
-      }
-      return svg;
-    }
-    function draw(stage){
-      const kind=lesson.step.kind;
-      if(kind==='numbers')choices(stage,[['3','three'],['1','one'],['2','two']]);
-      if(kind==='timber'){
-        for(const target of [true,false]){
-          label(stage,target?'Target':'Tap away the extra tile');
-          const grid=element('div','tutorial-grid tutorial-timber '+(target?'tutorial-target':''));
-          for(let i=0;i<9;i++){
-            const filled=[0,1,3,4].includes(i)||!target&&i===2&&!lesson.done;
-            const node=target?element('div','tutorial-choice',filled?'■':''):button(filled?'■':'','tile'+i);node.classList.toggle('tutorial-wood',filled);
-            node.setAttribute('aria-label',t('Tile')+' '+(i+1));
-            if(target||!filled||lesson.done)node.disabled=true;else hint(node,'tile'+i);
-            grid.appendChild(node);
-          }
-          stage.appendChild(grid);
-        }
-      }
-      if(kind==='sum'){
-        const total=lesson.accepted.reduce((n,v)=>n+(v==='two'?2:3),0);
-        label(stage,'Target');stage.appendChild(element('div','tutorial-equation',total+' / 5'));
-        choices(stage,[['🌰 2','two'],['🌰 4','four'],['🌰 3','three']]);
-      }
-      if(kind==='scales'){
-        const scale=element('div','tutorial-scale');
-        scale.appendChild(element('span','tutorial-pan tutorial-heavy','📦 A'));
-        scale.appendChild(element('span','tutorial-pivot','▲'));
-        scale.appendChild(element('span','tutorial-pan tutorial-light','📦 B'));
-        stage.appendChild(scale);choices(stage,[['📦 A','parcelA'],['📦 B','parcelB']]);
-      }
-      if(kind==='cards'){
-        label(stage,'Target');stage.appendChild(element('div','tutorial-target-card','●'));
-        choices(stage,[['▲','triangle'],['●','circle'],['■','square']]);
-      }
-      if(kind==='photo'){
-        const photo=element('div','tutorial-photo','🦋');photo.setAttribute('aria-label',t('Blurry picture'));stage.appendChild(photo);
-        choices(stage,[['🐟','fish'],['🦋','butterfly'],['🍃','leaf']]);
-      }
-      if(kind==='shadows'){
-        label(stage,'Target');const target=element('div','tutorial-shadow');target.appendChild(silhouette('circle-triangle'));stage.appendChild(target);
-        const grid=element('div','tutorial-choices');
-        for(const pair of ['circle-square','circle-triangle','square-triangle']){
-          const node=hint(button('',pair),pair);node.setAttribute('aria-label',t(pair));node.appendChild(silhouette(pair));grid.appendChild(node);
-        }
-        stage.appendChild(grid);
-      }
-      if(kind.startsWith('otter-')){
-        const row=element('div','tutorial-leaves');
-        for(let i=0;i<3;i++){
-          const node=hint(button((kind==='otter-reveal'&&i===1||lesson.done&&i===2)?'🦦':'🍃','leaf'+i),'leaf'+i);
-          if(kind!=='otter-pick')node.disabled=true;
-          if(kind==='otter-follow'&&i===1)node.classList.add('tutorial-moving-leaf');
-          if(kind==='otter-follow'&&i===2)node.classList.add('tutorial-returning-leaf');
-          row.appendChild(node);
-        }
-        stage.appendChild(row);
-        if(kind==='otter-reveal')stage.appendChild(hint(button('Hide and follow','hide','tutorial-primary'),'hide'));
-        if(kind==='otter-follow')observationTimer=win.setTimeout(()=>{if(dialog?.open)act('follow');},1600);
-      }
-      if(kind.startsWith('garden-'))garden(stage,kind==='garden-reveal');
-      if(kind==='train'){
-        label(stage,'Queue');const queue=hint(button(lesson.accepted.includes('queue')?'🐼 ✓':'🐼 🐼 🐼','queue'),'queue');stage.appendChild(queue);
-        label(stage,'Carriage');const car=hint(button(lesson.done?'🚂 🐼 🐼 🐼 ✓':'🚃 🐼 🐼 ＋','carriage'),'carriage');stage.appendChild(car);
-      }
+        pendingStart=false;
+        // React mounts its title host asynchronously after the engine stops.
+        // Launch only once the current, real Start button is available again.
+        let attempts=0;
+        const resume=()=>{
+          const button=doc.getElementById(screen.startId);
+          if(button&&titleVisible()){
+            bypass=true;try{button.click();}finally{bypass=false;}
+          }else if(++attempts<120)win.requestAnimationFrame(resume);
+          else console.error('Title did not return after tutorial: '+id);
+        };
+        resume();
+      }else{pendingStart=false;if(returnFocus?.isConnected)returnFocus.focus();}
     }
     function render(){
-      win.clearTimeout(observationTimer);
-      // Localization moves its existing switch into the topmost native dialog.
-      // Preserve that node across lesson steps instead of creating a second switch.
-      const languageSwitch=dialog.querySelector('.toenow-language-switch');
-      dialog.replaceChildren();
-      const header=element('div','tutorial-header');header.appendChild(element('span','tutorial-badge','Try it — no timer'));
-      const cancel=element('button','tutorial-text-button','Close tutorial');cancel.type='button';cancel.addEventListener('click',()=>close(false));header.appendChild(cancel);dialog.appendChild(header);
-      const heading=element('h2','',catalog[id].name);heading.id='tutorial-heading';dialog.appendChild(heading);
-      const instruction=element('p','tutorial-instruction',lesson.done?'You did it!':lesson.step.prompt);instruction.id='tutorial-instruction';dialog.appendChild(instruction);
-      const stage=element('div','tutorial-stage');draw(stage);dialog.appendChild(stage);
-      const feedback=element('p','tutorial-feedback',lesson.done?'✓ Ready to play!':'Follow the glow. Try one tap.');feedback.dataset.tutorialFeedback='true';feedback.setAttribute('role','status');dialog.appendChild(feedback);
-      if(lesson.done){
-        const finish=element('button','tutorial-primary',pendingStart?'START GAME':'Back to title');finish.type='button';finish.dataset.tutorialFinish='true';finish.addEventListener('click',()=>close(true));dialog.appendChild(finish);
-      }else{
-        const footer=element('div','tutorial-footer');footer.appendChild(element('span','',String(lesson.index+1)+' / '+catalog[id].steps.length));
-        const skip=element('button','tutorial-text-button','Skip tutorial');skip.type='button';skip.dataset.tutorialSkip='true';skip.addEventListener('click',()=>{progress.mark(id,'skipped');close(true);});footer.appendChild(skip);dialog.appendChild(footer);
+      if(!current?.active||!coach)return;
+      const guide=current.guide()||{};
+      if(guide.done&&!current.done)current.complete();
+      const done=current.done;
+      const text=t(done?'You did it!':guide.prompt||catalog[id].prompt);
+      if(prompt.textContent!==text)prompt.textContent=text;
+      finish.hidden=!done;finish.textContent=t(pendingStart?'START GAME':'Back to title');
+      skip.hidden=done;skip.textContent=t('Skip tutorial');cancel.textContent=t('Close tutorial');
+      coach.querySelector('[data-tutorial-badge]').textContent=t('Tutorial — no timer, no score');
+      const rect=guide.rect;
+      highlight.hidden=done||!rect||guide.waiting===true;
+      if(!highlight.hidden){
+        const width=Math.max(20,rect.width),height=Math.max(20,rect.height);
+        Object.assign(highlight.style,{left:rect.x+'px',top:rect.y+'px',width:width+'px',height:height+'px'});
       }
-      if(languageSwitch)dialog.appendChild(languageSwitch);
+      // Put the compact instruction panel on the opposite edge to the real target.
+      const top=rect&&rect.y+rect.height/2>win.innerHeight/2;
+      coach.dataset.edge=top?'top':'bottom';
     }
-    // Number Pop starts on pointerdown for immediate feedback. Gate that event
-    // as well as click so the first pointer cannot launch an engine underneath.
+    function frame(){render();if(current?.active)raf=win.requestAnimationFrame(frame);}
+    function open(start=false){
+      if(current?.active)return;
+      const adapter=adapters.get(id);
+      if(!adapter){console.error('Tutorial adapter not ready: '+id);return;}
+      pendingStart=start;returnFocus=doc.activeElement;
+      current=createSession(id,adapter,progress);doc.body.dataset.tutorial=id;
+      current.start();
+      coach=el('section','toenow-coach');coach.id='toenow-tutorial';coach.dataset.i18nIgnore='';coach.setAttribute('role','region');coach.setAttribute('aria-label',t('Play tutorial'));
+      const header=el('div','tutorial-coach-header');const badge=el('span','','Tutorial — no timer, no score');badge.dataset.tutorialBadge='';header.appendChild(badge);
+      cancel=control('Close tutorial',()=>close(false),'data-tutorial-cancel');coach.appendChild(header);
+      prompt=el('p','tutorial-coach-prompt');prompt.id='tutorial-instruction';prompt.setAttribute('role','status');prompt.setAttribute('aria-live','polite');coach.appendChild(prompt);
+      const controls=el('div','tutorial-coach-actions');
+      skip=control('Skip tutorial',()=>{current.skip();close(true);},'data-tutorial-skip');controls.appendChild(skip);
+      controls.appendChild(cancel);
+      finish=control('START GAME',()=>close(true),'data-tutorial-finish');controls.appendChild(finish);coach.appendChild(controls);
+      coach.addEventListener('keydown',event=>event.stopPropagation());
+      highlight=el('div','tutorial-real-target');highlight.id='toenow-tutorial-highlight';highlight.setAttribute('aria-hidden','true');
+      doc.body.append(highlight,coach);refresh=render;render();raf=win.requestAnimationFrame(frame);
+    }
+    function tutorialControl(target){return !!target.closest?.('#toenow-tutorial,.toenow-language-switch');}
+    function blockedGameControl(target){
+      const button=target.closest?.('button');
+      return !!button&&!tutorialControl(button)&&(
+        button.hasAttribute('data-start')||/restart|pause|resume|menu|continue|exit|title|help/i.test(button.id)||
+        /restart|pause/i.test(button.getAttribute('aria-label')||'')
+      );
+    }
     win.addEventListener('pointerdown',event=>{
-      const target=event.target.closest?.('button');
-      if(!bypass&&!dialog?.open&&target?.id===screen.startId&&titleVisible()&&progress.shouldShow(id)){
-        // Keep the title in place until the matching click, so the pointer's
-        // release cannot land on a newly inserted lesson control.
-        event.preventDefault();event.stopImmediatePropagation();
+      if(bypass)return;
+      if(current?.active){
+        if(!tutorialControl(event.target)&&(current.done||blockedGameControl(event.target))){event.preventDefault();event.stopImmediatePropagation();}
+        return;
       }
+      const button=event.target.closest?.('button');
+      if(button?.id===screen.startId&&titleVisible()&&progress.shouldShow(id)){event.preventDefault();event.stopImmediatePropagation();}
     },true);
-    // Window capture precedes game handlers, including React's delegated events.
     win.addEventListener('click',event=>{
       if(bypass)return;
-      const target=event.target.closest?.('button');if(!target)return;
-      if(target.hasAttribute('data-tutorial-replay')){event.preventDefault();event.stopImmediatePropagation();open(false);}
-      else if(target.id===screen.startId&&titleVisible()&&progress.shouldShow(id)){
-        event.preventDefault();event.stopImmediatePropagation();open(true);
+      if(current?.active){
+        if(!tutorialControl(event.target)&&(current.done||blockedGameControl(event.target))){event.preventDefault();event.stopImmediatePropagation();}
+        return;
       }
+      const button=event.target.closest?.('button');if(!button)return;
+      if(button.hasAttribute('data-tutorial-replay')){event.preventDefault();event.stopImmediatePropagation();open(false);}
+      else if(button.id===screen.startId&&titleVisible()&&progress.shouldShow(id)){event.preventDefault();event.stopImmediatePropagation();open(true);}
     },true);
     win.addEventListener('keydown',event=>{
-      if(dialog?.open){
+      if(current?.active){
         if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();close(false);}
-        else event.stopPropagation();
+        else if(!tutorialControl(event.target)&&['Enter',' ','r','R','p','P'].includes(event.key)){
+          event.preventDefault();event.stopImmediatePropagation();
+          const button=event.target.closest?.('button');
+          // Preserve keyboard activation of the game's actual choice buttons,
+          // while preventing engine-wide start/restart shortcuts underneath.
+          if(['Enter',' '].includes(event.key)&&button&&!button.disabled&&!current.done&&!blockedGameControl(button))button.click();
+        }
         return;
       }
       if(!bypass&&titleVisible()&&['Enter',' '].includes(event.key)){
         const button=event.target.closest?.('button');
-        // Game-wide shortcuts often consume Enter before native button clicks.
-        // Explicitly handle the focused title controls ahead of those shortcuts.
-        if(button?.hasAttribute('data-tutorial-replay')){
-          event.preventDefault();event.stopImmediatePropagation();open(false);
-        }else if(progress.shouldShow(id)&&(button?.id===screen.startId||!event.target.closest?.('button,a,input,select,textarea,summary'))){
-          event.preventDefault();event.stopImmediatePropagation();open(true);
-        }
+        if(button?.hasAttribute('data-tutorial-replay')){event.preventDefault();event.stopImmediatePropagation();open(false);}
+        else if(progress.shouldShow(id)&&(button?.id===screen.startId||!event.target.closest?.('button,a,input,select,textarea,summary'))){event.preventDefault();event.stopImmediatePropagation();open(true);}
       }
     },true);
-    win.ToenowI18n?.subscribe(()=>{if(dialog?.open)render();});
+    win.ToenowI18n?.subscribe(()=>render());
     return {open,progress};
   }
-  return {catalog,createProgress,createLesson,install};
+  return {catalog,createProgress,createSession,register,isActive,isComplete,complete,getState,install};
 });

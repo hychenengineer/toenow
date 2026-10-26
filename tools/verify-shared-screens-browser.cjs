@@ -21,7 +21,7 @@ const hooks = {
 async function instrument(page, id) {
   // This suite exercises title/result lifecycles for returning players.
   // First-play interception and lesson actions have their own browser matrix.
-  await page.addInitScript(id=>localStorage.setItem('toenow_tutorial_'+id+'_v1','completed'),id);
+  await page.addInitScript(id=>localStorage.setItem('toenow_tutorial_'+id+'_v2','completed'),id);
   if (id === 'flash-brain') {
     let js = fs.readFileSync(path.join(root,'games',id,'assets/index-cr-6j3L1.js'),'utf8');
     const marker = '},x=(e,t)=>{let n=p.current';

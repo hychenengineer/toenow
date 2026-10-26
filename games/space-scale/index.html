@@ -1925,11 +1925,11 @@
           } else {
             hudWaveBarEl.style.backgroundColor = 'var(--accent-cyan)';
           }
-          hudWaveSecEl.textContent = waveTimeSec.toFixed(1) + 's WINDOW';
+          hudWaveSecEl.textContent = window.ToenowTutorials?.isActive?.('space-scale') ? '∞' : waveTimeSec.toFixed(1) + 's WINDOW';
 
           const mins = Math.floor(globalTimeSec / 60);
           const secs = Math.floor(globalTimeSec % 60);
-          hudTimerEl.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
+          hudTimerEl.textContent = window.ToenowTutorials?.isActive?.('space-scale') ? '∞' : mins + ':' + (secs < 10 ? '0' : '') + secs;
           if (globalTimeSec <= 60) {
             hudTimerEl.style.color = 'var(--accent-rose)';
           } else {
@@ -1943,7 +1943,7 @@
         function loadWave(nextWave) {
           if (window.ToenowAnimals) window.ToenowAnimals.setWave('space-scale', nextWave);
           wave = nextWave;
-          currentPuzzle = generateOverhauledPuzzle(wave, Date.now());
+          currentPuzzle = generateOverhauledPuzzle(wave, Boolean(window.ToenowTutorials?.isActive?.('space-scale')) ? 1234 : Date.now());
           waveTimeSec = currentPuzzle.waveDurationSec;
           hoveredBodyId = null;
           collapseAnim = null;
@@ -1961,7 +1961,7 @@
         }
 
         function startNewGame(startWave = 1, isPractice = false) {
-          if (toenowSdk) toenowSdk.startRun({ wave: startWave, isPractice });
+          if (!Boolean(window.ToenowTutorials?.isActive?.('space-scale')) && toenowSdk) toenowSdk.startRun({ wave: startWave, isPractice });
           isPracticeMode = Boolean(isPractice);
           score = 0;
           streak = 0;
@@ -1977,6 +1977,7 @@
         }
 
         function triggerGameOver() {
+          if (Boolean(window.ToenowTutorials?.isActive?.('space-scale'))) return;
           const finalScore = Math.round(score);
           if (!isPracticeMode) {
             const clearedWave = Math.max(1, wave - 1);
@@ -2028,7 +2029,14 @@
         }
 
         function handleBodySelection(bodyId, tapX, tapY) {
-          if (gameState !== 'playing' || collapseAnim) return;
+          if (gameState !== 'playing' || collapseAnim || (Boolean(window.ToenowTutorials?.isActive?.('space-scale')) && Boolean(window.ToenowTutorials?.isComplete?.('space-scale')))) return;
+          if (Boolean(window.ToenowTutorials?.isActive?.('space-scale'))) {
+            if (bodyId === currentPuzzle.targetBodyId) {
+              hoveredBodyId = bodyId; syncDockHoverState(); sound.playCollapseSuccess(1);
+              window.ToenowTutorials.complete('space-scale');
+            } else { sound.playShieldDamage(); }
+            return;
+          }
 
           const isCorrect = bodyId === currentPuzzle.targetBodyId;
           if (window.ToenowAnimals) window.ToenowAnimals.feedback('space-scale', isCorrect);
@@ -2627,8 +2635,8 @@
                 loadWave(wave + 1);
               }
             } else {
-              globalTimeSec = Math.max(0, globalTimeSec - dt);
-              waveTimeSec = Math.max(0, waveTimeSec - dt);
+              if (!Boolean(window.ToenowTutorials?.isActive?.('space-scale'))) globalTimeSec = Math.max(0, globalTimeSec - dt);
+              if (!Boolean(window.ToenowTutorials?.isActive?.('space-scale'))) waveTimeSec = Math.max(0, waveTimeSec - dt);
               syncHudDOM();
 
               if (globalTimeSec <= 0) {
@@ -2904,6 +2912,17 @@
             requestAnimationFrame(tick);
           }
         }
+
+        window.ToenowTutorials?.register?.('space-scale', {
+          start() { startNewGame(1, true); },
+          stop() { isPracticeMode = false; collapseAnim = null; setGameState('title'); },
+          getGuide() {
+            const target = renderedBodyTargets.find(t => t.bodyId === currentPuzzle?.targetBodyId);
+            const bounds = canvas.getBoundingClientRect();
+            const directive = currentPuzzle?.directive === 'min' ? 'lighter' : 'heavier';
+            return { prompt: 'The lower side is heavier. Tap the ' + directive + ' parcel.', rect: target ? { x: bounds.left + target.x - target.hitRadius, y: bounds.top + target.y - target.hitRadius, width: target.hitRadius * 2, height: target.hitRadius * 2 } : null, waiting: !target, done: Boolean(window.ToenowTutorials?.isComplete?.('space-scale')) };
+          }
+        });
 
         requestAnimationFrame(tick);
       })();

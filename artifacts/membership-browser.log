@@ -1,0 +1,10 @@
+page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "http://127.0.0.1:8765/?play=number-pop", waiting until "load"
+
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-membership-browser.cjs:13:14 {
+  log: [
+    '  - navigating to "http://127.0.0.1:8765/?play=number-pop", waiting until "load"'
+  ],
+  name: 'TimeoutError'
+}

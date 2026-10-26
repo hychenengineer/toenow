@@ -1,0 +1,15 @@
+CHECK space-scale 390 en
+AFTER RELOAD {
+  url: 'http://127.0.0.1:8771/games/space-scale/',
+  title: 'Space Scale - Fox Parcel Weighhouse',
+  html: '<html lang="en"><head>\n' +
+    '    <meta charset="UTF-8">\n' +
+    '    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">\n' +
+    '    <title>Space Scale - Fox Parcel Weighhouse</title>\n' +
+    '    <meta name="description" content="A rapid-fire deep-space astrophysics deduction game. Analyze kinetic scales, lever arm moments, and counterweight cancellations to identify target celestial masses before time runs out.">\n' +
+    '    <meta property="og:title" content="Space Scale - Fox ',
+  button: true,
+  hook: 'object'
+} []
+PASS space-scale 390 en
+PASS total-time browser regression

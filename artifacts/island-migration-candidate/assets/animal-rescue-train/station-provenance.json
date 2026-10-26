@@ -1,0 +1,8 @@
+{
+  "asset": "station.webp",
+  "source": "station-source.png",
+  "created": "2026-10-25",
+  "method": "OpenAI image_gen",
+  "purpose": "Approved simplified Animal Rescue Train game board scenery; no gameplay text or interactive elements baked into art",
+  "conversion": "sharp WebP quality 78, original dimensions preserved"
+}

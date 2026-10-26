@@ -1,3 +1,4 @@
+const { readSource } = require('../tools/lib/game-source.cjs');
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('fs');
@@ -125,7 +126,7 @@ for (const game of GAMES) {
     const fullPath = path.resolve(__dirname, '..', game.path);
     assert.ok(fs.existsSync(fullPath), `Game file missing: ${game.path}`);
 
-    const html = require('./helpers/screen-engine-adapter.cjs').expand(fs.readFileSync(fullPath, 'utf8'), game.id);
+    const html = require('./helpers/screen-engine-adapter.cjs').expand(readSource(fullPath, 'utf8'), game.id);
     const { doc, existingIds, elements } = createMockDOM(html);
 
     // Verify Start Button exists in DOM
@@ -191,7 +192,7 @@ for (const game of GAMES) {
     while ((match = scriptRegex.exec(html)) !== null) {
       const src = match[0].match(/src=["']([^"']+)["']/);
       if (game.external && src) {
-        scriptBlocks.push(fs.readFileSync(path.resolve(path.dirname(fullPath), src[1]), 'utf8'));
+        scriptBlocks.push(readSource(path.resolve(path.dirname(fullPath), src[1]), 'utf8'));
       } else if (!src) {
         scriptBlocks.push(match[1]);
       }

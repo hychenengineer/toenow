@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Toenow — Membership Invitation Preview</title>
+<link rel="stylesheet" href="../assets/unified-title-menu.css">
+<style>body{margin:0;background:#070b15;color:#cbd5e1;font-family:system-ui}nav{position:fixed;top:8px;left:8px;z-index:200;display:flex;gap:8px;align-items:center;font-size:12px}nav button{padding:8px;background:#172238;color:#fff;border:1px solid #475569;border-radius:8px}nav span{background:#070b15;padding:4px}#preview{padding-top:48px!important}#preview .modal-card{max-height:calc(100dvh - 64px)!important}</style>
+</head>
+<body>
+<nav><span>結算畫面預覽 · 範例成績</span><button id="language">中文 / EN</button><button id="account">切換已登入／未登入</button></nav>
+<section id="preview" class="active" data-toenow-screen="gameover"></section>
+<script src="../shared/toenow-levels.js"></script>
+<script src="../shared/toenow-i18n-core.js"></script><script src="../shared/toenow-i18n-games-a.js"></script><script src="../shared/toenow-i18n-games-b.js"></script><script src="../shared/toenow-i18n.js"></script>
+<script src="../shared/toenow-screen-config.js"></script><script src="../shared/toenow-screens.js"></script>
+<script>
+window.ToenowAccount={signedIn:false};
+ToenowI18n.setLanguage('zh-Hant',false);
+ToenowScreens.renderGameOver(document.getElementById('preview'),'number-pop',{score:1240,bestScore:1580,wave:12,combo:8,reason:'TIME EXPIRED',onRetry(){location.href='../games/number-pop/'},onTitle(){location.href='../games/number-pop/'}});
+// This page lives one directory above games, so resolve its account links explicitly.
+document.querySelectorAll('[data-account-action]').forEach(a=>a.href='../?auth='+a.dataset.accountAction);
+document.getElementById('language').onclick=()=>ToenowI18n.setLanguage(ToenowI18n.language==='en'?'zh-Hant':'en',false);
+document.getElementById('account').onclick=()=>{ToenowAccount.signedIn=!ToenowAccount.signedIn;window.dispatchEvent(new Event('toenow-auth-change'));};
+</script>
+</body></html>

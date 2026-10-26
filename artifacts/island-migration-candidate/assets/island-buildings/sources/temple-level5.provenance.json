@@ -1,0 +1,10 @@
+{
+  "kind": "temple",
+  "level": 5,
+  "method": "built-in image_gen",
+  "source": "C:\\Users\\HsinYuChen\\.codex\\generated_images\\01a16a47-2f32-7341-83dd-edc8be80d6f0\\exec-56f33101-c452-431a-8af8-268e7e07e4fe.png",
+  "references": [
+    "C:/Users/HsinYuChen/.codex/generated_images/01a16a47-2f32-7341-83dd-edc8be80d6f0/exec-5a6b4c80-311f-444c-a764-08cbdf502a60.png"
+  ],
+  "prompt": "SINGLE production game landmark sprite, premium richly detailed hand-painted isometric 2.5D storybook architecture matching the approved reference, tactile stone/wood/roof tiles, soft ambient occlusion, afternoon light from upper-left. Fixed 35-degree overhead isometric camera, entrance facing lower-left, ground centered horizontally near 80% image height, square sprite canvas with roughly 10% clear transparent margin. Genuinely TRANSPARENT background and soft alpha contact shadow. Entire subject including roofs and tiny ground patch visible, no cropping. No typography, labels, level numerals, icons, UI, characters, opaque paper, sky, sea, broad terrain, giant plinth or floating land cube. Keep architecture readable at map size; restrained local grass, steps and planting only. Create the complete LEVEL 5 version of Silhouette Ruins. A restored small classical island sanctuary of warm cream limestone, muted dusty-lavender tiled pediment roof, three graceful carved columns and an open shadowed central doorway. Small attached side cloister, carved geometric silhouette reliefs on a low stone wall, a short formal stair, compact stone court with a simple octagonal mosaic, a little moss, flowers and warm lanterns. Ancient but welcoming, no religious symbols, no text or numbers. This is ONE isolated finished landmark, not a sheet or scene. Use the reference solely for coherent architecture/rendering style; do not copy unrelated buildings or compose several landmarks together. Five-stage growth derivatives will preserve this same central core and camera. The complete final landmark has complete tiled roof trim, low carved walls, octagonal courtyard mosaic, moss, flowers and lanterns."
+}

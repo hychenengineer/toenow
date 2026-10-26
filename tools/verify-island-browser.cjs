@@ -1,3 +1,4 @@
+const { readSource } = require('./lib/game-source.cjs');
 const {chromium} = require('playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -124,7 +125,7 @@ const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'.
   await page.waitForFunction(()=>!document.getElementById('theaterModal').classList.contains('open'));
   // Real number-pop normal/practice starts and production game-over flow.
   await page.route(/\/games\/number-pop\/(?:index\.html)?(?:\?.*)?$/,route=>{
-   let html=fs.readFileSync(path.resolve(__dirname,'../games/number-pop/index.html'),'utf8');
+   let html=readSource(path.resolve(__dirname,'../games/number-pop/index.html'),'utf8');
    const end=html.lastIndexOf('})();');
    html=html.slice(0,end)+'window.__islandFinish=()=>{game.score=120;game.wave=11;game.runDuration=60;triggerGameOver();};'+html.slice(end);
    return route.fulfill({contentType:'text/html',body:html});

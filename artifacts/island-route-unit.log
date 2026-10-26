@@ -1,0 +1,130 @@
+TAP version 13
+# Subtest: The nearest-neighbour route starts bottom-left with Rabbit and ends top-right with Panda
+ok 1 - The nearest-neighbour route starts bottom-left with Rabbit and ends top-right with Panda
+  ---
+  duration_ms: 3.1359
+  ...
+# Subtest: Updating the old random route preserves its opened buildings and actual completion credit
+ok 2 - Updating the old random route preserves its opened buildings and actual completion credit
+  ---
+  duration_ms: 0.5151
+  ...
+# Subtest: Saved normal milestones unlock one building even while the iframe remains active
+ok 3 - Saved normal milestones unlock one building even while the iframe remains active
+  ---
+  duration_ms: 0.7711
+  ...
+# Subtest: The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building
+ok 4 - The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building
+  ---
+  duration_ms: 0.4695
+  ...
+# Subtest: Fresh and settings-only players start with one persisted rabbit garden
+ok 5 - Fresh and settings-only players start with one persisted rabbit garden
+  ---
+  duration_ms: 1.0627
+  ...
+# Subtest: Actual legacy history retains all games, including zero-score attempts
+ok 6 - Actual legacy history retains all games, including zero-score attempts
+  ---
+  duration_ms: 0.3623
+  ...
+# Subtest: Only an unlocked game reaching Wave 6 in normal play opens one new place once
+ok 7 - Only an unlocked game reaching Wave 6 in normal play opens one new place once
+  ---
+  duration_ms: 0.4906
+  ...
+# Subtest: Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+ok 8 - Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+  ---
+  duration_ms: 0.6714
+  ...
+# Subtest: Every distinct completion opens at most one place and the final place finishes cleanly
+ok 9 - Every distinct completion opens at most one place and the final place finishes cleanly
+  ---
+  duration_ms: 0.6877
+  ...
+# Subtest: Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+ok 10 - Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+  ---
+  duration_ms: 0.6662
+  ...
+# Subtest: A readable but unwritable existing save retains this session progress
+ok 11 - A readable but unwritable existing save retains this session progress
+  ---
+  duration_ms: 0.3278
+  ...
+# Subtest: Rejected run records cannot bypass validation through reconciliation or reload
+ok 12 - Rejected run records cannot bypass validation through reconciliation or reload
+  ---
+  duration_ms: 0.6916
+  ...
+# Subtest: Another tab cannot reconcile an active iframe record before its result is validated
+ok 13 - Another tab cannot reconcile an active iframe record before its result is validated
+  ---
+  duration_ms: 0.4826
+  ...
+# Subtest: Iframe validation guard survives replay and closing removes the marker safely
+ok 14 - Iframe validation guard survives replay and closing removes the marker safely
+  ---
+  duration_ms: 0.6095
+  ...
+# Subtest: Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+ok 15 - Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+  ---
+  duration_ms: 0.4189
+  ...
+# Subtest: Corrupt nested run metadata cannot crash the saved journey
+ok 16 - Corrupt nested run metadata cannot crash the saved journey
+  ---
+  duration_ms: 0.3026
+  ...
+# Subtest: SDK publishes a normal level milestone during play without ending the run or writing scores
+ok 17 - SDK publishes a normal level milestone during play without ending the run or writing scores
+  ---
+  duration_ms: 1.928
+  ...
+# Subtest: SDK survives a browser denying access to localStorage itself
+ok 18 - SDK survives a browser denying access to localStorage itself
+  ---
+  duration_ms: 0.4092
+  ...
+# Subtest: ToenowGameSDK handles lifecycle, storage, and title records cleanly
+ok 19 - ToenowGameSDK handles lifecycle, storage, and title records cleanly
+  ---
+  duration_ms: 0.3285
+  ...
+# Subtest: ToenowGameSDK guards practice mode from mutating records
+ok 20 - ToenowGameSDK guards practice mode from mutating records
+  ---
+  duration_ms: 0.1977
+  ...
+# Subtest: SDK lifecycle methods invoke configured callbacks and retain practice state
+ok 21 - SDK lifecycle methods invoke configured callbacks and retain practice state
+  ---
+  duration_ms: 1.1961
+  ...
+# Subtest: handleGameOver rejects implausible normal scores and never writes practice records
+ok 22 - handleGameOver rejects implausible normal scores and never writes practice records
+  ---
+  duration_ms: 0.5822
+  ...
+# Subtest: SDK practice bridge passes the actual selected wave to the game callback
+ok 23 - SDK practice bridge passes the actual selected wave to the game callback
+  ---
+  duration_ms: 0.8507
+  ...
+# Subtest: SDK respects hasWaves configuration for level-only games
+ok 24 - SDK respects hasWaves configuration for level-only games
+  ---
+  duration_ms: 0.1708
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 104.6693

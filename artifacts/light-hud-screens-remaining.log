@@ -1,0 +1,31 @@
+CHECK shared add-up 1100 en
+CHECK shared add-up 1100 zh-Hant
+CHECK shared add-up 390 en
+CHECK shared add-up 390 zh-Hant
+PASS add-up: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK shared space-scale 1100 en
+CHECK shared space-scale 1100 zh-Hant
+CHECK shared space-scale 390 en
+CHECK shared space-scale 390 zh-Hant
+PASS space-scale: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK shared tap-match 1100 en
+CHECK shared tap-match 1100 zh-Hant
+CHECK shared tap-match 390 en
+CHECK shared tap-match 390 zh-Hant
+PASS tap-match: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK shared spot-quick 1100 en
+CHECK shared spot-quick 1100 zh-Hant
+CHECK shared spot-quick 390 en
+CHECK shared spot-quick 390 zh-Hant
+PASS spot-quick: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK shared shadow-match 1100 en
+CHECK shared shadow-match 1100 zh-Hant
+CHECK shared shadow-match 390 en
+CHECK shared shadow-match 390 zh-Hant
+PASS shadow-match: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK shared flash-brain 1100 en
+CHECK shared flash-brain 1100 zh-Hant
+CHECK shared flash-brain 390 en
+CHECK shared flash-brain 390 zh-Hant
+PASS flash-brain: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+{"standalone":24,"iframe":6,"practice":6}

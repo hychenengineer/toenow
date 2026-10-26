@@ -1,0 +1,46 @@
+CHECK number-pop 1100 en
+CHECK number-pop 1100 zh-Hant
+CHECK number-pop 390 en
+CHECK number-pop 390 zh-Hant
+PASS number-pop: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK ball-track 1100 en
+CHECK ball-track 1100 zh-Hant
+CHECK ball-track 390 en
+CHECK ball-track 390 zh-Hant
+PASS ball-track: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK block-match 1100 en
+CHECK block-match 1100 zh-Hant
+CHECK block-match 390 en
+CHECK block-match 390 zh-Hant
+PASS block-match: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK add-up 1100 en
+CHECK add-up 1100 zh-Hant
+CHECK add-up 390 en
+CHECK add-up 390 zh-Hant
+PASS add-up: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK space-scale 1100 en
+CHECK space-scale 1100 zh-Hant
+CHECK space-scale 390 en
+CHECK space-scale 390 zh-Hant
+PASS space-scale: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK tap-match 1100 en
+CHECK tap-match 1100 zh-Hant
+CHECK tap-match 390 en
+CHECK tap-match 390 zh-Hant
+PASS tap-match: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK spot-quick 1100 en
+CHECK spot-quick 1100 zh-Hant
+CHECK spot-quick 390 en
+CHECK spot-quick 390 zh-Hant
+PASS spot-quick: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK shadow-match 1100 en
+CHECK shadow-match 1100 zh-Hant
+CHECK shadow-match 390 en
+CHECK shadow-match 390 zh-Hant
+PASS shadow-match: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK flash-brain 1100 en
+CHECK flash-brain 1100 zh-Hant
+CHECK flash-brain 390 en
+CHECK flash-brain 390 zh-Hant
+PASS flash-brain: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+{"standalone":36,"iframe":9,"practice":9}

@@ -1,3 +1,4 @@
+const { readSource } = require('../tools/lib/game-source.cjs');
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -6,9 +7,9 @@ const ids=['number-pop','ball-track','block-match','add-up','space-scale','tap-m
 test('ten games use the shared coach and register adapters in their own game engines',()=>{
   assert.deepEqual(Object.keys(catalog).sort(),ids.slice().sort());
   for(const id of ids){
-    const html=fs.readFileSync(`games/${id}/index.html`,'utf8');
+    const html=readSource(`games/${id}/index.html`,'utf8');
     assert.ok(html.includes('../../shared/toenow-tutorials.js'),id);
-    const source=id==='flash-brain'?fs.readFileSync('games/flash-brain/tutorial.js','utf8'):id==='animal-rescue-train'?fs.readFileSync('games/animal-rescue-train/game.js','utf8'):html;
+    const source=id==='flash-brain'?readSource('games/flash-brain/tutorial.js','utf8'):id==='animal-rescue-train'?readSource('games/animal-rescue-train/game.js','utf8'):html;
     assert.match(source,/ToenowTutorials\??\.register(?:\?\.)?\(/,id+' registers real engine');
   }
 });
@@ -50,7 +51,7 @@ test('unavailable storage does not block teaching or in-page completion',()=>{
   run.start();run.complete();run.stop();assert.equal(progress.shouldShow('flash-brain'),false);
 });
 test('shared coach contains no duplicate game renderer or synthetic answer buttons',()=>{
-  const src=fs.readFileSync('shared/toenow-tutorials.js','utf8');
+  const src=readSource('shared/toenow-tutorials.js','utf8');
   assert.doesNotMatch(src,/tutorial-choice|createElementNS|function silhouette|function garden|function draw\(/);
   assert.match(src,/getGuide/);
   const {createI18n}=require('../shared/toenow-i18n.js');

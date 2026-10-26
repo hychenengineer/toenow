@@ -1,0 +1,37 @@
+[
+  {
+    "file": "games/animal-rescue-train/index.html",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "matches": false,
+    "bytes": 6807
+  },
+  {
+    "file": "games/animal-rescue-train/game.js",
+    "status": 200,
+    "type": "application/javascript",
+    "matches": false,
+    "bytes": 20622
+  },
+  {
+    "file": "games/animal-rescue-train/simple-board.css",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "matches": false,
+    "bytes": 116916
+  },
+  {
+    "file": "shared/toenow-i18n-core.js",
+    "status": 200,
+    "type": "application/javascript",
+    "matches": false,
+    "bytes": 26987
+  },
+  {
+    "file": "assets/animal-rescue-train/station.webp",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "matches": false,
+    "bytes": 116916
+  }
+]

@@ -1,0 +1,210 @@
+TAP version 13
+# Subtest: The nearest-neighbour route starts bottom-left with Rabbit and ends top-right with Panda
+ok 1 - The nearest-neighbour route starts bottom-left with Rabbit and ends top-right with Panda
+  ---
+  duration_ms: 2.5579
+  ...
+# Subtest: Updating the old random route keeps completion credit and uses the earned fixed route
+not ok 2 - Updating the old random route keeps completion credit and uses the earned fixed route
+  ---
+  duration_ms: 6.4741
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-exploration.test.cjs:19:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert(!flow.isUnlocked('block-match'))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-exploration.test.cjs:22:3)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: Saved normal milestones unlock one building even while the iframe remains active
+ok 3 - Saved normal milestones unlock one building even while the iframe remains active
+  ---
+  duration_ms: 0.7446
+  ...
+# Subtest: The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building
+ok 4 - The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building
+  ---
+  duration_ms: 0.4425
+  ...
+# Subtest: Malformed version-2 opened lists never leave a player with zero usable games
+ok 5 - Malformed version-2 opened lists never leave a player with zero usable games
+  ---
+  duration_ms: 0.5531
+  ...
+# Subtest: Fresh and settings-only players start with one persisted rabbit garden
+ok 6 - Fresh and settings-only players start with one persisted rabbit garden
+  ---
+  duration_ms: 0.5442
+  ...
+# Subtest: Existing score-only and zero-score attempts enter exploration without losing records
+not ok 7 - Existing score-only and zero-score attempts enter exploration without losing records
+  ---
+  duration_ms: 1.0227
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-exploration.test.cjs:61:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'legacy'
+    - 'explore'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'explore'
+  actual: 'legacy'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-exploration.test.cjs:67:12)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: Persisted legacy access migrates once to version 3 and cannot be restored by cloud sign-in
+not ok 8 - Persisted legacy access migrates once to version 3 and cannot be restored by cloud sign-in
+  ---
+  duration_ms: 0.4724
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-exploration.test.cjs:72:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    2 !== 3
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 3
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-exploration.test.cjs:80:12)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: Returning players open only the contiguous cleared route while keeping later-game credit
+not ok 9 - Returning players open only the contiguous cleared route while keeping later-game credit
+  ---
+  duration_ms: 0.9782
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-exploration.test.cjs:88:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'number-pop',
+        'space-scale',
+        'add-up',
+    +   'flash-brain',
+    +   'ball-track',
+    +   'tap-match',
+    +   'block-match',
+    +   'spot-quick',
+    +   'shadow-match',
+    +   'animal-rescue-train'
+      ]
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'number-pop'
+    1: 'space-scale'
+    2: 'add-up'
+  actual:
+    0: 'number-pop'
+    1: 'space-scale'
+    2: 'add-up'
+    3: 'flash-brain'
+    4: 'ball-track'
+    5: 'tap-match'
+    6: 'block-match'
+    7: 'spot-quick'
+    8: 'shadow-match'
+    9: 'animal-rescue-train'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-exploration.test.cjs:91:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: Only an unlocked game reaching Wave 6 in normal play opens one new place once
+ok 10 - Only an unlocked game reaching Wave 6 in normal play opens one new place once
+  ---
+  duration_ms: 0.9773
+  ...
+# Subtest: Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+ok 11 - Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+  ---
+  duration_ms: 0.3843
+  ...
+# Subtest: Every distinct completion opens at most one place and the final place finishes cleanly
+ok 12 - Every distinct completion opens at most one place and the final place finishes cleanly
+  ---
+  duration_ms: 0.5539
+  ...
+# Subtest: Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+ok 13 - Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+  ---
+  duration_ms: 0.5901
+  ...
+# Subtest: A readable but unwritable existing save retains this session progress
+ok 14 - A readable but unwritable existing save retains this session progress
+  ---
+  duration_ms: 0.2971
+  ...
+# Subtest: Rejected run records cannot bypass validation through reconciliation or reload
+ok 15 - Rejected run records cannot bypass validation through reconciliation or reload
+  ---
+  duration_ms: 0.3264
+  ...
+# Subtest: Another tab cannot reconcile an active iframe record before its result is validated
+ok 16 - Another tab cannot reconcile an active iframe record before its result is validated
+  ---
+  duration_ms: 0.3938
+  ...
+# Subtest: Iframe validation guard survives replay and closing removes the marker safely
+ok 17 - Iframe validation guard survives replay and closing removes the marker safely
+  ---
+  duration_ms: 0.5458
+  ...
+# Subtest: Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+ok 18 - Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+  ---
+  duration_ms: 0.4064
+  ...
+# Subtest: Corrupt nested run metadata cannot crash the saved journey
+ok 19 - Corrupt nested run metadata cannot crash the saved journey
+  ---
+  duration_ms: 0.2026
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 15
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 114.0687

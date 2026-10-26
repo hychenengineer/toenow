@@ -1,3 +1,4 @@
+const { readSource } = require('./lib/game-source.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -9,7 +10,7 @@ const base=process.env.TOENOW_TEST_URL||'http://127.0.0.1:8765';
   const page=await context.newPage();
   // UI integration is local and must not depend on third-party SDK/font availability.
   await page.context().route('https://**',route=>route.abort());
-  let html=fs.readFileSync('games/number-pop/index.html','utf8');
+  let html=readSource('games/number-pop/index.html','utf8');
   const pos=html.lastIndexOf('})();');
   html=html.slice(0,pos)+'window.__finishMembershipTest=()=>{game.score=321;game.wave=13;triggerGameOver();};'+html.slice(pos);
   await context.route(/\/games\/number-pop\/(?:index\.html)?$/,route=>route.fulfill({contentType:'text/html',body:html}));

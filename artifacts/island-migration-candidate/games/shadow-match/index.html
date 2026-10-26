@@ -1,0 +1,2851 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Shadow Match</title>
+    <meta name="description" content="Fun and fast shadow matching arcade game where drifting silhouettes merge into unified shapes." />
+    <meta property="og:title" content="Shadow Match" />
+    <meta property="og:description" content="Fun and fast shadow matching arcade game where drifting silhouettes merge into unified shapes." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
+    <script src="../../shared/toenow-levels.js"></script>
+    <script src="../../shared/toenow-security.js"></script>
+    <script src="../../shared/toenow-platform.js"></script>
+    <script src="../../shared/toenow-analytics.js"></script>
+    <script src="../../shared/toenow-sdk.js"></script>
+    <script src="../../shared/toenow-i18n-core.js"></script>
+    <script src="../../shared/toenow-i18n-games-a.js"></script>
+    <script src="../../shared/toenow-i18n-games-b.js"></script>
+    <script src="../../shared/toenow-i18n-animals.js"></script>
+<script src="../../shared/toenow-i18n.js"></script>
+    <link rel="stylesheet" href="../../assets/toenow-tutorials.css">
+    <script src="../../shared/toenow-tutorial-config.js"></script>
+    <script src="../../shared/toenow-tutorials.js"></script>
+<script src="../../shared/toenow-animals.js"></script>
+    <script src="../../shared/toenow-screen-config.js"></script>
+    <script src="../../shared/toenow-screens.js"></script>
+    <style>
+      :root {
+        --bg-void: #070a0e;
+        --chamber-bg: #0d2230;
+        --chamber-grid: #16384d;
+        --cyan-bezel: #00f3ff;
+        --shadow-fill: #05070a;
+        --phantom-crimson: #ff2a5f;
+        --dock-card-bg: #0d131c;
+        --dock-card-border: #1a2636;
+        --flash-lime: #00ff88;
+        --flash-crimson: #ff2a5f;
+        --hud-white: #eef6ff;
+        --hud-muted: #7fa6c4;
+        --hud-amber: #ffaa00;
+        --font-display: 'Bahnschrift', 'DIN Condensed', 'Franklin Gothic Medium', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        --font-mono: 'JetBrains Mono', 'Cascadia Mono', 'Consolas', 'SFMono-Regular', ui-monospace, monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      html,
+      body {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background-color: var(--bg-void);
+        color: var(--hud-white);
+        font-family: var(--font-sans);
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      #viewport-shell {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background:
+          radial-gradient(circle at 50% 38%, rgba(13, 34, 48, 0.45) 0%, rgba(7, 10, 14, 0.98) 70%),
+          var(--bg-void);
+        overflow: hidden;
+      }
+
+      /* Adaptive 9:16 vertical arcade container on desktop, full viewport on mobile */
+      #arcade-frame {
+        position: relative;
+        width: min(100vw, calc(100vh * 9 / 16));
+        height: 100vh;
+        max-width: 560px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: var(--bg-void);
+        border-left: 1px solid rgba(26, 38, 54, 0.85);
+        border-right: 1px solid rgba(26, 38, 54, 0.85);
+        box-shadow: 0 0 60px rgba(0, 0, 0, 0.85);
+        overflow: hidden;
+      }
+
+      @media (max-width: 600px) {
+        #arcade-frame {
+          width: 100vw;
+          max-width: 100vw;
+          border-left: none;
+          border-right: none;
+        }
+      }
+
+      /* Full-frame backing canvas for unified shadow occlusion & card rendering */
+      #game-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      /* Strict 3-Zone Vertical Segregation */
+      /* Zone 1: Top 15% Telemetry HUD Band */
+      #hud-zone {
+        position: relative;
+        z-index: 10;
+        height: 15%;
+        min-height: 86px;
+        padding: 8px 10px 6px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: linear-gradient(180deg, rgba(13, 19, 28, 0.92) 0%, rgba(7, 10, 14, 0.4) 100%);
+        border-bottom: 1px solid var(--dock-card-border);
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+
+      body[data-state="title"] #hud-zone,
+      body[data-state="title"] #dock-zone {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .hud-top-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        align-items: center;
+        gap: 6px;
+      }
+
+      .hud-cluster-left {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .hud-metric-block {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .hud-kicker {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--hud-muted);
+        line-height: 1.1;
+      }
+
+      .hud-hero-num {
+        font-family: var(--font-mono);
+        font-size: clamp(16px, 2.3vh, 22px);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        color: var(--hud-white);
+        letter-spacing: 0.02em;
+        line-height: 1.15;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+      }
+
+      .combo-readout {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 2px;
+        font-family: var(--font-mono);
+        font-size: clamp(14px, 2vh, 18px);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        color: var(--cyan-bezel);
+      }
+
+      .combo-readout.combo-hot {
+        color: var(--flash-lime);
+      }
+
+      .hud-cluster-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 88px;
+      }
+
+      #hud-timer {
+        font-family: var(--font-mono);
+        font-size: clamp(18px, 2.7vh, 26px);
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        color: var(--hud-white);
+        line-height: 1.05;
+        letter-spacing: 0.02em;
+        transition: color 0.15s ease;
+      }
+
+      #hud-timer.timer-warn {
+        color: var(--hud-amber);
+      }
+
+      #hud-timer.timer-critical {
+        color: var(--flash-crimson);
+        animation: criticalPulse 0.45s infinite alternate ease-in-out;
+      }
+
+      @keyframes criticalPulse {
+        from {
+          transform: scale(1);
+          opacity: 1;
+        }
+        to {
+          transform: scale(1.07);
+          opacity: 0.78;
+        }
+      }
+
+      .timer-bar-track {
+        width: 100%;
+        height: 4px;
+        background: #121c29;
+        border-radius: 2px;
+        margin-top: 4px;
+        overflow: hidden;
+      }
+
+      #hud-timer-bar {
+        width: 100%;
+        height: 100%;
+        background: var(--cyan-bezel);
+        transform-origin: left center;
+        transition: background-color 0.15s ease;
+      }
+
+      .hud-cluster-right {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 6px;
+        min-width: 0;
+      }
+
+      .hud-right-metrics {
+        display: flex;
+        align-items: baseline;
+        gap: 7px;
+        text-align: right;
+      }
+
+      .hud-utility-btns {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        pointer-events: auto;
+        flex-shrink: 0;
+      }
+
+      .icon-btn {
+        width: 27px;
+        height: 27px;
+        border-radius: 4px;
+        background: #0d131c;
+        border: 1px solid #1a2636;
+        color: var(--hud-white);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+      }
+
+      .icon-btn:hover,
+      .icon-btn:focus-visible {
+        border-color: var(--cyan-bezel);
+        color: var(--cyan-bezel);
+        outline: none;
+      }
+
+      .icon-btn:active {
+        transform: scale(0.94);
+      }
+
+      @media (max-width: 440px) {
+        .hud-cluster-left {
+          gap: 6px;
+        }
+        .hud-hero-num {
+          font-size: 15px;
+        }
+        .combo-readout {
+          font-size: 13px;
+        }
+        .hud-cluster-center {
+          min-width: 72px;
+        }
+        #hud-timer {
+          font-size: 17px;
+        }
+        .hud-cluster-right {
+          gap: 4px;
+        }
+        .hud-right-metrics {
+          gap: 5px;
+        }
+        .icon-btn {
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .hud-sub-banner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 3px;
+        border-top: 1px solid rgba(26, 38, 54, 0.55);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--cyan-bezel);
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      /* Preserve the progress readout when the localized stage name is long. */
+      #hud-status-text {
+        flex: 1 1 0;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .hud-sub-banner {
+        gap: 8px;
+      }
+
+      .hud-sub-banner.banner-phantom {
+        color: var(--flash-crimson);
+      }
+
+      #hud-feedback-tag {
+        flex: 0 0 auto;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--hud-amber);
+        letter-spacing: 0.06em;
+      }
+
+      /* Zone 2: Middle 42% Optical Projection Chamber */
+      #chamber-zone {
+        position: relative;
+        z-index: 5;
+        height: 42%;
+        width: 100%;
+        pointer-events: none;
+      }
+
+      /* Zone 3: Bottom 43% Composite Schematic Selection Dock */
+      #dock-zone {
+        position: relative;
+        z-index: 10;
+        height: 43%;
+        width: 100%;
+        padding: 10px 14px 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        pointer-events: auto;
+      }
+
+      .dock-header-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        color: var(--hud-muted);
+        letter-spacing: 0.06em;
+        margin-bottom: 6px;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+
+      #dock-grid {
+        flex: 1;
+        display: grid;
+        gap: 10px;
+        width: 100%;
+        height: 100%;
+      }
+
+      #dock-grid.grid-2x2 {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+      }
+
+      #dock-grid.grid-3x2 {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+      }
+
+      .dock-card-btn {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 48px;
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        cursor: pointer;
+        padding: 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        outline: none;
+        transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .dock-card-btn:focus-visible {
+        border-color: var(--cyan-bezel);
+        box-shadow: 0 0 0 2px rgba(0, 243, 255, 0.45);
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* Modals & Overlays (Title, Pause, Game Over) */
+      .overlay-screen {
+        position: absolute;
+        inset: 0;
+        z-index: 30;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 20px 28px;
+        background: linear-gradient(
+          180deg,
+          rgba(7, 10, 14, 0.96) 0%,
+          rgba(7, 10, 14, 0.08) 22%,
+          rgba(7, 10, 14, 0.08) 62%,
+          rgba(7, 10, 14, 0.96) 100%
+        );
+        pointer-events: auto;
+      }
+
+      .overlay-screen.hidden {
+        display: none !important;
+        pointer-events: none !important;
+      }
+
+      .title-top-lockup {
+        width: 100%;
+        text-align: center;
+        margin-top: 0;
+      }
+
+      .title-svg-emblem {
+        width: 100%;
+        max-width: 320px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .title-subtitle {
+        font-size: 12px;
+        color: var(--hud-muted);
+        margin: 2px auto 0;
+        line-height: 1.3;
+        letter-spacing: 0.04em;
+      }
+
+      .briefing-panel {
+        width: 100%;
+        background: rgba(13, 19, 28, 0.94);
+        border: 1px solid var(--dock-card-border);
+        border-radius: 8px;
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75);
+      }
+
+      .briefing-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .briefing-row + .briefing-row {
+        padding-top: 10px;
+        border-top: 1px solid rgba(26, 38, 54, 0.75);
+      }
+
+      .briefing-icon {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        border-radius: 6px;
+        background: #070a0e;
+        border: 1px solid #1a2636;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .briefing-copy h2 {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--hud-white);
+        letter-spacing: 0.04em;
+        margin-bottom: 2px;
+      }
+
+      .briefing-copy p {
+        font-size: 12px;
+        color: var(--hud-muted);
+        line-height: 1.42;
+      }
+
+      .cta-stack {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .primary-cta-btn {
+        width: 100%;
+        min-height: 50px;
+        padding: 12px 24px;
+        background: var(--cyan-bezel);
+        color: #05070a;
+        border: 1px solid var(--cyan-bezel);
+        border-radius: 6px;
+        font-family: var(--font-mono);
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        cursor: pointer;
+        white-space: nowrap;
+        box-shadow: 0 0 24px rgba(0, 243, 255, 0.28);
+        transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.12s ease;
+      }
+
+      .primary-cta-btn:hover,
+      .primary-cta-btn:focus-visible {
+        background: #52f7ff;
+        outline: none;
+        transform: translateY(-1px);
+      }
+
+      .primary-cta-btn:active {
+        transform: scale(0.98);
+      }
+
+      .secondary-cta-btn {
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 18px;
+        background: #0d131c;
+        color: var(--hud-white);
+        border: 1px solid #1a2636;
+        border-radius: 6px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: border-color 0.12s ease, color 0.12s ease;
+      }
+
+      .secondary-cta-btn:hover,
+      .secondary-cta-btn:focus-visible {
+        border-color: var(--cyan-bezel);
+        color: var(--cyan-bezel);
+        outline: none;
+      }
+
+      .control-hint-line {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--hud-muted);
+        text-align: center;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+
+      /* Telemetry Modal Card (Pause & Game Over) */
+      .modal-card {
+        width: 100%;
+        margin: auto 0;
+        background: #0d131c;
+        border: 1px solid var(--cyan-bezel);
+        border-radius: 8px;
+        padding: 20px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+      }
+
+      .modal-header {
+        text-align: center;
+        border-bottom: 1px solid #1a2636;
+        padding-bottom: 12px;
+      }
+
+      .modal-kicker {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        color: var(--cyan-bezel);
+      }
+
+      .modal-title {
+        font-family: var(--font-display);
+        font-size: 26px;
+        font-weight: 800;
+        color: var(--hud-white);
+        letter-spacing: 0.04em;
+        margin-top: 4px;
+      }
+
+      .cognitive-tier-block {
+        background: #070a0e;
+        border: 1px solid #1a2636;
+        border-radius: 6px;
+        padding: 12px 14px;
+        text-align: center;
+      }
+
+      .tier-label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        color: var(--hud-muted);
+      }
+
+      #gameover-tier-badge {
+        font-family: var(--font-mono);
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--flash-lime);
+        letter-spacing: 0.08em;
+        margin-top: 3px;
+      }
+
+      #gameover-tier-desc {
+        font-size: 12px;
+        color: var(--hud-muted);
+        margin-top: 4px;
+      }
+
+      .telemetry-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .stat-tile {
+        background: #070a0e;
+        border: 1px solid #1a2636;
+        border-radius: 6px;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .stat-tile-label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--hud-muted);
+      }
+
+      .stat-tile-value {
+        font-family: var(--font-mono);
+        font-size: 20px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        color: var(--hud-white);
+      }
+    </style>
+  <link rel="stylesheet" href="../../assets/toenow-animals.css">
+</head>
+  <body data-state="title">
+    <main id="viewport-shell">
+      <div id="arcade-frame">
+        <!-- Main High-DPI Canvas for Optical Chamber + Unified Shadow Occlusion + Dock Schematics -->
+        <canvas id="game-canvas" data-testid="eclipse-canvas"></canvas>
+
+        <!-- ZONE 1: Top 15% Telemetry HUD Band -->
+        <section id="hud-zone" aria-label="Optical Telemetry HUD">
+          <div class="hud-top-row">
+            <div class="hud-cluster-left">
+              <div class="hud-metric-block">
+                <span class="hud-kicker">SCORE</span>
+                <span id="hud-score" class="hud-hero-num">000000</span>
+              </div>
+              <div class="hud-metric-block">
+                <span class="hud-kicker">COMBO</span>
+                <span id="hud-combo" class="combo-readout">1x</span>
+              </div>
+            </div>
+
+            <div class="hud-cluster-center">
+              <span id="hud-timer" aria-live="off">60.0s</span>
+              <div class="timer-bar-track">
+                <div id="hud-timer-bar"></div>
+              </div>
+            </div>
+
+            <div class="hud-cluster-right">
+              <div class="hud-right-metrics">
+                <div class="hud-metric-block">
+                  <span class="hud-kicker">LEVEL</span>
+                  <span id="hud-level" class="hud-hero-num">1</span>
+                </div>
+                <div class="hud-metric-block">
+                  <span class="hud-kicker">WAVE</span>
+                  <span id="hud-wave" class="hud-hero-num">1</span>
+                </div>
+              </div>
+
+              <div class="hud-utility-btns">
+                <button
+                  type="button"
+                  id="btn-mute"
+                  class="icon-btn"
+                  tabindex="-1"
+                  aria-label="Toggle Audio Mute (M)"
+                  title="Mute / Unmute [M]"
+                >
+                  <svg id="icon-sound-on" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                  </svg>
+                  <svg id="icon-sound-off" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  id="btn-pause"
+                  class="icon-btn"
+                  tabindex="-1"
+                  aria-label="Pause Game (P)"
+                  title="Pause [P]"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="6" y="4" width="4" height="16"></rect>
+                    <rect x="14" y="4" width="4" height="16"></rect>
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  id="btn-restart-quick"
+                  class="icon-btn"
+                  tabindex="-1"
+                  aria-label="Restart Run (R)"
+                  title="Restart [R]"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                    <path d="M3 3v5h5"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="hud-banner-wrap" class="hud-sub-banner">
+            <span id="hud-status-text">TRACKING SILHOUETTES</span>
+            <span id="hud-feedback-tag">PAR 5.0s</span>
+          </div>
+        </section>
+
+        <!-- ZONE 2: Middle 42% Optical Projection Chamber -->
+        <section id="chamber-zone" aria-label="Optical Backlight Projection Chamber"></section>
+
+        <!-- ZONE 3: Bottom 43% Composite Schematic Selection Dock -->
+        <section id="dock-zone" aria-label="Candidate Schematic Selection Dock">
+          <div class="dock-header-line">
+            <span id="dock-instruction">SELECT MATCHING COMPOSITE SCHEMATIC</span>
+            <span id="dock-target-count">2 TARGETS</span>
+          </div>
+          <div id="dock-grid" class="grid-2x2" role="group" aria-label="Candidate Schematics"></div>
+        </section>
+
+        <!-- OVERLAY 1: Concise Title / Boot Overlay -->
+        <section id="title-overlay" class="overlay-screen unified-title-screen" aria-label="Shadow Match Title" data-toenow-screen="title"></section>
+
+        <!-- OVERLAY 2: Pause Modal -->
+        <section id="pause-overlay" class="overlay-screen unified-pause-screen hidden" aria-label="Optics Paused">
+          <div class="unified-pause-card">
+            <div class="unified-pause-kicker">ANALYSIS SUSPENDED</div>
+            <h2 class="unified-pause-title">PAUSED</h2>
+            <p class="unified-pause-notice">Chamber silhouettes hidden while paused.</p>
+
+            <div class="unified-pause-stats-grid">
+              <div class="unified-pause-stat-box">
+                <span class="unified-pause-stat-label">SCORE</span>
+                <span id="pause-stat-score" class="unified-pause-stat-val">0</span>
+              </div>
+              <div class="unified-pause-stat-box">
+                <span class="unified-pause-stat-label">WAVE</span>
+                <span id="pause-stat-wave" class="unified-pause-stat-val">1</span>
+              </div>
+              <div class="unified-pause-stat-box">
+                <span class="unified-pause-stat-label">TIME</span>
+                <span id="pause-stat-time" class="unified-pause-stat-val">60.0s</span>
+              </div>
+            </div>
+
+            <div class="unified-pause-btn-row">
+              <button type="button" id="btn-resume" class="unified-pause-resume-btn">
+                RESUME
+              </button>
+              <button type="button" id="btn-pause-restart" class="unified-pause-action-btn">
+                RESTART
+              </button>
+              <button type="button" id="btn-pause-title" class="unified-pause-action-btn">
+                TITLE
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Shared game over layout -->
+        <section id="gameover-overlay" class="overlay-screen unified-gameover-screen hidden" role="dialog" aria-modal="true" aria-labelledby="gameover-title" data-toenow-screen="gameover"></section>
+      </div>
+    </main>
+
+    <script>ToenowScreens.mount("shadow-match");</script>
+    <script>
+
+
+      (function () {
+        'use strict';
+
+        // Detect headless environment for software-rendering budget optimization
+        const IS_HEADLESS = Boolean(
+          navigator.webdriver || /HeadlessChrome/i.test(navigator.userAgent || '')
+        );
+
+        // ============================================================================
+        // 1. ZERO-ASSET PROCEDURAL WEB AUDIO API (SoundEngine)
+        // ============================================================================
+        class SoundEngine {
+          constructor() {
+            this.ctx = null;
+            this.muted = false;
+          }
+
+          ensureContext() {
+            if (this.muted) return null;
+            if (!this.ctx) {
+              const AudioCtx = window.AudioContext || window.webkitAudioContext;
+              if (AudioCtx) {
+                try {
+                  this.ctx = new AudioCtx();
+                } catch (_e) {
+                  this.ctx = null;
+                }
+              }
+            }
+            if (this.ctx && this.ctx.state === 'suspended') {
+              this.ctx.resume().catch(function () {});
+            }
+            return this.ctx;
+          }
+
+          // Subtle low-pass filtered synth hum pulse (220Hz -> 330Hz triangle, 90ms) on wave start
+          playChamberPulse() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const filter = ctx.createBiquadFilter();
+            const gain = ctx.createGain();
+
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(220, now);
+            osc.frequency.exponentialRampToValueAtTime(330, now + 0.09);
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(680, now);
+
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.11, now + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.start(now);
+            osc.stop(now + 0.095);
+          }
+
+          // Sharp crimson alert double-chirp (880Hz -> 660Hz square wave, 110ms) when Level 5 Phantom Decoy appears
+          playPhantomTag() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(880, now);
+            osc.frequency.setValueAtTime(660, now + 0.055);
+
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.setValueAtTime(0.01, now + 0.048);
+            gain.gain.setValueAtTime(0.08, now + 0.055);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.start(now);
+            osc.stop(now + 0.115);
+          }
+
+          // Ascending harmonic chord arpeggio (440Hz, 554.37Hz, 659.25Hz shifted by combo multiplier)
+          playLockSuccess(combo) {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const shift = 1 + Math.min(7, Math.max(0, (combo || 1) - 1)) * 0.055;
+            const baseNotes = [440, 554.37, 659.25];
+
+            baseNotes.forEach(function (freq, idx) {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              const start = now + idx * 0.042;
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(freq * shift, start);
+
+              gain.gain.setValueAtTime(0.001, start);
+              gain.gain.linearRampToValueAtTime(0.12, start + 0.015);
+              gain.gain.exponentialRampToValueAtTime(0.001, start + 0.16);
+
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(start);
+              osc.stop(start + 0.17);
+            });
+          }
+
+          // Detuned dual sawtooth buzzer (100Hz & 108Hz, 230ms)
+          playFaultBuzz() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            [100, 108].forEach(function (freq) {
+              const osc = ctx.createOscillator();
+              const filter = ctx.createBiquadFilter();
+              const gain = ctx.createGain();
+
+              osc.type = 'sawtooth';
+              osc.frequency.setValueAtTime(freq, now);
+
+              filter.type = 'lowpass';
+              filter.frequency.setValueAtTime(420, now);
+
+              gain.gain.setValueAtTime(0.09, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.23);
+
+              osc.connect(filter);
+              filter.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(now);
+              osc.stop(now + 0.24);
+            });
+          }
+
+          // Soft mechanical optical relay click (1200Hz bandpass burst, 25ms) during Level 5 strobe shutters
+          playShutterClick() {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const filter = ctx.createBiquadFilter();
+            const gain = ctx.createGain();
+
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(1200, now);
+
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(1200, now);
+            filter.Q.setValueAtTime(4.5, now);
+
+            gain.gain.setValueAtTime(0.06, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.028);
+          }
+
+          // Crisp high-Q tick (900Hz normal, 1450Hz urgent under 10s)
+          playTimerTick(urgent) {
+            const ctx = this.ensureContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const filter = ctx.createBiquadFilter();
+            const gain = ctx.createGain();
+
+            const targetFreq = urgent ? 1450 : 900;
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(targetFreq, now);
+
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(targetFreq, now);
+            filter.Q.setValueAtTime(8.0, now);
+
+            gain.gain.setValueAtTime(urgent ? 0.07 : 0.035, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.035);
+          }
+        }
+
+        const sound = new SoundEngine();
+
+        // ============================================================================
+        // 2. PROCEDURAL SILHOUETTE VOCABULARY (14 SHAPES IN [-1, 1] LOCAL COORDS)
+        // ============================================================================
+        function buildStarVertices(points, outerR, innerR) {
+          const verts = [];
+          const total = points * 2;
+          for (let i = 0; i < total; i++) {
+            const r = i % 2 === 0 ? outerR : innerR;
+            const angle = -Math.PI / 2 + (i * Math.PI) / points;
+            verts.push([Math.cos(angle) * r, Math.sin(angle) * r]);
+          }
+          return verts;
+        }
+
+        function buildCrescentVertices() {
+          const verts = [];
+          const steps = 20;
+          const maxAngle = Math.PI * 0.72;
+          const tipX = Math.cos(maxAngle) * 0.9 - 0.06;
+          const tipY = Math.sin(maxAngle) * 0.9;
+          for (let i = 0; i <= steps; i++) {
+            const a = -maxAngle + (i / steps) * (maxAngle * 2);
+            verts.push([Math.cos(a) * 0.9 - 0.06, Math.sin(a) * 0.9]);
+          }
+          for (let i = steps - 1; i >= 1; i--) {
+            const u = (i / steps) * 2 - 1;
+            const ix = tipX + (1 - u * u) * 0.56;
+            const iy = u * tipY;
+            verts.push([ix, iy]);
+          }
+          return verts;
+        }
+
+        function buildGear6Vertices() {
+          const verts = [];
+          const teeth = 6;
+          const rInner = 0.64;
+          const rOuter = 0.95;
+          for (let i = 0; i < teeth; i++) {
+            const base = (i * 2 * Math.PI) / teeth - Math.PI / 2;
+            const step = (2 * Math.PI) / teeth;
+            verts.push(
+              [Math.cos(base) * rInner, Math.sin(base) * rInner],
+              [Math.cos(base + step * 0.18) * rInner, Math.sin(base + step * 0.18) * rInner],
+              [Math.cos(base + step * 0.30) * rOuter, Math.sin(base + step * 0.30) * rOuter],
+              [Math.cos(base + step * 0.70) * rOuter, Math.sin(base + step * 0.70) * rOuter],
+              [Math.cos(base + step * 0.82) * rInner, Math.sin(base + step * 0.82) * rInner]
+            );
+          }
+          return verts;
+        }
+
+        function buildHexNutVertices() {
+          const verts = [];
+          for (let i = 0; i < 6; i++) {
+            const a = -Math.PI / 2 + (i * Math.PI) / 3;
+            verts.push([Math.cos(a) * 0.92, Math.sin(a) * 0.92]);
+          }
+          return verts;
+        }
+
+        const LIGHTNING_VERTS = [
+          [0.18, -0.96],
+          [-0.58, -0.04],
+          [-0.04, -0.04],
+          [-0.42, 0.96],
+          [0.62, 0.08],
+          [0.06, 0.08]
+        ];
+
+        const WRENCH_VERTS = [
+          [-0.58, -0.92],
+          [-0.22, -0.92],
+          [-0.22, -0.52],
+          [0.14, -0.52],
+          [0.14, -0.84],
+          [0.52, -0.62],
+          [0.56, -0.22],
+          [0.24, 0.04],
+          [0.24, 0.78],
+          [0.36, 0.94],
+          [-0.36, 0.94],
+          [-0.24, 0.78],
+          [-0.24, 0.04],
+          [-0.64, -0.26],
+          [-0.68, -0.64]
+        ];
+
+        const SHAPE_VOCABULARY = {
+          STAR_5: {
+            id: 'STAR_5',
+            label: '5-Point Star',
+            cousins: ['STAR_6', 'ANCHOR_CROSS', 'CROWN_SPIRE'],
+            vertices: buildStarVertices(5, 0.96, 0.42)
+          },
+          STAR_6: {
+            id: 'STAR_6',
+            label: '6-Point Star',
+            cousins: ['STAR_5', 'GEAR_6', 'ANCHOR_CROSS'],
+            vertices: buildStarVertices(6, 0.96, 0.48)
+          },
+          CRESCENT: {
+            id: 'CRESCENT',
+            label: 'Crescent',
+            cousins: ['KEY_SILHOUETTE', 'WRENCH', 'BELL_DOME'],
+            vertices: buildCrescentVertices()
+          },
+          LIGHTNING: {
+            id: 'LIGHTNING',
+            label: 'Lightning',
+            cousins: ['ARROW_CHEVRON', 'DIAMOND_SPIRE', 'WRENCH'],
+            vertices: LIGHTNING_VERTS
+          },
+          GEAR_6: {
+            id: 'GEAR_6',
+            label: '6-Tooth Gear',
+            cousins: ['HEX_NUT', 'STAR_6', 'ANCHOR_CROSS'],
+            vertices: buildGear6Vertices()
+          },
+          HEX_NUT: {
+            id: 'HEX_NUT',
+            label: 'Hex Nut',
+            cousins: ['GEAR_6', 'DIAMOND_SPIRE', 'BELL_DOME'],
+            vertices: buildHexNutVertices()
+          },
+          ARROW_CHEVRON: {
+            id: 'ARROW_CHEVRON',
+            label: 'Arrow Chevron',
+            cousins: ['CROWN_SPIRE', 'LIGHTNING', 'DIAMOND_SPIRE'],
+            vertices: [
+              [0.0, -0.96],
+              [0.86, -0.02],
+              [0.42, -0.02],
+              [0.42, 0.92],
+              [0.0, 0.58],
+              [-0.42, 0.92],
+              [-0.42, -0.02],
+              [-0.86, -0.02]
+            ]
+          },
+          ANCHOR_CROSS: {
+            id: 'ANCHOR_CROSS',
+            label: 'Anchor Cross',
+            cousins: ['STAR_5', 'STAR_6', 'GEAR_6'],
+            vertices: [
+              [-0.36, -0.94],
+              [0.0, -0.74],
+              [0.36, -0.94],
+              [0.22, -0.22],
+              [0.94, -0.36],
+              [0.74, 0.0],
+              [0.94, 0.36],
+              [0.22, 0.22],
+              [0.36, 0.94],
+              [0.0, 0.74],
+              [-0.36, 0.94],
+              [-0.22, 0.22],
+              [-0.94, 0.36],
+              [-0.74, 0.0],
+              [-0.94, -0.36],
+              [-0.22, -0.22]
+            ]
+          },
+          KEY_SILHOUETTE: {
+            id: 'KEY_SILHOUETTE',
+            label: 'Key',
+            cousins: ['WRENCH', 'CRESCENT', 'BELL_DOME'],
+            vertices: [
+              [-0.42, -0.94],
+              [0.42, -0.94],
+              [0.64, -0.68],
+              [0.64, -0.28],
+              [0.22, -0.08],
+              [0.22, 0.26],
+              [0.58, 0.26],
+              [0.58, 0.48],
+              [0.22, 0.48],
+              [0.22, 0.66],
+              [0.66, 0.66],
+              [0.66, 0.92],
+              [-0.22, 0.92],
+              [-0.22, -0.08],
+              [-0.64, -0.28],
+              [-0.64, -0.68]
+            ]
+          },
+          WRENCH: {
+            id: 'WRENCH',
+            label: 'Wrench',
+            cousins: ['KEY_SILHOUETTE', 'LIGHTNING', 'HOURGLASS'],
+            vertices: WRENCH_VERTS
+          },
+          HOURGLASS: {
+            id: 'HOURGLASS',
+            label: 'Hourglass',
+            cousins: ['ANCHOR_CROSS', 'BELL_DOME', 'CROWN_SPIRE'],
+            vertices: [
+              [-0.78, -0.92],
+              [0.78, -0.92],
+              [0.78, -0.68],
+              [0.22, 0.0],
+              [0.78, 0.68],
+              [0.78, 0.92],
+              [-0.78, 0.92],
+              [-0.78, 0.68],
+              [-0.22, 0.0],
+              [-0.78, -0.68]
+            ]
+          },
+          CROWN_SPIRE: {
+            id: 'CROWN_SPIRE',
+            label: 'Crown Spire',
+            cousins: ['ARROW_CHEVRON', 'STAR_5', 'HOURGLASS'],
+            vertices: [
+              [-0.88, -0.48],
+              [-0.42, 0.14],
+              [0.0, -0.94],
+              [0.42, 0.14],
+              [0.88, -0.48],
+              [0.68, 0.84],
+              [-0.68, 0.84]
+            ]
+          },
+          DIAMOND_SPIRE: {
+            id: 'DIAMOND_SPIRE',
+            label: 'Diamond',
+            cousins: ['HEX_NUT', 'ARROW_CHEVRON', 'LIGHTNING'],
+            vertices: [
+              [0.0, -0.96],
+              [0.68, 0.0],
+              [0.0, 0.96],
+              [-0.68, 0.0]
+            ]
+          },
+          BELL_DOME: {
+            id: 'BELL_DOME',
+            label: 'Bell Dome',
+            cousins: ['HOURGLASS', 'KEY_SILHOUETTE', 'HEX_NUT'],
+            vertices: [
+              [-0.18, -0.94],
+              [0.18, -0.94],
+              [0.22, -0.74],
+              [0.56, -0.42],
+              [0.68, 0.34],
+              [0.92, 0.62],
+              [0.92, 0.76],
+              [0.26, 0.76],
+              [0.18, 0.96],
+              [-0.18, 0.96],
+              [-0.26, 0.76],
+              [-0.92, 0.76],
+              [-0.92, 0.62],
+              [-0.68, 0.34],
+              [-0.56, -0.42],
+              [-0.22, -0.74]
+            ]
+          }
+        };
+
+        const ALL_SHAPE_IDS = Object.keys(SHAPE_VOCABULARY);
+
+        function randomFloat() {
+          if (window.crypto && typeof window.crypto.getRandomValues === 'function') {
+            const arr = new Uint32Array(1);
+            window.crypto.getRandomValues(arr);
+            return arr[0] / 4294967296;
+          }
+          return Math.random();
+        }
+
+        function traceShapePath(ctx, shapeId, radius) {
+          const def = SHAPE_VOCABULARY[shapeId];
+          if (!def) return;
+          const verts = def.vertices;
+          ctx.beginPath();
+          for (let i = 0; i < verts.length; i++) {
+            const px = verts[i][0] * radius;
+            const py = verts[i][1] * radius;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+        }
+
+        // ============================================================================
+        // 3. 5-TIER DIFFICULTY MATRIX & WAVE GENERATOR (ALWAYS 4 CARDS IN 2x2 GRID)
+        // ============================================================================
+        function getLevelSpecForWave(wave) {
+          const w = Math.max(1, Math.floor(wave));
+          const clears = w - 1;
+          const levelNames = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT', 'MASTER'];
+
+          if (w <= 5) {
+            // Level 1: Waves 1-5 (5 waves to clear)
+            return {
+              level: 1,
+              levelName: 'BEGINNER',
+              clearsInLevel: clears,
+              requiredClears: 5,
+              targetCount: 2,
+              hasPhantom: false,
+              cardCount: 4,
+              gridCols: 2,
+              gridRows: 2,
+              speedPxPerSec: 45,
+              spinRadPerSec: 0,
+              scaleMin: 1.0,
+              scaleMax: 1.0,
+              parSeconds: 5.0,
+              motionPattern: 'linear_bounce',
+              statusBanner: 'LEVEL 1 · BEGINNER · TRACKING SILHOUETTES'
+            };
+          }
+          if (w <= 10) {
+            // Level 2: Waves 6-10 (5 waves to clear)
+            const inLvl = w - 6;
+            return {
+              level: 2,
+              levelName: 'INTERMEDIATE',
+              clearsInLevel: inLvl,
+              requiredClears: 5,
+              targetCount: inLvl < 3 ? 2 : 3,
+              hasPhantom: false,
+              cardCount: 4,
+              gridCols: 2,
+              gridRows: 2,
+              speedPxPerSec: 75,
+              spinRadPerSec: 0.8,
+              scaleMin: 1.0,
+              scaleMax: 1.0,
+              parSeconds: 4.5,
+              motionPattern: 'center_cross',
+              statusBanner: 'LEVEL 2 · INTERMEDIATE · TRACKING SILHOUETTES'
+            };
+          }
+          if (w <= 15) {
+            // Level 3: Waves 11-15 (5 waves to clear)
+            const inLvl = w - 11;
+            return {
+              level: 3,
+              levelName: 'ADVANCED',
+              clearsInLevel: inLvl,
+              requiredClears: 5,
+              targetCount: 3,
+              hasPhantom: false,
+              cardCount: 4,
+              gridCols: 2,
+              gridRows: 2,
+              speedPxPerSec: 110,
+              spinRadPerSec: 1.5,
+              scaleMin: 0.75,
+              scaleMax: 1.25,
+              parSeconds: 4.0,
+              motionPattern: 'scale_breathing',
+              statusBanner: 'LEVEL 3 · ADVANCED · ORBITAL OCCLUSION'
+            };
+          }
+          if (w <= 20) {
+            // Level 4: Waves 16-20 (5 waves to clear)
+            const inLvl = w - 16;
+            return {
+              level: 4,
+              levelName: 'EXPERT',
+              clearsInLevel: inLvl,
+              requiredClears: 5,
+              targetCount: inLvl < 3 ? 3 : 4,
+              hasPhantom: false,
+              cardCount: 4,
+              gridCols: 2,
+              gridRows: 2,
+              speedPxPerSec: 125,
+              spinRadPerSec: 2.2,
+              scaleMin: 0.88,
+              scaleMax: 1.12,
+              parSeconds: 3.5,
+              motionPattern: 'orbital_vortex',
+              statusBanner: 'LEVEL 4 · EXPERT · ORBITAL OCCLUSION'
+            };
+          }
+          // Level 5: Waves 21+ (Master)
+          return {
+            level: 5,
+            levelName: 'MASTER',
+            clearsInLevel: w - 21,
+            requiredClears: null,
+            targetCount: 4,
+            hasPhantom: true,
+            cardCount: 4,
+            gridCols: 2,
+            gridRows: 2,
+            speedPxPerSec: 145,
+            spinRadPerSec: 2.8,
+            scaleMin: 0.85,
+            scaleMax: 1.15,
+            parSeconds: 3.0,
+            motionPattern: 'lissajous_strobe',
+            statusBanner: 'LEVEL 5 · MASTER · TRACK & EXCLUDE CRIMSON PHANTOM!'
+          };
+        }
+
+        function shuffleArray(items) {
+          const arr = items.slice();
+          for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(randomFloat() * (i + 1));
+            const tmp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = tmp;
+          }
+          return arr;
+        }
+
+        function canonicalKey(shapes) {
+          return shapes.slice().sort().join('|');
+        }
+
+        let lastWaveTargetKey = '';
+
+        function generateWaveSetup(wave) {
+          const spec = getLevelSpecForWave(wave);
+          let targetShapes = [];
+
+          for (let tTry = 0; tTry < 12; tTry++) {
+            const pool = shuffleArray(ALL_SHAPE_IDS);
+            targetShapes = pool.slice(0, spec.targetCount);
+            if (!lastWaveTargetKey || canonicalKey(targetShapes) !== lastWaveTargetKey) {
+              break;
+            }
+          }
+          lastWaveTargetKey = canonicalKey(targetShapes);
+
+          let phantomShape = null;
+          if (spec.hasPhantom) {
+            const cousins = [];
+            targetShapes.forEach(function (t) {
+              SHAPE_VOCABULARY[t].cousins.forEach(function (c) {
+                if (targetShapes.indexOf(c) === -1 && cousins.indexOf(c) === -1) {
+                  cousins.push(c);
+                }
+              });
+            });
+            if (cousins.length > 0) {
+              phantomShape = cousins[Math.floor(randomFloat() * cousins.length)];
+            } else {
+              const rem = ALL_SHAPE_IDS.filter(function (s) {
+                return targetShapes.indexOf(s) === -1;
+              });
+              phantomShape = rem[Math.floor(randomFloat() * rem.length)] || 'STAR_6';
+            }
+          }
+
+          const usedKeys = new Set();
+          usedKeys.add(canonicalKey(targetShapes));
+
+          const decoySets = [];
+          const neededDecoys = spec.cardCount - 1; // Always 3 decoys for 4 total cards
+
+          // In Level 5, include a decoy that swaps a target shape for the Phantom Decoy shape
+          if (phantomShape) {
+            const indices = shuffleArray(
+              targetShapes.map(function (_, idx) {
+                return idx;
+              })
+            );
+            for (let r = 0; r < indices.length && decoySets.length < 1; r++) {
+              const decoy = targetShapes.slice();
+              decoy[indices[r]] = phantomShape;
+              const k = canonicalKey(decoy);
+              if (!usedKeys.has(k)) {
+                usedKeys.add(k);
+                decoySets.push(shuffleArray(decoy));
+              }
+            }
+          }
+
+          let attempts = 0;
+          while (decoySets.length < neededDecoys && attempts < 140) {
+            attempts++;
+            const replaceIdx = Math.floor(randomFloat() * targetShapes.length);
+            const orig = targetShapes[replaceIdx];
+            const cousins = SHAPE_VOCABULARY[orig].cousins.filter(function (c) {
+              return targetShapes.indexOf(c) === -1;
+            });
+            const fallback = ALL_SHAPE_IDS.filter(function (s) {
+              return targetShapes.indexOf(s) === -1;
+            });
+            const candidates = cousins.length > 0 && attempts < 65 ? cousins : fallback;
+            const replacement = candidates[Math.floor(randomFloat() * candidates.length)];
+            if (!replacement) continue;
+
+            const decoy = targetShapes.slice();
+            decoy[replaceIdx] = replacement;
+
+            if (attempts > 45 && targetShapes.length >= 3) {
+              const secondIdx = (replaceIdx + 1) % targetShapes.length;
+              const secondPool = ALL_SHAPE_IDS.filter(function (s) {
+                return decoy.indexOf(s) === -1;
+              });
+              if (secondPool.length > 0) {
+                decoy[secondIdx] = secondPool[Math.floor(randomFloat() * secondPool.length)];
+              }
+            }
+
+            const k = canonicalKey(decoy);
+            if (!usedKeys.has(k)) {
+              usedKeys.add(k);
+              decoySets.push(shuffleArray(decoy));
+            }
+          }
+
+          const correctCardIndex = Math.floor(randomFloat() * spec.cardCount);
+          const cards = [];
+          let dIdx = 0;
+          for (let i = 0; i < spec.cardCount; i++) {
+            if (i === correctCardIndex) {
+              cards.push({
+                index: i,
+                shapes: shuffleArray(targetShapes),
+                isCorrect: true
+              });
+            } else {
+              cards.push({
+                index: i,
+                shapes: decoySets[dIdx++] || shuffleArray(targetShapes),
+                isCorrect: false
+              });
+            }
+          }
+
+          return {
+            wave: wave,
+            spec: spec,
+            targetShapes: targetShapes,
+            phantomShape: phantomShape,
+            cards: cards,
+            correctCardIndex: correctCardIndex
+          };
+        }
+
+        function resolveCapacitiveCardHit(px, py, cardRects, paddingPx) {
+          const pad = typeof paddingPx === 'number' ? paddingPx : 15;
+          for (let i = 0; i < cardRects.length; i++) {
+            const r = cardRects[i];
+            if (px >= r.x && px <= r.x + r.width && py >= r.y && py <= r.y + r.height) {
+              return i;
+            }
+          }
+          let bestIdx = -1;
+          let bestDistSq = Infinity;
+          for (let i = 0; i < cardRects.length; i++) {
+            const r = cardRects[i];
+            if (
+              px >= r.x - pad &&
+              px <= r.x + r.width + pad &&
+              py >= r.y - pad &&
+              py <= r.y + r.height + pad
+            ) {
+              const cx = Math.max(r.x, Math.min(px, r.x + r.width));
+              const cy = Math.max(r.y, Math.min(py, r.y + r.height));
+              const dx = px - cx;
+              const dy = py - cy;
+              const dSq = dx * dx + dy * dy;
+              if (dSq < bestDistSq) {
+                bestDistSq = dSq;
+                bestIdx = i;
+              }
+            }
+          }
+          return bestIdx;
+        }
+
+        function getCognitiveTierBadge(score, accuracyPct, wavesResolved) {
+          if (score >= 28000 || (wavesResolved >= 18 && accuracyPct >= 88)) {
+            return {
+              tier: 'ECLIPSE SAVANT',
+              subtitle: 'Supreme spatial deconstruction under high-velocity occlusion'
+            };
+          }
+          if (score >= 16000 || (wavesResolved >= 12 && accuracyPct >= 80)) {
+            return {
+              tier: 'PHANTOM INTERCEPTOR',
+              subtitle: 'High-precision orbital silhouette separation & chiral lock'
+            };
+          }
+          if (score >= 8000 || wavesResolved >= 7) {
+            return {
+              tier: 'KINETIC ANALYST',
+              subtitle: 'Reliable vector contour recognition across multi-body drift'
+            };
+          }
+          return {
+            tier: 'OPTICAL INITIATE',
+            subtitle: 'Baseline silhouette calibration established'
+          };
+        }
+
+        // ============================================================================
+        // 4. DOM REFERENCES & OFFSCREEN COMPOSITING BUFFERS
+        // ============================================================================
+        const arcadeFrame = document.getElementById('arcade-frame');
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Offscreen buffers for True Unified Shadow Occlusion
+        const shadowBuffer = document.createElement('canvas');
+        const shadowCtx = shadowBuffer.getContext('2d');
+        const rimBuffer = document.createElement('canvas');
+        const rimCtx = rimBuffer.getContext('2d');
+
+        // HUD & Overlay Elements
+        const hudScoreEl = document.getElementById('hud-score');
+        const hudComboEl = document.getElementById('hud-combo');
+        const hudTimerEl = document.getElementById('hud-timer');
+        const hudTimerBarEl = document.getElementById('hud-timer-bar');
+        const hudLevelEl = document.getElementById('hud-level');
+        const hudWaveEl = document.getElementById('hud-wave');
+        const hudBannerWrapEl = document.getElementById('hud-banner-wrap');
+        const hudStatusTextEl = document.getElementById('hud-status-text');
+        const hudFeedbackTagEl = document.getElementById('hud-feedback-tag');
+
+        const chamberZoneEl = document.getElementById('chamber-zone');
+        const dockZoneEl = document.getElementById('dock-zone');
+        const dockGridEl = document.getElementById('dock-grid');
+        const dockTargetCountEl = document.getElementById('dock-target-count');
+
+        const titleOverlayEl = document.getElementById('title-overlay');
+        const pauseOverlayEl = document.getElementById('pause-overlay');
+        const gameoverOverlayEl = document.getElementById('gameover-overlay');
+
+        const btnMute = document.getElementById('btn-mute');
+        const iconSoundOn = document.getElementById('icon-sound-on');
+        const iconSoundOff = document.getElementById('icon-sound-off');
+        const btnPause = document.getElementById('btn-pause');
+        const btnRestartQuick = document.getElementById('btn-restart-quick');
+        const btnInitOptics = document.getElementById('btn-init-optics');
+        const btnResume = document.getElementById('btn-resume');
+        const btnPauseRestart = document.getElementById('btn-pause-restart');
+        const btnPauseTitle = document.getElementById('btn-pause-title');
+        const btnRebootOptics = document.getElementById('btn-reboot-optics');
+        const btnGameoverTitle = document.getElementById('btn-gameover-title');
+        const pauseStatScoreEl = document.getElementById('pause-stat-score');
+        const pauseStatWaveEl = document.getElementById('pause-stat-wave');
+        const pauseStatTimeEl = document.getElementById('pause-stat-time');
+
+        const STORAGE_KEY_SCORE = 'shadow_match_best_score_v1';
+        const STORAGE_KEY_WAVE = 'shadow_match_best_wave_v1';
+
+        // Initialize Toenow Game SDK
+        const toenowSdk = typeof ToenowGameSDK !== 'undefined'
+          ? new ToenowGameSDK({ gameId: 'shadow-match', category: 'puzzle', gameTitle: 'Shadow Match' })
+          : null;
+
+        function loadBestRecords() {
+          let s = 0, w = 1;
+          try {
+            s = parseInt(localStorage.getItem(STORAGE_KEY_SCORE) || '0', 10) || 0;
+            w = parseInt(localStorage.getItem(STORAGE_KEY_WAVE) || '1', 10) || 1;
+          } catch (_) {}
+          return { bestScore: s, bestWave: w };
+        }
+
+        function saveBestRecords(score, wave) {
+          if (state && state.isPractice) return;
+          if (window.ToenowTutorials?.isActive?.('shadow-match')) return;
+          try {
+            const current = loadBestRecords();
+            const newScore = Math.max(current.bestScore, Math.round(score));
+            const newWave = Math.max(current.bestWave, wave);
+            localStorage.setItem(STORAGE_KEY_SCORE, String(newScore));
+            localStorage.setItem(STORAGE_KEY_WAVE, String(newWave));
+          } catch (_) {}
+        }
+
+        function updateTitleScreenRecords() {
+          const rec = loadBestRecords();
+          ToenowScreens.updateTitle('shadow-match', { bestScore: rec.bestScore, bestWave: rec.bestWave });
+        }
+
+        // ============================================================================
+        // 5. GAME STATE & KINETIC BODY SIMULATION
+        // ============================================================================
+        const state = {
+          mode: 'title', // 'title' | 'playing' | 'paused' | 'gameover'
+          score: 0,
+          combo: 1,
+          peakCombo: 1,
+          timeRemaining: 60.0,
+          wave: 1,
+          wavesResolved: 0,
+          totalAttempts: 0,
+          correctAttempts: 0,
+          waveElapsed: 0,
+          lastTickSecond: 60,
+          lastShutterCycle: -1,
+          setup: null,
+          drifters: [],
+          // Feedback transition window ('none' | 'correct' | 'fault')
+          transitionType: 'none',
+          transitionTimer: 0,
+          selectedCardIndex: -1,
+          feedbackBannerTimer: 0,
+          feedbackBannerText: '',
+          feedbackBannerColor: '#ffaa00',
+          // Geometry layout cache in frame-local CSS pixels
+          frameWidth: 420,
+          frameHeight: 740,
+          dpr: 1,
+          chamberRect: { x: 14, y: 120, width: 392, height: 290 },
+          cardRects: [],
+          cardButtons: []
+        };
+
+        function setGameState(nextMode) {
+          state.mode = nextMode;
+          document.body.dataset.state = nextMode;
+
+          titleOverlayEl.classList.toggle('hidden', nextMode !== 'title');
+          pauseOverlayEl.classList.toggle('hidden', nextMode !== 'paused');
+          gameoverOverlayEl.classList.toggle('hidden', nextMode !== 'gameover');
+
+          if (nextMode === 'title') {
+            updateTitleScreenRecords();
+          } else if (nextMode === 'paused') {
+            if (pauseStatScoreEl) pauseStatScoreEl.textContent = String(Math.floor(state.score));
+            if (pauseStatWaveEl) pauseStatWaveEl.textContent = String(state.wave);
+            if (pauseStatTimeEl) pauseStatTimeEl.textContent = Math.max(0, state.timeRemaining).toFixed(1) + 's';
+          }
+
+          if (nextMode === 'playing' && document.activeElement && document.activeElement.blur) {
+            document.activeElement.blur();
+          }
+        }
+
+        function measureLayout() {
+          const frameBounds = arcadeFrame.getBoundingClientRect();
+          const chamberBounds = chamberZoneEl.getBoundingClientRect();
+          const dpr = IS_HEADLESS ? 1 : Math.min(window.devicePixelRatio || 1, 2.5);
+
+          state.frameWidth = Math.max(300, frameBounds.width);
+          state.frameHeight = Math.max(480, frameBounds.height);
+          state.dpr = dpr;
+
+          canvas.width = Math.round(state.frameWidth * dpr);
+          canvas.height = Math.round(state.frameHeight * dpr);
+
+          const padX = 14;
+          const padY = 8;
+          const cX = padX;
+          const cY = chamberBounds.top - frameBounds.top + padY;
+          const cW = Math.max(200, state.frameWidth - padX * 2);
+          const cH = Math.max(140, chamberBounds.height - padY * 2);
+
+          state.chamberRect = { x: cX, y: cY, width: cW, height: cH };
+
+          shadowBuffer.width = Math.max(1, Math.round(cW * dpr));
+          shadowBuffer.height = Math.max(1, Math.round(cH * dpr));
+          rimBuffer.width = Math.max(1, Math.round(cW * dpr));
+          rimBuffer.height = Math.max(1, Math.round(cH * dpr));
+
+          updateCardRects();
+        }
+
+        function updateCardRects() {
+          const frameBounds = arcadeFrame.getBoundingClientRect();
+          state.cardRects = state.cardButtons.map(function (btn) {
+            const r = btn.getBoundingClientRect();
+            return {
+              x: r.left - frameBounds.left,
+              y: r.top - frameBounds.top,
+              width: r.width,
+              height: r.height
+            };
+          });
+        }
+
+        function spawnDriftersForSetup(setup) {
+          const cW = state.chamberRect.width;
+          const cH = state.chamberRect.height;
+          const baseRadius = Math.min(cW, cH) * 0.21;
+          const spec = setup.spec;
+
+          const allItems = setup.targetShapes.map(function (shapeId) {
+            return { shapeId: shapeId, isPhantom: false };
+          });
+          if (setup.phantomShape) {
+            allItems.push({ shapeId: setup.phantomShape, isPhantom: true });
+          }
+
+          const total = allItems.length;
+          const randomAngleOffset = randomFloat() * Math.PI * 2;
+          state.drifters = allItems.map(function (item, idx) {
+            const angle = (idx / total) * Math.PI * 2 + randomAngleOffset;
+            const spread = Math.min(cW, cH) * (spec.level === 1 ? 0.16 : 0.14);
+            const startX = cW * 0.5 + Math.cos(angle) * spread;
+            const startY = cH * 0.5 + Math.sin(angle) * spread;
+
+            // Randomize opposing velocity vectors so silhouettes drift across the center and overlap uniquely each wave
+            const jitter = (randomFloat() - 0.5) * 0.45;
+            const velAngle = angle + Math.PI + (idx % 2 === 0 ? 0.32 : -0.32) + jitter;
+            const vx = Math.cos(velAngle) * spec.speedPxPerSec;
+            const vy = Math.sin(velAngle) * spec.speedPxPerSec;
+            const spinDir = idx % 2 === 0 ? 1 : -1;
+            const spinRate = spec.spinRadPerSec * spinDir;
+
+            // Separation target coordinates used during the 0.25s match confirmation freeze
+            const sepCols = total <= 3 ? total : Math.ceil(total / 2);
+            const sepRows = total <= 3 ? 1 : 2;
+            const col = idx % sepCols;
+            const row = Math.floor(idx / sepCols);
+            const sepX = ((col + 0.5) / sepCols) * (cW * 0.76) + cW * 0.12;
+            const sepY =
+              sepRows === 1
+                ? cH * 0.5
+                : ((row + 0.5) / sepRows) * (cH * 0.64) + cH * 0.18;
+
+            return {
+              shapeId: item.shapeId,
+              isPhantom: item.isPhantom,
+              x: startX,
+              y: startY,
+              vx: vx,
+              vy: vy,
+              rotation: spec.level === 1 ? 0 : randomFloat() * Math.PI * 2,
+              spin: spinRate,
+              scale: 1.0,
+              baseRadius: baseRadius,
+              phase: randomAngleOffset + (idx * Math.PI * 2) / total,
+              freqX: 1 + (idx % 2),
+              freqY: 2 + (idx % 3 === 0 ? 1 : 0),
+              sepX: sepX,
+              sepY: sepY
+            };
+          });
+        }
+
+        function buildDockDOM(setup) {
+          const is6 = setup.spec.cardCount === 6;
+          dockGridEl.className = is6 ? 'grid-3x2' : 'grid-2x2';
+          dockGridEl.innerHTML = '';
+          state.cardButtons = [];
+
+          dockTargetCountEl.textContent =
+            setup.spec.targetCount +
+            ' TARGETS' +
+            (setup.spec.hasPhantom ? ' · 1 PHANTOM' : '');
+
+          setup.cards.forEach(function (card, idx) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'dock-card-btn';
+            btn.dataset.cardIndex = String(idx);
+            const readableNames = card.shapes
+              .map(function (id) {
+                return SHAPE_VOCABULARY[id].label;
+              })
+              .join(' + ');
+            btn.setAttribute(
+              'aria-label',
+              'Schematic Card ' + (idx + 1) + ': ' + readableNames
+            );
+
+            const srSpan = document.createElement('span');
+            srSpan.className = 'sr-only';
+            srSpan.textContent = 'Card ' + (idx + 1) + ': ' + readableNames;
+            btn.appendChild(srSpan);
+
+            btn.addEventListener('click', function (e) {
+              e.preventDefault();
+              handleCardSelection(idx);
+            });
+
+            dockGridEl.appendChild(btn);
+            state.cardButtons.push(btn);
+          });
+
+          updateCardRects();
+        }
+
+        function loadWave(waveNum) {
+          state.wave = waveNum;
+          if(window.ToenowAnimals) window.ToenowAnimals.setWave('shadow-match', waveNum);
+          state.waveElapsed = 0;
+          state.lastShutterCycle = -1;
+          state.transitionType = 'none';
+          state.transitionTimer = 0;
+          state.selectedCardIndex = -1;
+
+          const setup = generateWaveSetup(waveNum);
+          state.setup = setup;
+
+          buildDockDOM(setup);
+          spawnDriftersForSetup(setup);
+          syncHUD();
+
+          if (state.mode === 'playing') {
+            sound.playChamberPulse();
+            if (setup.spec.hasPhantom) {
+              sound.playPhantomTag();
+            }
+          }
+        }
+
+        function syncHUD() {
+          const spec = state.setup ? state.setup.spec : getLevelSpecForWave(state.wave);
+          hudScoreEl.textContent = String(Math.floor(state.score)).padStart(6, '0');
+          hudComboEl.textContent = state.combo + 'x';
+          hudComboEl.classList.toggle('combo-hot', state.combo >= 4);
+
+          const clampedTime = Math.max(0, state.timeRemaining);
+          hudTimerEl.textContent = Boolean(window.ToenowTutorials?.isActive?.('shadow-match')) ? '∞' : clampedTime.toFixed(1) + 's';
+          hudTimerEl.classList.toggle('timer-warn', clampedTime < 15.0 && clampedTime >= 5.0);
+          hudTimerEl.classList.toggle('timer-critical', clampedTime < 5.0);
+
+          const barRatio = Math.max(0, Math.min(1, clampedTime / 60.0));
+          hudTimerBarEl.style.transform = 'scaleX(' + barRatio.toFixed(4) + ')';
+          if (clampedTime < 5.0) {
+            hudTimerBarEl.style.backgroundColor = '#ff2a5f';
+          } else if (clampedTime < 15.0) {
+            hudTimerBarEl.style.backgroundColor = '#ffaa00';
+          } else {
+            hudTimerBarEl.style.backgroundColor = '#00f3ff';
+          }
+
+          hudLevelEl.textContent = String(spec.level);
+          hudWaveEl.textContent = String(state.wave);
+
+          hudStatusTextEl.textContent = spec.statusBanner;
+          hudBannerWrapEl.classList.toggle('banner-phantom', spec.level === 5);
+
+          if (state.feedbackBannerTimer > 0) {
+            hudFeedbackTagEl.textContent = state.feedbackBannerText;
+            hudFeedbackTagEl.style.color = state.feedbackBannerColor;
+          } else {
+            const clearProgress = spec.requiredClears
+              ? 'CLEAR ' + spec.clearsInLevel + '/' + spec.requiredClears + ' · '
+              : 'CLEAR ' + spec.clearsInLevel + ' · ';
+            hudFeedbackTagEl.textContent =
+              clearProgress + 'PAR ' + spec.parSeconds.toFixed(1) + 's';
+            hudFeedbackTagEl.style.color = '#7fa6c4';
+          }
+        }
+
+        function startNewRun(startWave = 1, isPractice = false) {
+          if (!Boolean(window.ToenowTutorials?.isActive?.('shadow-match')) && toenowSdk) toenowSdk.startRun({ wave: startWave, isPractice });
+          state.isPractice = Boolean(isPractice);
+          state.score = 0;
+          state.combo = 1;
+          state.peakCombo = 1;
+          state.timeRemaining = 60.0;
+          state.wave = 1;
+          state.wavesResolved = 0;
+          state.totalAttempts = 0;
+          state.correctAttempts = 0;
+          state.lastTickSecond = 60;
+          state.feedbackBannerTimer = 0;
+
+          setGameState('playing');
+          measureLayout();
+          loadWave(1);
+        }
+
+        function triggerGameOver() {
+          if (Boolean(window.ToenowTutorials?.isActive?.('shadow-match'))) return;
+          state.timeRemaining = 0;
+          syncHUD();
+
+          const accuracyPct =
+            state.totalAttempts > 0
+              ? Math.round((state.correctAttempts / state.totalAttempts) * 100)
+              : 100;
+
+                    saveBestRecords(state.score, state.wave);
+          ToenowScreens.updateGameOver('shadow-match', { score: state.score, bestScore: loadBestRecords().bestScore, wave: state.wave, combo: state.peakCombo });
+          updateTitleScreenRecords();
+
+          setGameState('gameover');
+
+          // Toenow Game SDK Unified Lifecycle & Hub Contract
+          if (toenowSdk) {
+            toenowSdk.reportGameOver({
+              score: Math.round(state.score),
+              wave: Number(state.wave) || 1,
+              isPractice: Boolean(state.isPractice),
+              streak: Number(state.peakCombo) || 0,
+              accuracy: accuracyPct
+            });
+          } else {
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage(
+                  {
+                    type: 'GAME_OVER',
+                    gameId: 'shadow-match',
+                    category: 'puzzle',
+                    score: Math.round(state.score),
+                    isPractice: Boolean(state.isPractice),
+                    wave: Number(state.wave) || 1,
+                    streak: Number(state.peakCombo) || 0
+                  },
+                  '*'
+                );
+              }
+            } catch (_) {}
+          }
+        }
+
+        function handleCardSelection(cardIdx) {
+          if (state.mode !== 'playing' || (Boolean(window.ToenowTutorials?.isActive?.('shadow-match')) && Boolean(window.ToenowTutorials?.isComplete?.('shadow-match')))) return;
+          if (state.transitionType !== 'none') return;
+          if (!state.setup || cardIdx < 0 || cardIdx >= state.setup.cards.length) return;
+
+          state.selectedCardIndex = cardIdx;
+          if (Boolean(window.ToenowTutorials?.isActive?.('shadow-match'))) {
+            if (state.setup.cards[cardIdx].isCorrect) {
+              sound.playLockSuccess(1); window.ToenowTutorials.complete('shadow-match');
+            } else { sound.playFaultBuzz(); }
+            return;
+          }
+          state.totalAttempts += 1;
+
+          const chosenCard = state.setup.cards[cardIdx];
+          const spec = state.setup.spec;
+
+          if(window.ToenowAnimals) window.ToenowAnimals.feedback('shadow-match', chosenCard.isCorrect);
+          if (chosenCard.isCorrect) {
+            state.correctAttempts += 1;
+            state.wavesResolved += 1;
+
+            // Award (400 * level * combo) points
+            const pointsEarned = 400 * spec.level * state.combo;
+            state.score += pointsEarned;
+
+            // Increment combo up to 8x
+            state.combo = Math.min(8, state.combo + 1);
+            if (state.combo > state.peakCombo) {
+              state.peakCombo = state.combo;
+            }
+
+            // +1.5s time bonus if solved faster than Level Par Time
+            const beatPar = state.waveElapsed <= spec.parSeconds;
+            if (beatPar) {
+              state.timeRemaining = Math.min(99.9, state.timeRemaining + 1.5);
+              state.feedbackBannerText = '+1.5s PAR BONUS · +' + pointsEarned;
+              state.feedbackBannerColor = '#00ff88';
+            } else {
+              state.feedbackBannerText = 'LOCK CONFIRMED · +' + pointsEarned;
+              state.feedbackBannerColor = '#00ff88';
+            }
+            state.feedbackBannerTimer = 1.4;
+
+            // Freeze & separate upper silhouettes for 0.25s in Neon Lime
+            state.transitionType = 'correct';
+            state.transitionTimer = 0.25;
+
+            sound.playLockSuccess(state.combo);
+            syncHUD();
+          } else {
+            // Wrong Card Tap (Optical Fault):
+            // Reset combo to 1x, deduct -3.0s, flash Crimson, outline correct card in Amber for 0.45s
+            state.combo = 1;
+            state.timeRemaining = Math.max(0, state.timeRemaining - 3.0);
+
+            state.feedbackBannerText = 'OPTICAL FAULT -3.0s · RETRY STAGE';
+            state.feedbackBannerColor = '#ff2a5f';
+            state.feedbackBannerTimer = 1.5;
+
+            state.transitionType = 'fault';
+            state.transitionTimer = 0.45;
+
+            sound.playFaultBuzz();
+            syncHUD();
+          }
+        }
+
+        // ============================================================================
+        // 6. CAPACITIVE TOUCH HIT-BOX EXPANSION (+15px FORGIVENESS) & INPUT BINDINGS
+        // ============================================================================
+        function onDockPointerTrigger(clientX, clientY, eventObj) {
+          if (state.mode !== 'playing' || state.transitionType !== 'none') return;
+          updateCardRects();
+          const frameBounds = arcadeFrame.getBoundingClientRect();
+          const localX = clientX - frameBounds.left;
+          const localY = clientY - frameBounds.top;
+
+          const dockBounds = dockZoneEl.getBoundingClientRect();
+          if (clientY < dockBounds.top - 15 || clientY > dockBounds.bottom + 15) return;
+
+          const hitIndex = resolveCapacitiveCardHit(localX, localY, state.cardRects, 15);
+          if (hitIndex !== -1) {
+            if (eventObj && eventObj.cancelable) {
+              eventObj.preventDefault();
+            }
+            handleCardSelection(hitIndex);
+          }
+        }
+
+        dockZoneEl.addEventListener(
+          'touchstart',
+          function (e) {
+            if (e.changedTouches && e.changedTouches.length > 0) {
+              const t = e.changedTouches[0];
+              onDockPointerTrigger(t.clientX, t.clientY, e);
+            }
+          },
+          { passive: false }
+        );
+
+        dockZoneEl.addEventListener('mousedown', function (e) {
+          if (e.button !== 0) return;
+          onDockPointerTrigger(e.clientX, e.clientY, e);
+        });
+
+        // Utility & Overlay Button Handlers
+        btnInitOptics.addEventListener('click', function () {
+          startNewRun();
+        });
+
+        btnRebootOptics.addEventListener('click', function () {
+          startNewRun();
+        });
+
+        btnGameoverTitle.addEventListener('click', function () {
+          setGameState('title');
+          loadWave(1);
+        });
+
+        btnPause.addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          if (state.mode === 'playing') {
+            setGameState('paused');
+          } else if (state.mode === 'paused') {
+            setGameState('playing');
+          }
+        });
+
+        btnResume.addEventListener('click', function () {
+          if (state.mode === 'paused') {
+            setGameState('playing');
+          }
+        });
+
+        btnPauseRestart.addEventListener('click', function () {
+          startNewRun();
+        });
+
+        btnPauseTitle.addEventListener('click', function () {
+          setGameState('title');
+          loadWave(1);
+        });
+
+        btnRestartQuick.addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          startNewRun();
+        });
+
+        btnMute.addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          sound.muted = !sound.muted;
+          iconSoundOn.style.display = sound.muted ? 'none' : 'block';
+          iconSoundOff.style.display = sound.muted ? 'block' : 'none';
+        });
+
+        // Keyboard shortcuts: Enter/Space to Start, 1-6 for Dock Cards, P/Escape for Pause, M for Mute, R for Restart
+        window.addEventListener('keydown', function (e) {
+          if (e.repeat) return;
+          const key = e.key;
+
+          if (state.mode === 'title' || state.mode === 'gameover') {
+            if (key === 'Enter' || key === ' ') {
+              e.preventDefault();
+              startNewRun();
+              return;
+            }
+          }
+
+          if (key === 'Escape' || key === 'p' || key === 'P') {
+            if (state.mode === 'playing') {
+              e.preventDefault();
+              setGameState('paused');
+            } else if (state.mode === 'paused') {
+              e.preventDefault();
+              setGameState('playing');
+            }
+            return;
+          }
+
+          if (key === 'm' || key === 'M') {
+            sound.muted = !sound.muted;
+            iconSoundOn.style.display = sound.muted ? 'none' : 'block';
+            iconSoundOff.style.display = sound.muted ? 'block' : 'none';
+            return;
+          }
+
+          if (key === 'r' || key === 'R') {
+            if (state.mode === 'playing' || state.mode === 'paused') {
+              e.preventDefault();
+              startNewRun();
+              return;
+            }
+          }
+
+          if (state.mode === 'playing' && state.transitionType === 'none') {
+            const num = parseInt(key, 10);
+            if (num >= 1 && num <= 6 && state.setup && num <= state.setup.cards.length) {
+              e.preventDefault();
+              handleCardSelection(num - 1);
+            }
+          }
+        });
+
+        // Resize handling
+        window.addEventListener('resize', function () {
+          measureLayout();
+        });
+
+        // ============================================================================
+        // 7. SIMULATION STEP (CLAMPED DT, 5-TIER MOTION PATTERNS, TIMER)
+        // ============================================================================
+        function updateSimulation(dt) {
+          if (Boolean(window.ToenowTutorials?.isActive?.('shadow-match')) && Boolean(window.ToenowTutorials?.isComplete?.('shadow-match'))) return;
+          // Keep ambient silhouette motion alive on the Title screen background
+          if (state.mode === 'title') {
+            state.waveElapsed += dt;
+            stepDrifters(dt);
+            return;
+          }
+
+          if (state.mode !== 'playing') return;
+
+          if (state.feedbackBannerTimer > 0) {
+            state.feedbackBannerTimer = Math.max(0, state.feedbackBannerTimer - dt);
+          }
+
+          // Handle match / fault transition freeze window
+          if (state.transitionType !== 'none') {
+            state.transitionTimer -= dt;
+            if (state.transitionType === 'correct') {
+              // Smoothly separate silhouettes toward un-occluded confirmation slots during 0.25s freeze
+              const lerpAlpha = Math.min(1, dt * 16);
+              state.drifters.forEach(function (d) {
+                d.x += (d.sepX - d.x) * lerpAlpha;
+                d.y += (d.sepY - d.y) * lerpAlpha;
+                d.rotation *= 0.72;
+                d.scale += (0.85 - d.scale) * lerpAlpha;
+              });
+            }
+
+            if (state.transitionTimer <= 0) {
+              const wasCorrect = state.transitionType === 'correct';
+              if (state.timeRemaining <= 0) {
+                triggerGameOver();
+              } else {
+                // Only advance wave & level progression when the player passes the current stage!
+                loadWave(wasCorrect ? state.wave + 1 : state.wave);
+              }
+            }
+            return;
+          }
+
+          // Global 60.0s countdown clock
+          if (!Boolean(window.ToenowTutorials?.isActive?.('shadow-match'))) state.timeRemaining = Math.max(0, state.timeRemaining - dt);
+          state.waveElapsed += dt;
+
+          const currentWholeSec = Math.ceil(state.timeRemaining);
+          if (currentWholeSec < state.lastTickSecond && currentWholeSec > 0) {
+            state.lastTickSecond = currentWholeSec;
+            if (currentWholeSec <= 15) {
+              sound.playTimerTick(currentWholeSec <= 10);
+            }
+          }
+
+          // Level 5 strobe shutter click audio cue every 1.20s
+          if (state.setup && state.setup.spec.level === 5) {
+            const cycleIdx = Math.floor(state.waveElapsed / 1.2);
+            const cyclePhase = state.waveElapsed % 1.2;
+            if (cyclePhase >= 0.9 && state.lastShutterCycle !== cycleIdx) {
+              state.lastShutterCycle = cycleIdx;
+              sound.playShutterClick();
+            }
+          }
+
+          stepDrifters(dt);
+          syncHUD();
+
+          if (state.timeRemaining <= 0) {
+            triggerGameOver();
+          }
+        }
+
+        function stepDrifters(dt) {
+          if (!state.setup) return;
+          const spec = state.setup.spec;
+          const cW = state.chamberRect.width;
+          const cH = state.chamberRect.height;
+          const cx = cW * 0.5;
+          const cy = cH * 0.5;
+          const t = state.waveElapsed;
+
+          state.drifters.forEach(function (d, idx) {
+            const margin = d.baseRadius * 0.92;
+            d.rotation += d.spin * dt;
+
+            if (spec.motionPattern === 'linear_bounce') {
+              // Level 1: Upright steady drift with soft center attraction + wall bounce
+              d.x += d.vx * dt;
+              d.y += d.vy * dt;
+              d.scale = 1.0;
+              if (d.x < margin) {
+                d.x = margin;
+                d.vx = Math.abs(d.vx);
+              } else if (d.x > cW - margin) {
+                d.x = cW - margin;
+                d.vx = -Math.abs(d.vx);
+              }
+              if (d.y < margin) {
+                d.y = margin;
+                d.vy = Math.abs(d.vy);
+              } else if (d.y > cH - margin) {
+                d.y = cH - margin;
+                d.vy = -Math.abs(d.vy);
+              }
+            } else if (spec.motionPattern === 'center_cross') {
+              // Level 2: Periodic center intersection harmonic paths
+              const rx = Math.max(36, cW * 0.32);
+              const ry = Math.max(30, cH * 0.28);
+              const omega = spec.speedPxPerSec / 65;
+              d.x = cx + Math.cos(t * omega + d.phase) * rx;
+              d.y = cy + Math.sin(t * omega * 1.5 + d.phase) * ry;
+              d.scale = 1.0;
+            } else if (spec.motionPattern === 'scale_breathing') {
+              // Level 3: Sinusoidal Scale Breathing (0.75x - 1.25x) + sweeping orbits
+              d.x += d.vx * dt;
+              d.y += d.vy * dt;
+              d.scale = 1.0 + 0.25 * Math.sin(t * 2.8 + d.phase);
+              if (d.x < margin) {
+                d.x = margin;
+                d.vx = Math.abs(d.vx);
+              } else if (d.x > cW - margin) {
+                d.x = cW - margin;
+                d.vx = -Math.abs(d.vx);
+              }
+              if (d.y < margin) {
+                d.y = margin;
+                d.vy = Math.abs(d.vy);
+              } else if (d.y > cH - margin) {
+                d.y = cH - margin;
+                d.vy = -Math.abs(d.vy);
+              }
+            } else if (spec.motionPattern === 'orbital_vortex') {
+              // Level 4: Orbital Vortex keeping shapes 60%-80% overlapped near center with brief apogee separations
+              const apogeePulse = 0.22 + 0.78 * Math.pow(Math.sin(t * 1.35), 4);
+              const maxR = Math.min(cW, cH) * 0.31;
+              const r = maxR * apogeePulse;
+              const angle = t * 1.45 * (idx % 2 === 0 ? 1 : -1) + d.phase;
+              d.x = cx + Math.cos(angle) * r;
+              d.y = cy + Math.sin(angle) * r * 0.82;
+              d.scale = 0.96 + 0.1 * Math.cos(t * 2.2 + d.phase);
+            } else if (spec.motionPattern === 'lissajous_strobe') {
+              // Level 5: High-speed Lissajous figure-8 orbits
+              const rx = Math.max(42, cW * 0.34);
+              const ry = Math.max(34, cH * 0.31);
+              const omega = 1.65;
+              d.x = cx + Math.sin(t * omega * d.freqX + d.phase) * rx;
+              d.y = cy + Math.sin(t * omega * d.freqY + d.phase * 1.3) * ry;
+              d.scale = 0.95 + 0.12 * Math.sin(t * 3.1 + d.phase);
+            }
+          });
+        }
+
+        // ============================================================================
+        // 8. CANVAS RENDERER (TRUE UNIFIED SHADOW OCCLUSION + DOCK SCHEMATICS)
+        // ============================================================================
+        function renderFrame() {
+          const dpr = state.dpr;
+          const W = canvas.width;
+          const H = canvas.height;
+
+          // 1. Clear main canvas every frame at 60 FPS (Zero motion-blur trails)
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.clearRect(0, 0, W, H);
+
+          ctx.save();
+          ctx.scale(dpr, dpr);
+
+          // Fill Outer Void Canvas (#070a0e)
+          ctx.fillStyle = '#e7e6d4';
+          ctx.fillRect(0, 0, state.frameWidth, state.frameHeight);
+
+          renderForestTheater();
+          renderOpticalChamber();
+          if (state.mode !== 'title') {
+            renderCandidateDockCards();
+          }
+
+          ctx.restore();
+        }
+
+        function renderForestTheater() {
+          const r=state.chamberRect;
+          // Framing remains outside the optical area: exact puppet geometry is unchanged.
+          ctx.fillStyle='#8a674a';
+          ctx.fillRect(r.x-9,r.y-8,r.width+18,8);
+          ctx.fillRect(r.x-9,r.y,8,r.height+8);
+          ctx.fillRect(r.x+r.width+1,r.y,8,r.height+8);
+          ctx.fillRect(r.x-9,r.y+r.height,r.width+18,8);
+          ctx.fillStyle='#6d8c68';
+          ctx.beginPath();ctx.moveTo(r.x-10,r.y-8);ctx.lineTo(r.x+r.width*.5,r.y-23);
+          ctx.lineTo(r.x+r.width+10,r.y-8);ctx.closePath();ctx.fill();
+          const puppetX=r.x+r.width*.8, puppetY=Math.max(26,r.y-54);
+          ctx.strokeStyle='#a78559';ctx.lineWidth=1.5;
+          ctx.beginPath();ctx.moveTo(puppetX-13,puppetY+9);ctx.lineTo(r.x+12,r.y-3);
+          ctx.moveTo(puppetX+13,puppetY+9);ctx.lineTo(r.x+r.width-12,r.y-3);ctx.stroke();
+          if(window.ToenowAnimals && window.ToenowAnimals.drawAnimal) {
+            window.ToenowAnimals.drawAnimal(ctx,'raccoon',puppetX,puppetY,40);
+          }
+        }
+
+        function renderOpticalChamber() {
+          const rect = state.chamberRect;
+          const dpr = state.dpr;
+          const spec = state.setup ? state.setup.spec : getLevelSpecForWave(1);
+
+          // Determine Level 5 Strobe Eclipse Shutter state (dims for 0.30s every 1.20s)
+          let shutterDimmed = false;
+          if (
+            state.mode === 'playing' &&
+            state.transitionType === 'none' &&
+            spec.level === 5
+          ) {
+            const cyclePhase = state.waveElapsed % 1.2;
+            if (cyclePhase >= 0.9) {
+              shutterDimmed = true;
+            }
+          }
+
+          ctx.save();
+          // Chamber Backlight Fill (#0d2230 normal, dimmed during eclipse shutter)
+          ctx.fillStyle = shutterDimmed ? '#575e51' : '#e4d8ae';
+          ctx.beginPath();
+          ctx.roundRect(rect.x, rect.y, rect.width, rect.height, 8);
+          ctx.fill();
+          ctx.clip();
+
+          // Subtle #16384d calibration grid lines
+          ctx.strokeStyle = shutterDimmed ? 'rgba(90, 91, 68, .15)' : 'rgba(112, 107, 78, .13)';
+          ctx.lineWidth = 1;
+          const gridStep = 28;
+          ctx.beginPath();
+          for (let gx = rect.x + gridStep; gx < rect.x + rect.width; gx += gridStep) {
+            ctx.moveTo(gx, rect.y);
+            ctx.lineTo(gx, rect.y + rect.height);
+          }
+          for (let gy = rect.y + gridStep; gy < rect.y + rect.height; gy += gridStep) {
+            ctx.moveTo(rect.x, gy);
+            ctx.lineTo(rect.x + rect.width, gy);
+          }
+          ctx.stroke();
+
+          // Center optical calibration crosshair
+          const midX = rect.x + rect.width * 0.5;
+          const midY = rect.y + rect.height * 0.5;
+          ctx.strokeStyle = 'rgba(100, 109, 78, .1)';
+          ctx.beginPath();
+          ctx.arc(midX, midY, Math.min(rect.width, rect.height) * 0.34, 0, Math.PI * 2);
+          ctx.moveTo(midX - 18, midY);
+          ctx.lineTo(midX + 18, midY);
+          ctx.moveTo(midX, midY - 18);
+          ctx.lineTo(midX, midY + 18);
+          ctx.stroke();
+
+          // Offscreen Unified Shadow Occlusion Compositing
+          shadowCtx.setTransform(1, 0, 0, 1, 0, 0);
+          shadowCtx.clearRect(0, 0, shadowBuffer.width, shadowBuffer.height);
+
+          rimCtx.setTransform(1, 0, 0, 1, 0, 0);
+          rimCtx.clearRect(0, 0, rimBuffer.width, rimBuffer.height);
+
+          const isCorrectFlash = state.transitionType === 'correct';
+          const isFaultFlash = state.transitionType === 'fault';
+          const activeRimColor = isCorrectFlash
+            ? '#00ff88'
+            : isFaultFlash
+            ? '#ff2a5f'
+            : '#5d7355';
+
+          shadowCtx.save();
+          shadowCtx.scale(dpr, dpr);
+          shadowCtx.globalCompositeOperation = 'source-over';
+          shadowCtx.fillStyle = isCorrectFlash ? '#07291c' : '#05070a';
+
+          rimCtx.save();
+          rimCtx.scale(dpr, dpr);
+          rimCtx.globalCompositeOperation = 'source-over';
+          rimCtx.fillStyle = activeRimColor;
+          rimCtx.strokeStyle = activeRimColor;
+          rimCtx.lineWidth = 4; // 2px extends outside fill boundary; interior is masked by shadowBuffer
+          rimCtx.lineJoin = 'round';
+
+          let phantomTagTarget = null;
+
+          state.drifters.forEach(function (d) {
+            // Level 5 initial 0.35s Crimson Phantom Tagging Window
+            if (d.isPhantom && state.waveElapsed < 0.35 && state.transitionType === 'none') {
+              phantomTagTarget = d;
+              return;
+            }
+            // During the 0.25s correct match confirmation freeze, hide the phantom decoy so the player sees the clean target set
+            if (d.isPhantom && isCorrectFlash) {
+              return;
+            }
+
+            const drawR = d.baseRadius * d.scale;
+
+            // 1. Draw onto rimBuffer (fill + 4px stroke)
+            rimCtx.save();
+            rimCtx.translate(d.x, d.y);
+            rimCtx.rotate(d.rotation);
+            traceShapePath(rimCtx, d.shapeId, drawR);
+            rimCtx.fill('evenodd');
+            rimCtx.stroke();
+            rimCtx.restore();
+
+            // 2. Draw onto shadowBuffer (solid #05070a fill only, zero individual stroke)
+            shadowCtx.save();
+            shadowCtx.translate(d.x, d.y);
+            shadowCtx.rotate(d.rotation);
+            traceShapePath(shadowCtx, d.shapeId, drawR);
+            shadowCtx.fill('evenodd');
+            shadowCtx.restore();
+          });
+
+          rimCtx.restore();
+          shadowCtx.restore();
+
+          // Composite unified rim layer + unified pitch-obsidian shadow layer onto chamber
+          ctx.save();
+          if (!IS_HEADLESS) {
+            ctx.shadowColor = activeRimColor;
+            ctx.shadowBlur = 8;
+          }
+          ctx.drawImage(rimBuffer, rect.x, rect.y, rect.width, rect.height);
+          ctx.restore();
+
+          ctx.drawImage(shadowBuffer, rect.x, rect.y, rect.width, rect.height);
+
+          // Render Level 5 Phantom Decoy during its initial 0.35s Crimson Tagging Window (#ff2a5f)
+          if (phantomTagTarget) {
+            const p = phantomTagTarget;
+            const pR = p.baseRadius * p.scale;
+            ctx.save();
+            ctx.translate(rect.x + p.x, rect.y + p.y);
+            ctx.rotate(p.rotation);
+            ctx.fillStyle = '#ff2a5f';
+            ctx.strokeStyle = '#eef6ff';
+            ctx.lineWidth = 2;
+            traceShapePath(ctx, p.shapeId, pR);
+            ctx.fill('evenodd');
+            ctx.stroke();
+            ctx.restore();
+
+            // Telemetry tag bracket around Crimson Phantom
+            ctx.save();
+            ctx.strokeStyle = '#ff2a5f';
+            ctx.lineWidth = 1.5;
+            const boxR = pR * 1.15;
+            ctx.strokeRect(rect.x + p.x - boxR, rect.y + p.y - boxR, boxR * 2, boxR * 2);
+            ctx.fillStyle = '#ff2a5f';
+            ctx.font = '700 10px Consolas, monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('PHANTOM DECOY', rect.x + p.x, rect.y + p.y - boxR - 5);
+            ctx.restore();
+          }
+
+          // Level 5 Strobe Shutter HUD Notice
+          if (shutterDimmed) {
+            ctx.fillStyle = 'rgba(255, 170, 0, 0.85)';
+            ctx.font = '700 11px Consolas, monospace';
+            ctx.textAlign = 'right';
+            ctx.fillText('ECLIPSE SHUTTER ACTIVE', rect.x + rect.width - 12, rect.y + 20);
+          }
+
+          ctx.restore();
+
+          // Crisp #00f3ff Outer Bezel & Technical Corner Reticles
+          ctx.save();
+          ctx.strokeStyle = activeRimColor;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.roundRect(rect.x, rect.y, rect.width, rect.height, 8);
+          ctx.stroke();
+
+          // Corner Reticle Ticks
+          const tick = 10;
+          ctx.strokeStyle = '#eef6ff';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          // Top-Left
+          ctx.moveTo(rect.x + 4, rect.y + 4 + tick);
+          ctx.lineTo(rect.x + 4, rect.y + 4);
+          ctx.lineTo(rect.x + 4 + tick, rect.y + 4);
+          // Top-Right
+          ctx.moveTo(rect.x + rect.width - 4 - tick, rect.y + 4);
+          ctx.lineTo(rect.x + rect.width - 4, rect.y + 4);
+          ctx.lineTo(rect.x + rect.width - 4, rect.y + 4 + tick);
+          // Bottom-Left
+          ctx.moveTo(rect.x + 4, rect.y + rect.height - 4 - tick);
+          ctx.lineTo(rect.x + 4, rect.y + rect.height - 4);
+          ctx.lineTo(rect.x + 4 + tick, rect.y + rect.height - 4);
+          // Bottom-Right
+          ctx.moveTo(rect.x + rect.width - 4 - tick, rect.y + rect.height - 4);
+          ctx.lineTo(rect.x + rect.width - 4, rect.y + rect.height - 4);
+          ctx.lineTo(rect.x + rect.width - 4, rect.y + rect.height - 4 - tick);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        function renderCandidateDockCards() {
+          if (!state.setup) return;
+          updateCardRects();
+          if (state.cardRects.length === 0) return;
+          const cards = state.setup.cards;
+
+          for (let i = 0; i < cards.length; i++) {
+            const card = cards[i];
+            const r = state.cardRects[i];
+            if (!r || r.width <= 0 || r.height <= 0) continue;
+
+            let fillStyle = '#f3ebd7';
+            let borderStyle = '#9a8764';
+            let borderWidth = 1.5;
+            let iconStroke = '#50694e';
+
+            if (state.transitionType === 'correct' && i === state.selectedCardIndex) {
+              fillStyle = 'rgba(0, 255, 136, 0.16)';
+              borderStyle = '#00ff88';
+              borderWidth = 2.5;
+              iconStroke = '#00ff88';
+            } else if (state.transitionType === 'fault') {
+              if (i === state.selectedCardIndex) {
+                fillStyle = 'rgba(255, 42, 95, 0.18)';
+                borderStyle = '#ff2a5f';
+                borderWidth = 2.5;
+                iconStroke = '#ff2a5f';
+              } else if (card.isCorrect) {
+                // Outline correct dock card in Amber (#ffaa00) for 0.45s on fault
+                fillStyle = 'rgba(255, 170, 0, 0.14)';
+                borderStyle = '#ffaa00';
+                borderWidth = 2.5;
+                iconStroke = '#ffaa00';
+              }
+            }
+
+            ctx.save();
+            ctx.fillStyle = fillStyle;
+            ctx.strokeStyle = borderStyle;
+            ctx.lineWidth = borderWidth;
+            ctx.beginPath();
+            ctx.roundRect(r.x, r.y, r.width, r.height, 6);
+            ctx.fill();
+            ctx.stroke();
+
+            // Key index badge [1]-[6] in top-left corner of card
+            ctx.fillStyle = '#7fa6c4';
+            ctx.font = '700 10px Consolas, monospace';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText('[' + (i + 1) + ']', r.x + 7, r.y + 6);
+
+            // Render N upright (0 deg rotation) mini-silhouettes side-by-side
+            const count = card.shapes.length;
+            const innerPadX = 10;
+            const availW = Math.max(40, r.width - innerPadX * 2);
+            const slotW = availW / count;
+            const maxIconR = Math.min(slotW * 0.39, r.height * 0.29, 24);
+            const centerY = r.y + r.height * 0.54;
+
+            for (let s = 0; s < count; s++) {
+              const shapeId = card.shapes[s];
+              const centerX = r.x + innerPadX + slotW * (s + 0.5);
+
+              ctx.save();
+              ctx.translate(centerX, centerY);
+              ctx.fillStyle = '#05070a';
+              ctx.strokeStyle = iconStroke;
+              ctx.lineWidth = 1.75;
+              ctx.lineJoin = 'round';
+              traceShapePath(ctx, shapeId, maxIconR);
+              ctx.fill('evenodd');
+              ctx.stroke();
+              ctx.restore();
+            }
+
+            ctx.restore();
+          }
+        }
+
+        // ============================================================================
+        // 9. MAIN ANIMATION LOOP & DETERMINISTIC TEST API
+        // ============================================================================
+        let lastFrameTime = performance.now();
+        let headlessAccumulator = 0;
+
+        function frameLoop(now) {
+          const rawDt = Math.max(0, (now - lastFrameTime) / 1000);
+          lastFrameTime = now;
+          const clampedDt = Math.min(rawDt, 0.05);
+
+          if (IS_HEADLESS) {
+            headlessAccumulator += clampedDt;
+            if (headlessAccumulator >= 0.06) {
+              updateSimulation(headlessAccumulator);
+              renderFrame();
+              headlessAccumulator = 0;
+            }
+          } else {
+            updateSimulation(clampedDt);
+            renderFrame();
+          }
+
+          requestAnimationFrame(frameLoop);
+        }
+
+        // Expose clean programmatic hook for automated verification
+        window.__ECLIPSE_DRIFT__ = {
+          getState: function () {
+            return {
+              mode: state.mode,
+              score: state.score,
+              combo: state.combo,
+              peakCombo: state.peakCombo,
+              timeRemaining: state.timeRemaining,
+              wave: state.wave,
+              level: state.setup ? state.setup.spec.level : 1,
+              correctCardIndex: state.setup ? state.setup.correctCardIndex : 0,
+              targetShapes: state.setup ? state.setup.targetShapes : [],
+              phantomShape: state.setup ? state.setup.phantomShape : null
+            };
+          },
+          selectCard: function (idx) {
+            handleCardSelection(idx);
+          },
+          loadWave: function (waveNum) {
+            loadWave(waveNum);
+          },
+          setTimeRemaining: function (sec) {
+            state.timeRemaining = sec;
+            if (sec <= 0) triggerGameOver();
+            else syncHUD();
+          }
+        };
+
+        window.ToenowTutorials?.register?.('shadow-match', {
+          start() { startNewRun(1, true); },
+          stop() { state.isPractice = false; state.transitionType = 'none'; setGameState('title'); },
+          getGuide() {
+            const button = state.cardButtons[state.setup?.correctCardIndex], bounds = button?.getBoundingClientRect();
+            return { prompt: 'Look at the shadows above. Tap the card with the same shapes.', rect: bounds ? { x: bounds.left, y: bounds.top, width: bounds.width, height: bounds.height } : null, waiting: !bounds, done: Boolean(window.ToenowTutorials?.isComplete?.('shadow-match')) };
+          }
+        });
+
+        // Initialize layout, Wave 1 preview, and handle ?autostart=1
+        measureLayout();
+        loadWave(1);
+        const params = new URLSearchParams(window.location.search);
+        if (typeof ToenowLevels !== 'undefined' && ToenowLevels.setupPracticeMode) {
+          ToenowLevels.setupPracticeMode({
+            container: '#title-overlay .unified-title-card',
+            onStartGame: (startWave, isPractice) => {
+              startNewRun(startWave, isPractice);
+            }
+          });
+        }
+        if (params.get('autostart') === '1') {
+          startNewRun();
+        } else {
+          setGameState('title');
+        }
+        renderFrame();
+        requestAnimationFrame(frameLoop);
+      })();
+    </script>
+  </body>
+</html>

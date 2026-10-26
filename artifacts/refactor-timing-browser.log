@@ -1,0 +1,17 @@
+CHECK space-scale 390 en
+locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-tutorial-replay]')
+
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-total-time-browser.cjs:122:54 {
+  log: [ "  - waiting for locator('[data-tutorial-replay]')" ],
+  name: 'TimeoutError'
+}
+locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-tutorial-replay]')
+
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-total-time-browser.cjs:122:54 {
+  log: [ "  - waiting for locator('[data-tutorial-replay]')" ],
+  name: 'TimeoutError'
+}

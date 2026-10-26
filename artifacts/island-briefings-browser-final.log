@@ -1,0 +1,17 @@
+PASS block-match 390x850 en: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS block-match 390x850 zh-Hant: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS block-match 1100x850 en: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS block-match 1100x850 zh-Hant: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS block-match 320x640 en: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS block-match 320x640 zh-Hant: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS block-match 844x390 en: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS block-match 844x390 zh-Hant: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS tap-match 390x850 en: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS tap-match 390x850 zh-Hant: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS tap-match 1100x850 en: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS tap-match 1100x850 zh-Hant: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS tap-match 320x640 en: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS tap-match 320x640 zh-Hant: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS tap-match 844x390 en: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS tap-match 844x390 zh-Hant: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS 72 briefing cases

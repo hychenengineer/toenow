@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Animal Island — 50 Landmark Stages / 動物島五十階段圖鑑</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f0df;color:#344b40;font:16px/1.5 system-ui,sans-serif}main{max-width:1500px;margin:auto;padding:32px 20px}h1{font-family:Georgia,serif;font-weight:500;margin:0 0 8px}p{margin:8px 0 22px}.status{padding:12px 18px;background:#e4ebd8;border-radius:12px}.scroll{overflow-x:auto}.row{min-width:850px;display:grid;grid-template-columns:repeat(5,minmax(160px,1fr));gap:12px;margin-bottom:28px}.location{border-top:1px solid #c7cfba;padding-top:20px}.location h2{margin:0;font-size:21px}.location h2 span{display:block;font-size:15px;font-weight:400}.stage{margin:10px 0 0;background:#fffaf0;border:1px solid #d5d8c3;border-radius:14px;overflow:hidden}.art{background-color:#f6f4eb;background-image:linear-gradient(45deg,#e6e7dc 25%,transparent 25%),linear-gradient(-45deg,#e6e7dc 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e6e7dc 75%),linear-gradient(-45deg,transparent 75%,#e6e7dc 75%);background-size:24px 24px;background-position:0 0,0 12px,12px -12px,-12px 0}.stage img{display:block;object-fit:contain;width:100%;aspect-ratio:1;padding:6px}.stage figcaption{padding:10px;font-size:13px}.stage strong{display:block;font-size:15px}.stage a{color:#34624c}.stage small{display:block;color:#637163}.missing{opacity:.5}.missing img{visibility:hidden}.loaded{font-weight:600}footer{font-size:13px;color:#657064;margin-top:20px}
+</style>
+</head>
+<body><main>
+<h1>Animal Island — Five Stages per Location<br>動物島：十個地點，各五個成長階段</h1>
+<p>Watercolor landmarks with participating animals. The checkerboard reveals transparent margins.<br>水彩地標與參與活動的動物；棋盤底色可檢視透明邊緣。手機可左右滑動每一列查看五階段。</p>
+<p class="status" role="status" id="status">Loading manifest / 載入圖鑑中…</p>
+<div id="gallery"></div>
+<footer>Original PNG files and generation provenance remain linked beneath every stage. Runtime textures fit within 480 × 480 pixels.<br>每階段均附原始 PNG 與生成來源；遊戲貼圖最大為 480 × 480 像素。</footer>
+</main><script>
+const locations=[['panda','Panda Rescue Station','熊貓救援車站'],['rabbit','Rabbit Harvest Garden','兔子採收園'],['otter','Otter River Shelter','水獺溪流小屋'],['beaver','Beaver Timber Workshop','海狸木作工坊'],['squirrel','Squirrel Supply Depot','松鼠補給站'],['fox','Fox Parcel Weighhouse','狐狸秤重小屋'],['penguin','Penguin Matching Pool','企鵝配對池'],['owl','Owl Observation Station','貓頭鷹觀察站'],['raccoon','Raccoon Shadow Theater','浣熊影子劇場'],['elephant','Elephant Memory Garden','大象記憶花園']];
+(async()=>{
+let manifest;try{const response=await fetch('../assets/animal-island/manifest.json',{cache:'no-store'});if(!response.ok)throw Error('Manifest not generated');manifest=await response.json();}catch(e){manifest={count:0,assets:[]};}
+const entries=new Map(manifest.assets.map(e=>[e.species+'-level'+e.level,e]));let loaded=0;
+const status=document.getElementById('status');const update=()=>status.textContent=`${manifest.count}/50 prepared · ${loaded}/50 images loaded / 已準備 ${manifest.count}/50 張，已載入 ${loaded}/50 張`;
+for(const [species,en,zh] of locations){
+const section=document.createElement('section');section.className='location';const title=document.createElement('h2');title.textContent=en;const chinese=document.createElement('span');chinese.textContent=zh;title.append(chinese);section.append(title);
+const scroll=document.createElement('div');scroll.className='scroll';const row=document.createElement('div');row.className='row';scroll.append(row);section.append(scroll);
+for(let level=1;level<=5;level++){
+ const key=species+'-level'+level,entry=entries.get(key);const figure=document.createElement('figure');figure.className='stage'+(entry?'':' missing');figure.dataset.species=species;figure.dataset.level=String(level);
+ const art=document.createElement('div');art.className='art';const img=document.createElement('img');img.alt=`${en}, Level ${level} / ${zh} 第 ${level} 階段`;img.width=480;img.height=480;img.loading='eager';img.addEventListener('load',()=>{loaded++;figure.dataset.loaded='true';update()});img.addEventListener('error',()=>{figure.dataset.loaded='false'});if(entry)img.src='../'+entry.runtime;art.append(img);figure.append(art);
+ const caption=document.createElement('figcaption');const heading=document.createElement('strong');heading.textContent=`Level ${level} / 第 ${level} 階段`;caption.append(heading);
+ if(entry){const size=document.createElement('small');size.textContent=`${entry.runtimeSize.join(' × ')} px · ${(entry.runtimeBytes/1024).toFixed(1)} KiB`;caption.append(size);for(const [label,url] of [['Original PNG / 原圖',entry.source],['Provenance / 來源',entry.provenance]]){const link=document.createElement('a');link.textContent=label;link.href='../'+url;link.target='_blank';link.rel='noopener';caption.append(link,document.createElement('br'));}}
+ else{const pending=document.createElement('small');pending.textContent='Awaiting generation / 等待生成';caption.append(pending)}figure.append(caption);row.append(figure);
+}document.getElementById('gallery').append(section);
+}update();
+})();
+</script></body></html>

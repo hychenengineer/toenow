@@ -1,0 +1,15 @@
+[
+  {
+    "id": "flash-brain",
+    "size": "mobile",
+    "correctInput": true,
+    "hazardInput": true,
+    "hudNoOverlap": true,
+    "privacy": {
+      "leaks": 0,
+      "revealed": 680
+    },
+    "errors": [],
+    "supplied": []
+  }
+]

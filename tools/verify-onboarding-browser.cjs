@@ -1,3 +1,4 @@
+const { readSource } = require('./lib/game-source.cjs');
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -61,7 +62,7 @@ const output = path.resolve(__dirname, '../artifacts/island-onboarding');
     // Instrument only game state setup; execute the production start and game-over lifecycle.
     await page.evaluate(() => localStorage.setItem('toenow_tutorial_number-pop_v2', 'completed'));
     await page.route(/\/games\/number-pop\/(?:index\.html)?(?:\?.*)?$/, route => {
-      let html = fs.readFileSync(path.resolve(__dirname, '../games/number-pop/index.html'), 'utf8');
+      let html = readSource(path.resolve(__dirname, '../games/number-pop/index.html'), 'utf8');
       const end = html.lastIndexOf('})();');
       html = html.slice(0, end) + 'window.__onboardingFinish=(wave,score)=>{game.score=score;game.wave=wave;game.runDuration=60;triggerGameOver();};' + html.slice(end);
       return route.fulfill({ contentType: 'text/html', body: html });

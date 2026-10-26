@@ -1,0 +1,10 @@
+PASS block-match 390 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS animal-rescue-train 390 zh-Hant: 6 real game taps, score0, records protected, normal start, replay/cancel
+PASS block-match: incomplete cancel, explicit skip, normal game
+PASS animal-rescue-train: incomplete cancel, explicit skip, normal game
+PASS block-match: iframe actual game tutorial
+PASS animal-rescue-train: iframe actual game tutorial
+PASS keyboard, language switching and protected restart shortcut
+PASS train real queue/carriage buttons with Enter/Space
+PASS existing train save, puzzle history and original carriage state survive tutorial
+{"realGameLessons":2,"skipScenarios":2,"iframeScenarios":2,"keyboard":1}

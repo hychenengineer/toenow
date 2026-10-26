@@ -1,0 +1,63 @@
+TAP version 13
+# Subtest: Fresh and settings-only players start with one persisted rabbit garden
+ok 1 - Fresh and settings-only players start with one persisted rabbit garden
+  ---
+  duration_ms: 2.9161
+  ...
+# Subtest: Actual legacy history retains all games, including zero-score attempts
+ok 2 - Actual legacy history retains all games, including zero-score attempts
+  ---
+  duration_ms: 0.4856
+  ...
+# Subtest: Only an unlocked game reaching Wave 6 in normal play opens one new place once
+ok 3 - Only an unlocked game reaching Wave 6 in normal play opens one new place once
+  ---
+  duration_ms: 0.9673
+  ...
+# Subtest: Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+ok 4 - Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+  ---
+  duration_ms: 0.4309
+  ...
+# Subtest: Every distinct completion opens at most one place and the final place finishes cleanly
+ok 5 - Every distinct completion opens at most one place and the final place finishes cleanly
+  ---
+  duration_ms: 0.4474
+  ...
+# Subtest: Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+ok 6 - Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+  ---
+  duration_ms: 0.4738
+  ...
+# Subtest: A readable but unwritable existing save retains this session progress
+ok 7 - A readable but unwritable existing save retains this session progress
+  ---
+  duration_ms: 0.1921
+  ...
+# Subtest: Rejected run records cannot bypass validation through reconciliation or reload
+not ok 8 - Rejected run records cannot bypass validation through reconciliation or reload
+  ---
+  duration_ms: 0.3005
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-exploration.test.cjs:85:1'
+  failureType: 'testCodeFailure'
+  error: 'flow.reject is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-exploration.test.cjs:88:8)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 7
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12134.2571

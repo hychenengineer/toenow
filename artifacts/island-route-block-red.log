@@ -1,0 +1,11 @@
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+6 !== 5
+
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-island-progression-browser.cjs:67:12 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 6,
+  expected: 5,
+  operator: 'strictEqual'
+}

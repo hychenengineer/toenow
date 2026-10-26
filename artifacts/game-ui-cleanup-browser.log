@@ -1,0 +1,32 @@
+Launching UI verification browser
+Checking standalone 1100px animal-rescue-train
+{ lang: 'zh-Hant', api: true, saved: 'zh-Hant' }
+Checking standalone 1100px number-pop
+{ lang: 'zh-Hant', api: true, saved: 'zh-Hant' }
+Checking standalone 1100px ball-track
+{ lang: 'zh-Hant', api: true, saved: 'zh-Hant' }
+Checking standalone 1100px block-match
+{ lang: 'zh-Hant', api: true, saved: 'zh-Hant' }
+Checking standalone 1100px add-up
+{ lang: 'zh-Hant', api: true, saved: 'zh-Hant' }
+Checking standalone 1100px space-scale
+{ lang: 'zh-Hant', api: true, saved: 'zh-Hant' }
+Checking standalone 1100px tap-match
+{ lang: 'zh-Hant', api: true, saved: 'zh-Hant' }
+Checking standalone 1100px spot-quick
+{ lang: 'zh-Hant', api: true, saved: 'zh-Hant' }
+Checking standalone 1100px shadow-match
+{ lang: 'zh-Hant', api: true, saved: 'zh-Hant' }
+Checking standalone 1100px flash-brain
+{ lang: 'zh-Hant', api: true, saved: 'zh-Hant' }
+Checking Hub 1100px
+PASS 1100px animal-rescue-train: standalone/iframe without switch, no URL badge, language inheritance/sync
+PASS 1100px number-pop: standalone/iframe without switch, no URL badge, language inheritance/sync
+PASS 1100px ball-track: standalone/iframe without switch, no URL badge, language inheritance/sync
+PASS 1100px block-match: standalone/iframe without switch, no URL badge, language inheritance/sync
+PASS 1100px add-up: standalone/iframe without switch, no URL badge, language inheritance/sync
+PASS 1100px space-scale: standalone/iframe without switch, no URL badge, language inheritance/sync
+PASS 1100px tap-match: standalone/iframe without switch, no URL badge, language inheritance/sync
+PASS 1100px spot-quick: standalone/iframe without switch, no URL badge, language inheritance/sync
+PASS 1100px shadow-match: standalone/iframe without switch, no URL badge, language inheritance/sync
+PASS 1100px flash-brain: standalone/iframe without switch, no URL badge, language inheritance/sync

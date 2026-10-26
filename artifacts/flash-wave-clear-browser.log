@@ -1,0 +1,4 @@
+PASS 390/en: clear notice, timer/input protection, pause/resume, next wave, rule transition and iframe restart
+PASS 390/zh-Hant: clear notice, timer/input protection, pause/resume, next wave, rule transition and iframe restart
+PASS 1100/en: clear notice, timer/input protection, pause/resume, next wave, rule transition and iframe restart
+PASS 1100/zh-Hant: clear notice, timer/input protection, pause/resume, next wave, rule transition and iframe restart

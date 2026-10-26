@@ -1,0 +1,120 @@
+TAP version 13
+# Subtest: The nearest-neighbour route starts bottom-left with Rabbit and ends top-right with Panda
+ok 1 - The nearest-neighbour route starts bottom-left with Rabbit and ends top-right with Panda
+  ---
+  duration_ms: 2.825
+  ...
+# Subtest: Updating the old random route keeps completion credit and uses the earned fixed route
+ok 2 - Updating the old random route keeps completion credit and uses the earned fixed route
+  ---
+  duration_ms: 0.7698
+  ...
+# Subtest: Saved normal milestones unlock one building even while the iframe remains active
+ok 3 - Saved normal milestones unlock one building even while the iframe remains active
+  ---
+  duration_ms: 0.7694
+  ...
+# Subtest: The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building
+ok 4 - The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building
+  ---
+  duration_ms: 0.5115
+  ...
+# Subtest: Malformed version-2 opened lists never leave a player with zero usable games
+ok 5 - Malformed version-2 opened lists never leave a player with zero usable games
+  ---
+  duration_ms: 1.2793
+  ...
+# Subtest: Fresh and settings-only players start with one persisted rabbit garden
+ok 6 - Fresh and settings-only players start with one persisted rabbit garden
+  ---
+  duration_ms: 0.6114
+  ...
+# Subtest: Existing score-only and zero-score attempts enter exploration without losing records
+ok 7 - Existing score-only and zero-score attempts enter exploration without losing records
+  ---
+  duration_ms: 0.4595
+  ...
+# Subtest: Persisted legacy access migrates once to version 3 and cannot be restored by cloud sign-in
+ok 8 - Persisted legacy access migrates once to version 3 and cannot be restored by cloud sign-in
+  ---
+  duration_ms: 0.7846
+  ...
+# Subtest: Returning players open only the contiguous cleared route while keeping later-game credit
+ok 9 - Returning players open only the contiguous cleared route while keeping later-game credit
+  ---
+  duration_ms: 0.4275
+  ...
+# Subtest: An older open tab cannot overwrite the migrated exploration policy
+ok 10 - An older open tab cannot overwrite the migrated exploration policy
+  ---
+  duration_ms: 0.4542
+  ...
+# Subtest: Only an unlocked game reaching Wave 6 in normal play opens one new place once
+ok 11 - Only an unlocked game reaching Wave 6 in normal play opens one new place once
+  ---
+  duration_ms: 1.128
+  ...
+# Subtest: Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+ok 12 - Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+  ---
+  duration_ms: 0.3573
+  ...
+# Subtest: Every distinct completion opens at most one place and the final place finishes cleanly
+ok 13 - Every distinct completion opens at most one place and the final place finishes cleanly
+  ---
+  duration_ms: 0.8017
+  ...
+# Subtest: Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+ok 14 - Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+  ---
+  duration_ms: 0.9669
+  ...
+# Subtest: A readable but unwritable existing save retains this session progress
+ok 15 - A readable but unwritable existing save retains this session progress
+  ---
+  duration_ms: 0.2891
+  ...
+# Subtest: Rejected run records cannot bypass validation through reconciliation or reload
+ok 16 - Rejected run records cannot bypass validation through reconciliation or reload
+  ---
+  duration_ms: 0.4748
+  ...
+# Subtest: Another tab cannot reconcile an active iframe record before its result is validated
+ok 17 - Another tab cannot reconcile an active iframe record before its result is validated
+  ---
+  duration_ms: 0.5093
+  ...
+# Subtest: Iframe validation guard survives replay and closing removes the marker safely
+ok 18 - Iframe validation guard survives replay and closing removes the marker safely
+  ---
+  duration_ms: 0.4049
+  ...
+# Subtest: Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+ok 19 - Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+  ---
+  duration_ms: 0.3894
+  ...
+# Subtest: Corrupt nested run metadata cannot crash the saved journey
+ok 20 - Corrupt nested run metadata cannot crash the saved journey
+  ---
+  duration_ms: 0.2874
+  ...
+# Subtest: Older tabs still guard raw saves after the policy has migrated
+ok 21 - Older tabs still guard raw saves after the policy has migrated
+  ---
+  duration_ms: 0.2841
+  ...
+# Subtest: Imported iframe guards settle when an older tab closes its run
+ok 22 - Imported iframe guards settle when an older tab closes its run
+  ---
+  duration_ms: 0.3727
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 20898.2317

@@ -1,0 +1,25 @@
+locator.click: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator('#gameViewer').contentFrame().locator('.unified-practice-level-btn[data-level="3"]')
+    - locator resolved to <button type="button" data-level="3" data-wave="11" class="unified-practice-level-btn">…</button>
+  - attempting click action
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - performing click action
+
+    at finish (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-onboarding-browser.cjs:75:76)
+    at async C:\Users\HsinYuChen\source\repos\toenow\tools\verify-onboarding-browser.cjs:87:5 {
+  log: [
+    `  - waiting for locator('#gameViewer').contentFrame().locator('.unified-practice-level-btn[data-level="3"]')`,
+    '    - locator resolved to <button type="button" data-level="3" data-wave="11" class="unified-practice-level-btn">…</button>',
+    '  - attempting click action',
+    '    - waiting for element to be visible, enabled and stable',
+    '    - element is visible, enabled and stable',
+    '    - scrolling into view if needed',
+    '    - done scrolling',
+    '    - performing click action'
+  ],
+  name: 'TimeoutError'
+}

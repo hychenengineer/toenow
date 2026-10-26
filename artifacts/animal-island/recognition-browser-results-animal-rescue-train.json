@@ -1,0 +1,22 @@
+[
+  {
+    "id": "animal-rescue-train",
+    "size": "desktop",
+    "boarding": true,
+    "liveLanguageSwitch": true,
+    "illegalBoardingBlocked": true,
+    "disabledCarriages": 2,
+    "errors": [],
+    "supplied": []
+  },
+  {
+    "id": "animal-rescue-train",
+    "size": "mobile",
+    "boarding": true,
+    "liveLanguageSwitch": true,
+    "illegalBoardingBlocked": true,
+    "disabledCarriages": 1,
+    "errors": [],
+    "supplied": []
+  }
+]

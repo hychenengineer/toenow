@@ -1,0 +1,38 @@
+{
+  "id": "spot-quick",
+  "status": "PASS",
+  "url": "http://127.0.0.1:8765/games/spot-quick/",
+  "startedAt": "2026-10-25T16:48:50.144Z",
+  "viewport": {
+    "width": 768,
+    "height": 576
+  },
+  "actions": [
+    {
+      "action": "Clicked production Start control",
+      "atMs": 1792946930462,
+      "atSeconds": 0.318
+    },
+    {
+      "action": "Identified the correct specimen photo",
+      "atMs": 1792946931026,
+      "atSeconds": 0.882
+    }
+  ],
+  "trimStartSeconds": 0.318,
+  "videoBytes": 283431,
+  "posterBytes": 125865,
+  "videoSha256": "2c019e21e42fa2d89a27ae3f9ecc6246b498a9d1075e8a6f12be84880748b76e",
+  "posterSha256": "9e26bf11cc27b86301609cfc8aa356bb8c0fede007c83f66c46243d15bafed97",
+  "originalRecording": "recordings/spot-quick.webm",
+  "originalRecordingSha256": "c3aa98b6e8bfd8b0bd0a6fb1bce9bcdc4c5bb1c1d67c873ef27d01bdc655b82a",
+  "media": {
+    "duration": 7,
+    "width": 768,
+    "height": 576,
+    "decodedTime": 0.211927,
+    "readyState": 4
+  },
+  "errors": [],
+  "storageIsolation": "new nonpersistent browser context; no production browser profile"
+}

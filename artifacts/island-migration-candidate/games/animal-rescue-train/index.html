@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0f19">
+  <title>Animal Rescue Train · TOENOW</title>
+  <meta name="description" content="Plan the queues and bring every animal home. Five difficulty levels, new puzzles each wave, and no timer.">
+  <link rel="stylesheet" href="../../assets/unified-title-menu.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="../../shared/toenow-levels.js"></script>
+  <script src="../../shared/toenow-security.js"></script>
+  <script src="../../shared/toenow-platform.js"></script>
+  <script src="../../shared/toenow-analytics.js"></script>
+  <script src="../../shared/toenow-sdk.js"></script>
+  <script src="../../shared/toenow-i18n-core.js"></script>
+  <script src="../../shared/toenow-i18n-games-a.js"></script>
+  <script src="../../shared/toenow-i18n-games-b.js"></script>
+  <script src="../../shared/toenow-i18n-animals.js"></script>
+<script src="../../shared/toenow-i18n.js"></script>
+    <link rel="stylesheet" href="../../assets/toenow-tutorials.css">
+    <script src="../../shared/toenow-tutorial-config.js"></script>
+    <script src="../../shared/toenow-tutorials.js"></script>
+<script src="../../shared/toenow-animals.js"></script>
+  <script src="engine.js" defer></script>
+  <script src="levels.js" defer></script>
+  <script src="puzzles.js" defer></script>
+  <script src="picker.js" defer></script>
+  <script src="session.js" defer></script>
+  <script src="game.js" defer></script>
+<link rel="stylesheet" href="../../assets/toenow-animals.css">
+<link rel="stylesheet" href="simple-board.css">
+</head>
+<body data-state="title" data-screen="menu">
+  <main class="shell">
+    <section id="menu-screen" class="unified-title-screen" aria-label="Animal Rescue Train menu">
+      <div class="unified-title-card rescue-title-card">
+        <img id="train-title-art" class="unified-animal-art" src="../../assets/animal-island/panda-level1.webp" alt="" width="140" height="94">
+        <span class="unified-category-pill">LOGIC · NO TIMER</span>
+        <h1 class="unified-game-title">Animal Rescue Train</h1>
+        <p class="unified-game-desc">Three of a kind. All aboard!</p>
+        <div id="boarding-example" class="boarding-example" aria-hidden="true"></div>
+        <div class="unified-records-strip"><div class="unified-record-box"><span class="unified-record-label" id="title-best-score-label">BEST SCORE</span><strong id="title-best-score">0</strong></div><div class="unified-record-box"><span class="unified-record-label" id="title-best-wave-label">BEST LEVEL</span><strong id="title-best-wave">1</strong></div></div>
+        <p id="title-best-level" class="record-level">LVL 1 · BEGINNER</p>
+        <details class="start-rules"><summary id="rules-title">How to play</summary>
+          <ol id="rules-list" class="rules"><li><strong>Pick a queue head.</strong> Preview the next three animals.</li><li><strong>Pick a carriage.</strong> Each has three seats.</li><li><strong>Three of a kind depart.</strong> An empty carriage replaces them. Rescue every target.</li></ol>
+          <p id="mixed-warning" class="warning">One species per carriage. Empty carriages accept any animal; occupied carriages accept only the same kind.</p>
+          <p class="menu-note">Use PRACTICE to jump straight to any level. Practice does not change best records.</p>
+          <p id="save-notice" class="fineprint">Guest progress is saved in this browser.</p>
+        </details>
+        <button id="continue" class="secondary start-button" hidden>Continue last puzzle</button>
+        <div class="unified-actions-bar"><button id="btn-start-game" class="unified-start-btn" data-start="true">START GAME</button></div>
+        <button type="button" class="toenow-tutorial-replay" data-tutorial-replay>Play tutorial</button>
+        <button id="exit-title" class="text-button">Back to Hub</button>
+      </div>
+    </section>
+    <section id="play-screen" aria-label="Rescue puzzle" hidden>
+      <div class="play-toolbar"><button id="menu" class="secondary">← Menu</button><strong class="play-title">Animal Rescue Train</strong><button id="help" class="secondary" aria-label="Open game instructions">? Help</button></div>
+      <section class="station panel" aria-label="Rescue station">
+        <div class="station-header"><p class="eyebrow" id="level-number"></p><span id="tier-label"></span><span id="moves" class="sr-only" aria-hidden="true">0</span></div>
+        <div id="goals" class="last-rule" hidden></div>
+        <div id="queues" class="queues" role="group" aria-label="Queues"></div>
+        <div id="stationmaster" class="stationmaster" role="status" aria-live="polite" aria-atomic="true"></div>
+        <div class="rail-yard"><div class="rail" aria-hidden="true"></div><div id="cars" class="cars" role="group" aria-label="Carriages"></div></div>
+        <section id="result" class="result" aria-live="polite" hidden></section>
+        <footer class="controls"><button id="undo" class="secondary" disabled>↶ Undo move</button><button id="restart" aria-label="Restart Run" class="secondary toenow-icon-control" title="Restart Run"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#restart"/></svg></button><button id="next" class="primary" hidden>Next puzzle →</button></footer>
+        <button id="btn-share-score" class="text-button" hidden>SHARE SCORE</button>
+        <p id="record-notice" class="fineprint" role="status"></p>
+      </section>
+    </section>
+    <dialog id="success-dialog" aria-labelledby="result-title">
+      <img id="train-result-art" class="unified-animal-art" src="../../assets/animal-island/panda-level1.webp" alt="" width="140" height="94">
+      <div id="success-actions" class="success-actions"><button id="success-menu" class="secondary">Title Screen</button></div>
+    </dialog>
+    <dialog id="last-animal-dialog" aria-labelledby="last-animal-title" aria-describedby="last-animal-rule last-animal-detail">
+      <p class="eyebrow">LEVEL 5 · SPECIAL RULE</p>
+      <h2 id="last-animal-title">Save this animal for last</h2>
+      <div id="last-animal-picture" class="last-animal-picture" aria-hidden="true"></div>
+      <p id="last-animal-rule" class="last-animal-rule"></p>
+      <p id="last-animal-detail">Rescue all the other animals first. Let this animal’s final carriage leave last.</p>
+      <button id="acknowledge-last-animal" class="primary">Got it — Start</button>
+    </dialog>
+    <dialog id="help-dialog" aria-labelledby="help-title"><h2 id="help-title">How to play</h2><div id="help-content"></div><button id="close-help" class="primary">Back to puzzle</button></dialog>
+    <dialog id="pause-dialog" aria-labelledby="pause-title"><h2 id="pause-title">Paused</h2><button id="resume" class="primary">Resume puzzle</button></dialog>
+  </main>
+</body>
+</html>

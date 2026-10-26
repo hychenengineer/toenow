@@ -1,3 +1,4 @@
+const { readSource } = require('../tools/lib/game-source.cjs');
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('fs');
@@ -28,7 +29,7 @@ test('ToenowLevels exports GAME_STORAGE_KEYS for all 10 games', () => {
 });
 
 test('Hub index.html bidirectional sync logic correctly populates Game storage from Hub and vice-versa', () => {
-  const indexHtml = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+  const indexHtml = readSource(path.join(__dirname, '..', 'index.html'), 'utf8');
 
   // Verify openTheaterModal code contains GAME_STORAGE_KEYS mapping and bidirectional sync
   assert.ok(indexHtml.includes('GAME_STORAGE_KEYS'), 'index.html should reference GAME_STORAGE_KEYS');
@@ -115,13 +116,13 @@ test('All 9 games have code guards preventing Practice Mode from overwriting Per
   ];
 
   for (const g of games) {
-    const content = fs.readFileSync(path.join(__dirname, '..', g.file), 'utf8');
+    const content = readSource(path.join(__dirname, '..', g.file), 'utf8');
     assert.ok(g.check(content), `Game ${g.file} must have practice mode guard against overwriting best scores`);
   }
 });
 
 test('Hub postMessage GAME_OVER listener ignores practice mode runs and never overwrites best scores', () => {
-  const indexHtml = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+  const indexHtml = readSource(path.join(__dirname, '..', 'index.html'), 'utf8');
   assert.ok(indexHtml.includes('if (isPractice)'), 'Hub message handler must explicitly inspect isPractice flag');
   assert.ok(
     indexHtml.includes('Practice mode not recorded'),
@@ -130,21 +131,21 @@ test('Hub postMessage GAME_OVER listener ignores practice mode runs and never ov
 });
 
 test('Hub and games immediately update maxLevel and best wave on game over without delay', () => {
-  const indexHtml = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+  const indexHtml = readSource(path.join(__dirname, '..', 'index.html'), 'utf8');
   assert.ok(
     indexHtml.includes('saveGameScore(gameId, category, score, wave)'),
     'Hub must pass wave directly into saveGameScore on GAME_OVER message'
   );
 
   // Check subgames update title-best-level on run completion
-  const addUp = fs.readFileSync(path.join(__dirname, '..', 'games/add-up/index.html'), 'utf8');
+  const addUp = readSource(path.join(__dirname, '..', 'games/add-up/index.html'), 'utf8');
   assert.ok(addUp.includes('add_up_best_wave'), 'Add Up must persist best wave on game over');
 
-  const spaceScale = fs.readFileSync(path.join(__dirname, '..', 'games/space-scale/index.html'), 'utf8');
+  const spaceScale = readSource(path.join(__dirname, '..', 'games/space-scale/index.html'), 'utf8');
   assert.ok(spaceScale.includes('space_scale_best_wave') && spaceScale.includes('syncPersistentStatsUI()'), 'Space Scale must sync best level on game over');
 
   for (const game of ['number-pop','ball-track','block-match','add-up','space-scale','tap-match','spot-quick','shadow-match']) {
-    const source=fs.readFileSync(path.join(__dirname,'..','games',game,'index.html'),'utf8');
+    const source=readSource(path.join(__dirname,'..','games',game,'index.html'),'utf8');
     assert.ok(source.includes('ToenowScreens.updateTitle('),game+' must pass current records to the shared title renderer');
   }
 });

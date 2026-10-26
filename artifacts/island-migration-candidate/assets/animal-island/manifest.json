@@ -1,0 +1,1414 @@
+{
+  "schemaVersion": 1,
+  "method": "built-in image_gen",
+  "encoding": "sharp WebP quality 88, alphaQuality 100, max 480px; original PNG bytes preserved",
+  "partial": false,
+  "count": 50,
+  "expectedCount": 50,
+  "unique": 50,
+  "sourceBytes": 129552819,
+  "runtimeBytes": 4924984,
+  "missing": [],
+  "assets": [
+    {
+      "species": "panda",
+      "level": 1,
+      "source": "assets/animal-island/sources/panda-level1.png",
+      "runtime": "assets/animal-island/panda-level1.webp",
+      "provenance": "assets/animal-island/sources/panda-level1.provenance.json",
+      "sourceSha256": "abe6eadc4c7fc6f04475976dd39c6d1a78b54ef32952042379e730e5244fe7f1",
+      "runtimeSha256": "63f5c492efd4374e91442d57ea7a0754f476e53b60b962fcb1ef1611b0b73d8b",
+      "sourcePixelSha256": "c1591c83e2234aa01ad11de461cd738ab38a5375e528f95d22b6fcf51d381b43",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2391196,
+      "runtimeBytes": 88314
+    },
+    {
+      "species": "panda",
+      "level": 2,
+      "source": "assets/animal-island/sources/panda-level2.png",
+      "runtime": "assets/animal-island/panda-level2.webp",
+      "provenance": "assets/animal-island/sources/panda-level2.provenance.json",
+      "sourceSha256": "4434dc53d5bebaf62db20ab117ccdb68ad88ac7b155e9cc894da8f459cf9376f",
+      "runtimeSha256": "254cf9ed752973b7671c69ab9cc30e94b402667ee07ea29be67f6a5fb5c8d423",
+      "sourcePixelSha256": "d384b70a0f4f911cc5780414fee0e78a7856ed0999692cc23c2344c2799cf5fc",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2482288,
+      "runtimeBytes": 87722
+    },
+    {
+      "species": "panda",
+      "level": 3,
+      "source": "assets/animal-island/sources/panda-level3.png",
+      "runtime": "assets/animal-island/panda-level3.webp",
+      "provenance": "assets/animal-island/sources/panda-level3.provenance.json",
+      "sourceSha256": "409c33bfaafacb427cfe5d74d19b954e455706f19a4d9261fa6a00f1b25a01a6",
+      "runtimeSha256": "4ec96b262a34ba379c404424a094f5d08acb307267020dd0aa34ebe1701c3863",
+      "sourcePixelSha256": "5dd238ef70a01476aa7943c8f90f4d930c8549329a2fcbca4bddc5945cca6c19",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2742752,
+      "runtimeBytes": 104838
+    },
+    {
+      "species": "panda",
+      "level": 4,
+      "source": "assets/animal-island/sources/panda-level4.png",
+      "runtime": "assets/animal-island/panda-level4.webp",
+      "provenance": "assets/animal-island/sources/panda-level4.provenance.json",
+      "sourceSha256": "620347594243e4039d228eb61cd7a388444fa2b4917bff7277c925ff09c028a0",
+      "runtimeSha256": "d8d02a53d3ab06e31af104da41df94c2f5a5a3d59df49687c2428507fc671c73",
+      "sourcePixelSha256": "7ba06eae8e6896c7d4bc7de175b2c26bdf797e7e719939f2738b871924cf8d85",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2948505,
+      "runtimeBytes": 112582
+    },
+    {
+      "species": "panda",
+      "level": 5,
+      "source": "assets/animal-island/sources/panda-level5.png",
+      "runtime": "assets/animal-island/panda-level5.webp",
+      "provenance": "assets/animal-island/sources/panda-level5.provenance.json",
+      "sourceSha256": "72b6c05abafbb890fb7ba7a2bec799e760ac5fbf1720a703f446b749df986c82",
+      "runtimeSha256": "0ad85c6dd66b6a7f306e6b4392b69c1705d60234cdc9fa1ea3c83899c78db466",
+      "sourcePixelSha256": "2189cc75c443d1256d7c18badc4970a7c925e9940b2e022e2463e914ef4e4bf1",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2867987,
+      "runtimeBytes": 110652
+    },
+    {
+      "species": "rabbit",
+      "level": 1,
+      "source": "assets/animal-island/sources/rabbit-level1.png",
+      "runtime": "assets/animal-island/rabbit-level1.webp",
+      "provenance": "assets/animal-island/sources/rabbit-level1.provenance.json",
+      "sourceSha256": "b48f407f180d0eb10870d149925489b70d987d7d83ec4ce1a5d0c458cba90f30",
+      "runtimeSha256": "76cec78d0e0f80072f326b3c7122bc7409c6ba3a3f29c7e3c36163534f272770",
+      "sourcePixelSha256": "5a4e6f3bbfb4c41863be8714a531b2b3f1af4a9c8c8650709080614a1ef4bcbe",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 1945909,
+      "runtimeBytes": 76156
+    },
+    {
+      "species": "rabbit",
+      "level": 2,
+      "source": "assets/animal-island/sources/rabbit-level2.png",
+      "runtime": "assets/animal-island/rabbit-level2.webp",
+      "provenance": "assets/animal-island/sources/rabbit-level2.provenance.json",
+      "sourceSha256": "7d11e87a2d8c4c1c688265b187083f087100072c56cc7485f949ba4fe437f02e",
+      "runtimeSha256": "3805721c6c9e204ee29f72093c3a839bcba667b5c031cf2ba38bb336e37f1bfe",
+      "sourcePixelSha256": "26c0611b847af7ba3fdc784e17c2d844cb9cf34cc4498a56ea83214f45edd99e",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2462746,
+      "runtimeBytes": 97162
+    },
+    {
+      "species": "rabbit",
+      "level": 3,
+      "source": "assets/animal-island/sources/rabbit-level3.png",
+      "runtime": "assets/animal-island/rabbit-level3.webp",
+      "provenance": "assets/animal-island/sources/rabbit-level3.provenance.json",
+      "sourceSha256": "6f2f01a6031af4455bad15955192925e1b77f712ff4315320d310a4c29f7f572",
+      "runtimeSha256": "947b3e141981c3ecc123f8c5cf2640252e66c6b5cd90d7de3c20846640262c0a",
+      "sourcePixelSha256": "b9d6e360084cf527f754df3faf790e5893090a4a2b6865bf9806e6a7f2985888",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2908621,
+      "runtimeBytes": 110498
+    },
+    {
+      "species": "rabbit",
+      "level": 4,
+      "source": "assets/animal-island/sources/rabbit-level4.png",
+      "runtime": "assets/animal-island/rabbit-level4.webp",
+      "provenance": "assets/animal-island/sources/rabbit-level4.provenance.json",
+      "sourceSha256": "dfb0b79e8e18c688f2db9babd79b8c2635e90c3b5fc8c10832c03fe231cc17c5",
+      "runtimeSha256": "49afc42a6e0e55e6d6f4a94b4eb52970f9a646ffb7da3ccf32102badc64e9e6c",
+      "sourcePixelSha256": "e4a845f3e767b478382dcb1e64558a3f92aeaa7f6f176e8135379fb0ad52bb01",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 3007339,
+      "runtimeBytes": 110048
+    },
+    {
+      "species": "rabbit",
+      "level": 5,
+      "source": "assets/animal-island/sources/rabbit-level5.png",
+      "runtime": "assets/animal-island/rabbit-level5.webp",
+      "provenance": "assets/animal-island/sources/rabbit-level5.provenance.json",
+      "sourceSha256": "7205fb7b1cc68672041db1db7fe289742c5b011c60f4c8eca3aa491ec3119f2f",
+      "runtimeSha256": "12e819da13a6171bb01267572b8c3ca0a0ff85e20263c677fdf9e5b70733153b",
+      "sourcePixelSha256": "b568fc5188cd20ce103d6a2c4f3d3605cb01d68efd1cb76203861ad9cb1d0d59",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2743171,
+      "runtimeBytes": 104724
+    },
+    {
+      "species": "otter",
+      "level": 1,
+      "source": "assets/animal-island/sources/otter-level1.png",
+      "runtime": "assets/animal-island/otter-level1.webp",
+      "provenance": "assets/animal-island/sources/otter-level1.provenance.json",
+      "sourceSha256": "eed901e7aa92bcd0ec92088d162a2e0811b0d2cb5a043cac8ad798b0892aebdd",
+      "runtimeSha256": "2850583c4f212b698b09f630e9bb317bfad335b0632b2c86fc0bfaa984a9623c",
+      "sourcePixelSha256": "c3ced0e18e4a561bbf94091eda8309538866d8080c87731555a2a4af957a7efa",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2822013,
+      "runtimeBytes": 103316
+    },
+    {
+      "species": "otter",
+      "level": 2,
+      "source": "assets/animal-island/sources/otter-level2.png",
+      "runtime": "assets/animal-island/otter-level2.webp",
+      "provenance": "assets/animal-island/sources/otter-level2.provenance.json",
+      "sourceSha256": "543e14282d83aa96edc882f8aa693930bcc1f08fac4604f955687ec2c8873ae2",
+      "runtimeSha256": "b8ee5323b1a55c4f4bb3e3105a585f65f35c70981ad7260644f5be754319ae71",
+      "sourcePixelSha256": "2a282932de7c70233d155bf121259e954d316e225dfe71dace41fe4382f587af",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2744354,
+      "runtimeBytes": 103420
+    },
+    {
+      "species": "otter",
+      "level": 3,
+      "source": "assets/animal-island/sources/otter-level3.png",
+      "runtime": "assets/animal-island/otter-level3.webp",
+      "provenance": "assets/animal-island/sources/otter-level3.provenance.json",
+      "sourceSha256": "ad733f9888d3744b6688b4c8c2de60c4b6bb4ce00fe5dd93deae4328f0649567",
+      "runtimeSha256": "8b49451592a9e2302dfb1cc512ba30ec6c6948565933362f759481b130243f79",
+      "sourcePixelSha256": "2ceb2dbe21d1c98a550739f44dcdf4eb38928fec460c974b0d8acfa86cfc210e",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2899053,
+      "runtimeBytes": 115854
+    },
+    {
+      "species": "otter",
+      "level": 4,
+      "source": "assets/animal-island/sources/otter-level4.png",
+      "runtime": "assets/animal-island/otter-level4.webp",
+      "provenance": "assets/animal-island/sources/otter-level4.provenance.json",
+      "sourceSha256": "d973d1284bec54fb2fe09e3fdf08c6ef4449fb6ecaa156e1afdf8571ce9b8d7b",
+      "runtimeSha256": "0997a27fb209960671674319e03db882b65b7128eea77b03be3d7d10790872b9",
+      "sourcePixelSha256": "0d9668c8f5d112ad3fca4b8ac95d3b55cf3b5066d151249f6d5fad03fb15e687",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2882004,
+      "runtimeBytes": 108720
+    },
+    {
+      "species": "otter",
+      "level": 5,
+      "source": "assets/animal-island/sources/otter-level5.png",
+      "runtime": "assets/animal-island/otter-level5.webp",
+      "provenance": "assets/animal-island/sources/otter-level5.provenance.json",
+      "sourceSha256": "1b5b6ed9074c2fcb1c0c2eec79f1c08aefc054e9db0f5ca28080525ff7d5ecfe",
+      "runtimeSha256": "18e462df6d99c5a3a557729d5497d9dd3145ac00717d9166caa3b9a98e1a1ee6",
+      "sourcePixelSha256": "278ab281827d14ec8dc5daabddb2f949784e6729dcccd2427e6ddae60bf315d1",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2675473,
+      "runtimeBytes": 100286
+    },
+    {
+      "species": "beaver",
+      "level": 1,
+      "source": "assets/animal-island/sources/beaver-level1.png",
+      "runtime": "assets/animal-island/beaver-level1.webp",
+      "provenance": "assets/animal-island/sources/beaver-level1.provenance.json",
+      "sourceSha256": "48ca6af90611cc16629886d5b3d2655c3ceb3e76f5acc5865fe4bccf6146fbd8",
+      "runtimeSha256": "6d1590cc4232f6563538492aece42a0442b94fdcea22738a29386b4a61d942f0",
+      "sourcePixelSha256": "dfa0e25816d62400fd861565e9612273d9ef8238d4b5b65373cfa0b8ba679842",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 1336589,
+      "runtimeBytes": 49462
+    },
+    {
+      "species": "beaver",
+      "level": 2,
+      "source": "assets/animal-island/sources/beaver-level2.png",
+      "runtime": "assets/animal-island/beaver-level2.webp",
+      "provenance": "assets/animal-island/sources/beaver-level2.provenance.json",
+      "sourceSha256": "7741ebbc73a6575419acc3dd1fc4ce7293ba16669ac756dc69400113011b6bb8",
+      "runtimeSha256": "957c16aec730982c6e491d7f181eef160454ba9acae2be4d1de5db57b28f144a",
+      "sourcePixelSha256": "75630a2ab5341e60c43d5e19e1828a93c01fad5c610652ee210689f915a8bc03",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2299687,
+      "runtimeBytes": 84948
+    },
+    {
+      "species": "beaver",
+      "level": 3,
+      "source": "assets/animal-island/sources/beaver-level3.png",
+      "runtime": "assets/animal-island/beaver-level3.webp",
+      "provenance": "assets/animal-island/sources/beaver-level3.provenance.json",
+      "sourceSha256": "07e8dd2f9ebb7312a87b6b4aec89f3d2e2f8951cb898dce37b9dc74cef809af0",
+      "runtimeSha256": "6243901c9effacb6c853362328d725f29f81a446b01bdf3b73d186b203f86ad7",
+      "sourcePixelSha256": "f4e5f93381e71501cc5d394f97c0346a7f55c658efb48cca4f1281817dc4e1bc",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2678964,
+      "runtimeBytes": 102548
+    },
+    {
+      "species": "beaver",
+      "level": 4,
+      "source": "assets/animal-island/sources/beaver-level4.png",
+      "runtime": "assets/animal-island/beaver-level4.webp",
+      "provenance": "assets/animal-island/sources/beaver-level4.provenance.json",
+      "sourceSha256": "f468b36ea177e375b3b62d78095d9169fddb2aa20911fce320673a7ad4378006",
+      "runtimeSha256": "5ce0fa3c41c36e7925d7b15d6aca2752463026cfeb173ce6e1d33f588d8de119",
+      "sourcePixelSha256": "8238689997002f4c3cb74032baac425c95a8c347c85fccfc4eca474102a058a8",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2818299,
+      "runtimeBytes": 104896
+    },
+    {
+      "species": "beaver",
+      "level": 5,
+      "source": "assets/animal-island/sources/beaver-level5.png",
+      "runtime": "assets/animal-island/beaver-level5.webp",
+      "provenance": "assets/animal-island/sources/beaver-level5.provenance.json",
+      "sourceSha256": "7f9efa8e0bfafb4c6b4b38d78a73745ffec35e4f15f1ecad59166f436eed086c",
+      "runtimeSha256": "4d0ffb65567daece581ab0f3a7094111fa6250467d6e3f8ed2d444c7a797bda1",
+      "sourcePixelSha256": "3dbdb0eb04c8a15fff4de2bf25ad913fadf7538f8e447bfae7c53d8de3baedef",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 3072678,
+      "runtimeBytes": 115098
+    },
+    {
+      "species": "squirrel",
+      "level": 1,
+      "source": "assets/animal-island/sources/squirrel-level1.png",
+      "runtime": "assets/animal-island/squirrel-level1.webp",
+      "provenance": "assets/animal-island/sources/squirrel-level1.provenance.json",
+      "sourceSha256": "1f631bffd63d2fbdd206c4ee454d2db754c8b88d1abd34b17e5071623f4846b1",
+      "runtimeSha256": "1cf934a14357c76795c7cde24b978da2a008bcd465bed52ccd13cc3c525cde9d",
+      "sourcePixelSha256": "157ddb095dc7b066c4f79d0aa7ab80785b66a8ceb5775e225f3fefeb3ec1c80a",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 1808980,
+      "runtimeBytes": 73794
+    },
+    {
+      "species": "squirrel",
+      "level": 2,
+      "source": "assets/animal-island/sources/squirrel-level2.png",
+      "runtime": "assets/animal-island/squirrel-level2.webp",
+      "provenance": "assets/animal-island/sources/squirrel-level2.provenance.json",
+      "sourceSha256": "e9de92320706ae2fbea8e807dd047c0eb661a4fcb1e5481ebd65d1ee6507667a",
+      "runtimeSha256": "1665f28aec3b1c4bac7ab688ea94095ffbb1130d9ddaae50d3b5bc7ce22a0927",
+      "sourcePixelSha256": "c21ef557aa14e72305a2422bcc6c1477d4a8d41c6ba53ad968b52555e143c076",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2338805,
+      "runtimeBytes": 90338
+    },
+    {
+      "species": "squirrel",
+      "level": 3,
+      "source": "assets/animal-island/sources/squirrel-level3.png",
+      "runtime": "assets/animal-island/squirrel-level3.webp",
+      "provenance": "assets/animal-island/sources/squirrel-level3.provenance.json",
+      "sourceSha256": "f8b6908b6dcee800979fdb2f437350b9c76221158814c0188cf7657f46179b59",
+      "runtimeSha256": "d00c576f068a603df3603c65a0e4d095ea91a435540f9c05f01029af232dffdc",
+      "sourcePixelSha256": "002d7aba9abd87cf8d7054895d424a6c1fb0f21dc2738c8ae4a92ec36e793276",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2661250,
+      "runtimeBytes": 100466
+    },
+    {
+      "species": "squirrel",
+      "level": 4,
+      "source": "assets/animal-island/sources/squirrel-level4.png",
+      "runtime": "assets/animal-island/squirrel-level4.webp",
+      "provenance": "assets/animal-island/sources/squirrel-level4.provenance.json",
+      "sourceSha256": "8e0508f3ff5a43d58389eb0504077a4143205bced1e3531f865dccd4ec80313e",
+      "runtimeSha256": "e22c5e638cef02b845b34d99cb3f3fb45ee5c0f477f2a2e4b2a9857aa52a3caf",
+      "sourcePixelSha256": "06f9066b87e9f195954ef4c97ec24397bbb4c2e3d7650078548d9452cec47455",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2841054,
+      "runtimeBytes": 104732
+    },
+    {
+      "species": "squirrel",
+      "level": 5,
+      "source": "assets/animal-island/sources/squirrel-level5.png",
+      "runtime": "assets/animal-island/squirrel-level5.webp",
+      "provenance": "assets/animal-island/sources/squirrel-level5.provenance.json",
+      "sourceSha256": "0dea05210df1fab0179a524616f7a6513c5d1cba5597b2669e91eab5c490be24",
+      "runtimeSha256": "ea304c73d7b3df0b8baf1c2b2422aa7ebf573c094b6f3c27c7c98128dc0cd2a8",
+      "sourcePixelSha256": "2899eaebda1208fe26ef7f5b8da0b6418b304cac5358beb5163c12bba98fce42",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2573193,
+      "runtimeBytes": 102340
+    },
+    {
+      "species": "fox",
+      "level": 1,
+      "source": "assets/animal-island/sources/fox-level1.png",
+      "runtime": "assets/animal-island/fox-level1.webp",
+      "provenance": "assets/animal-island/sources/fox-level1.provenance.json",
+      "sourceSha256": "5d789fc8f102e4d7fed603e32dff819d1989d89e009de810e805ef43139095a5",
+      "runtimeSha256": "bb93cb0999aa1ebeff0ee62d5923d5b59f3bd445d82dff5a34a79224561000bc",
+      "sourcePixelSha256": "4e838f2bd2df471f0a7fc621cf21fdc98e0aff060cf19216fbda28ecfe503462",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 1991107,
+      "runtimeBytes": 80516
+    },
+    {
+      "species": "fox",
+      "level": 2,
+      "source": "assets/animal-island/sources/fox-level2.png",
+      "runtime": "assets/animal-island/fox-level2.webp",
+      "provenance": "assets/animal-island/sources/fox-level2.provenance.json",
+      "sourceSha256": "3d9d8e6058b797b5ea116c8e9b9d003d140000261459bd01667efdabd6109b53",
+      "runtimeSha256": "a31a2e29d3d7c66c753b7e280f6e5c67fd76e11089932380f1abbedafdde1ebd",
+      "sourcePixelSha256": "5722dfe3e6aee9d0d8aff5af69ec7ed87875215966e636b6445d7a38aa67ed01",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2532037,
+      "runtimeBytes": 100662
+    },
+    {
+      "species": "fox",
+      "level": 3,
+      "source": "assets/animal-island/sources/fox-level3.png",
+      "runtime": "assets/animal-island/fox-level3.webp",
+      "provenance": "assets/animal-island/sources/fox-level3.provenance.json",
+      "sourceSha256": "86925f8415ef03b0b2ae29e256262b432a2e06438e2f611131ddf9baa7be0905",
+      "runtimeSha256": "2b7dbd2080e8edcefc252fc5058dcc51d185aa1c688f4c7c2877c6cdd925baa4",
+      "sourcePixelSha256": "451f0d39d4f5504af7bfa3581f7fb2d5161a982d4e97354b61b9baf6be712fc8",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2849924,
+      "runtimeBytes": 104184
+    },
+    {
+      "species": "fox",
+      "level": 4,
+      "source": "assets/animal-island/sources/fox-level4.png",
+      "runtime": "assets/animal-island/fox-level4.webp",
+      "provenance": "assets/animal-island/sources/fox-level4.provenance.json",
+      "sourceSha256": "8ada378ac0d7d999887e4f7f8a8f573b186739ef8ff81879aaa3c5cafc818777",
+      "runtimeSha256": "ef5b3c0f1837316fa655824e4f39bfc613b3cec4239d57df0e84cc1bb94ab164",
+      "sourcePixelSha256": "bc255ab025586f030cc89d0eb5f4f4ef6c101076a9baaed48c66476f8196bc7e",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2539891,
+      "runtimeBytes": 96820
+    },
+    {
+      "species": "fox",
+      "level": 5,
+      "source": "assets/animal-island/sources/fox-level5.png",
+      "runtime": "assets/animal-island/fox-level5.webp",
+      "provenance": "assets/animal-island/sources/fox-level5.provenance.json",
+      "sourceSha256": "28fbf4324c1b0c0701598788f64688478ac3068b44c00f27fa9c8f23a1c45618",
+      "runtimeSha256": "d4d06c88bec980f686ce7b504b7f4513c152614cf81822c4ccb8a83721d7c9b1",
+      "sourcePixelSha256": "007ca04adbbbe013f940ae2a01d0209f46e98a263942560ce0fe7acbd355eddb",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2818474,
+      "runtimeBytes": 106842
+    },
+    {
+      "species": "penguin",
+      "level": 1,
+      "source": "assets/animal-island/sources/penguin-level1.png",
+      "runtime": "assets/animal-island/penguin-level1.webp",
+      "provenance": "assets/animal-island/sources/penguin-level1.provenance.json",
+      "sourceSha256": "1ce15bd4204b20fa8cb9c07893250c2cf9bfe15af10baa2ae39e95e571c6a134",
+      "runtimeSha256": "736c21b5011d8c4baa1fb774139540a33eb0acf82ff5e93fc16c15298bc7af33",
+      "sourcePixelSha256": "9757cd4117c767fe49f7ee6cc5d07d1e9796d69c65f1f33abbca0cf14b477dd7",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2555600,
+      "runtimeBytes": 92520
+    },
+    {
+      "species": "penguin",
+      "level": 2,
+      "source": "assets/animal-island/sources/penguin-level2.png",
+      "runtime": "assets/animal-island/penguin-level2.webp",
+      "provenance": "assets/animal-island/sources/penguin-level2.provenance.json",
+      "sourceSha256": "25e9beb77a0334374a5de218c5334f4a3bf3ddc2a73d04dc8d4111bf4d111a89",
+      "runtimeSha256": "9184e46ed4b7c44b3d758a13683b1aa0741fa8d8f0d66265bb9026587eadc935",
+      "sourcePixelSha256": "2d6a57a56c19e7681e26a669cfc9629b034ca48fc59b8c6ab61b56f0a45695f5",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2428194,
+      "runtimeBytes": 90582
+    },
+    {
+      "species": "penguin",
+      "level": 3,
+      "source": "assets/animal-island/sources/penguin-level3.png",
+      "runtime": "assets/animal-island/penguin-level3.webp",
+      "provenance": "assets/animal-island/sources/penguin-level3.provenance.json",
+      "sourceSha256": "0b50c78e639990962eb1e9af205be662e135d26f4698c9d39a7f95c9fe73f096",
+      "runtimeSha256": "25455b0a2847c384c1d15f7a117f67d9d6d524b9ebe6b76ac59cf505e7579e16",
+      "sourcePixelSha256": "936471fef5ea2509bbfa2bd45a868cef00a4074689d4be0c65decbb8ddb44370",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2605153,
+      "runtimeBytes": 96146
+    },
+    {
+      "species": "penguin",
+      "level": 4,
+      "source": "assets/animal-island/sources/penguin-level4.png",
+      "runtime": "assets/animal-island/penguin-level4.webp",
+      "provenance": "assets/animal-island/sources/penguin-level4.provenance.json",
+      "sourceSha256": "3b7f0093dd8dc8eb163ba670c43cc411f51f6e655827194a9c32ed10732a9144",
+      "runtimeSha256": "715635231baf042f4178f2abbffc266f11f223fee52c181ca436184627351d9a",
+      "sourcePixelSha256": "70a599d9d1f30c69e87a60228ca17105e68738f7958dcc1ef375129a38ad7286",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2652305,
+      "runtimeBytes": 102026
+    },
+    {
+      "species": "penguin",
+      "level": 5,
+      "source": "assets/animal-island/sources/penguin-level5.png",
+      "runtime": "assets/animal-island/penguin-level5.webp",
+      "provenance": "assets/animal-island/sources/penguin-level5.provenance.json",
+      "sourceSha256": "21891b4a9a15d1a106dba53d459032922b734ea848755a1f8f8e642c04480b4c",
+      "runtimeSha256": "e96b10bf13ded0bf0d304e6f8c04848c29a625003daddbd4269f6398f9d094e7",
+      "sourcePixelSha256": "4390485613bd33a904925dc91eb286ce77ba397ee71291c3c2f9541f533b4ad5",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 3162420,
+      "runtimeBytes": 119274
+    },
+    {
+      "species": "owl",
+      "level": 1,
+      "source": "assets/animal-island/sources/owl-level1.png",
+      "runtime": "assets/animal-island/owl-level1.webp",
+      "provenance": "assets/animal-island/sources/owl-level1.provenance.json",
+      "sourceSha256": "531a778719fe807b12ef519b888387b8b223933293f36a4a448f74be2049f0ab",
+      "runtimeSha256": "5ce5dea378938ba449f65af1b42b61beb3d2e2e87a822cc0043d4d8c0d2b9f07",
+      "sourcePixelSha256": "d589c914a0702181c4df2077f220b639dec8683ae2d5f3ba5deb4809cd9a7fac",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 1792182,
+      "runtimeBytes": 70328
+    },
+    {
+      "species": "owl",
+      "level": 2,
+      "source": "assets/animal-island/sources/owl-level2.png",
+      "runtime": "assets/animal-island/owl-level2.webp",
+      "provenance": "assets/animal-island/sources/owl-level2.provenance.json",
+      "sourceSha256": "afaa9a9a4b396977c9ee8ae1955116b6225ad7287e853fcf4cc8a51916b5ae76",
+      "runtimeSha256": "5571f0fe4faa9e8aff4d749cd983c7c8647054922c691205e9973dd087a374b1",
+      "sourcePixelSha256": "3b289ebe7f0accbd28f0c0a95f1bfd8aef09c91dd059edbd0c97f87a89a3db05",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2754900,
+      "runtimeBytes": 106422
+    },
+    {
+      "species": "owl",
+      "level": 3,
+      "source": "assets/animal-island/sources/owl-level3.png",
+      "runtime": "assets/animal-island/owl-level3.webp",
+      "provenance": "assets/animal-island/sources/owl-level3.provenance.json",
+      "sourceSha256": "9261e5e994f267c81a93dae21fa9150f8f00a4dbd185d118aff1bf4837262b25",
+      "runtimeSha256": "7c71f2e095c31fd022ffd8bac7347fe3701eab528c7876e7e5b80cae277074a1",
+      "sourcePixelSha256": "cd2202ef734333ec3525a4ac0952826875c182327de65971694f84eae45fec5b",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2867744,
+      "runtimeBytes": 109888
+    },
+    {
+      "species": "owl",
+      "level": 4,
+      "source": "assets/animal-island/sources/owl-level4.png",
+      "runtime": "assets/animal-island/owl-level4.webp",
+      "provenance": "assets/animal-island/sources/owl-level4.provenance.json",
+      "sourceSha256": "d873501c717dc2145b752cefb73fa4720351cd9c2cf40a2aa5abec4b7694d0a8",
+      "runtimeSha256": "bac87d002480cf27c9f7587aff5980ee14acaa8af27c39d95370cb367bedcd5d",
+      "sourcePixelSha256": "e2a5764c3e1eca74c0117c7125403ff0290a148928682b020ace8f8e3b4e78d2",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2427356,
+      "runtimeBytes": 97892
+    },
+    {
+      "species": "owl",
+      "level": 5,
+      "source": "assets/animal-island/sources/owl-level5.png",
+      "runtime": "assets/animal-island/owl-level5.webp",
+      "provenance": "assets/animal-island/sources/owl-level5.provenance.json",
+      "sourceSha256": "31a6660b1e885c2ee83dc84f6d67b07fd941839422f550ffacdea86db158c398",
+      "runtimeSha256": "3565651988f5e5a9571c0ab8f060bbbf3f109ec5d289b3df434061c98453ea64",
+      "sourcePixelSha256": "585b99b9ceeeed09b3d7adb0e73429a5d85de28e0390a5955bbbe20d759c3ceb",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2553976,
+      "runtimeBytes": 97884
+    },
+    {
+      "species": "raccoon",
+      "level": 1,
+      "source": "assets/animal-island/sources/raccoon-level1.png",
+      "runtime": "assets/animal-island/raccoon-level1.webp",
+      "provenance": "assets/animal-island/sources/raccoon-level1.provenance.json",
+      "sourceSha256": "65dbb1a57082490dc0eb3c62c4a4d4d510c9d1d7b4648534f52b10ff91bd3e75",
+      "runtimeSha256": "c4cb35ce314d631d6f9107e75e250875c4d468b787258201a4bab40312fd3b6f",
+      "sourcePixelSha256": "c6260a95db8744b1481c1a5b6d1f5edc1fab5c0f6dbcdb460f8be2b274b742d2",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2248277,
+      "runtimeBytes": 90310
+    },
+    {
+      "species": "raccoon",
+      "level": 2,
+      "source": "assets/animal-island/sources/raccoon-level2.png",
+      "runtime": "assets/animal-island/raccoon-level2.webp",
+      "provenance": "assets/animal-island/sources/raccoon-level2.provenance.json",
+      "sourceSha256": "cbb6f29df42774befcc32717564d3bf81d59bd5adc7e30244a0ff3d51e757143",
+      "runtimeSha256": "9015640500d8fcc1b5e563ca3614ef3960f15b71d7f3f0c61a15a6468e6f3792",
+      "sourcePixelSha256": "cd34d039b02e93bef2cb23ebfd5580d93a48dd8dcbf8917ebea87333abaefcea",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2238258,
+      "runtimeBytes": 78502
+    },
+    {
+      "species": "raccoon",
+      "level": 3,
+      "source": "assets/animal-island/sources/raccoon-level3.png",
+      "runtime": "assets/animal-island/raccoon-level3.webp",
+      "provenance": "assets/animal-island/sources/raccoon-level3.provenance.json",
+      "sourceSha256": "4f433c65e5a0a47a0475dd40e2aaee1541303000e2c3b1b1c07cb4a010254a72",
+      "runtimeSha256": "c6fd6c06aaf59752293309742a002137970807f2fb44c8a9076d535e8659b1ab",
+      "sourcePixelSha256": "3759138015ec3460164f3a8d6b00dc18d2ecb8ab2f072ece85390f6d7880f1b9",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2662099,
+      "runtimeBytes": 100572
+    },
+    {
+      "species": "raccoon",
+      "level": 4,
+      "source": "assets/animal-island/sources/raccoon-level4.png",
+      "runtime": "assets/animal-island/raccoon-level4.webp",
+      "provenance": "assets/animal-island/sources/raccoon-level4.provenance.json",
+      "sourceSha256": "21f0e299c4ad52603881aec4d63e870162a280876c1e642fcf1c69d06b44a1aa",
+      "runtimeSha256": "ba88bc1e55981d90ca465c77a59df1e0115d678c43cc3b97402dda2e36811b8f",
+      "sourcePixelSha256": "ddd54d51626f259b7dc89e8238308c2fc7cbad96b4c5be46542a7130e42eb41a",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2603804,
+      "runtimeBytes": 99244
+    },
+    {
+      "species": "raccoon",
+      "level": 5,
+      "source": "assets/animal-island/sources/raccoon-level5.png",
+      "runtime": "assets/animal-island/raccoon-level5.webp",
+      "provenance": "assets/animal-island/sources/raccoon-level5.provenance.json",
+      "sourceSha256": "a60ed0b85bbfa42d388befed9e8cda3126dcc538bd2c9175bdb2fba692649321",
+      "runtimeSha256": "1174c5928f900271de5679b4f42bfd62dc3205ae17233cb39b36a083763ce525",
+      "sourcePixelSha256": "da14f9808f0e51ea911769dd73599649d4cace9116bbe9f15ab2bb2522900e61",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2634952,
+      "runtimeBytes": 98688
+    },
+    {
+      "species": "elephant",
+      "level": 1,
+      "source": "assets/animal-island/sources/elephant-level1.png",
+      "runtime": "assets/animal-island/elephant-level1.webp",
+      "provenance": "assets/animal-island/sources/elephant-level1.provenance.json",
+      "sourceSha256": "dcb217068f35fd0820ecb7e6eea5f987fd5bd5a9243e45f643c02c12ebcc69b4",
+      "runtimeSha256": "b5a11f21aac4757a4e1750eff767fcde677c16f2fd6c0f8941ce2c0894b02c25",
+      "sourcePixelSha256": "66fa50d61b3bf41230981a60f82ce39885c1f08aef9424cd7526ffbb858b67e8",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 1943118,
+      "runtimeBytes": 68570
+    },
+    {
+      "species": "elephant",
+      "level": 2,
+      "source": "assets/animal-island/sources/elephant-level2.png",
+      "runtime": "assets/animal-island/elephant-level2.webp",
+      "provenance": "assets/animal-island/sources/elephant-level2.provenance.json",
+      "sourceSha256": "fe63e7b38e2fd5a907a404d18e50ff26e9a301292c07ca13498c199430960523",
+      "runtimeSha256": "43de25be406a193255e2fdb038bcc279253324b39ceb4dc7e6a6c42a2520d7e0",
+      "sourcePixelSha256": "c45c0f010b4a5392945cc7a8684b112af483b3248b4b508a42bd5b1719c23508",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2535901,
+      "runtimeBytes": 100672
+    },
+    {
+      "species": "elephant",
+      "level": 3,
+      "source": "assets/animal-island/sources/elephant-level3.png",
+      "runtime": "assets/animal-island/elephant-level3.webp",
+      "provenance": "assets/animal-island/sources/elephant-level3.provenance.json",
+      "sourceSha256": "fb3bf5d8d04bc5776a6bd8488389d335de46ca72364bc34f6f2b73a786f3178b",
+      "runtimeSha256": "85cec4cdfb78f308ee08e820a5a19d1bc679a427929a1cd6f700202dfd6e7a0f",
+      "sourcePixelSha256": "6c6b0d53b66b65a1f1c9e764c3562d9960d3af43a702ff514295694d48850d0f",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 2943020,
+      "runtimeBytes": 118880
+    },
+    {
+      "species": "elephant",
+      "level": 4,
+      "source": "assets/animal-island/sources/elephant-level4.png",
+      "runtime": "assets/animal-island/elephant-level4.webp",
+      "provenance": "assets/animal-island/sources/elephant-level4.provenance.json",
+      "sourceSha256": "8d44c0622133378f81b8818cb6dd23d09c5f302cbfe6ce829bf7e8ee4cc19156",
+      "runtimeSha256": "94cd7454eb118b807bca147296b3ac9768fafd99e014e9bf0fe50e9de571ae3d",
+      "sourcePixelSha256": "91078121f96f31b94884b39ac060fed6887e5fcc1588800a20adb90d3fd336a6",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 3138011,
+      "runtimeBytes": 116612
+    },
+    {
+      "species": "elephant",
+      "level": 5,
+      "source": "assets/animal-island/sources/elephant-level5.png",
+      "runtime": "assets/animal-island/elephant-level5.webp",
+      "provenance": "assets/animal-island/sources/elephant-level5.provenance.json",
+      "sourceSha256": "2f30ac2508a06c02abebc0e965aa2cca15311da299fbf3ad01e98bd0ba7f894a",
+      "runtimeSha256": "a96654b9a02fe3eed4971c791e75f2aeeafd55a71d86c188a30d4536887b9cbb",
+      "sourcePixelSha256": "49a1d58b4d656dff5a6cfd6750f99bf621635cf9b20b8c3ac412647711ab62f9",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        480,
+        480
+      ],
+      "sourceAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "runtimeAlpha": {
+        "min": 0,
+        "max": 255
+      },
+      "sourceBytes": 3121206,
+      "runtimeBytes": 118034
+    }
+  ]
+}

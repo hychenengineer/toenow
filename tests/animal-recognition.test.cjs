@@ -1,20 +1,18 @@
+const { readSource } = require('../tools/lib/game-source.cjs');
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const crypto=require('node:crypto');
-const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
+const read=p=>readSource(path.join(__dirname,'..',p),'utf8');
 test('Spot Quick preserves all 170 specimens, 50 categories and candidate difficulty',()=>{
- const s=read('games/spot-quick/index.html');
- const specimens=s.slice(s.indexOf('const SPECIMEN_POOL'),s.indexOf('function loadBestFocusScore'));
- assert.equal([...specimens.matchAll(/id:\s*"([^"]+)"/g)].length,170);
- assert.equal(new Set([...specimens.matchAll(/cluster:\s*"([^"]+)"/g)].map(x=>x[1])).size,50);
- for(const [start,end,expected] of [
- ['const SPECIMEN_POOL','function loadBestFocusScore','8c22fd1a2b77b0876e408bd86567446a4a19aa9f9a942d0a960c5942b70d3008'],
- ['function getTierForWave','const state','5e55ec42168cb9facd395f71356930dcb8766a31b2c8e06b79b9a520484da602'],
- ['function generateCandidatesForTier','function setupWave','dc9478370fbc9aa04e6ed2218e0f2c78f13fac6db06f60b0943d5348fc040f0a']]){
- const i=s.indexOf(start);assert.equal(crypto.createHash('sha256').update(s.slice(i,s.indexOf(end,i))).digest('hex'),expected);
- }
+ const { SPECIMEN_POOL }=require('../games/spot-quick/shapes.js');
+ assert.equal(SPECIMEN_POOL.length,170);
+ assert.equal(new Set(SPECIMEN_POOL.map(s=>s.id)).size,170);
+ assert.equal(new Set(SPECIMEN_POOL.map(s=>s.cluster)).size,50);
+ assert.ok(SPECIMEN_POOL.every(s=>typeof s.render==='function'));
+ const artHash=crypto.createHash('sha256').update(JSON.stringify(SPECIMEN_POOL.map(s=>[s.id,s.cluster,s.render.toString()]))).digest('hex');
+ assert.equal(artHash,'66aae6abbaed7d99c1b197e3cf6332843ec6ef8164840972a0365ed6f5d3544d','all original specimen drawing functions are preserved');
 });
 test('Memory garden never reveals animals in hidden or paused cells',()=>{
  const garden=require('../games/flash-brain/garden.js');

@@ -1,0 +1,10 @@
+PASS ball-track 390 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS ball-track 390 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS ball-track 1100 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS ball-track 1100 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS ball-track: incomplete cancel, explicit skip, normal game
+PASS ball-track: iframe actual game tutorial
+PASS keyboard, language switching and protected restart shortcut
+PASS train real queue/carriage buttons with Enter/Space
+PASS existing train save, puzzle history and original carriage state survive tutorial
+{"realGameLessons":4,"skipScenarios":1,"iframeScenarios":1,"keyboard":1}

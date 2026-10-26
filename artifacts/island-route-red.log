@@ -1,0 +1,215 @@
+TAP version 13
+# Subtest: The nearest-neighbour route starts bottom-left with Rabbit and ends top-right with Panda
+not ok 1 - The nearest-neighbour route starts bottom-left with Rabbit and ends top-right with Panda
+  ---
+  duration_ms: 5.7018
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-exploration.test.cjs:12:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   40,
+    -   18,
+        78
+      ]
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 18
+    1: 78
+  actual:
+    0: 40
+    1: 78
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-exploration.test.cjs:15:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    node:internal/test_runner/harness:252:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+  ...
+# Subtest: Updating the old random route preserves its opened buildings and actual completion credit
+not ok 2 - Updating the old random route preserves its opened buildings and actual completion credit
+  ---
+  duration_ms: 0.9132
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-exploration.test.cjs:19:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'block-match'
+    - 'space-scale'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'space-scale'
+  actual: 'block-match'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-exploration.test.cjs:23:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: Saved normal milestones unlock one building even while the iframe remains active
+not ok 3 - Saved normal milestones unlock one building even while the iframe remains active
+  ---
+  duration_ms: 0.6454
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-exploration.test.cjs:26:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'number-pop',
+    -   'space-scale'
+      ]
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'number-pop'
+    1: 'space-scale'
+  actual:
+    0: 'number-pop'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-exploration.test.cjs:29:28)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: Fresh and settings-only players start with one persisted rabbit garden
+ok 4 - Fresh and settings-only players start with one persisted rabbit garden
+  ---
+  duration_ms: 0.5824
+  ...
+# Subtest: Actual legacy history retains all games, including zero-score attempts
+ok 5 - Actual legacy history retains all games, including zero-score attempts
+  ---
+  duration_ms: 0.2824
+  ...
+# Subtest: Only an unlocked game reaching Wave 6 in normal play opens one new place once
+ok 6 - Only an unlocked game reaching Wave 6 in normal play opens one new place once
+  ---
+  duration_ms: 0.3906
+  ...
+# Subtest: Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+ok 7 - Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+  ---
+  duration_ms: 0.2801
+  ...
+# Subtest: Every distinct completion opens at most one place and the final place finishes cleanly
+ok 8 - Every distinct completion opens at most one place and the final place finishes cleanly
+  ---
+  duration_ms: 1.0314
+  ...
+# Subtest: Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+ok 9 - Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+  ---
+  duration_ms: 0.5013
+  ...
+# Subtest: A readable but unwritable existing save retains this session progress
+ok 10 - A readable but unwritable existing save retains this session progress
+  ---
+  duration_ms: 0.2476
+  ...
+# Subtest: Rejected run records cannot bypass validation through reconciliation or reload
+ok 11 - Rejected run records cannot bypass validation through reconciliation or reload
+  ---
+  duration_ms: 0.2506
+  ...
+# Subtest: Another tab cannot reconcile an active iframe record before its result is validated
+ok 12 - Another tab cannot reconcile an active iframe record before its result is validated
+  ---
+  duration_ms: 0.3864
+  ...
+# Subtest: Iframe validation guard survives replay and closing removes the marker safely
+ok 13 - Iframe validation guard survives replay and closing removes the marker safely
+  ---
+  duration_ms: 0.3374
+  ...
+# Subtest: Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+ok 14 - Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+  ---
+  duration_ms: 0.259
+  ...
+# Subtest: Corrupt nested run metadata cannot crash the saved journey
+ok 15 - Corrupt nested run metadata cannot crash the saved journey
+  ---
+  duration_ms: 0.147
+  ...
+# Subtest: SDK publishes a normal level milestone during play without ending the run or writing scores
+not ok 16 - SDK publishes a normal level milestone during play without ending the run or writing scores
+  ---
+  duration_ms: 1.1306
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-sdk.test.cjs:5:1'
+  failureType: 'testCodeFailure'
+  error: 'sdk.reportProgress is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-sdk.test.cjs:13:22)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    node:internal/test_runner/harness:252:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+  ...
+# Subtest: SDK survives a browser denying access to localStorage itself
+ok 17 - SDK survives a browser denying access to localStorage itself
+  ---
+  duration_ms: 0.2823
+  ...
+# Subtest: ToenowGameSDK handles lifecycle, storage, and title records cleanly
+ok 18 - ToenowGameSDK handles lifecycle, storage, and title records cleanly
+  ---
+  duration_ms: 0.2705
+  ...
+# Subtest: ToenowGameSDK guards practice mode from mutating records
+ok 19 - ToenowGameSDK guards practice mode from mutating records
+  ---
+  duration_ms: 0.0978
+  ...
+# Subtest: SDK lifecycle methods invoke configured callbacks and retain practice state
+ok 20 - SDK lifecycle methods invoke configured callbacks and retain practice state
+  ---
+  duration_ms: 1.1194
+  ...
+# Subtest: handleGameOver rejects implausible normal scores and never writes practice records
+ok 21 - handleGameOver rejects implausible normal scores and never writes practice records
+  ---
+  duration_ms: 0.4164
+  ...
+# Subtest: SDK practice bridge passes the actual selected wave to the game callback
+ok 22 - SDK practice bridge passes the actual selected wave to the game callback
+  ---
+  duration_ms: 0.4051
+  ...
+# Subtest: SDK respects hasWaves configuration for level-only games
+ok 23 - SDK respects hasWaves configuration for level-only games
+  ---
+  duration_ms: 0.1725
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 19
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 172.5467

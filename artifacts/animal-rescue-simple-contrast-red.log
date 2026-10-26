@@ -1,0 +1,10 @@
+Evidence: C:\Users\HsinYuChen\source\repos\toenow\artifacts\animal-rescue-train\simple-board\run-1792971848610
+AssertionError [ERR_ASSERTION]: carriage rule remains readable in Help
+    at check (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-rescue-simple-browser.cjs:13:41)
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-rescue-simple-browser.cjs:62:9 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '=='
+}

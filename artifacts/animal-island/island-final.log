@@ -1,0 +1,8 @@
+AssertionError [ERR_ASSERTION]: overlapping map targets at 768/en/bright
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-island-browser.cjs:55:13 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Array],
+  expected: [],
+  operator: 'deepStrictEqual'
+}

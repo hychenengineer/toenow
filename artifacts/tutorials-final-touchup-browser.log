@@ -1,0 +1,9 @@
+PASS block-match 390 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS block-match 390 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS block-match 1100 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS block-match 1100 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS block-match: cancel remains new, explicit skip persists and starts
+PASS block-match: iframe first play and skip
+PASS keyboard, mid-lesson language switch and shared switch restoration
+PASS blocked storage: completion stays in memory and play is available
+{"lessonScenarios":4,"skipScenarios":1,"iframeScenarios":1,"edgeCases":2}

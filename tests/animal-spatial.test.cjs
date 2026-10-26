@@ -1,14 +1,16 @@
+const { readSource } = require('../tools/lib/game-source.cjs');
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
-const html=fs.readFileSync('games/ball-track/index.html','utf8');
+const html=readSource('games/ball-track/index.html','utf8');
 function render(phase,hasCore,revealedState=null,shieldOpen=0){
  const log=[];
  const ctx=new Proxy({}, {get:(_,key)=>(...args)=>{log.push([key,...args]);if(String(key).startsWith('create'))return {addColorStop:(...stops)=>log.push(['stop',...stops])};},set:(_,key,value)=>{log.push([key,value]);return true;}});
  const animals=[];
  const env={ctx,Math,getCapsuleRadius:()=>30,state:{phase,mode:'playing'},window:{ToenowAnimals:{drawAnimal:(...args)=>animals.push(args.slice(1))}}};
  const code=html.slice(html.indexOf('function drawShellCapsule('),html.indexOf('function drawParticlesAndPopups('));
+ env.scene=env;
  vm.runInNewContext(code,env);
  env.drawShellCapsule({x:20,y:30,scaleX:1,scaleY:1,hasCore,revealedState,shieldOpen,id:1},0);
  return {log,animals};
@@ -40,7 +42,8 @@ test('otter target panel uses the pond paper palette',()=>{
 });
 
 function loadFunction(game,name,next,env){
- const src=fs.readFileSync(`games/${game}/index.html`,'utf8');
+ const src=readSource(`games/${game}/index.html`,'utf8');
+ env.scene=env;
  vm.runInNewContext(src.slice(src.indexOf(`function ${name}(`),src.indexOf(next,src.indexOf(`function ${name}(`))),env);
  return env[name];
 }
@@ -67,9 +70,7 @@ test('raccoon theater keeps correct-card award and wrong-card time penalty',()=>
  }
 });
 test('timber blueprints invert their axes without changing required/excess cell identity',()=>{
- const src=fs.readFileSync('games/block-match/index.html','utf8');
- const env={Math};
- vm.runInNewContext(src.slice(src.indexOf('function getPhaseForWave('),src.indexOf('// --- Constants & Session State ---')),env);
+ const env=require('../games/block-match/rules.js');
  for(const wave of [1,6,11,16,21,60]){
   const b=env.generateWaveBoard(wave,0),n=b.config.gridSize;
   let extras=0;

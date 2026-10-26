@@ -1,0 +1,5 @@
+page.waitForFunction: Timeout 12000ms exceeded.
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-ball-memory-browser.cjs:13:18 {
+  log: [],
+  name: 'TimeoutError'
+}

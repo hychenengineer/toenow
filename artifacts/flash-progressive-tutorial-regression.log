@@ -1,0 +1,10 @@
+PASS flash-brain 390 en: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain 390 zh-Hant: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain 1100 en: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain 1100 zh-Hant: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain: incomplete cancel, explicit skip, normal game
+PASS flash-brain: iframe actual game tutorial
+PASS keyboard, language switching and protected restart shortcut
+PASS train real queue/carriage buttons with Enter/Space
+PASS existing train save, puzzle history and original carriage state survive tutorial
+{"realGameLessons":4,"skipScenarios":1,"iframeScenarios":1,"keyboard":1}

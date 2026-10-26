@@ -1,0 +1,14 @@
+PASS 390 en: priority notice lifecycle, translation, layout, restart, pause, ordinary wave
+PASS 390 zh-Hant: priority notice lifecycle, translation, layout, restart, pause, ordinary wave
+PASS 1100 en: priority notice lifecycle, translation, layout, restart, pause, ordinary wave
+PASS 1100 zh-Hant: priority notice lifecycle, translation, layout, restart, pause, ordinary wave
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('#gameViewer').contentFrame().locator('.unified-start-btn') to be visible
+
+    at run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-flash-priority-notice-browser.cjs:53:74) {
+  log: [
+    "  - waiting for locator('#gameViewer').contentFrame().locator('.unified-start-btn') to be visible"
+  ],
+  name: 'TimeoutError'
+}

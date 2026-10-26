@@ -1,0 +1,21 @@
+PASS 1100px add-up: standalone, iframe, inherited language, Hub synchronization
+PASS 1100px animal-rescue-train: standalone, iframe, inherited language, Hub synchronization
+PASS 1100px ball-track: standalone, iframe, inherited language, Hub synchronization
+PASS 1100px block-match: standalone, iframe, inherited language, Hub synchronization
+PASS 1100px flash-brain: standalone, iframe, inherited language, Hub synchronization
+PASS 1100px number-pop: standalone, iframe, inherited language, Hub synchronization
+PASS 1100px shadow-match: standalone, iframe, inherited language, Hub synchronization
+PASS 1100px space-scale: standalone, iframe, inherited language, Hub synchronization
+PASS 1100px spot-quick: standalone, iframe, inherited language, Hub synchronization
+PASS 1100px tap-match: standalone, iframe, inherited language, Hub synchronization
+PASS 390px add-up: standalone, iframe, inherited language, Hub synchronization
+PASS 390px animal-rescue-train: standalone, iframe, inherited language, Hub synchronization
+PASS 390px ball-track: standalone, iframe, inherited language, Hub synchronization
+PASS 390px block-match: standalone, iframe, inherited language, Hub synchronization
+PASS 390px flash-brain: standalone, iframe, inherited language, Hub synchronization
+PASS 390px number-pop: standalone, iframe, inherited language, Hub synchronization
+PASS 390px shadow-match: standalone, iframe, inherited language, Hub synchronization
+PASS 390px space-scale: standalone, iframe, inherited language, Hub synchronization
+PASS 390px spot-quick: standalone, iframe, inherited language, Hub synchronization
+PASS 390px tap-match: standalone, iframe, inherited language, Hub synchronization
+PASS language controls: all 10 games and location modal, desktop/mobile

@@ -1,0 +1,5 @@
+PASS: 30 theme/width/language combinations
+PASS: bright persistence and Hub navigation
+PASS: arena persistence and Hub navigation
+PASS: calm persistence and Hub navigation
+PASS: 30 theme/width/language combinations; persistence, filtering, previews, profile, iframe launch/close, invalid preference and blocked storage.

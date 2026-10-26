@@ -1,0 +1,38 @@
+PASS number-pop 390 en: 3 real game taps, score0, records protected, normal start, replay/cancel
+PASS ball-track 390 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS block-match 390 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS add-up 390 en: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS space-scale 390 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS tap-match 390 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS spot-quick 390 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS shadow-match 390 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain 390 en: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS animal-rescue-train 390 en: 6 real game taps, score0, records protected, normal start, replay/cancel
+PASS number-pop: incomplete cancel, explicit skip, normal game
+PASS ball-track: incomplete cancel, explicit skip, normal game
+PASS block-match: incomplete cancel, explicit skip, normal game
+PASS add-up: incomplete cancel, explicit skip, normal game
+PASS space-scale: incomplete cancel, explicit skip, normal game
+PASS tap-match: incomplete cancel, explicit skip, normal game
+PASS spot-quick: incomplete cancel, explicit skip, normal game
+PASS shadow-match: incomplete cancel, explicit skip, normal game
+PASS flash-brain: incomplete cancel, explicit skip, normal game
+PASS animal-rescue-train: incomplete cancel, explicit skip, normal game
+PASS number-pop: iframe actual game tutorial
+PASS ball-track: iframe actual game tutorial
+PASS block-match: iframe actual game tutorial
+PASS add-up: iframe actual game tutorial
+PASS space-scale: iframe actual game tutorial
+PASS tap-match: iframe actual game tutorial
+PASS spot-quick: iframe actual game tutorial
+PASS shadow-match: iframe actual game tutorial
+PASS flash-brain: iframe actual game tutorial
+PASS animal-rescue-train: iframe actual game tutorial
+locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('.toenow-language-switch')
+
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:108:53 {
+  log: [ "  - waiting for locator('.toenow-language-switch')" ],
+  name: 'TimeoutError'
+}

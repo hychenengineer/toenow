@@ -1,3 +1,4 @@
+const { readSource } = require('./lib/game-source.cjs');
 /* Real numeric gameplay checks. Space Scale receives only a read-only state hook. */
 const fs=require('node:fs');
 const path=require('node:path');
@@ -14,7 +15,7 @@ async function run(){
    const page=await browser.newPage({viewport:{width,height:850}});const errors=[];
    page.on('pageerror',e=>errors.push(e.message));
    if(id==='space-scale'){
-    let html=fs.readFileSync(path.join(root,'games',id,'index.html'),'utf8');const index=html.lastIndexOf('})();');
+    let html=readSource(path.join(root,'games',id,'index.html'),'utf8');const index=html.lastIndexOf('})();');
     assert.ok(index>0);html=html.slice(0,index)+`window.__numericScale={state:()=>({wave,score,shields,target:currentPuzzle.targetBodyId,bodies:currentPuzzle.bodies})};`+html.slice(index);
     await page.route('**/games/space-scale/',r=>r.fulfill({contentType:'text/html',body:html}));
    }

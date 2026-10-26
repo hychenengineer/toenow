@@ -1,3 +1,4 @@
+const { readSource } = require('../tools/lib/game-source.cjs');
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('fs');
@@ -5,7 +6,7 @@ const path = require('path');
 const vm = require('vm');
 
 test('Number Pop keeps drifting bubbles in the middle half on wide screens and leaves room on phones', () => {
-  const html = fs.readFileSync(path.resolve(__dirname, '../games/number-pop/index.html'), 'utf8');
+  const html = readSource(path.resolve(__dirname, '../games/number-pop/index.html'), 'utf8');
   const boundsFunction = html.slice(html.indexOf('function getArenaBounds()'), html.indexOf('function computeCoreScaleFactor'));
   const clampFunction = html.slice(html.indexOf('function clampCoreToSafeArena('), html.indexOf('const BASE_GAME_TIME'));
   for (const width of [390, 768, 1280, 1860, 2560]) {
@@ -34,16 +35,13 @@ test('Number Pop keeps drifting bubbles in the middle half on wide screens and l
 
 test('Number Pop generates valid math fractions for all waves 1-30 with no zero denominators or NaN', () => {
   const htmlPath = path.resolve(__dirname, '../games/number-pop/index.html');
-  const html = fs.readFileSync(htmlPath, 'utf8');
+  const html = readSource(htmlPath, 'utf8');
 
   // Extract script
   const scriptRegex = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
   let match, gameScript = '';
   while ((match = scriptRegex.exec(html)) !== null) {
-    if (match[1].includes('__QUANTUM_GAME__')) {
-      gameScript = match[1];
-      break;
-    }
+    if (!/\bsrc=/.test(match[0])) gameScript += match[1] + '\n;\n';
   }
   assert.ok(gameScript, 'Must locate Number Pop game engine script');
 

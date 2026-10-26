@@ -1,0 +1,15 @@
+PASS flash-brain 390 en: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain 390 zh-Hant: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain 1100 en: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain 1100 zh-Hant: 2 real game taps, score0, records protected, normal start, replay/cancel
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+true !== false
+
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:87:45 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: true,
+  expected: false,
+  operator: 'strictEqual'
+}

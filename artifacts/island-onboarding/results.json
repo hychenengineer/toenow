@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "checks": [
+    "welcome 1440/en",
+    "welcome 1440/zh-Hant",
+    "welcome 768/en",
+    "welcome 768/zh-Hant",
+    "welcome 390/en",
+    "welcome 390/zh-Hant",
+    "welcome 320/en",
+    "welcome 320/zh-Hant"
+  ],
+  "practice": "PASS",
+  "normalWaveBoundary": "PASS",
+  "duplicate": "PASS",
+  "legacy": "PASS",
+  "reload": "PASS",
+  "messageSource": "PASS",
+  "rejectedResult": "PASS",
+  "authWithLocalStub": "PASS",
+  "liveAuth": "NOT VERIFIED",
+  "errors": []
+}

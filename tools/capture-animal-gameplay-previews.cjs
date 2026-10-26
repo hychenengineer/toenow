@@ -1,3 +1,4 @@
+const { readSource } = require('./lib/game-source.cjs');
 /* Captures real browser rendering and input. No game state or saved records are mutated by hooks. */
 const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),crypto=require('node:crypto');
 const {execFileSync}=require('node:child_process');
@@ -9,7 +10,7 @@ const config=require('../shared/toenow-screen-config.js');
 const games=['animal-rescue-train','number-pop','ball-track','block-match','add-up','space-scale','tap-match','spot-quick','shadow-match','flash-brain'];
 const selected=process.env.TOENOW_TEST_GAMES?process.env.TOENOW_TEST_GAMES.split(','):games;
 const viewport={width:768,height:576};
-const hash=file=>crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+const hash=file=>crypto.createHash('sha256').update(readSource(file)).digest('hex');
 const bounded=(p,ms,label)=>Promise.race([p,new Promise((_,reject)=>{const t=setTimeout(()=>reject(Error(label+' timed out')),ms);t.unref()})]);
 function ffmpegPath(){
  if(process.env.TOENOW_FFMPEG)return process.env.TOENOW_FFMPEG;
@@ -54,7 +55,7 @@ async function act(page,id,log){
 }
 async function run(){
  fs.mkdirSync(rawDir,{recursive:true});const ffmpeg=ffmpegPath();
- const reportPath=path.join(out,'verification.json');let report=fs.existsSync(reportPath)?JSON.parse(fs.readFileSync(reportPath,'utf8')):{method:'Playwright Edge recordVideo with actual production Start controls and input',viewport,results:[]};
+ const reportPath=path.join(out,'verification.json');let report=fs.existsSync(reportPath)?JSON.parse(readSource(reportPath,'utf8')):{method:'Playwright Edge recordVideo with actual production Start controls and input',viewport,results:[]};
  const server=await chromium.launchServer({channel:'msedge',headless:true});const browser=await chromium.connect(server.wsEndpoint());
  try{
  for(const id of selected){
@@ -62,7 +63,7 @@ async function run(){
   const context=await browser.newContext({viewport,recordVideo:{dir:path.join(os.tmpdir(),'toenow-animal-preview-recordings'),size:viewport},locale:'en-US'});
   const page=await context.newPage();page.setDefaultTimeout(15000);const video=page.video(),errors=[],actions=[];page.on('pageerror',e=>errors.push(e.message));
   if(id==='space-scale'){
-   let html=fs.readFileSync(path.join(root,'games',id,'index.html'),'utf8'),i=html.lastIndexOf('})();');
+   let html=readSource(path.join(root,'games',id,'index.html'),'utf8'),i=html.lastIndexOf('})();');
    html=html.slice(0,i)+`Object.defineProperty(window,'__captureScale',{get:()=>({target:currentPuzzle.targetBodyId,bodies:currentPuzzle.bodies})});`+html.slice(i);
    await page.route('**/games/space-scale/',r=>r.fulfill({contentType:'text/html',body:html}));
   }

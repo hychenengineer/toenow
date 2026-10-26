@@ -1,0 +1,10 @@
+PASS number-pop: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+PASS ball-track: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+PASS block-match: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+PASS add-up: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+PASS space-scale: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+PASS tap-match: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+PASS spot-quick: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+PASS shadow-match: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+PASS flash-brain: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+{"standalone":36,"iframe":9,"practice":9}

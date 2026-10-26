@@ -1,0 +1,14 @@
+PASS number-pop: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+PASS ball-track: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+PASS block-match: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+PASS add-up: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+AssertionError [ERR_ASSERTION]: space-scale result dimensions differ from other games: 460,787.4375,136
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-shared-screens-browser.cjs:100:50
+    at Array.forEach (<anonymous>)
+    at run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-shared-screens-browser.cjs:100:20) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '=='
+}

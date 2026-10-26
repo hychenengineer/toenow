@@ -1,3 +1,4 @@
+const { readSource } = require('../tools/lib/game-source.cjs');
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('fs');
@@ -18,8 +19,8 @@ const GAMES = [
 GAMES.forEach(({ id, path: relPath, titleCardId, controller }) => {
   test(`Practice Mode contract verified for game [${id}]`, () => {
     const fullPath = path.resolve(__dirname, '..', relPath);
-    const html = fs.readFileSync(fullPath, 'utf8');
-    const source = html + (controller ? fs.readFileSync(path.resolve(__dirname, '..', controller), 'utf8') : '');
+    const html = readSource(fullPath, 'utf8');
+    const source = html + (controller ? readSource(path.resolve(__dirname, '..', controller), 'utf8') : '');
 
     // 1. Must load shared/toenow-levels.js
     assert.ok(html.includes('shared/toenow-levels.js'), `${id} must include shared/toenow-levels.js`);
@@ -38,7 +39,7 @@ GAMES.forEach(({ id, path: relPath, titleCardId, controller }) => {
 
 test('Practice Mode contract verified for game [flash-brain]', () => {
   const bundlePath = path.resolve(__dirname, '../games/flash-brain/assets/index-cr-6j3L1.js');
-  const js = fs.readFileSync(bundlePath, 'utf8');
+  const js = readSource(bundlePath, 'utf8');
 
   // Must render unified-actions-bar with START GAME and PRACTICE button
   assert.ok(js.includes('ToenowScreens.renderTitle'), 'Flash Brain must use the shared title renderer');

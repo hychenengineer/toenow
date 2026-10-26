@@ -1,0 +1,26 @@
+[
+  {
+    "id": "flash-brain",
+    "size": "desktop",
+    "correctInput": true,
+    "hazardInput": true,
+    "privacy": {
+      "leaks": 0,
+      "revealed": 688
+    },
+    "errors": [],
+    "supplied": []
+  },
+  {
+    "id": "flash-brain",
+    "size": "mobile",
+    "correctInput": true,
+    "hazardInput": true,
+    "privacy": {
+      "leaks": 0,
+      "revealed": 688
+    },
+    "errors": [],
+    "supplied": []
+  }
+]

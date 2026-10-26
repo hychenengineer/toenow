@@ -1,0 +1,219 @@
+TAP version 13
+# Subtest: Harvest baskets keep numeric labels and the fraction gauge
+ok 1 - Harvest baskets keep numeric labels and the fraction gauge
+  ---
+  duration_ms: 4.3919
+  ...
+# Subtest: Supply bags leave exact-sum, two-item minimum and overshoot logic intact
+ok 2 - Supply bags leave exact-sum, two-item minimum and overshoot logic intact
+  ---
+  duration_ms: 3.0479
+  ...
+# Subtest: Parcel render never uses hidden mass and keeps symbols distinct
+ok 3 - Parcel render never uses hidden mass and keeps symbols distinct
+  ---
+  duration_ms: 4.3131
+  ...
+# Subtest: Supply orders retain two, three and four bag solutions in every tier
+ok 4 - Supply orders retain two, three and four bag solutions in every tier
+  ---
+  duration_ms: 10.0883
+  ...
+# Subtest: Mystery parcel directive is decided by hidden mass across the unchanged tiers
+ok 5 - Mystery parcel directive is decided by hidden mass across the unchanged tiers
+  ---
+  duration_ms: 4.4634
+  ...
+# Subtest: Supply bag labels render after spark particles in dark ink
+not ok 6 - Supply bag labels render after spark particles in dark ink
+  ---
+  duration_ms: 8.4899
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-numeric-theme.test.cjs:59:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(render.indexOf('// 7. Particles')<render.indexOf('drawNutBag(ctx, n.radius'))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-numeric-theme.test.cjs:61:9)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: otter leaves conceal target identity throughout shuffle and selection, even with residual opening
+not ok 7 - otter leaves conceal target identity throughout shuffle and selection, even with residual opening
+  ---
+  duration_ms: 2.0074
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-spatial.test.cjs:17:1'
+  failureType: 'testCodeFailure'
+  error: 'scene is not defined'
+  code: 'ERR_TEST_FAILURE'
+  name: 'ReferenceError'
+  stack: |-
+    Object.drawShellCapsule (evalmachine.<anonymous>:2:21)
+    render (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-spatial.test.cjs:14:6)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-spatial.test.cjs:19:17)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    node:internal/test_runner/harness:252:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+  ...
+# Subtest: otter replaces the revealed core only at original reveal phases
+not ok 8 - otter replaces the revealed core only at original reveal phases
+  ---
+  duration_ms: 0.6117
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-spatial.test.cjs:24:1'
+  failureType: 'testCodeFailure'
+  error: 'scene is not defined'
+  code: 'ERR_TEST_FAILURE'
+  name: 'ReferenceError'
+  stack: |-
+    Object.drawShellCapsule (evalmachine.<anonymous>:2:21)
+    render (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-spatial.test.cjs:14:6)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-spatial.test.cjs:26:17)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: timber carving removes only excess cells and preserves required cells with original penalty
+ok 9 - timber carving removes only excess cells and preserves required cells with original penalty
+  ---
+  duration_ms: 34.8973
+  ...
+# Subtest: raccoon theater keeps correct-card award and wrong-card time penalty
+ok 10 - raccoon theater keeps correct-card award and wrong-card time penalty
+  ---
+  duration_ms: 24.4551
+  ...
+# Subtest: timber blueprints invert their axes without changing required/excess cell identity
+ok 11 - timber blueprints invert their axes without changing required/excess cell identity
+  ---
+  duration_ms: 1.9615
+  ...
+# Subtest: raccoon puppeteer stays above the stage instruction band
+not ok 12 - raccoon puppeteer stays above the stage instruction band
+  ---
+  duration_ms: 7.91
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-spatial.test.cjs:75:1'
+  failureType: 'testCodeFailure'
+  error: 'scene is not defined'
+  code: 'ERR_TEST_FAILURE'
+  name: 'ReferenceError'
+  stack: |-
+    renderForestTheater (evalmachine.<anonymous>:2:19)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-spatial.test.cjs:79:2)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: beaver portrait fits between stacked boards without blueprint clipping
+not ok 13 - beaver portrait fits between stacked boards without blueprint clipping
+  ---
+  duration_ms: 4.9888
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-spatial.test.cjs:81:1'
+  failureType: 'testCodeFailure'
+  error: 'scene is not defined'
+  code: 'ERR_TEST_FAILURE'
+  name: 'ReferenceError'
+  stack: |-
+    drawBoards (evalmachine.<anonymous>:2:22)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-spatial.test.cjs:91:95)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: source inspection follows local scripts and styles in page order without expanding shared dependencies
+ok 14 - source inspection follows local scripts and styles in page order without expanding shared dependencies
+  ---
+  duration_ms: 32.4349
+  ...
+# Subtest: extracted rules preserve valid boards, unique numeric choices and matching criteria
+ok 15 - extracted rules preserve valid boards, unique numeric choices and matching criteria
+  ---
+  duration_ms: 20.395
+  ...
+# Subtest: Spot Quick rules produce four distinct choices including the target across all five tiers
+ok 16 - Spot Quick rules produce four distinct choices including the target across all five tiers
+  ---
+  duration_ms: 28.2662
+  ...
+# Subtest: renderers read current controller values after resize and board replacement
+ok 17 - renderers read current controller values after resize and board replacement
+  ---
+  duration_ms: 1.0633
+  ...
+# Subtest: Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+ok 18 - Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 30.054
+  ...
+# Subtest: Game [number-pop] initializes cleanly and binds START GAME without runtime error
+ok 19 - Game [number-pop] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 34.7156
+  ...
+# Subtest: Game [ball-track] initializes cleanly and binds START GAME without runtime error
+ok 20 - Game [ball-track] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 14.5008
+  ...
+# Subtest: Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+ok 21 - Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 7.3264
+  ...
+# Subtest: Game [tap-match] initializes cleanly and binds START GAME without runtime error
+ok 22 - Game [tap-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 5.6789
+  ...
+# Subtest: Game [add-up] initializes cleanly and binds START GAME without runtime error
+ok 23 - Game [add-up] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 5.6849
+  ...
+# Subtest: Game [block-match] initializes cleanly and binds START GAME without runtime error
+ok 24 - Game [block-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 4.6464
+  ...
+# Subtest: Game [space-scale] initializes cleanly and binds START GAME without runtime error
+ok 25 - Game [space-scale] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 5.2704
+  ...
+# Subtest: Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+ok 26 - Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 9.2594
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 21
+# fail 5
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 220.4907

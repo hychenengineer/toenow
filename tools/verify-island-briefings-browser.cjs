@@ -1,3 +1,4 @@
+const { readSource } = require('./lib/game-source.cjs');
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -18,7 +19,7 @@ async function run() {
         const page = await browser.newPage({ viewport: { width, height }, hasTouch: true });
         const errors = [];
         page.on('pageerror', error => errors.push(error.message));
-        let html = fs.readFileSync(path.join(__dirname, '..', 'games', id, 'index.html'), 'utf8');
+        let html = readSource(path.join(__dirname, '..', 'games', id, 'index.html'), 'utf8');
         const marker = html.lastIndexOf('})();');
         assert.ok(marker > 0);
         html = html.slice(0, marker) + `window.__briefStyleTest=wave=>{${config.hook}};window.__briefState=()=>({active:${config.active},time:${config.timer}});` + html.slice(marker);

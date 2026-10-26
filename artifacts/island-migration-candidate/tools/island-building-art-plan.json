@@ -1,0 +1,87 @@
+{
+  "reference": "C:/Users/HsinYuChen/.codex/generated_images/01a16a47-2f32-7341-83dd-edc8be80d6f0/exec-5a6b4c80-311f-444c-a764-08cbdf502a60.png",
+  "commonPrompt": "SINGLE production game landmark sprite, premium richly detailed hand-painted isometric 2.5D storybook architecture matching the approved reference, tactile stone/wood/roof tiles, soft ambient occlusion, afternoon light from upper-left. Fixed 35-degree overhead isometric camera, entrance facing lower-left, ground centered horizontally near 80% image height, square sprite canvas with roughly 10% clear transparent margin. Genuinely TRANSPARENT background and soft alpha contact shadow. Entire subject including roofs and tiny ground patch visible, no cropping. No typography, labels, level numerals, icons, UI, characters, opaque paper, sky, sea, broad terrain, giant plinth or floating land cube. Keep architecture readable at map size; restrained local grass, steps and planting only. ",
+  "buildings": [
+    {
+      "kind": "lighthouse",
+      "title": "Memory Lighthouse",
+      "description": "Faithfully develop the TOP-RIGHT lighthouse in the approved reference: tall elegant ivory masonry lighthouse with a muted blue diagonal stripe, copper teal lantern cap, warm glass lantern and brass railing. Attached small keeper's cottage with terracotta roof, small winding stone entrance steps, coastal grasses, restrained natural rocks and flower planters. No sea or broad coastal scene.",
+      "core": "ivory lighthouse tower with a muted blue stripe, simple teal lantern roof and plain wooden entrance",
+      "device": "fully glazed lantern room and brass balcony",
+      "annex": "small keeper's cottage with terracotta roof",
+      "final": "mature coastal flower garden, detailed brass lantern, neat railings and warm light"
+    },
+    {
+      "kind": "station",
+      "title": "Rescue Harbor station",
+      "description": "Faithfully develop the BOTTOM-RIGHT railway station in the approved reference: cozy timber-and-cream-stucco station, terracotta tiled roof, tiny clock tower, teal painted frames, covered platform, compact short rail section and a tiny muted green locomotive with one animal carriage, discreet carved paw emblem, two supply crates, tidy flower planters. No readable station name or animals/people.",
+      "core": "small cream-stucco railway station with terracotta roof, teal trim and a short plain platform",
+      "device": "covered platform canopy and simple station clock",
+      "annex": "compact clock tower and short rail with a tiny green locomotive",
+      "final": "single animal carriage, finished platform furnishings, paw emblem, planters and warm lamps"
+    },
+    {
+      "kind": "music",
+      "title": "Melody Garden",
+      "description": "Faithfully develop the BOTTOM-LEFT music pavilion in the approved reference: open octagonal pale carved stone pavilion, muted lavender-blue ceramic tiled roof with graceful restrained eaves, warm brass wind chimes, compact arrangement of colorful resonant stone keys, low curved garden wall, moss and small flowers. Refined musical architecture, no giant music-note icon.",
+      "core": "small octagonal open stone music pavilion with a simple muted lavender-blue tiled roof",
+      "device": "small suspended brass chimes and three resonant stone keys",
+      "annex": "completed set of colorful stone keys with a small attached side alcove for instruments",
+      "final": "carved columns, elegant roof trims, low curved garden wall, flower beds and lanterns"
+    },
+    {
+      "kind": "workshop",
+      "title": "Mosaic Workshop",
+      "description": "An artisan's distinctive cream-stone and timber mosaic workshop, dusty rose and terracotta tiled gabled roofs, teal wooden window frames, broad arched studio windows, a small carved geometric tile pattern above its door, attached pottery/tile workroom and a tidy outdoor bench showing a few colored square ceramic tiles. Small chimney, warm windows, restrained climbing flowers and a tiny paved courtyard. Match approved reference's hand-painted architectural language.",
+      "core": "small cream-stone artisan cottage with dusty rose tiled gable roof and a simple arched workshop door",
+      "device": "finished arched studio windows and a small geometric ceramic tile emblem",
+      "annex": "attached tile-making workroom with a short chimney and neat outdoor tile bench",
+      "final": "mosaic courtyard edging, climbing flowers, carefully stacked colorful tile trays and warm lamps"
+    },
+    {
+      "kind": "garden",
+      "title": "Sum Conservatory",
+      "description": "Elegant botanical glass conservatory, cream limestone lower walls, muted sage-green iron framing and patinated copper-green glass roof, a central rounded glass dome and symmetric smaller side glasshouse wing. Visible potted ferns, a modest stone path with a very subtle geometric counting mosaic, low garden borders, restrained terracotta pots and warm lanterns. NO printed plus signs, numbers or labels.",
+      "core": "small single-bay cream-stone glasshouse with sage-green framing and simple glass roof",
+      "device": "finished glass panels, neat central framed entrance and a few visible potted ferns",
+      "annex": "one attached smaller side glasshouse wing and connecting stepping-stone path",
+      "final": "elegant central dome finial, low garden borders, abundant carefully arranged botanical pots and lamps"
+    },
+    {
+      "kind": "arch",
+      "title": "Echo Courtyard",
+      "description": "A beautiful small ancient courtyard gateway with a wide rounded cream-stone arch, teal glazed roof cap, pair of carved side pillars and subtle embossed repeating circular motifs. A compact circular stone court, one small bronze resonant bell inside the arch, attached low side arcade, simple patterned tile insets, moss at stone joints, restrained flowering shrubs and warm small lanterns. Do not show door text or giant target icons.",
+      "core": "single graceful cream-stone rounded arch on two simple pillars with a muted teal stone cap",
+      "device": "a small hanging bronze resonant bell, refined pillar carvings and a simple paved entrance",
+      "annex": "a short attached side arcade and a compact circular stone court",
+      "final": "finished patterned paving, low carved borders, moss, flowers and warm court lanterns"
+    },
+    {
+      "kind": "lookout",
+      "title": "Forest Lookout",
+      "description": "A charming forest lookout treehouse built around a single sturdy stylized tree trunk, honey-colored timber cabin raised on elegant wooden supports, muted moss-green shingle roof, small covered observation deck with telescope or binocular stand, wooden staircase, a side ranger's hut connected to the deck, restrained leafy branches framing only the roof and tiny ferns at the base. Clear compact silhouette, no dense forest surrounding, no characters.",
+      "core": "small honey-timber lookout cabin on a short sturdy raised deck with simple moss-green roof and wooden stair",
+      "device": "finished observation balcony railing and a small binocular stand",
+      "annex": "a compact attached ranger's side hut on the same deck",
+      "final": "refined shingle roof, neatly integrated tree branches, fern planters and warm ranger lamps"
+    },
+    {
+      "kind": "temple",
+      "title": "Silhouette Ruins",
+      "description": "A restored small classical island sanctuary of warm cream limestone, muted dusty-lavender tiled pediment roof, three graceful carved columns and an open shadowed central doorway. Small attached side cloister, carved geometric silhouette reliefs on a low stone wall, a short formal stair, compact stone court with a simple octagonal mosaic, a little moss, flowers and warm lanterns. Ancient but welcoming, no religious symbols, no text or numbers.",
+      "core": "humble warm limestone sanctuary with three plain columns, small dusty-lavender roof and two entrance steps",
+      "device": "restored column capitals, refined doorway frame and subtle geometric stone relief",
+      "annex": "a compact attached side cloister and short formal stair",
+      "final": "complete tiled roof trim, low carved walls, octagonal courtyard mosaic, moss, flowers and lanterns"
+    },
+    {
+      "kind": "orbit",
+      "title": "Orbit Terrace",
+      "description": "A distinctive small astronomical tracking terrace: elegant round cream-stone platform supporting a beautiful brass armillary sphere with muted blue-green rings and small matte blue/gold planet orbs. A compact cream-stone instrument hut with a curved dusty-blue copper roof stands behind, short staircase, attached narrow instrument alcove and low stone balustrade, a subtle circular compass mosaic, a few ornamental grasses and warm lamps. No printed numbers, UI or labels.",
+      "core": "small circular cream-stone terrace with one simple brass orbital ring on a short pedestal and a tiny closed instrument hut",
+      "device": "two nested blue-green brass rings with small planet orbs and refined pedestal",
+      "annex": "expanded instrument hut with a compact side instrument alcove",
+      "final": "full elegant armillary sphere, low balustrade, compass mosaic, ornamental grasses and soft lamps"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "id": "flash-brain",
+  "status": "PASS",
+  "url": "http://127.0.0.1:8765/games/flash-brain/",
+  "startedAt": "2026-10-25T16:50:15.226Z",
+  "viewport": {
+    "width": 768,
+    "height": 576
+  },
+  "presentationZoom": 1,
+  "actions": [
+    {
+      "action": "Clicked production Start control",
+      "atMs": 1792947015514,
+      "atSeconds": 0.288
+    },
+    {
+      "action": "Recalled a safe animal flowerbed",
+      "atMs": 1792947018117,
+      "atSeconds": 2.891
+    }
+  ],
+  "trimStartSeconds": 0.288,
+  "videoBytes": 190629,
+  "posterBytes": 53769,
+  "videoSha256": "a2fe55a36b52b4b7b6e7749f1a2a40e03d8eaa25f957f659e748fe0d2636ad5c",
+  "posterSha256": "3014899610818271e5aa077fc4c9fe8d079fa718af406391bb46eba2ab425719",
+  "originalRecording": "recordings/flash-brain.webm",
+  "originalRecordingSha256": "d84b37c66c12b5c7be9abd5a4603870af9e24d99345e21c44e5dc14ffc63fcc2",
+  "media": {
+    "duration": 7,
+    "width": 768,
+    "height": 576,
+    "decodedTime": 0.239883,
+    "readyState": 4
+  },
+  "errors": [],
+  "storageIsolation": "new nonpersistent browser context; no production browser profile"
+}

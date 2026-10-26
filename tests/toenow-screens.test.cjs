@@ -1,3 +1,4 @@
+const { readSource } = require('../tools/lib/game-source.cjs');
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -7,9 +8,9 @@ const games = ['number-pop','ball-track','block-match','add-up','space-scale','t
 
 test('nine games use one screen library without copied title or result templates', () => {
   for (const id of games) {
-    const html = fs.readFileSync(path.join(root, 'games', id, 'index.html'), 'utf8');
+    const html = readSource(path.join(root, 'games', id, 'index.html'), 'utf8');
     assert.ok(html.includes('../../shared/toenow-screens.js'), `${id}: shared renderer dependency`);
-    const source = id === 'flash-brain' ? fs.readFileSync(path.join(root,'games',id,'assets/index-cr-6j3L1.js'),'utf8') : html;
+    const source = id === 'flash-brain' ? readSource(path.join(root,'games',id,'assets/index-cr-6j3L1.js'),'utf8') : html;
     assert.ok(source.includes('ToenowScreens.'), `${id}: invokes renderer`);
     if (id !== 'flash-brain') {
       assert.equal((source.match(/data-toenow-screen="title"/g) || []).length, 1);

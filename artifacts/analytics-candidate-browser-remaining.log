@@ -1,0 +1,7 @@
+PASS flash-brain standalone
+PASS flash-brain embedded
+PASS flash-brain practice
+PASS animal-rescue-train standalone
+PASS animal-rescue-train embedded
+PASS animal-rescue-train practice
+CANDIDATE_BROWSER_PASS 6

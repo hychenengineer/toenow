@@ -1,0 +1,39 @@
+PASS: 30 theme/width/language combinations
+locator.click: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator('.game-preview-close')
+    - locator resolved to <button type="button" aria-label="關閉預覽" class="game-preview-close">✕</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is not visible
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is not visible
+    - retrying click action
+      - waiting 100ms
+    9 × waiting for element to be visible, enabled and stable
+      - element is not visible
+    - retrying click action
+      - waiting 500ms
+
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-hub-themes-browser.cjs:63:49 {
+  log: [
+    "  - waiting for locator('.game-preview-close')",
+    '    - locator resolved to <button type="button" aria-label="關閉預覽" class="game-preview-close">✕</button>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not visible',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not visible',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    9 × waiting for element to be visible, enabled and stable',
+    '      - element is not visible',
+    '    - retrying click action',
+    '      - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}

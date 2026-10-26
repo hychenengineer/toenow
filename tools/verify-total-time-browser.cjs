@@ -1,3 +1,4 @@
+const { readSource } = require('./lib/game-source.cjs');
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -46,7 +47,7 @@ async function instrument(page, id) {
     // Advance the production loop deterministically, without waiting 60 real seconds.
     window.requestAnimationFrame = () => 1;
   }, id);
-  let html = fs.readFileSync(path.join(__dirname,'../games',id,'index.html'),'utf8');
+  let html = readSource(path.join(__dirname,'../games',id,'index.html'),'utf8');
   const end = html.lastIndexOf('})();'); assert.ok(end > 0);
   html = html.slice(0,end)+`window.__timedTest={${hooks[id]}};`+html.slice(end);
   await page.route(`**/games/${id}/`, route => route.fulfill({ contentType:'text/html', body:html }));
@@ -118,7 +119,15 @@ async function instrument(page, id) {
       if (width===390 && lang==='en') {
         await page.reload({waitUntil:'domcontentloaded'});
         const records = await page.evaluate(k=>[localStorage.getItem(k.score),localStorage.getItem(k.wave)],keys[id]);
-        await page.locator('[data-tutorial-replay]').click();
+        // This deterministic suite disables requestAnimationFrame. Dispatch the
+        // button action directly; a real pointer click waits on browser frames.
+        // Pointer/keyboard interactions are covered by verify-tutorials-browser.
+        await page.evaluate(()=>{
+          const button=document.querySelector('[data-tutorial-replay]');
+          assertReplayButton(button);
+          function assertReplayButton(node){if(!node)throw Error('Tutorial replay button missing after reload');}
+          button.click();
+        });
         await page.locator('#toenow-tutorial').waitFor({state:'visible'});
         const tutorialTime = await page.evaluate(()=>__timedTest.snapshot().time);
         await page.evaluate(()=>{__timedTest.advance(65);__timedTest.wrong()});

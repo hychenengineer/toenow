@@ -1,0 +1,30 @@
+CHECK 320px en
+audio toggled
+paused
+resumed
+PASS 320px en: title alignment, audio, pause/resume, restart, fullscreen, reopen, standalone
+CHECK 320px zh-Hant
+audio toggled
+paused
+resumed
+PASS 320px zh-Hant: title alignment, audio, pause/resume, restart, fullscreen, reopen, standalone
+CHECK 390px en
+audio toggled
+paused
+resumed
+PASS 390px en: title alignment, audio, pause/resume, restart, fullscreen, reopen, standalone
+CHECK 390px zh-Hant
+audio toggled
+paused
+resumed
+PASS 390px zh-Hant: title alignment, audio, pause/resume, restart, fullscreen, reopen, standalone
+CHECK 1100px en
+audio toggled
+paused
+resumed
+PASS 1100px en: title alignment, audio, pause/resume, restart, fullscreen, reopen, standalone
+CHECK 1100px zh-Hant
+audio toggled
+paused
+resumed
+PASS 1100px zh-Hant: title alignment, audio, pause/resume, restart, fullscreen, reopen, standalone

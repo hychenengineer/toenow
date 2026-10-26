@@ -1,0 +1,140 @@
+TAP version 13
+# Subtest: Harvest baskets keep numeric labels and the fraction gauge
+ok 1 - Harvest baskets keep numeric labels and the fraction gauge
+  ---
+  duration_ms: 5.0382
+  ...
+# Subtest: Supply bags leave exact-sum, two-item minimum and overshoot logic intact
+ok 2 - Supply bags leave exact-sum, two-item minimum and overshoot logic intact
+  ---
+  duration_ms: 3.4361
+  ...
+# Subtest: Parcel render never uses hidden mass and keeps symbols distinct
+ok 3 - Parcel render never uses hidden mass and keeps symbols distinct
+  ---
+  duration_ms: 5.4073
+  ...
+# Subtest: Supply orders retain two, three and four bag solutions in every tier
+ok 4 - Supply orders retain two, three and four bag solutions in every tier
+  ---
+  duration_ms: 11.607
+  ...
+# Subtest: Mystery parcel directive is decided by hidden mass across the unchanged tiers
+ok 5 - Mystery parcel directive is decided by hidden mass across the unchanged tiers
+  ---
+  duration_ms: 4.4898
+  ...
+# Subtest: Supply bag labels render after spark particles in dark ink
+ok 6 - Supply bag labels render after spark particles in dark ink
+  ---
+  duration_ms: 3.0819
+  ...
+# Subtest: otter leaves conceal target identity throughout shuffle and selection, even with residual opening
+ok 7 - otter leaves conceal target identity throughout shuffle and selection, even with residual opening
+  ---
+  duration_ms: 8.275
+  ...
+# Subtest: otter replaces the revealed core only at original reveal phases
+ok 8 - otter replaces the revealed core only at original reveal phases
+  ---
+  duration_ms: 6.1433
+  ...
+# Subtest: timber carving removes only excess cells and preserves required cells with original penalty
+ok 9 - timber carving removes only excess cells and preserves required cells with original penalty
+  ---
+  duration_ms: 6.4654
+  ...
+# Subtest: raccoon theater keeps correct-card award and wrong-card time penalty
+ok 10 - raccoon theater keeps correct-card award and wrong-card time penalty
+  ---
+  duration_ms: 8.812
+  ...
+# Subtest: timber blueprints invert their axes without changing required/excess cell identity
+ok 11 - timber blueprints invert their axes without changing required/excess cell identity
+  ---
+  duration_ms: 1.7146
+  ...
+# Subtest: raccoon puppeteer stays above the stage instruction band
+ok 12 - raccoon puppeteer stays above the stage instruction band
+  ---
+  duration_ms: 3.8377
+  ...
+# Subtest: beaver portrait fits between stacked boards without blueprint clipping
+ok 13 - beaver portrait fits between stacked boards without blueprint clipping
+  ---
+  duration_ms: 7.3455
+  ...
+# Subtest: source inspection follows local scripts and styles in page order without expanding shared dependencies
+ok 14 - source inspection follows local scripts and styles in page order without expanding shared dependencies
+  ---
+  duration_ms: 15.0977
+  ...
+# Subtest: extracted rules preserve valid boards, unique numeric choices and matching criteria
+ok 15 - extracted rules preserve valid boards, unique numeric choices and matching criteria
+  ---
+  duration_ms: 21.1727
+  ...
+# Subtest: Spot Quick rules produce four distinct choices including the target across all five tiers
+ok 16 - Spot Quick rules produce four distinct choices including the target across all five tiers
+  ---
+  duration_ms: 26.3121
+  ...
+# Subtest: renderers use current scene dependencies instead of capturing stale values
+ok 17 - renderers use current scene dependencies instead of capturing stale values
+  ---
+  duration_ms: 1.285
+  ...
+# Subtest: Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+ok 18 - Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 31.8072
+  ...
+# Subtest: Game [number-pop] initializes cleanly and binds START GAME without runtime error
+ok 19 - Game [number-pop] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 25.5616
+  ...
+# Subtest: Game [ball-track] initializes cleanly and binds START GAME without runtime error
+ok 20 - Game [ball-track] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 7.7256
+  ...
+# Subtest: Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+ok 21 - Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 8.5089
+  ...
+# Subtest: Game [tap-match] initializes cleanly and binds START GAME without runtime error
+ok 22 - Game [tap-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 4.5571
+  ...
+# Subtest: Game [add-up] initializes cleanly and binds START GAME without runtime error
+ok 23 - Game [add-up] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 6.3716
+  ...
+# Subtest: Game [block-match] initializes cleanly and binds START GAME without runtime error
+ok 24 - Game [block-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 4.66
+  ...
+# Subtest: Game [space-scale] initializes cleanly and binds START GAME without runtime error
+ok 25 - Game [space-scale] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 4.8975
+  ...
+# Subtest: Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+ok 26 - Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 6.0104
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 200.7325

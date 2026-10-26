@@ -1,0 +1,12 @@
+PASS block-match 390x850 en: all briefing tiers, paper styling, layout, frozen timer, begin
+PASS block-match 390x850 zh-Hant: all briefing tiers, paper styling, layout, frozen timer, begin
+Error: UNKNOWN: unknown error, open 'C:\Users\HsinYuChen\source\repos\toenow\artifacts\island-briefing-block-match-1100-en-6.png'
+    at async open (node:internal/fs/promises:639:25)
+    at async Object.writeFile (node:internal/fs/promises:1212:14)
+    at async _Page.screenshot (C:\Users\HsinYuChen\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules\playwright-core\lib\coreBundle.js:61393:11)
+    at async run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-island-briefings-browser.cjs:45:84) {
+  errno: -4094,
+  code: 'UNKNOWN',
+  syscall: 'open',
+  path: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\artifacts\\island-briefing-block-match-1100-en-6.png'
+}

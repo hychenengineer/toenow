@@ -1,0 +1,1940 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Block Match</title>
+    <meta name="description" content="Fast-paced spatial deconstruction game. Tap excess silicon blocks across a 60-wave multi-phase curriculum." />
+    <meta property="og:title" content="Block Match" />
+    <meta property="og:description" content="Fast-paced spatial deconstruction game. Tap excess silicon blocks across a 60-wave multi-phase curriculum." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
+    <script src="../../shared/toenow-levels.js"></script>
+    <script src="../../shared/toenow-security.js"></script>
+    <script src="../../shared/toenow-platform.js"></script>
+    <script src="../../shared/toenow-analytics.js"></script>
+    <script src="../../shared/toenow-sdk.js"></script>
+    <script src="../../shared/toenow-i18n-core.js"></script>
+    <script src="../../shared/toenow-i18n-games-a.js"></script>
+    <script src="../../shared/toenow-i18n-games-b.js"></script>
+    <script src="../../shared/toenow-i18n-animals.js"></script>
+<script src="../../shared/toenow-i18n.js"></script>
+    <link rel="stylesheet" href="../../assets/toenow-tutorials.css">
+    <script src="../../shared/toenow-tutorial-config.js"></script>
+    <script src="../../shared/toenow-tutorials.js"></script>
+<script src="../../shared/toenow-animals.js"></script>
+    <script src="../../shared/toenow-screen-config.js"></script>
+    <script src="../../shared/toenow-screens.js"></script>
+    <style>
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #080b12;
+        color: #e6edf3;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        touch-action: none;
+      }
+
+      #match-success {
+        position: fixed;
+        inset: 0;
+        z-index: 15;
+        display: grid;
+        place-content: center;
+        pointer-events: none;
+        text-align: center;
+      }
+      #match-success[hidden] { display: none; }
+      .match-success-card {
+        max-width: calc(100vw - 32px);
+        padding: 20px 28px;
+        border: 2px solid #638263;
+        border-radius: 20px;
+        background: #f5faee;
+        color: #285334;
+        box-shadow: 0 8px 32px #28452e55;
+      }
+      .match-success-card strong { display: block; font-size: clamp(24px, 6vw, 34px); }
+      .match-success-card p { margin-top: 6px; font-size: 16px; }
+
+      #game-canvas {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        display: block;
+        cursor: crosshair;
+        touch-action: none;
+      }
+
+      /* Mobile-Safe Clamped HUD Container */
+      #hud-layer {
+        position: fixed;
+        top: 10px;
+        left: 0;
+        right: 0;
+        width: 95vw;
+        max-width: 480px;
+        margin: 0 auto;
+        box-sizing: border-box;
+        pointer-events: none;
+        z-index: 10;
+        transition: opacity 0.18s ease;
+      }
+
+      body[data-state="title"] #hud-layer {
+        opacity: 0;
+      }
+
+      .hud-bar {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        align-items: center;
+        gap: 4px;
+        background: rgba(8, 11, 18, 0.92);
+        border: 1px solid rgba(0, 240, 255, 0.28);
+        border-radius: 8px;
+        padding: 7px 10px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65);
+      }
+
+      .hud-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        min-width: 0;
+      }
+
+      .hud-controls {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        pointer-events: auto;
+      }
+
+      .hud-control-btn {
+        background: rgba(34, 211, 238, 0.15);
+        border: 1px solid rgba(34, 211, 238, 0.4);
+        color: #00f0ff;
+        border-radius: 4px;
+        padding: 5px 8px;
+        min-height: 32px;
+        font-size: 10px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .hud-kicker {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #64748b;
+        margin-bottom: 2px;
+        white-space: nowrap;
+      }
+
+      .hud-value {
+        font-size: 15px;
+        font-weight: 800;
+        line-height: 1.05;
+        font-variant-numeric: tabular-nums;
+        color: #f1f5f9;
+        white-space: nowrap;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+      }
+
+      .hud-value.cyan { color: #00f0ff; }
+      .hud-value.amber { color: #fbbf24; }
+      .hud-value.danger { color: #ff3b5c; }
+
+      /* Overlays (Title, Staged Phase Briefing, Game Over) */
+      .overlay-screen {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 20;
+        pointer-events: auto;
+        background: radial-gradient(circle at 50% 50%, rgba(8, 11, 18, 0.78) 0%, rgba(8, 11, 18, 0.96) 100%);
+        transition: opacity 0.18s ease;
+      }
+
+      .overlay-screen[hidden] {
+        display: none !important;
+      }
+
+      .modal-card {
+        width: 95vw;
+        max-width: 480px;
+        margin: 0 auto;
+        box-sizing: border-box;
+        background: rgba(13, 18, 28, 0.97);
+        border: 1px solid rgba(0, 240, 255, 0.35);
+        border-radius: 10px;
+        padding: 28px 24px;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(0, 240, 255, 0.1);
+      }
+
+      .modal-card.briefing-card {
+        border-color: rgba(251, 191, 36, 0.65);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 45px rgba(251, 191, 36, 0.18);
+      }
+
+      .game-title {
+        font-size: clamp(1.9rem, 5vw, 2.7rem);
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        color: #f1f5f9;
+        margin-bottom: 8px;
+        text-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+      }
+
+      .game-subtitle {
+        font-size: 14px;
+        line-height: 1.45;
+        color: #94a3b8;
+        max-width: 36ch;
+        margin: 0 auto 22px;
+      }
+
+      /* Phase Briefing Modal Elements */
+      .briefing-kicker {
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #38bdf8;
+        margin-bottom: 6px;
+      }
+
+      .briefing-title {
+        font-size: clamp(1.25rem, 3.8vw, 1.55rem);
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        color: #f1f5f9;
+        margin-bottom: 12px;
+      }
+
+      .briefing-badge {
+        display: inline-block;
+        padding: 5px 14px;
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        color: #fbbf24;
+        background: rgba(251, 191, 36, 0.12);
+        border: 1px solid rgba(251, 191, 36, 0.55);
+        border-radius: 6px;
+        margin-bottom: 16px;
+        box-shadow: 0 0 18px rgba(251, 191, 36, 0.2);
+      }
+
+      /* Animated Split-Cell Visual Icon inside Phase Briefing */
+      .briefing-visual-box {
+        width: 124px;
+        height: 82px;
+        margin: 0 auto 16px;
+        background: rgba(8, 11, 18, 0.92);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .split-cell {
+        width: 26px;
+        height: 26px;
+        border-radius: 4px;
+        position: absolute;
+      }
+
+      .split-cell.cyan-cell {
+        background: rgba(6, 182, 212, 0.85);
+        border: 1.5px solid #67e8f9;
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+      }
+
+      .split-cell.amber-cell {
+        background: rgba(245, 158, 11, 0.35);
+        border: 1.5px solid #fbbf24;
+        box-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+      }
+
+      @keyframes swapHorizontalLeft {
+        0%, 100% { transform: translateX(-22px); }
+        50% { transform: translateX(22px); }
+      }
+      @keyframes swapHorizontalRight {
+        0%, 100% { transform: translateX(22px); }
+        50% { transform: translateX(-22px); }
+      }
+      @keyframes swapVerticalTop {
+        0%, 100% { transform: translateY(-16px); }
+        50% { transform: translateY(16px); }
+      }
+      @keyframes swapVerticalBottom {
+        0%, 100% { transform: translateY(16px); }
+        50% { transform: translateY(-16px); }
+      }
+      @keyframes swapDualA {
+        0%, 100% { transform: translate(-20px, -14px); }
+        50% { transform: translate(20px, 14px); }
+      }
+      @keyframes swapDualB {
+        0%, 100% { transform: translate(20px, 14px); }
+        50% { transform: translate(-20px, -14px); }
+      }
+
+      .briefing-visual-box[data-anim="flip-h"] .cyan-cell {
+        animation: swapHorizontalLeft 1.8s ease-in-out infinite;
+      }
+      .briefing-visual-box[data-anim="flip-h"] .amber-cell {
+        animation: swapHorizontalRight 1.8s ease-in-out infinite;
+      }
+      .briefing-visual-box[data-anim="flip-v"] .cyan-cell {
+        animation: swapVerticalTop 1.8s ease-in-out infinite;
+      }
+      .briefing-visual-box[data-anim="flip-v"] .amber-cell {
+        animation: swapVerticalBottom 1.8s ease-in-out infinite;
+      }
+      .briefing-visual-box[data-anim="flip-hv"] .cyan-cell {
+        animation: swapDualA 1.8s ease-in-out infinite;
+      }
+      .briefing-visual-box[data-anim="flip-hv"] .amber-cell {
+        animation: swapDualB 1.8s ease-in-out infinite;
+      }
+
+      .briefing-desc {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #cbd5e1;
+        max-width: 38ch;
+        margin: 0 auto 22px;
+      }
+
+      .eyebrow-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: system-ui, -apple-system, sans-serif;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #00f0ff;
+        background: rgba(0, 240, 255, 0.1);
+        border: 1px solid rgba(0, 240, 255, 0.3);
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-bottom: 12px;
+      }
+
+      .rules-grid {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 16px;
+        text-align: left;
+      }
+
+      .rule-item {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .rule-stage {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #38bdf8;
+      }
+
+      .rule-desc {
+        font-size: 12px;
+        line-height: 1.35;
+        color: #cbd5e1;
+      }
+
+      .records-strip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 8px 16px;
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid rgba(0, 240, 255, 0.2);
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: #94a3b8;
+        margin-bottom: 18px;
+      }
+
+      .records-strip strong {
+        color: #00f0ff;
+      }
+
+      .primary-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 13px 24px;
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #080b12;
+        background: #00f0ff;
+        border: 1px solid #67e8f9;
+        border-radius: 6px;
+        cursor: pointer;
+        box-shadow: 0 0 24px rgba(0, 240, 255, 0.45);
+        transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+        white-space: nowrap;
+      }
+
+      .primary-btn.amber-btn {
+        background: #fbbf24;
+        border-color: #fde047;
+        box-shadow: 0 0 24px rgba(251, 191, 36, 0.45);
+      }
+
+      .primary-btn:hover, .primary-btn:focus-visible {
+        background: #38f8ff;
+        box-shadow: 0 0 32px rgba(0, 240, 255, 0.7);
+        transform: translateY(-1px);
+        outline: none;
+      }
+
+      .primary-btn.amber-btn:hover, .primary-btn.amber-btn:focus-visible {
+        background: #fde047;
+        box-shadow: 0 0 32px rgba(251, 191, 36, 0.7);
+      }
+
+      .secondary-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 11px 20px;
+        font-size: 13.5px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #cbd5e1;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+        white-space: nowrap;
+      }
+
+      .secondary-btn:hover, .secondary-btn:focus-visible {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.35);
+        color: #ffffff;
+        outline: none;
+      }
+
+      .btn-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin: 18px 0 20px;
+      }
+
+      .stat-tile {
+        background: rgba(8, 11, 18, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        padding: 10px 12px;
+      }
+
+      .stat-tile-label {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #64748b;
+        margin-bottom: 2px;
+      }
+
+      .stat-tile-val {
+        font-size: 22px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        color: #f1f5f9;
+      }
+
+      @media (max-width: 480px) {
+        .hud-bar {
+          padding: 6px 6px;
+          gap: 2px;
+        }
+        .hud-value {
+          font-size: 13px;
+        }
+        .hud-kicker {
+          font-size: 8px;
+        }
+        .modal-card {
+          padding: 22px 18px;
+        }
+      }
+    </style>
+  <link rel="stylesheet" href="../../assets/toenow-animals.css">
+</head>
+  <body data-state="title">
+    <canvas id="game-canvas" data-testid="game-canvas" aria-label="Block Match Workboard"></canvas>
+
+    <!-- Top HUD: stats and game controls -->
+    <div id="hud-layer">
+      <div class="hud-bar" aria-live="polite">
+        <div class="hud-stat">
+          <span class="hud-kicker">Score</span>
+          <span class="hud-value" id="hud-score">0</span>
+        </div>
+        <div class="hud-stat">
+          <span class="hud-kicker">Wave</span>
+          <span class="hud-value cyan" id="hud-wave">1/60</span>
+        </div>
+        <div class="hud-stat">
+          <span class="hud-kicker">Grid</span>
+          <span class="hud-value" id="hud-grid">3x3</span>
+        </div>
+        <div class="hud-stat">
+          <span class="hud-kicker">Combo</span>
+          <span class="hud-value amber" id="hud-combo">x1</span>
+        </div>
+        <div class="hud-stat">
+          <span class="hud-kicker">Timer</span>
+          <span class="hud-value" id="hud-timer">100.0s</span>
+        </div>
+        <div class="hud-controls">
+          <button id="btn-audio-hud" type="button" class="hud-control-btn toenow-icon-control" aria-label="Toggle Audio" aria-pressed="true" title="Toggle Audio" data-muted="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use class="control-sound-on" href="../../assets/toenow-control-icons.svg#sound-on"/><use class="control-sound-off" href="../../assets/toenow-control-icons.svg#sound-off"/></svg></button>
+          <button id="btn-pause-hud" type="button" class="hud-control-btn toenow-icon-control" aria-label="Pause Game (P)" title="Pause Game (P)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#pause"/></svg></button>
+          <button id="btn-restart-hud" type="button" class="hud-control-btn toenow-icon-control" aria-label="Restart Run" title="Restart Run"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#restart"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <div id="match-success" role="status" aria-live="polite" aria-atomic="true" hidden>
+      <div class="match-success-card">
+        <strong>✓ <span>Match complete!</span></strong>
+        <p>Great job! Next wave coming up…</p>
+      </div>
+    </div>
+
+    <!-- Title Screen Overlay -->
+    <section id="title-screen" class="unified-title-screen" aria-label="Title Screen" data-toenow-screen="title"></section>
+
+    <!-- Pause Screen Overlay (Anti-cheat blackout) -->
+    <section id="pause-screen" class="overlay-screen unified-pause-screen" aria-label="Pause Screen" hidden>
+      <div class="unified-pause-card">
+        <div class="unified-pause-kicker">GAME PAUSED</div>
+        <h2 class="unified-pause-title">PAUSED</h2>
+        <p class="unified-pause-notice">Deconstruction board is hidden while paused.</p>
+
+        <div class="unified-pause-stats-grid">
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">SCORE</span>
+            <span id="pause-score" class="unified-pause-stat-val">0</span>
+          </div>
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">WAVE</span>
+            <span id="pause-wave" class="unified-pause-stat-val">1/60</span>
+          </div>
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">TIME</span>
+            <span id="pause-timer" class="unified-pause-stat-val">100.0s</span>
+          </div>
+        </div>
+
+        <div class="unified-pause-btn-row">
+          <button id="btn-resume" type="button" class="unified-pause-resume-btn">RESUME</button>
+          <button id="btn-restart-pause" type="button" class="unified-pause-action-btn">RESTART</button>
+          <button id="btn-title-pause" type="button" class="unified-pause-action-btn">TITLE</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Staged Phase Transition Briefing Modal (Timer 100% Frozen) -->
+    <section id="briefing-screen" class="overlay-screen island-briefing" data-toenow-game="block-match" aria-label="Phase Transition Briefing" hidden>
+      <div class="modal-card briefing-card">
+        <div class="briefing-kicker">TIMER FROZEN · PHASE BRIEFING</div>
+        <h2 class="briefing-title" id="briefing-title">MODIFIER DETECTED: HORIZONTAL MIRROR</h2>
+        <div class="briefing-badge" id="briefing-badge">[ FLIP-H / &#9668;&#9658; ]</div>
+        <div class="briefing-visual-box" id="briefing-visual" data-anim="flip-h" aria-hidden="true">
+          <div class="split-cell cyan-cell"></div>
+          <div class="split-cell amber-cell"></div>
+        </div>
+        <p class="briefing-desc" id="briefing-desc">
+          The target blueprint is flipped LEFT to RIGHT. Mentally invert columns before carving!
+        </p>
+        <button type="button" class="primary-btn amber-btn" id="btn-engage-phase">
+          [ ENGAGE WAVE 16 ]
+        </button>
+      </div>
+    </section>
+
+    <!-- Game Over Screen -->
+    <section id="gameover-screen" class="overlay-screen unified-gameover-screen" aria-label="Game Over Screen" hidden data-toenow-screen="gameover"></section>
+
+    <script>ToenowScreens.mount("block-match");</script>
+    <script>
+      (function () {
+        'use strict';
+
+        var isHeadless = Boolean(navigator.webdriver || /HeadlessChrome/i.test(navigator.userAgent || ''));
+        var STORAGE_KEY_SCORE = 'chip_defrag_high_score_v5';
+        var STORAGE_KEY_SHARDS = 'chip_defrag_total_shards_v5';
+
+        function loadStorage(key) {
+          try {
+            var raw = window.localStorage.getItem(key);
+            var val = parseInt(raw || '0', 10);
+            return isFinite(val) && val > 0 ? val : 0;
+          } catch (e) {
+            return 0;
+          }
+        }
+
+        function saveStorage(key, val) {
+          try {
+            window.localStorage.setItem(key, String(Math.floor(val)));
+          } catch (e) {}
+        }
+
+        // --- Native Web Audio API Procedural Synthesizer ---
+        var audioCtx = null;
+        var audioOutput = null;
+        var audioEnabled = true;
+
+        function ensureAudio() {
+          if (!audioEnabled) return null;
+          if (!audioCtx) {
+            var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (AudioContextClass) {
+              try {
+                audioCtx = new AudioContextClass();
+                audioOutput = audioCtx.createGain();
+                audioOutput.connect(audioCtx.destination);
+              } catch (e) { audioCtx = null; audioOutput = null; }
+            }
+          }
+          if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume().catch(function () {});
+          }
+          return audioCtx;
+        }
+
+        var PENTATONIC_FREQS = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
+
+        function playSiliconTap(stepIndex) {
+          var ctx = ensureAudio();
+          if (!ctx) return;
+          var now = ctx.currentTime;
+          var idx = Math.min(stepIndex, PENTATONIC_FREQS.length - 1);
+          var freq = PENTATONIC_FREQS[idx];
+
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq * 1.45, now);
+          osc.frequency.exponentialRampToValueAtTime(freq, now + 0.075);
+
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
+
+          osc.connect(gain);
+          gain.connect(audioOutput);
+          osc.start(now);
+          osc.stop(now + 0.09);
+
+          var crunch = ctx.createOscillator();
+          var cGain = ctx.createGain();
+          crunch.type = 'square';
+          crunch.frequency.setValueAtTime(1600, now);
+          crunch.frequency.exponentialRampToValueAtTime(320, now + 0.022);
+          cGain.gain.setValueAtTime(0.11, now);
+          cGain.gain.exponentialRampToValueAtTime(0.001, now + 0.024);
+          crunch.connect(cGain);
+          cGain.connect(audioOutput);
+          crunch.start(now);
+          crunch.stop(now + 0.026);
+        }
+
+        function playWaveSurge() {
+          var ctx = ensureAudio();
+          if (!ctx) return;
+          var now = ctx.currentTime;
+
+          var chord = [523.25, 659.25, 783.99, 1046.50];
+          for (var i = 0; i < chord.length; i++) {
+            var osc = ctx.createOscillator();
+            var g = ctx.createGain();
+            var t = now + i * 0.035;
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(chord[i], t);
+            g.gain.setValueAtTime(0.14, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+            osc.connect(g);
+            g.connect(audioOutput);
+            osc.start(t);
+            osc.stop(t + 0.3);
+          }
+        }
+
+        function playBriefingAlert() {
+          var ctx = ensureAudio();
+          if (!ctx) return;
+          var now = ctx.currentTime;
+          var notes = [440, 554.37, 659.25, 880];
+          for (var i = 0; i < notes.length; i++) {
+            var osc = ctx.createOscillator();
+            var g = ctx.createGain();
+            var t = now + i * 0.055;
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(notes[i], t);
+            g.gain.setValueAtTime(0.18, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
+            osc.connect(g);
+            g.connect(audioOutput);
+            osc.start(t);
+            osc.stop(t + 0.34);
+          }
+        }
+
+        function playGlitchBuzz() {
+          var ctx = ensureAudio();
+          if (!ctx) return;
+          var now = ctx.currentTime;
+          var osc1 = ctx.createOscillator();
+          var osc2 = ctx.createOscillator();
+          var gain = ctx.createGain();
+
+          osc1.type = 'sawtooth';
+          osc2.type = 'square';
+          osc1.frequency.setValueAtTime(115, now);
+          osc1.frequency.linearRampToValueAtTime(72, now + 0.28);
+          osc2.frequency.setValueAtTime(123, now);
+          osc2.frequency.linearRampToValueAtTime(76, now + 0.28);
+
+          gain.gain.setValueAtTime(0.24, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(audioOutput);
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.31);
+          osc2.stop(now + 0.31);
+        }
+
+        // --- Staged Phase Transition Briefings (Before Waves 16, 31, and 46) ---
+        var PHASE_BRIEFINGS = {
+          6: {
+            targetWave: 6,
+            phaseNumber: 2,
+            mode: 'FLIP-H',
+            title: 'LEVEL 2 · INTERMEDIATE: HORIZONTAL MIRROR',
+            badge: '[ LEVEL 2 · FLIP-H / \u25C4\u25BA ]',
+            briefing: 'Grid expanded to 4x4! The blueprint is flipped LEFT to RIGHT. Mentally invert columns!',
+            buttonText: '[ ENGAGE LEVEL 2 · WAVE 6 ]',
+            animType: 'flip-h'
+          },
+          11: {
+            targetWave: 11,
+            phaseNumber: 3,
+            mode: 'FLIP-V',
+            title: 'LEVEL 3 · ADVANCED: VERTICAL MIRROR',
+            badge: '[ LEVEL 3 · FLIP-V / \u25B2\u25BC ]',
+            briefing: 'Grid expanded to 5x5! Blueprint is flipped TOP to BOTTOM. Mentally invert rows!',
+            buttonText: '[ ENGAGE LEVEL 3 · WAVE 11 ]',
+            animType: 'flip-v'
+          },
+          16: {
+            targetWave: 16,
+            phaseNumber: 4,
+            mode: 'FLIP-HV',
+            title: 'LEVEL 4 · EXPERT: DUAL 180\u00B0 INVERSION',
+            badge: '[ LEVEL 4 · FLIP-HV / 180\u00B0 ]',
+            briefing: 'Grid expanded to 6x6! Total inversion: flipped BOTH horizontally and vertically.',
+            buttonText: '[ ENGAGE LEVEL 4 · WAVE 16 ]',
+            animType: 'flip-hv'
+          },
+          21: {
+            targetWave: 21,
+            phaseNumber: 5,
+            mode: 'FLIP-HV',
+            title: 'LEVEL 5 · MASTER: SINGULARITY 7x7 MATRIX',
+            badge: '[ LEVEL 5 · MASTER / 7x7 ]',
+            briefing: 'Maximum spatial deconstruction on a full 7x7 grid! Carve with zero hesitation.',
+            buttonText: '[ ENGAGE LEVEL 5 · WAVE 21 ]',
+            animType: 'flip-hv'
+          }
+        };
+
+        // --- 60-Wave Multi-Phase Curriculum (3 Waves Per Grid Size 3x3..7x7) ---
+        function getPhaseForWave(wave) {
+          var w = Math.max(1, Math.floor(wave));
+          if (w <= 5) return { phase: 1, name: 'BEGINNER', notch: 'N' };
+          if (w <= 10) return { phase: 2, name: 'INTERMEDIATE', notch: 'FLIP-H' };
+          if (w <= 15) return { phase: 3, name: 'ADVANCED', notch: 'FLIP-V' };
+          if (w <= 20) return { phase: 4, name: 'EXPERT', notch: 'FLIP-HV' };
+          return { phase: 5, name: 'MASTER', notch: 'FLIP-HV' };
+        }
+
+        function getGridSizeForWave(wave) {
+          var w = Math.max(1, Math.floor(wave));
+          if (w <= 5) return 3;  // Level 1: 3x3
+          if (w <= 10) return 4; // Level 2: 4x4
+          if (w <= 15) return 5; // Level 3: 5x5
+          if (w <= 20) return 6; // Level 4: 6x6
+          return 7;              // Level 5: 7x7
+        }
+
+        function getWaveConfig(wave) {
+          var w = Math.max(1, Math.floor(wave));
+          var pInfo = getPhaseForWave(w);
+          var gridSize = getGridSizeForWave(w);
+          var subStep = (w - 1) % 5;
+          var baseExcess =
+            gridSize === 3 ? 2 :
+            gridSize === 4 ? 3 :
+            gridSize === 5 ? 5 :
+            gridSize === 6 ? 7 : 9;
+          var excessCount = baseExcess + (subStep >= 3 ? 1 : 0);
+
+          return {
+            wave: w,
+            phase: pInfo.phase,
+            phaseName: pInfo.name,
+            gridSize: gridSize,
+            excessCount: excessCount,
+            compassNotch: pInfo.notch
+          };
+        }
+
+        function rotateMatrixCW(m, turns) {
+          var n = m.length;
+          var t = ((turns % 4) + 4) % 4;
+          var curr = m.map(function (row) { return row.slice(); });
+          for (var i = 0; i < t; i++) {
+            var next = Array.from({ length: n }, function () { return Array(n).fill(0); });
+            for (var r = 0; r < n; r++) {
+              for (var c = 0; c < n; c++) {
+                next[c][n - 1 - r] = curr[r][c];
+              }
+            }
+            curr = next;
+          }
+          return curr;
+        }
+
+        function applySpatialTransform(matrix, mode) {
+          var n = matrix.length;
+          var out = Array.from({ length: n }, function () { return Array(n).fill(0); });
+          for (var r = 0; r < n; r++) {
+            for (var c = 0; c < n; c++) {
+              if (mode === 'N') {
+                out[r][c] = matrix[r][c];
+              } else if (mode === 'FLIP-H') {
+                out[r][c] = matrix[r][n - 1 - c];
+              } else if (mode === 'FLIP-V') {
+                out[r][c] = matrix[n - 1 - r][c];
+              } else {
+                out[r][c] = matrix[n - 1 - r][n - 1 - c];
+              }
+            }
+          }
+          return out;
+        }
+
+        function generateProceduralTemplate(gridSize) {
+          var n = gridSize;
+          var grid = Array.from({ length: n }, function () { return Array(n).fill(0); });
+          var targetCells = Math.max(4, Math.floor(n * n * 0.48));
+          var r = Math.floor(n / 2);
+          var c = Math.floor(n / 2);
+          grid[r][c] = 1;
+          var count = 1;
+          var attempts = 0;
+          var dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+
+          while (count < targetCells && attempts < 220) {
+            attempts++;
+            var d = dirs[Math.floor(Math.random() * dirs.length)];
+            var nr = r + d[0];
+            var nc = c + d[1];
+            if (nr >= 0 && nr < n && nc >= 0 && nc < n) {
+              r = nr;
+              c = nc;
+              if (grid[r][c] === 0) {
+                grid[r][c] = 1;
+                count++;
+              }
+            }
+          }
+
+          if (grid[0][0] === grid[0][n - 1]) {
+            grid[0][0] = 1;
+            grid[0][n - 1] = 0;
+          }
+          if (grid[0][0] === grid[n - 1][0]) {
+            grid[n - 1][0] = 0;
+          }
+          return grid;
+        }
+
+        function generateWaveBoard(wave, elapsed) {
+          var config = getWaveConfig(wave);
+          var basePattern = generateProceduralTemplate(config.gridSize);
+          var carvingTargetGrid = rotateMatrixCW(basePattern, Math.floor(Math.random() * 4));
+          var blueprintGrid = applySpatialTransform(carvingTargetGrid, config.compassNotch);
+          var n = config.gridSize;
+
+          var activeGrid = [];
+          var emptyCoords = [];
+          for (var r = 0; r < n; r++) {
+            var row = [];
+            for (var c = 0; c < n; c++) {
+              if (carvingTargetGrid[r][c] === 1) {
+                row.push(1);
+              } else {
+                row.push(0);
+                emptyCoords.push([r, c]);
+              }
+            }
+            activeGrid.push(row);
+          }
+
+          for (var i = emptyCoords.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = emptyCoords[i];
+            emptyCoords[i] = emptyCoords[j];
+            emptyCoords[j] = tmp;
+          }
+
+          var placedExcess = 0;
+          var idx = 0;
+          while (placedExcess < config.excessCount && idx < emptyCoords.length) {
+            var coord = emptyCoords[idx++];
+            activeGrid[coord[0]][coord[1]] = 2; // EXCESS
+            placedExcess++;
+          }
+
+          config.excessCount = placedExcess;
+
+          return {
+            config: config,
+            carvingTargetGrid: carvingTargetGrid,
+            blueprintGrid: blueprintGrid,
+            activeGrid: activeGrid,
+            remainingExcess: placedExcess,
+            blocksShatteredInWave: 0,
+            waveStartTime: elapsed
+          };
+        }
+
+        // --- Constants & Session State ---
+        var INITIAL_TIME_SECONDS = 100.0;
+        var MAX_TIME_CAP_SECONDS = 100.0;
+        var CORRECT_TAP_TIME_BONUS = 0.8;
+        var WAVE_CLEAR_TIME_BONUS = 2.0;
+        var PERFECT_WAVE_CLEAR_TIME_BONUS = 4.0;
+        var WRONG_TAP_TIME_PENALTY = 1.5;
+        var MISTAKE_FREEZE_SECONDS = 0.35;
+
+        var state = {
+          wave: 1,
+          score: 0,
+          highScore: loadStorage(STORAGE_KEY_SCORE),
+          totalShards: loadStorage(STORAGE_KEY_SHARDS),
+          combo: 1,
+          peakCombo: 1,
+          mistakesInWave: 0,
+          wavesCleared: 0,
+          timeLeft: INITIAL_TIME_SECONDS,
+          elapsedTime: 0,
+          freezeTimer: 0,
+          successRemaining: 0,
+          pendingBriefing: null
+        };
+
+        // Initialize Toenow Game SDK
+        var toenowSdk = typeof ToenowGameSDK !== 'undefined'
+          ? new ToenowGameSDK({ gameId: 'block-match', category: 'puzzle', gameTitle: 'Block Match' })
+          : null;
+
+        var board = generateWaveBoard(1, 0);
+        var gameMode = 'title'; // 'title' | 'playing' | 'briefing' | 'gameover'
+
+        // --- Particle Shards Ring Buffer ---
+        var MAX_SHARDS = 300;
+        var shards = [];
+        var shardCursor = 0;
+        for (var s = 0; s < MAX_SHARDS; s++) {
+          shards.push({
+            active: false,
+            x: 0,
+            y: 0,
+            vx: 0,
+            vy: 0,
+            size: 5,
+            angle: 0,
+            vAngle: 0,
+            alpha: 1,
+            decay: 1.7,
+            color: '#00f0ff'
+          });
+        }
+
+        function spawnShards(cx, cy, count, color) {
+          for (var i = 0; i < count; i++) {
+            var p = shards[shardCursor];
+            shardCursor = (shardCursor + 1) % MAX_SHARDS;
+            var angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+            var speed = 85 + Math.random() * 240;
+            p.active = true;
+            p.x = cx + (Math.random() - 0.5) * 14;
+            p.y = cy + (Math.random() - 0.5) * 14;
+            p.vx = Math.cos(angle) * speed;
+            p.vy = Math.sin(angle) * speed - 20;
+            p.size = 3.5 + Math.random() * 5.5;
+            p.angle = Math.random() * Math.PI * 2;
+            p.vAngle = (Math.random() - 0.5) * 12;
+            p.alpha = 1.0;
+            p.decay = 1.65 + Math.random() * 0.85;
+            p.color = color || '#00f0ff';
+          }
+        }
+
+        // Floating Text Popups
+        var MAX_POPUPS = 24;
+        var popups = [];
+        var popupCursor = 0;
+        for (var f = 0; f < MAX_POPUPS; f++) {
+          popups.push({ active: false, x: 0, y: 0, vy: -52, text: '', color: '#00f0ff', alpha: 0 });
+        }
+
+        function spawnPopup(x, y, text, color) {
+          var p = popups[popupCursor];
+          popupCursor = (popupCursor + 1) % MAX_POPUPS;
+          p.active = true;
+          p.x = x;
+          p.y = y;
+          p.vy = -54;
+          p.text = text;
+          p.color = color || '#00f0ff';
+          p.alpha = 1.0;
+        }
+
+        // Subtle Matrix Background Dust
+        var DUST_COUNT = 38;
+        var dustParticles = [];
+        for (var d = 0; d < DUST_COUNT; d++) {
+          dustParticles.push({
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+            size: 1 + Math.random() * 2,
+            vy: -10 - Math.random() * 18,
+            alpha: 0.14 + Math.random() * 0.3
+          });
+        }
+
+        // --- DOM Elements ---
+        var canvas = document.getElementById('game-canvas');
+        var ctx = canvas.getContext('2d');
+
+        var elHudScore = document.getElementById('hud-score');
+        var elHudWave = document.getElementById('hud-wave');
+        var elHudGrid = document.getElementById('hud-grid');
+        var elHudCombo = document.getElementById('hud-combo');
+        var elHudTimer = document.getElementById('hud-timer');
+
+        var elTitleScreen = document.getElementById('title-screen');
+        var elPauseScreen = document.getElementById('pause-screen');
+        var elPauseScore = document.getElementById('pause-score');
+        var elPauseWave = document.getElementById('pause-wave');
+        var elPauseTimer = document.getElementById('pause-timer');
+        var elBtnResume = document.getElementById('btn-resume');
+        var elBtnRestartPause = document.getElementById('btn-restart-pause');
+        var elBtnTitlePause = document.getElementById('btn-title-pause');
+
+        var elBriefingScreen = document.getElementById('briefing-screen');
+        var elBriefingTitle = document.getElementById('briefing-title');
+        var elBriefingBadge = document.getElementById('briefing-badge');
+        var elBriefingVisual = document.getElementById('briefing-visual');
+        var elBriefingDesc = document.getElementById('briefing-desc');
+        var elBtnEngagePhase = document.getElementById('btn-engage-phase');
+
+        var elGameOverScreen = document.getElementById('gameover-screen');
+          ToenowScreens.updateTitle('block-match', { bestScore: state.highScore, bestWave: parseInt(localStorage.getItem('block_match_best_wave') || '1', 10) });
+        // Dynamic Visual Feedback Timers
+        var shakeTrauma = 0;
+        var electricArcTimer = 0;
+        var redGlitchTimer = 0;
+
+        // Layout Metrics
+        var layout = {
+          vw: window.innerWidth,
+          vh: window.innerHeight,
+          leftBox: { x: 0, y: 0, size: 300, cellSize: 80, pad: 16, gap: 8 },
+          rightBox: { x: 0, y: 0, size: 220, cellSize: 60, pad: 14, gap: 6 }
+        };
+
+        function updateLayout() {
+          var dpr = isHeadless ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+          var vw = window.innerWidth;
+          var vh = window.innerHeight;
+          canvas.width = Math.floor(vw * dpr);
+          canvas.height = Math.floor(vh * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+          layout.vw = vw;
+          layout.vh = vh;
+
+          var topSafe = Math.max(78, document.getElementById('hud-layer').getBoundingClientRect().bottom + 12);
+          var bottomSafe = 24;
+          var availH = Math.max(240, vh - topSafe - bottomSafe);
+          var availW = Math.min(vw * 0.95, vw >= 768 ? 820 : 480);
+
+          var n = board ? board.config.gridSize : 3;
+
+          if (vw >= 768 && availH >= 360) {
+            var gap = Math.min(48, Math.max(24, Math.floor(availW * 0.05)));
+            // Both boards have equal size: leftSize === rightSize
+            var maxBoardSize = Math.min(availH * 0.82, (availW - gap) * 0.48, 420);
+            var boardSize = Math.max(180, Math.floor(maxBoardSize));
+            var totalW = boardSize * 2 + gap;
+            var startX = Math.floor((vw - totalW) * 0.5);
+            var centerY = topSafe + Math.floor(availH * 0.52);
+
+            layout.leftBox.size = boardSize;
+            layout.leftBox.x = startX;
+            layout.leftBox.y = Math.floor(centerY - boardSize * 0.5);
+
+            layout.rightBox.size = boardSize;
+            layout.rightBox.x = startX + boardSize + gap;
+            layout.rightBox.y = Math.floor(centerY - boardSize * 0.5);
+          } else {
+            var gapY = 32;
+            // Both boards have equal size in mobile/portrait vertical stack
+            var maxMobileSize = Math.min(Math.floor((availH - gapY) * 0.48), Math.floor(availW * 0.94), 330);
+            var boardMobileSize = Math.max(140, maxMobileSize);
+            var totalH = boardMobileSize * 2 + gapY;
+            var startY = topSafe + Math.max(12, Math.floor((availH - totalH) * 0.5));
+
+            layout.rightBox.size = boardMobileSize;
+            layout.rightBox.x = Math.floor((vw - boardMobileSize) * 0.5);
+            layout.rightBox.y = startY;
+
+            layout.leftBox.size = boardMobileSize;
+            layout.leftBox.x = Math.floor((vw - boardMobileSize) * 0.5);
+            layout.leftBox.y = startY + boardMobileSize + gapY;
+          }
+
+          var pad = Math.max(8, Math.floor(layout.leftBox.size * 0.045));
+          var cellGap = Math.max(3, Math.floor(layout.leftBox.size * (n >= 6 ? 0.014 : 0.02)));
+
+          layout.leftBox.pad = pad;
+          layout.leftBox.gap = cellGap;
+          layout.leftBox.cellSize = (layout.leftBox.size - pad * 2 - cellGap * (n - 1)) / n;
+
+          layout.rightBox.pad = pad;
+          layout.rightBox.gap = cellGap;
+          layout.rightBox.cellSize = (layout.rightBox.size - pad * 2 - cellGap * (n - 1)) / n;
+        }
+
+        function setGameMode(next) {
+          gameMode = next;
+          document.getElementById('match-success').hidden = next !== 'playing' || !state.successRemaining;
+          document.body.dataset.state = next;
+          elTitleScreen.hidden = next !== 'title';
+          if (next === 'title') {
+          ToenowScreens.updateTitle('block-match', { bestScore: state.highScore, bestWave: parseInt(localStorage.getItem('block_match_best_wave') || '1', 10) });
+          }
+          if (elPauseScreen) {
+            elPauseScreen.hidden = next !== 'paused';
+            if (next === 'paused') {
+              if (elPauseScore) elPauseScore.textContent = String(Math.round(state.score));
+              if (elPauseWave) elPauseWave.textContent = state.wave + '/60';
+              if (elPauseTimer) elPauseTimer.textContent = state.timeLeft.toFixed(1) + 's';
+            }
+          }
+          elBriefingScreen.hidden = next !== 'briefing';
+          elGameOverScreen.hidden = next !== 'gameover';
+        }
+
+        function togglePause() {
+          if (gameMode === 'playing') {
+            setGameMode('paused');
+          } else if (gameMode === 'paused') {
+            setGameMode('playing');
+          }
+        }
+
+        function syncHud() {
+          var n = board ? board.config.gridSize : 3;
+          elHudScore.textContent = String(Math.round(state.score));
+          elHudWave.textContent = state.wave + '/60';
+          if(window.ToenowAnimals) window.ToenowAnimals.setWave('block-match', state.wave);
+          elHudGrid.textContent = n + 'x' + n;
+          elHudCombo.textContent = 'x' + state.combo;
+          elHudTimer.textContent = window.ToenowTutorials?.isActive('block-match') ? '∞' : state.timeLeft.toFixed(1) + 's';
+          elHudTimer.className = state.timeLeft <= 12 ? 'hud-value danger' : 'hud-value';
+        }
+
+        function openPhaseBriefing(spec) {
+          state.pendingBriefing = spec;
+          elBriefingTitle.textContent = spec.title;
+          elBriefingBadge.textContent = spec.badge;
+          elBriefingVisual.setAttribute('data-anim', spec.animType);
+          elBriefingDesc.textContent = spec.briefing;
+          elBtnEngagePhase.textContent = spec.buttonText;
+          playBriefingAlert();
+          setGameMode('briefing');
+        }
+
+        function resumeFromPhaseBriefing() {
+          if (gameMode !== 'briefing') return;
+          state.pendingBriefing = null;
+          board.waveStartTime = state.elapsedTime;
+          setGameMode('playing');
+          syncHud();
+          canvas.focus();
+        }
+
+        function startNewGame(startWave = 1, isPractice = false) {
+          if (toenowSdk && !window.ToenowTutorials?.isActive('block-match')) toenowSdk.startRun({ wave: startWave, isPractice });
+          state.isPractice = Boolean(isPractice);
+          if (document.activeElement && typeof document.activeElement.blur === 'function') {
+            document.activeElement.blur();
+          }
+          ensureAudio();
+          state.wave = 1;
+          state.score = 0;
+          state.highScore = loadStorage(STORAGE_KEY_SCORE);
+          state.totalShards = loadStorage(STORAGE_KEY_SHARDS);
+          state.combo = 1;
+          state.peakCombo = 1;
+          state.mistakesInWave = 0;
+          state.wavesCleared = 0;
+          state.timeLeft = INITIAL_TIME_SECONDS;
+          state.elapsedTime = 0;
+          state.freezeTimer = 0;
+          state.pendingBriefing = null;
+
+          shakeTrauma = 0;
+          state.successRemaining = 0;
+          electricArcTimer = 0;
+          redGlitchTimer = 0;
+
+          board = generateWaveBoard(1, 0);
+          updateLayout();
+          syncHud();
+          setGameMode('playing');
+          canvas.focus();
+        }
+
+        function triggerGameOver() {
+          if (window.ToenowTutorials?.isActive('block-match')) return;
+          state.timeLeft = 0;
+          if (!state.isPractice && state.score > state.highScore) {
+            state.highScore = state.score;
+            saveStorage(STORAGE_KEY_SCORE, state.highScore);
+          }
+          saveStorage(STORAGE_KEY_SHARDS, state.totalShards);
+          syncHud();
+          playGlitchBuzz();
+
+          const prevBW = parseInt(localStorage.getItem('block_match_best_wave') || '1', 10) || 1;
+          if (!state.isPractice && state.wavesCleared > prevBW) localStorage.setItem('block_match_best_wave', String(state.wavesCleared));
+          ToenowScreens.updateGameOver('block-match', { score: state.score, bestScore: state.highScore, wave: state.wave, combo: state.peakCombo });
+                    setGameMode('gameover');
+
+          // Toenow Game SDK Unified Lifecycle & Hub Contract
+          if (toenowSdk) {
+            toenowSdk.reportGameOver({
+              score: Math.round(state.score || 0),
+              wave: state.wavesCleared || 1,
+              isPractice: Boolean(state.isPractice),
+              streak: state.peakCombo
+            });
+          } else {
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({
+                  type: 'GAME_OVER',
+                  gameId: 'block-match',
+                  category: 'puzzle',
+                  score: Math.round(state.score || 0),
+                  wave: state.wavesCleared || 1,
+                  isPractice: Boolean(state.isPractice)
+                }, '*');
+              }
+            } catch (_) {}
+          }
+        }
+
+        function getCellCenter(box, r, c) {
+          return {
+            x: box.x + box.pad + c * (box.cellSize + box.gap) + box.cellSize * 0.5,
+            y: box.y + box.pad + r * (box.cellSize + box.gap) + box.cellSize * 0.5
+          };
+        }
+
+        function advanceAfterSuccess() {
+          document.getElementById('match-success').hidden = true;
+          state.wave++;
+          board = generateWaveBoard(state.wave, state.elapsedTime);
+          updateLayout();
+          syncHud();
+          var nextBriefing = PHASE_BRIEFINGS[state.wave];
+          if (nextBriefing) openPhaseBriefing(nextBriefing);
+        }
+
+        function hitTestLeftGridPoint(x, y) {
+          var b = layout.leftBox;
+          var n = board.config.gridSize;
+          if (x < b.x || x > b.x + b.size || y < b.y || y > b.y + b.size) return null;
+
+          for (var r = 0; r < n; r++) {
+            for (var c = 0; c < n; c++) {
+              var cx = b.x + b.pad + c * (b.cellSize + b.gap);
+              var cy = b.y + b.pad + r * (b.cellSize + b.gap);
+              if (x >= cx && x <= cx + b.cellSize && y >= cy && y <= cy + b.cellSize) {
+                return { r: r, c: c };
+              }
+            }
+          }
+          return null;
+        }
+
+        /**
+         * Deliberate Single-Cell Tap Handler (No drag/brush slicing).
+         */
+        function handleSingleCellTap(r, c) {
+          if (gameMode !== 'playing' || state.freezeTimer > 0 || state.successRemaining > 0) return;
+          if (window.ToenowTutorials?.isActive('block-match') && window.ToenowTutorials?.isComplete('block-match')) return;
+          var n = board.config.gridSize;
+          if (r < 0 || r >= n || c < 0 || c >= n) return;
+
+          var cell = board.activeGrid[r][c];
+          if (cell === 0) return;
+
+          var center = getCellCenter(layout.leftBox, r, c);
+
+          if(window.ToenowAnimals) window.ToenowAnimals.feedback('block-match', cell === 2);
+          if (cell === 2) {
+            // Shatter excess block!
+            board.activeGrid[r][c] = 0;
+            board.remainingExcess--;
+            board.blocksShatteredInWave++;
+
+            if (window.ToenowTutorials?.isActive('block-match')) {
+              spawnShards(center.x, center.y, 18, '#00f0ff');
+              playSiliconTap(board.blocksShatteredInWave);
+              if (board.remainingExcess <= 0) window.ToenowTutorials.complete('block-match');
+              syncHud();
+              return;
+            }
+
+            var blockScore = Math.round(50 * state.combo);
+            state.score += blockScore;
+            state.totalShards++;
+            state.combo = Math.min(25, state.combo + 1);
+            state.peakCombo = Math.max(state.peakCombo, state.combo);
+            state.timeLeft = Math.min(MAX_TIME_CAP_SECONDS, state.timeLeft + CORRECT_TAP_TIME_BONUS);
+
+            spawnShards(center.x, center.y, 18, '#00f0ff');
+            spawnPopup(center.x, center.y - 10, '+' + blockScore + ' (+' + CORRECT_TAP_TIME_BONUS.toFixed(1) + 's)', '#00f0ff');
+            shakeTrauma = Math.min(1.0, shakeTrauma + 0.26);
+            playSiliconTap(board.blocksShatteredInWave);
+
+            if (board.remainingExcess <= 0) {
+              var isPerfect = state.mistakesInWave === 0;
+              var waveBonus = Math.round(150 * state.combo);
+              var clearTimeBonus = isPerfect ? PERFECT_WAVE_CLEAR_TIME_BONUS : WAVE_CLEAR_TIME_BONUS;
+
+              state.score += waveBonus;
+              state.timeLeft = Math.min(MAX_TIME_CAP_SECONDS, state.timeLeft + clearTimeBonus);
+              state.wavesCleared++;
+              if (!state.isPractice && !window.ToenowTutorials?.isActive('block-match')) toenowSdk?.reportProgress({ wave: state.wave + 1 });
+              state.mistakesInWave = 0;
+
+              electricArcTimer = 0.48;
+              shakeTrauma = Math.min(1.0, shakeTrauma + 0.45);
+              playWaveSurge();
+
+              state.successRemaining = 1.2;
+              document.getElementById('match-success').hidden = false;
+            }
+
+            if (state.score > state.highScore) {
+              state.highScore = state.score;
+              saveStorage(STORAGE_KEY_SCORE, state.highScore);
+            }
+            saveStorage(STORAGE_KEY_SHARDS, state.totalShards);
+            syncHud();
+            return;
+          }
+
+          // Tapping an essential core block triggers a 0.35s glitch penalty and resets combo
+          if (window.ToenowTutorials?.isActive('block-match')) {
+            redGlitchTimer = MISTAKE_FREEZE_SECONDS;
+            playGlitchBuzz();
+            return;
+          }
+          state.combo = 1;
+          state.mistakesInWave++;
+          state.timeLeft = Math.max(0, state.timeLeft - WRONG_TAP_TIME_PENALTY);
+          state.freezeTimer = MISTAKE_FREEZE_SECONDS;
+          redGlitchTimer = MISTAKE_FREEZE_SECONDS;
+          shakeTrauma = Math.min(1.0, shakeTrauma + 0.6);
+
+          spawnShards(center.x, center.y, 12, '#ff3b5c');
+          spawnPopup(center.x, center.y - 10, 'CORE BLOCK! -' + WRONG_TAP_TIME_PENALTY.toFixed(1) + 's', '#ff3b5c');
+          playGlitchBuzz();
+          syncHud();
+
+          if (state.timeLeft <= 0) {
+            triggerGameOver();
+          }
+        }
+
+        // --- Deliberate Single-Cell Tap Input (pointerdown only) ---
+        canvas.addEventListener('pointerdown', function (e) {
+          if (gameMode !== 'playing') return;
+          e.preventDefault();
+          var rect = canvas.getBoundingClientRect();
+          var x = e.clientX - rect.left;
+          var y = e.clientY - rect.top;
+          var hit = hitTestLeftGridPoint(x, y);
+          if (hit) {
+            handleSingleCellTap(hit.r, hit.c);
+          }
+        });
+
+        document.getElementById('btn-start').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          startNewGame();
+        });
+        elBtnEngagePhase.addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          resumeFromPhaseBriefing();
+        });
+
+        document.getElementById('btn-retry').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          startNewGame();
+        });
+        document.getElementById('btn-title-gameover').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          setGameMode('title');
+        });
+
+        var elBtnPauseHud = document.getElementById('btn-pause-hud');
+        var elBtnAudioHud = document.getElementById('btn-audio-hud');
+        elBtnAudioHud.addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          audioEnabled = !audioEnabled;
+          if (audioOutput && audioCtx) {
+            audioOutput.gain.setValueAtTime(audioEnabled ? 1 : 0, audioCtx.currentTime);
+          }
+          if (audioEnabled) ensureAudio();
+          elBtnAudioHud.dataset.muted = String(!audioEnabled);
+          elBtnAudioHud.setAttribute('aria-pressed', String(audioEnabled));
+        });
+        document.getElementById('btn-restart-hud').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          startNewGame(1, state.isPractice);
+        });
+        if (elBtnPauseHud) {
+          elBtnPauseHud.addEventListener('click', function (e) {
+            e.currentTarget.blur();
+            togglePause();
+          });
+        }
+
+        if (elBtnResume) {
+          elBtnResume.addEventListener('click', function (e) {
+            e.currentTarget.blur();
+            setGameMode('playing');
+          });
+        }
+        if (elBtnRestartPause) {
+          elBtnRestartPause.addEventListener('click', function (e) {
+            e.currentTarget.blur();
+            startNewGame();
+          });
+        }
+        if (elBtnTitlePause) {
+          elBtnTitlePause.addEventListener('click', function (e) {
+            e.currentTarget.blur();
+            setGameMode('title');
+          });
+        }
+
+        window.addEventListener('keydown', function (e) {
+          if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
+            e.preventDefault();
+            togglePause();
+            return;
+          }
+          if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter') {
+            if (gameMode === 'paused') {
+              e.preventDefault();
+              setGameMode('playing');
+              return;
+            }
+            if (gameMode === 'briefing') {
+              e.preventDefault();
+              resumeFromPhaseBriefing();
+            } else if (gameMode === 'title' || gameMode === 'gameover') {
+              e.preventDefault();
+              startNewGame();
+            }
+          }
+        });
+
+        window.addEventListener('resize', updateLayout);
+
+        // --- Rendering Helpers ---
+        function drawRoundedRect(x, y, w, h, r) {
+          var radius = Math.min(r, w * 0.5, h * 0.5);
+          ctx.beginPath();
+          ctx.moveTo(x + radius, y);
+          ctx.arcTo(x + w, y, x + w, y + h, radius);
+          ctx.arcTo(x + w, y + h, x, y + h, radius);
+          ctx.arcTo(x, y + h, x, y, radius);
+          ctx.arcTo(x, y, x + w, y, radius);
+          ctx.closePath();
+        }
+
+        /**
+         * Renders the single 12 o'clock hardware alignment notch on each board:
+         * - Workboard (Left): permanently labeled "N"
+         * - Blueprint (Right): labeled "N", "FLIP-H", "FLIP-V", or "FLIP-HV"
+         */
+        function drawSingleTopNotch(box, label, borderColor, textColor, bgFill) {
+          ctx.save();
+          ctx.font = '900 11.5px system-ui, sans-serif';
+          var textMetrics = ctx.measureText(label);
+          var notchW = Math.max(36, Math.ceil(textMetrics.width) + 20);
+          var notchH = 22;
+          var nx = box.x + box.size * 0.5 - notchW * 0.5;
+          var ny = box.y - notchH * 0.55;
+
+          ctx.fillStyle = bgFill;
+          drawRoundedRect(nx, ny, notchW, notchH, 5);
+          ctx.fill();
+
+          ctx.lineWidth = 1.8;
+          ctx.strokeStyle = borderColor;
+          ctx.stroke();
+
+          ctx.fillStyle = textColor;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.shadowColor = textColor;
+          ctx.shadowBlur = 8;
+          ctx.fillText(label, box.x + box.size * 0.5, ny + notchH * 0.52);
+          ctx.restore();
+        }
+
+        function drawBackground(vw, vh) {
+          ctx.fillStyle = '#eee8d7';
+          ctx.fillRect(0, 0, vw, vh);
+
+          ctx.strokeStyle = 'rgba(111, 87, 55, 0.06)';
+          ctx.lineWidth = 1;
+          var step = 48;
+          ctx.beginPath();
+          for (var x = 0; x < vw; x += step) {
+            ctx.moveTo(x, 0); ctx.lineTo(x, vh);
+          }
+          for (var y = 0; y < vh; y += step) {
+            ctx.moveTo(0, y); ctx.lineTo(vw, y);
+          }
+          ctx.stroke();
+
+          ctx.fillStyle = '#b69b66';
+          for (var i = 0; i < dustParticles.length; i++) {
+            var p = dustParticles[i];
+            p.y += p.vy * 0.016;
+            if (p.y < -10) p.y = vh + 10;
+            ctx.globalAlpha = p.alpha;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+          }
+          ctx.globalAlpha = 1.0;
+        }
+
+        function drawBoards() {
+          var lBox = layout.leftBox;
+          var rBox = layout.rightBox;
+          var n = board.config.gridSize;
+          ctx.fillStyle='#916c48';
+          ctx.fillRect(lBox.x-6,lBox.y+lBox.size+5,lBox.size+12,7);
+
+          // --- WORKBOARD (Left, Static, No 'N' Notch) ---
+          ctx.fillStyle = '#a78057';
+          drawRoundedRect(lBox.x, lBox.y, lBox.size, lBox.size, 10);
+          ctx.fill();
+          ctx.lineWidth = 1.8;
+          ctx.strokeStyle = electricArcTimer > 0 ? '#b6cc8f' : '#74583b';
+          ctx.stroke();
+
+          for (var r = 0; r < n; r++) {
+            for (var c = 0; c < n; c++) {
+              var cx = lBox.x + lBox.pad + c * (lBox.cellSize + lBox.gap);
+              var cy = lBox.y + lBox.pad + r * (lBox.cellSize + lBox.gap);
+              var cs = lBox.cellSize;
+              var cellVal = board.activeGrid[r][c];
+
+              ctx.fillStyle = '#e0ccaa';
+              drawRoundedRect(cx, cy, cs, cs, 4);
+              ctx.fill();
+              ctx.lineWidth = 1;
+              ctx.strokeStyle = 'rgba(255, 255, 255, 0.07)';
+              ctx.stroke();
+
+              if (cellVal === 1 || cellVal === 2) {
+                var pad = 1.2;
+                var bx = cx + pad;
+                var by = cy + pad;
+                var bs = cs - pad * 2;
+
+                var grad = ctx.createLinearGradient(bx, by, bx + bs, by + bs);
+                grad.addColorStop(0, '#d3a970');
+                grad.addColorStop(1, '#ab7948');
+                ctx.fillStyle = grad;
+                drawRoundedRect(bx, by, bs, bs, 3.5);
+                ctx.fill();
+
+                ctx.lineWidth = 1.3;
+                ctx.strokeStyle = '#795432';
+                drawRoundedRect(bx, by, bs, bs, 3.5);
+                ctx.stroke();
+
+                var inset = bs * 0.23;
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.24)';
+                ctx.lineWidth = 1;
+                // Wood grain is identical for cells 1 and 2: the blueprint supplies the answer.
+                ctx.beginPath();
+                for(var grain=0;grain<3;grain++) {
+                  var gy=by+bs*(.24+grain*.25);
+                  ctx.moveTo(bx+bs*.12,gy);ctx.lineTo(bx+bs*.87,gy+bs*.04);
+                }
+                ctx.stroke();
+              }
+            }
+          }
+
+          // --- TARGET BLUEPRINT (Right, Static, Only shows modifier notch for FLIP-H / FLIP-V / FLIP-HV) ---
+          ctx.fillStyle = '#e6eddf';
+          drawRoundedRect(rBox.x, rBox.y, rBox.size, rBox.size, 10);
+          ctx.fill();
+          ctx.lineWidth = 1.8;
+          ctx.strokeStyle = '#638263';
+          ctx.stroke();
+
+          if (board.config.compassNotch && board.config.compassNotch !== 'N') {
+            drawSingleTopNotch(rBox, board.config.compassNotch, '#fbbf24', '#fbbf24', '#1c140a');
+          }
+
+          for (var tr = 0; tr < n; tr++) {
+            for (var tc = 0; tc < n; tc++) {
+              var tx = rBox.x + rBox.pad + tc * (rBox.cellSize + rBox.gap);
+              var ty = rBox.y + rBox.pad + tr * (rBox.cellSize + rBox.gap);
+              var ts = rBox.cellSize;
+              var isTarget = board.blueprintGrid[tr][tc] === 1;
+
+              ctx.fillStyle = isTarget ? '#94ae91' : '#d7e2d0';
+              drawRoundedRect(tx, ty, ts, ts, 3);
+              ctx.fill();
+
+              if (isTarget) {
+                ctx.lineWidth = 1.5;
+                ctx.strokeStyle = '#496c53';
+                drawRoundedRect(tx + 1, ty + 1, ts - 2, ts - 2, 3);
+                ctx.stroke();
+
+                var tInset = ts * 0.24;
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = '#54795c';
+                ctx.strokeRect(tx + tInset, ty + tInset, ts - tInset * 2, ts - tInset * 2);
+              } else {
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = 'rgba(245, 158, 11, 0.11)';
+                drawRoundedRect(tx, ty, ts, ts, 3);
+                ctx.stroke();
+              }
+            }
+          }
+
+          // Paint the builder last, entirely inside the gap when boards stack on mobile.
+          // Board bounds and hit targets stay untouched.
+          if(window.ToenowAnimals && window.ToenowAnimals.drawAnimal) {
+            var portraitSize = 42;
+            // Watercolor sprites use 1.35 times the nominal size as their drawn height.
+            var portraitY = lBox.y - 5 - portraitSize * 1.35 * 0.5;
+            if(lBox.y >= rBox.y + rBox.size) {
+              var boardGap = lBox.y - rBox.y - rBox.size;
+              portraitSize = Math.max(0, Math.min(42, (boardGap - 10) / 1.35));
+              portraitY = rBox.y + rBox.size + boardGap * 0.5;
+            }
+            if(portraitSize > 0) window.ToenowAnimals.drawAnimal(ctx, 'beaver', lBox.x + lBox.size - 28, portraitY, portraitSize);
+          }
+
+          if (electricArcTimer > 0) {
+            ctx.save();
+            ctx.strokeStyle = 'rgba(255, 255, 255, ' + (electricArcTimer / 0.48) + ')';
+            ctx.lineWidth = 3.5;
+            drawRoundedRect(lBox.x - 2, lBox.y - 2, lBox.size + 4, lBox.size + 4, 11);
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+
+        function updateAndDrawParticles(dt) {
+          for (var i = 0; i < MAX_SHARDS; i++) {
+            var p = shards[i];
+            if (!p.active) continue;
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.vy += 340 * dt;
+            p.vx *= 1 - 1.5 * dt;
+            p.angle += p.vAngle * dt;
+            p.alpha -= p.decay * dt;
+
+            if (p.alpha <= 0) {
+              p.active = false;
+              continue;
+            }
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle);
+            ctx.globalAlpha = Math.max(0, p.alpha);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size * 0.5, -p.size * 0.5, p.size, p.size);
+            ctx.restore();
+          }
+
+          ctx.font = '800 13px system-ui, sans-serif';
+          ctx.textAlign = 'center';
+          for (var j = 0; j < MAX_POPUPS; j++) {
+            var pop = popups[j];
+            if (!pop.active) continue;
+            pop.y += pop.vy * dt;
+            pop.alpha -= 1.25 * dt;
+            if (pop.alpha <= 0) {
+              pop.active = false;
+              continue;
+            }
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, pop.alpha);
+            ctx.fillStyle = '#eee8d7';
+            ctx.fillText(pop.text, pop.x + 1, pop.y + 1);
+            ctx.fillStyle = pop.color;
+            ctx.fillText(pop.text, pop.x, pop.y);
+            ctx.restore();
+          }
+        }
+
+        function drawScreenOverlays(vw, vh) {
+          if (redGlitchTimer > 0) {
+            var gAlpha = Math.min(1, redGlitchTimer / MISTAKE_FREEZE_SECONDS);
+            ctx.fillStyle = 'rgba(255, 59, 92, ' + gAlpha * 0.22 + ')';
+            ctx.fillRect(0, 0, vw, vh);
+
+            ctx.fillStyle = 'rgba(255, 59, 92, ' + gAlpha * 0.45 + ')';
+            for (var s = 0; s < 4; s++) {
+              var barY = Math.random() * vh;
+              var barH = 3 + Math.random() * 10;
+              ctx.fillRect(0, barY, vw, barH);
+            }
+          }
+        }
+
+        // --- Main 60 FPS Loop (Timer 100% frozen when gameMode === 'briefing') ---
+        var lastTime = performance.now();
+
+        function frame(now) {
+          var rawDt = (now - lastTime) / 1000;
+          lastTime = now;
+          var dt = Math.min(Math.max(rawDt, 0), 0.05);
+
+          if (shakeTrauma > 0) shakeTrauma = Math.max(0, shakeTrauma - 2.8 * dt);
+          if (electricArcTimer > 0) electricArcTimer = Math.max(0, electricArcTimer - dt);
+          if (redGlitchTimer > 0) redGlitchTimer = Math.max(0, redGlitchTimer - dt);
+
+          // Session timer ticks ONLY during active 'playing' state (100% frozen during 'briefing')
+          if (window.ToenowTutorials?.isActive('block-match')) {
+            // Keep rendering the real board and particles without session progression.
+          } else if (gameMode === 'playing' && state.successRemaining > 0) {
+            state.successRemaining = Math.max(0, state.successRemaining - dt);
+            if (state.successRemaining === 0) advanceAfterSuccess();
+          } else if (gameMode === 'playing') {
+            state.elapsedTime += dt;
+            if (state.freezeTimer > 0) {
+              state.freezeTimer = Math.max(0, state.freezeTimer - dt);
+            }
+
+            state.timeLeft = Math.max(0, state.timeLeft - dt);
+            syncHud();
+
+            if (state.timeLeft <= 0) {
+              triggerGameOver();
+            }
+          }
+
+          ctx.save();
+          if (shakeTrauma > 0.01) {
+            var mag = shakeTrauma * shakeTrauma * 10;
+            var ox = (Math.random() * 2 - 1) * mag;
+            var oy = (Math.random() * 2 - 1) * mag;
+            ctx.translate(ox, oy);
+          }
+
+          drawBackground(layout.vw, layout.vh);
+          if (gameMode !== 'title') {
+            drawBoards();
+          }
+          updateAndDrawParticles(dt);
+          drawScreenOverlays(layout.vw, layout.vh);
+
+          ctx.restore();
+          window.requestAnimationFrame(frame);
+        }
+
+        // Inspection / Automated Testing Interface
+        window.__CHIP_DEFRAG__ = {
+          getState: function () {
+            return {
+              mode: gameMode,
+              wave: state.wave,
+              score: state.score,
+              highScore: state.highScore,
+              totalShards: state.totalShards,
+              combo: state.combo,
+              timeLeft: state.timeLeft,
+              elapsedTime: state.elapsedTime,
+              freezeTimer: state.freezeTimer,
+              pendingBriefing: state.pendingBriefing,
+              board: board,
+              layout: layout
+            };
+          },
+          clickCell: function (r, c) {
+            handleSingleCellTap(r, c);
+          },
+          engagePhaseBriefing: function () {
+            resumeFromPhaseBriefing();
+          },
+          jumpToWave: function (targetWave) {
+            state.wave = targetWave;
+            board = generateWaveBoard(state.wave, state.elapsedTime);
+            updateLayout();
+            syncHud();
+          },
+          forceGameOver: function () {
+            triggerGameOver();
+          }
+        };
+
+        updateLayout();
+        syncHud();
+
+        window.ToenowTutorials?.register('block-match', {
+          start() {
+            startNewGame(1, true);
+            board.config = getWaveConfig(1);
+            board.config.gridSize = 3;
+            board.carvingTargetGrid = [[0,1,0],[1,1,1],[0,1,0]];
+            board.blueprintGrid = board.carvingTargetGrid.map(row => row.slice());
+            board.activeGrid = [[2,1,0],[1,1,1],[0,1,0]];
+            board.remainingExcess = board.config.excessCount = 1;
+            board.blocksShatteredInWave = 0;
+            document.getElementById('match-success').hidden = true;
+            updateLayout();
+            syncHud();
+          },
+          stop() {
+            state.isPractice = false;
+            state.score = state.successRemaining = state.freezeTimer = 0;
+            document.getElementById('match-success').hidden = true;
+            setGameMode('title');
+          },
+          getGuide() {
+            if (board.remainingExcess === 0) return { done: true };
+            const point = getCellCenter(layout.leftBox, 0, 0);
+            const rect = canvas.getBoundingClientRect();
+            const size = layout.leftBox.cellSize;
+            return { prompt: 'Tap away the extra tile', rect: {
+              x: rect.left + point.x - size / 2, y: rect.top + point.y - size / 2, width: size, height: size
+            }};
+          }
+        });
+
+        var params = new URLSearchParams(window.location.search);
+        if (typeof ToenowLevels !== 'undefined' && ToenowLevels.setupPracticeMode) {
+          ToenowLevels.setupPracticeMode({
+            container: '#title-screen .unified-title-card',
+            onStartGame: (startWave, isPractice) => {
+              startNewGame(startWave, isPractice);
+            }
+          });
+        }
+        if (params.get('autostart') === '1') {
+          startNewGame();
+        } else {
+          setGameMode('title');
+        }
+
+        window.requestAnimationFrame(frame);
+      })();
+    </script>
+  </body>
+</html>

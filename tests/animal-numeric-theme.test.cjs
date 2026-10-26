@@ -1,8 +1,9 @@
+const { readSource } = require('../tools/lib/game-source.cjs');
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const read = id => fs.readFileSync(`games/${id}/index.html`, 'utf8');
+const read = id => readSource(`games/${id}/index.html`, 'utf8');
 function fn(html, name, next) { return html.slice(html.indexOf(`function ${name}(`), html.indexOf(`function ${next}(`)); }
 test('Harvest baskets keep numeric labels and the fraction gauge', () => {
   const html = read('number-pop');
@@ -31,9 +32,7 @@ test('Parcel render never uses hidden mass and keeps symbols distinct', () => {
   assert.deepEqual(labels, ['p1','p2','p3','p4','p5','p6']);
 });
 test('Supply orders retain two, three and four bag solutions in every tier', () => {
-  const html = read('add-up');
-  const source = html.slice(html.indexOf('function evaluateSelection('), html.indexOf('// --- Native Web Audio'));
-  const context = { Math }; vm.createContext(context); vm.runInContext(source, context);
+  const context = require('../games/add-up/rules.js');
   for (const wave of [1,5,6,10,11,15,16,20,21,35]) for(let run=0;run<10;run++) {
     const data=context.generateWaveData(wave);
     const sizes=new Set();
@@ -47,10 +46,7 @@ test('Supply orders retain two, three and four bag solutions in every tier', () 
   assert.equal(context.getChainMultiplier(2),1);assert.equal(context.getChainMultiplier(3),2);assert.equal(context.getChainMultiplier(4),3);
 });
 test('Mystery parcel directive is decided by hidden mass across the unchanged tiers', () => {
-  const html=read('space-scale');
-  const catalogue=html.slice(html.indexOf('const ARCHETYPES ='),html.indexOf('const SYNAPSE_RANKS ='));
-  const logic=html.slice(html.indexOf('function createRng('),html.indexOf('// Particle pool'));
-  const context={Math, Date};vm.createContext(context);vm.runInContext(catalogue+'\n'+logic,context);
+  const context=require('../games/space-scale/rules.js');
   for(const wave of [1,3,4,6,7,9,10,12,13,15,21]) for(let seed=1;seed<=20;seed++) {
     const puzzle=context.generateOverhauledPuzzle(wave,seed);
     const ordered=[...puzzle.bodies].sort((a,b)=>b.mass-a.mass);
@@ -62,7 +58,7 @@ test('Mystery parcel directive is decided by hidden mass across the unchanged ti
 });
 test('Supply bag labels render after spark particles in dark ink',()=>{
  const html=read('add-up'),render=html.slice(html.indexOf('function renderArena()'),html.indexOf('// Test & inspection hook'));
- assert.ok(render.indexOf('// 7. Particles')<render.indexOf('drawNutBag(ctx, n.radius'));
- const label=render.slice(render.indexOf('drawNutBag(ctx, n.radius'),render.indexOf("ctx.fillText(n.label, 0, 2)"));
+ assert.ok(render.indexOf('// 7. Particles')<render.indexOf('drawNutBag(scene.ctx, n.radius'));
+ const label=render.slice(render.indexOf('drawNutBag(scene.ctx, n.radius'),render.indexOf("ctx.fillText(n.label, 0, 2)"));
  assert.match(label,/#4d3c29/);
 });

@@ -1,0 +1,1259 @@
+{
+  "version": 1,
+  "method": "built-in image_gen",
+  "count": 50,
+  "sourceBytes": 97557123,
+  "runtimeBytes": 6437078,
+  "assets": [
+    {
+      "kind": "observatory",
+      "level": 1,
+      "source": "assets/island-buildings/sources/observatory-level1.png",
+      "runtime": "assets/island-buildings/observatory-level1.webp",
+      "provenance": "assets/island-buildings/sources/observatory-level1.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        14,
+        22,
+        1240,
+        1254
+      ],
+      "sourceSha256": "affe97032a27d51df7518ed8a849bdbb152da010b180d7524c55a2b61e5c945a",
+      "runtimeSha256": "7c27a8d1fa6ab37a44bd100921cd616c7177652f98f935fc689ed7930eb28974",
+      "sourceBytes": 1264920,
+      "runtimeBytes": 82938
+    },
+    {
+      "kind": "observatory",
+      "level": 2,
+      "source": "assets/island-buildings/sources/observatory-level2.png",
+      "runtime": "assets/island-buildings/observatory-level2.webp",
+      "provenance": "assets/island-buildings/sources/observatory-level2.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        13,
+        1253,
+        1254
+      ],
+      "sourceSha256": "d0747e99faba9f145a4ea4636ebc91bcce1d37280ba131aa608da7bd46bd1d46",
+      "runtimeSha256": "eb81be3a18b0846e801fd698176bf78c8347311ac688fde8651b4724dca0f1e7",
+      "sourceBytes": 1595907,
+      "runtimeBytes": 100368
+    },
+    {
+      "kind": "observatory",
+      "level": 3,
+      "source": "assets/island-buildings/sources/observatory-level3.png",
+      "runtime": "assets/island-buildings/observatory-level3.webp",
+      "provenance": "assets/island-buildings/sources/observatory-level3.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        9,
+        1254,
+        1254
+      ],
+      "sourceSha256": "8db388749b5c69689284616541dd547bb2d7033dac2a51ec03ac3500c75bf0b4",
+      "runtimeSha256": "e177b01fc2de05f6bf007317bc20d01bab9f8f42144140ff56f7ab2d4c8117a5",
+      "sourceBytes": 1812483,
+      "runtimeBytes": 111664
+    },
+    {
+      "kind": "observatory",
+      "level": 4,
+      "source": "assets/island-buildings/sources/observatory-level4.png",
+      "runtime": "assets/island-buildings/observatory-level4.webp",
+      "provenance": "assets/island-buildings/sources/observatory-level4.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        25,
+        1243,
+        1198
+      ],
+      "sourceSha256": "3de4b2611a23e1dd17d8b03111abf65cbf1f343accdbad1f600aa297e5165abb",
+      "runtimeSha256": "ddd5a806298ef8eaaf9e5ff048d4bfde2a2fed75a191397ed68b517458e083a1",
+      "sourceBytes": 2063325,
+      "runtimeBytes": 129738
+    },
+    {
+      "kind": "observatory",
+      "level": 5,
+      "source": "assets/island-buildings/sources/observatory-level5.png",
+      "runtime": "assets/island-buildings/observatory-level5.webp",
+      "provenance": "assets/island-buildings/sources/observatory-level5.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        21,
+        1254,
+        1254
+      ],
+      "sourceSha256": "9fc081383c0ba291c445c3841b2a9dec4cd8d812de26462f399f5d5cbba29c97",
+      "runtimeSha256": "fe1bfba8850ff399dbec4817d9c9c7a86ba069791cd11251f946b74fd464c8ba",
+      "sourceBytes": 2279360,
+      "runtimeBytes": 157818
+    },
+    {
+      "kind": "lighthouse",
+      "level": 1,
+      "source": "assets/island-buildings/sources/lighthouse-level1.png",
+      "runtime": "assets/island-buildings/lighthouse-level1.webp",
+      "provenance": "assets/island-buildings/sources/lighthouse-level1.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        23,
+        23,
+        1226,
+        1254
+      ],
+      "sourceSha256": "1464c562ae557ed28d4222e557cd5e4261f7601dd57cf99d1bbe2ed97a4382d4",
+      "runtimeSha256": "d79924cf327ec9c44a1cb8d2bbc92ecef9b67d084293125578756fb0b8b467e4",
+      "sourceBytes": 933147,
+      "runtimeBytes": 57896
+    },
+    {
+      "kind": "lighthouse",
+      "level": 2,
+      "source": "assets/island-buildings/sources/lighthouse-level2.png",
+      "runtime": "assets/island-buildings/lighthouse-level2.webp",
+      "provenance": "assets/island-buildings/sources/lighthouse-level2.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        21,
+        1224,
+        1254
+      ],
+      "sourceSha256": "688c7330e4a18779d953f100ef43d87785f7f8959e0de70073b199a1c893956f",
+      "runtimeSha256": "0f38719a029400a6314b5df837696cef1c31d60ac33c787e476f1069af857718",
+      "sourceBytes": 971201,
+      "runtimeBytes": 62796
+    },
+    {
+      "kind": "lighthouse",
+      "level": 3,
+      "source": "assets/island-buildings/sources/lighthouse-level3.png",
+      "runtime": "assets/island-buildings/lighthouse-level3.webp",
+      "provenance": "assets/island-buildings/sources/lighthouse-level3.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        19,
+        1236,
+        1254
+      ],
+      "sourceSha256": "9f328dc911273097ee8298610d86d4370eeb93fec2e26c715d02b5cf0007016c",
+      "runtimeSha256": "399497ea30122c1fbf671efd8099f7eb2be22338a3199c89da2ca5ec3a6cfc78",
+      "sourceBytes": 1798400,
+      "runtimeBytes": 121066
+    },
+    {
+      "kind": "lighthouse",
+      "level": 4,
+      "source": "assets/island-buildings/sources/lighthouse-level4.png",
+      "runtime": "assets/island-buildings/lighthouse-level4.webp",
+      "provenance": "assets/island-buildings/sources/lighthouse-level4.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        35,
+        1254,
+        1254
+      ],
+      "sourceSha256": "915b60f1a99b8e2cf655f883985d65bdc61f0f4de34af030d5abc4e179d158ed",
+      "runtimeSha256": "11c3608c2adeca5c73132c4ea33f020ffba3a6f95d624a3116dd2404ab5c4b10",
+      "sourceBytes": 2028725,
+      "runtimeBytes": 134672
+    },
+    {
+      "kind": "lighthouse",
+      "level": 5,
+      "source": "assets/island-buildings/sources/lighthouse-level5.png",
+      "runtime": "assets/island-buildings/lighthouse-level5.webp",
+      "provenance": "assets/island-buildings/sources/lighthouse-level5.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        18,
+        1240,
+        1224
+      ],
+      "sourceSha256": "9e0aa53487541e14058939558c7c96a2ed7bc529c6ddc9e44cf939ee82a4852d",
+      "runtimeSha256": "8eee91e44f77b02698b191b59d3e23710c989d4f08556c1d43b22d6fd4d4ac80",
+      "sourceBytes": 2111221,
+      "runtimeBytes": 149106
+    },
+    {
+      "kind": "station",
+      "level": 1,
+      "source": "assets/island-buildings/sources/station-level1.png",
+      "runtime": "assets/island-buildings/station-level1.webp",
+      "provenance": "assets/island-buildings/sources/station-level1.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        0,
+        1218,
+        1254
+      ],
+      "sourceSha256": "3247ce5c6980dbf55b5acc33c305f449ecd89ddc2d2e7bfc7b137a7637002136",
+      "runtimeSha256": "241e7d975767f7b51fdc50148d0538597f3e7092385a711c0843e700f99c4aa1",
+      "sourceBytes": 1520160,
+      "runtimeBytes": 90002
+    },
+    {
+      "kind": "station",
+      "level": 2,
+      "source": "assets/island-buildings/sources/station-level2.png",
+      "runtime": "assets/island-buildings/station-level2.webp",
+      "provenance": "assets/island-buildings/sources/station-level2.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        39,
+        1241,
+        1235
+      ],
+      "sourceSha256": "354126185dab8e9f1ca09c03921c5c83d7f5daaeb2da69876fda83f369dbc408",
+      "runtimeSha256": "dcabeb5d0f5442e15510cab9fb7f74e6bd250f1b167c3029f8c8e7d22de0d96a",
+      "sourceBytes": 1588634,
+      "runtimeBytes": 92254
+    },
+    {
+      "kind": "station",
+      "level": 3,
+      "source": "assets/island-buildings/sources/station-level3.png",
+      "runtime": "assets/island-buildings/station-level3.webp",
+      "provenance": "assets/island-buildings/sources/station-level3.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        23,
+        1254,
+        1210
+      ],
+      "sourceSha256": "eb43946bc91d872bba8cfc7f176e45e5fae08a6ecfb8ef4e1b476b3c65fbf13d",
+      "runtimeSha256": "dbe88fe0e7b1d07650c247ce32f6b8d5fcf89db3f31d7bd2e8a2c23100a68ecd",
+      "sourceBytes": 1943566,
+      "runtimeBytes": 122082
+    },
+    {
+      "kind": "station",
+      "level": 4,
+      "source": "assets/island-buildings/sources/station-level4.png",
+      "runtime": "assets/island-buildings/station-level4.webp",
+      "provenance": "assets/island-buildings/sources/station-level4.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        17,
+        1240,
+        1254
+      ],
+      "sourceSha256": "a4376b4829c82dbfba14737d882ae7d5a5b093fc3dbe74d769e8552cd6be312f",
+      "runtimeSha256": "401130c079d6374d37b68b3b83d41f2277b8366ed9a57f49f89b6e228112439a",
+      "sourceBytes": 1914755,
+      "runtimeBytes": 118842
+    },
+    {
+      "kind": "station",
+      "level": 5,
+      "source": "assets/island-buildings/sources/station-level5.png",
+      "runtime": "assets/island-buildings/station-level5.webp",
+      "provenance": "assets/island-buildings/sources/station-level5.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        20,
+        1254,
+        1254
+      ],
+      "sourceSha256": "40f74dbbf9ff298077dce10dc984aad2a4b2f7aea020e1f61355927a7603c32d",
+      "runtimeSha256": "c4108772cbbf07962e6b61b056a83ef5feeaa76a78a4b15fafb271b9cfd560e9",
+      "sourceBytes": 2100417,
+      "runtimeBytes": 144002
+    },
+    {
+      "kind": "music",
+      "level": 1,
+      "source": "assets/island-buildings/sources/music-level1.png",
+      "runtime": "assets/island-buildings/music-level1.webp",
+      "provenance": "assets/island-buildings/sources/music-level1.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        9,
+        1240,
+        1254
+      ],
+      "sourceSha256": "dee3b1ba00cf303ddb2066f255c7d9828e458bd0371439bb4163f2ec8ab3f0c0",
+      "runtimeSha256": "b2ec3ca5a466d4f3be2905cdce2eb0c10bf577cf063995ca2d60b1926f36a7fe",
+      "sourceBytes": 1740537,
+      "runtimeBytes": 121884
+    },
+    {
+      "kind": "music",
+      "level": 2,
+      "source": "assets/island-buildings/sources/music-level2.png",
+      "runtime": "assets/island-buildings/music-level2.webp",
+      "provenance": "assets/island-buildings/sources/music-level2.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        29,
+        1234,
+        1254
+      ],
+      "sourceSha256": "7f5d4cd9e8342423b64ec377289446c406ee55c9a09d1516eb9731aed537f227",
+      "runtimeSha256": "fdd760cabbf77b267219bba47c4d10c4beb28207551a521a9748aeb0cfa5cffd",
+      "sourceBytes": 1871066,
+      "runtimeBytes": 130120
+    },
+    {
+      "kind": "music",
+      "level": 3,
+      "source": "assets/island-buildings/sources/music-level3.png",
+      "runtime": "assets/island-buildings/music-level3.webp",
+      "provenance": "assets/island-buildings/sources/music-level3.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        41,
+        1228,
+        1184
+      ],
+      "sourceSha256": "b44efe4cb81adcb2b96c969c1050e5003c64ecd14d055e4eadf377aaf4ae7cc7",
+      "runtimeSha256": "43a51af78c3755148698fbda237f3f38c2e4c8bccb53359ce91bfb9f79a8f0e7",
+      "sourceBytes": 2289264,
+      "runtimeBytes": 159746
+    },
+    {
+      "kind": "music",
+      "level": 4,
+      "source": "assets/island-buildings/sources/music-level4.png",
+      "runtime": "assets/island-buildings/music-level4.webp",
+      "provenance": "assets/island-buildings/sources/music-level4.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        8,
+        1240,
+        1254
+      ],
+      "sourceSha256": "333b44578fe74a47c58abe8174b98bbbadbea8ebe9faef0cff3511725d14a193",
+      "runtimeSha256": "f2eac92591ef5fd59ccd9635f8260d809b2418aec434579aa5c96187680bfae6",
+      "sourceBytes": 2161777,
+      "runtimeBytes": 150746
+    },
+    {
+      "kind": "music",
+      "level": 5,
+      "source": "assets/island-buildings/sources/music-level5.png",
+      "runtime": "assets/island-buildings/music-level5.webp",
+      "provenance": "assets/island-buildings/sources/music-level5.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        19,
+        1251,
+        1254
+      ],
+      "sourceSha256": "66e2e28d69394c95d9fb87f739d83e02b0ca05e5d988e2371c69f2b493b5dd37",
+      "runtimeSha256": "c1090e1334987bd5048bf4a1d61b7e48a6b31334a521852e6ff27e838ace181e",
+      "sourceBytes": 2427134,
+      "runtimeBytes": 169738
+    },
+    {
+      "kind": "workshop",
+      "level": 1,
+      "source": "assets/island-buildings/sources/workshop-level1.png",
+      "runtime": "assets/island-buildings/workshop-level1.webp",
+      "provenance": "assets/island-buildings/sources/workshop-level1.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        23,
+        1210,
+        1254
+      ],
+      "sourceSha256": "219d1dbf76e2fce12c7bc48b896b1d45ed0f181aae6b37b1535dbfda9d324b66",
+      "runtimeSha256": "d732657730d8e65d9cf2bf9d841583b89807ca71679e0914361f9602cfb5e89a",
+      "sourceBytes": 2021599,
+      "runtimeBytes": 122248
+    },
+    {
+      "kind": "workshop",
+      "level": 2,
+      "source": "assets/island-buildings/sources/workshop-level2.png",
+      "runtime": "assets/island-buildings/workshop-level2.webp",
+      "provenance": "assets/island-buildings/sources/workshop-level2.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        28,
+        1254,
+        1254
+      ],
+      "sourceSha256": "725d0f25ab17e4d6ae9332f42d2405d5de48b0d335e0c2a9fd846c9504601cb8",
+      "runtimeSha256": "8210d13094e9f1d3447cc9eaf2e0f34c2a94367be08e52a8525e3525a902479b",
+      "sourceBytes": 2298674,
+      "runtimeBytes": 150916
+    },
+    {
+      "kind": "workshop",
+      "level": 3,
+      "source": "assets/island-buildings/sources/workshop-level3.png",
+      "runtime": "assets/island-buildings/workshop-level3.webp",
+      "provenance": "assets/island-buildings/sources/workshop-level3.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        116,
+        1241,
+        1254
+      ],
+      "sourceSha256": "b65840434bb621431dc4b7bb4f13fa4b5ce3b6d80f911a304e3abe6e1d20f904",
+      "runtimeSha256": "7089ce56d3e483a6ffc9d0a44f23f4c7bffb2645d671de6bb90fc31545eaa8a4",
+      "sourceBytes": 2273161,
+      "runtimeBytes": 143156
+    },
+    {
+      "kind": "workshop",
+      "level": 4,
+      "source": "assets/island-buildings/sources/workshop-level4.png",
+      "runtime": "assets/island-buildings/workshop-level4.webp",
+      "provenance": "assets/island-buildings/sources/workshop-level4.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        25,
+        39,
+        1242,
+        1254
+      ],
+      "sourceSha256": "ab483c5782b8343baf06303e5a1c8d20680afe5afdce42dfc9129e573ec0a3f7",
+      "runtimeSha256": "e73826d4dd03641d0df8a530eec7a58f11e21454df356fca1a814f8e25d26b0a",
+      "sourceBytes": 2224477,
+      "runtimeBytes": 135262
+    },
+    {
+      "kind": "workshop",
+      "level": 5,
+      "source": "assets/island-buildings/sources/workshop-level5.png",
+      "runtime": "assets/island-buildings/workshop-level5.webp",
+      "provenance": "assets/island-buildings/sources/workshop-level5.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        3,
+        1240,
+        1254
+      ],
+      "sourceSha256": "b8143f0967dbdd069dcf671e5b86228564a5bd6da5be8400f2763166c22b8cd4",
+      "runtimeSha256": "d70042b7f0857cca8c5dda4915e3df636d3c1b839fa3d4da76b8138b0cc85f0c",
+      "sourceBytes": 2496743,
+      "runtimeBytes": 163352
+    },
+    {
+      "kind": "garden",
+      "level": 1,
+      "source": "assets/island-buildings/sources/garden-level1.png",
+      "runtime": "assets/island-buildings/garden-level1.webp",
+      "provenance": "assets/island-buildings/sources/garden-level1.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        51,
+        1248,
+        1254
+      ],
+      "sourceSha256": "b18ea8fe60a7d7e56417a5bd3d376c8fff10a67338432008c52ad299689a9262",
+      "runtimeSha256": "30958a55bf939a855e50bfa9e3b85d505586510986577388992693faa093fc8e",
+      "sourceBytes": 1553148,
+      "runtimeBytes": 93306
+    },
+    {
+      "kind": "garden",
+      "level": 2,
+      "source": "assets/island-buildings/sources/garden-level2.png",
+      "runtime": "assets/island-buildings/garden-level2.webp",
+      "provenance": "assets/island-buildings/sources/garden-level2.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        19,
+        1224,
+        1254
+      ],
+      "sourceSha256": "8619fe5a76fc59d91ff42b960492780c45890bbc778eada03a5b5ade75efecea",
+      "runtimeSha256": "5967d5875a389aa13928a120a7033b1bb568893e867a3af21a2965423bd06cdd",
+      "sourceBytes": 1683182,
+      "runtimeBytes": 103614
+    },
+    {
+      "kind": "garden",
+      "level": 3,
+      "source": "assets/island-buildings/sources/garden-level3.png",
+      "runtime": "assets/island-buildings/garden-level3.webp",
+      "provenance": "assets/island-buildings/sources/garden-level3.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        0,
+        1243,
+        1254
+      ],
+      "sourceSha256": "a40d7963f79f4187780497bf0317df80022a2f1d1e078135a732c25509b62e7c",
+      "runtimeSha256": "61d5508e27cb3c4554cbc543b20ee0305c42ce8f90d8ce7222f50a45e2c6cd94",
+      "sourceBytes": 1986350,
+      "runtimeBytes": 119112
+    },
+    {
+      "kind": "garden",
+      "level": 4,
+      "source": "assets/island-buildings/sources/garden-level4.png",
+      "runtime": "assets/island-buildings/garden-level4.webp",
+      "provenance": "assets/island-buildings/sources/garden-level4.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        16,
+        1254,
+        1254
+      ],
+      "sourceSha256": "95bd72ffa1b80f28baf5ce71a041ce5e2d4c74b42e564c0bf833479a630df90e",
+      "runtimeSha256": "9bbaef3d6f36d7b51cb11b7b4a88bf8dce0657760f291a20e33909bf73cf453f",
+      "sourceBytes": 2262703,
+      "runtimeBytes": 143440
+    },
+    {
+      "kind": "garden",
+      "level": 5,
+      "source": "assets/island-buildings/sources/garden-level5.png",
+      "runtime": "assets/island-buildings/garden-level5.webp",
+      "provenance": "assets/island-buildings/sources/garden-level5.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        0,
+        1253,
+        1254
+      ],
+      "sourceSha256": "13ab930db4fafb70c0cbe535d454390fa906c28a2935ca764086ed0bea30d0a8",
+      "runtimeSha256": "4a371f8262ad160d34e4318150cd9ebb80b985f2788ee6c97ecd2af24001e055",
+      "sourceBytes": 2387531,
+      "runtimeBytes": 157114
+    },
+    {
+      "kind": "arch",
+      "level": 1,
+      "source": "assets/island-buildings/sources/arch-level1.png",
+      "runtime": "assets/island-buildings/arch-level1.webp",
+      "provenance": "assets/island-buildings/sources/arch-level1.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        19,
+        1224,
+        1235
+      ],
+      "sourceSha256": "b3d4e26a54509a9446f3d2f490989f365db33aea7cb9722acf349f433bdb03e9",
+      "runtimeSha256": "e6070587ce4783b72ae0d0227f973c512a533f8da25fde98d134ae079e84fa07",
+      "sourceBytes": 1313351,
+      "runtimeBytes": 89470
+    },
+    {
+      "kind": "arch",
+      "level": 2,
+      "source": "assets/island-buildings/sources/arch-level2.png",
+      "runtime": "assets/island-buildings/arch-level2.webp",
+      "provenance": "assets/island-buildings/sources/arch-level2.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        24,
+        1240,
+        1254
+      ],
+      "sourceSha256": "93bca3c10e58698cf70cf25999e5bbbdecf8c30c70bb0b33f8c037f5e2dba955",
+      "runtimeSha256": "860f063f61a10cd176208ad86f34cb4cc79959f17791d08fb38fbb5a95a8fa51",
+      "sourceBytes": 1476223,
+      "runtimeBytes": 106476
+    },
+    {
+      "kind": "arch",
+      "level": 3,
+      "source": "assets/island-buildings/sources/arch-level3.png",
+      "runtime": "assets/island-buildings/arch-level3.webp",
+      "provenance": "assets/island-buildings/sources/arch-level3.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        31,
+        1254,
+        1144
+      ],
+      "sourceSha256": "6085bace5e8b0b28012d17ae7ec85df0e832a8bb4c4428a106d86631ae6350c6",
+      "runtimeSha256": "613c765d081d428033342dae21cd20b09fee4b791af6eb085a0bc37440c5bea9",
+      "sourceBytes": 1984726,
+      "runtimeBytes": 131018
+    },
+    {
+      "kind": "arch",
+      "level": 4,
+      "source": "assets/island-buildings/sources/arch-level4.png",
+      "runtime": "assets/island-buildings/arch-level4.webp",
+      "provenance": "assets/island-buildings/sources/arch-level4.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        47,
+        1254,
+        1254
+      ],
+      "sourceSha256": "7a907d8f835715e83dccc1c7a4eb6555e0ed897e4f36228f5bed25d6e19ba470",
+      "runtimeSha256": "136ed6165dbb717441d48b7d52fa6701e014d8cc06373808168eeb534b1b33c6",
+      "sourceBytes": 1991874,
+      "runtimeBytes": 135478
+    },
+    {
+      "kind": "arch",
+      "level": 5,
+      "source": "assets/island-buildings/sources/arch-level5.png",
+      "runtime": "assets/island-buildings/arch-level5.webp",
+      "provenance": "assets/island-buildings/sources/arch-level5.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        19,
+        1254,
+        1254
+      ],
+      "sourceSha256": "5bf69d627dd11b9e9604a7f83cf912f547c61e4cc3f06ed68cdb025bb22e7286",
+      "runtimeSha256": "86a8320a764a27eb218c81198f01ab0a7e4a237c1864a8b4e0b520382b38fdaa",
+      "sourceBytes": 2307212,
+      "runtimeBytes": 155826
+    },
+    {
+      "kind": "lookout",
+      "level": 1,
+      "source": "assets/island-buildings/sources/lookout-level1.png",
+      "runtime": "assets/island-buildings/lookout-level1.webp",
+      "provenance": "assets/island-buildings/sources/lookout-level1.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        39,
+        1218,
+        1210
+      ],
+      "sourceSha256": "e4239984319636e461b21379c7fa39ba5e548addd2db035b994095d8412ac184",
+      "runtimeSha256": "9f5d1365d2f62bcdbf7f45635552adcc25d06426d89cce4d7c38ca765cc5e0dc",
+      "sourceBytes": 1876875,
+      "runtimeBytes": 133388
+    },
+    {
+      "kind": "lookout",
+      "level": 2,
+      "source": "assets/island-buildings/sources/lookout-level2.png",
+      "runtime": "assets/island-buildings/lookout-level2.webp",
+      "provenance": "assets/island-buildings/sources/lookout-level2.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        0,
+        1234,
+        1254
+      ],
+      "sourceSha256": "6983f8eda6294ae285e033ebf1b395874cba67598031a07a17dac1ebc699681e",
+      "runtimeSha256": "fa4c0579ef90bede7cd8cb056bad11756b6cce9a3711eb93fa0a3fd09a8dde77",
+      "sourceBytes": 1956913,
+      "runtimeBytes": 143280
+    },
+    {
+      "kind": "lookout",
+      "level": 3,
+      "source": "assets/island-buildings/sources/lookout-level3.png",
+      "runtime": "assets/island-buildings/lookout-level3.webp",
+      "provenance": "assets/island-buildings/sources/lookout-level3.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        35,
+        1239,
+        1254
+      ],
+      "sourceSha256": "6b7a11370fad533d745f3a5ff54c5696084b3678a4bab5f5c45e61f7e752c823",
+      "runtimeSha256": "fa4028686d119916116306b3ecc67e02e1a7633dad202cb4956e26fd2777ca93",
+      "sourceBytes": 2112996,
+      "runtimeBytes": 145782
+    },
+    {
+      "kind": "lookout",
+      "level": 4,
+      "source": "assets/island-buildings/sources/lookout-level4.png",
+      "runtime": "assets/island-buildings/lookout-level4.webp",
+      "provenance": "assets/island-buildings/sources/lookout-level4.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        41,
+        1240,
+        1228
+      ],
+      "sourceSha256": "bd8c538c422c78ea903395b08a21f510ed50b29c72ccbf6c51557259628f3d81",
+      "runtimeSha256": "8aade2c418fac75cc9645e0e5e957bc0e1513b42dcfe53dae04fe8abd231cbda",
+      "sourceBytes": 2204489,
+      "runtimeBytes": 151814
+    },
+    {
+      "kind": "lookout",
+      "level": 5,
+      "source": "assets/island-buildings/sources/lookout-level5.png",
+      "runtime": "assets/island-buildings/lookout-level5.webp",
+      "provenance": "assets/island-buildings/sources/lookout-level5.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        23,
+        1244,
+        1254
+      ],
+      "sourceSha256": "6244913f831f40401257a999b588186dcb90ae752e6a8981e79d3ba991433777",
+      "runtimeSha256": "43ded79e3ada9e51b662d3fc956e702e8e6a61aa7e62e92e0c3138bc38904d30",
+      "sourceBytes": 2276404,
+      "runtimeBytes": 172076
+    },
+    {
+      "kind": "temple",
+      "level": 1,
+      "source": "assets/island-buildings/sources/temple-level1.png",
+      "runtime": "assets/island-buildings/temple-level1.webp",
+      "provenance": "assets/island-buildings/sources/temple-level1.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        15,
+        1236,
+        1254
+      ],
+      "sourceSha256": "ea0b08dfc05a8566349927772fb8e9798db530188b78163860584021b136cf4f",
+      "runtimeSha256": "852184b4ffd874470f7b4ee676875007bc68afc369b6c429a447e51e9f17fad5",
+      "sourceBytes": 1467401,
+      "runtimeBytes": 86292
+    },
+    {
+      "kind": "temple",
+      "level": 2,
+      "source": "assets/island-buildings/sources/temple-level2.png",
+      "runtime": "assets/island-buildings/temple-level2.webp",
+      "provenance": "assets/island-buildings/sources/temple-level2.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        55,
+        1222,
+        1254
+      ],
+      "sourceSha256": "f5cf5dc73c7d79fd03c97f24396b7acf21a404b6375fd02226730c5d0f01a438",
+      "runtimeSha256": "f63c2aeaec948d2537a5a2e03c70b7d4f6593d55bf9afc623161da918528319e",
+      "sourceBytes": 1904043,
+      "runtimeBytes": 129090
+    },
+    {
+      "kind": "temple",
+      "level": 3,
+      "source": "assets/island-buildings/sources/temple-level3.png",
+      "runtime": "assets/island-buildings/temple-level3.webp",
+      "provenance": "assets/island-buildings/sources/temple-level3.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        9,
+        1240,
+        1254
+      ],
+      "sourceSha256": "f4a34e1495a845853a42c09e91cf6f0277b95c66e0a11063759cbb2719ebb7c4",
+      "runtimeSha256": "5d44283cd354f5979b94b1ebf34bd3edffaa5e2d55266a015d7aeeeb22570fcc",
+      "sourceBytes": 2287467,
+      "runtimeBytes": 150070
+    },
+    {
+      "kind": "temple",
+      "level": 4,
+      "source": "assets/island-buildings/sources/temple-level4.png",
+      "runtime": "assets/island-buildings/temple-level4.webp",
+      "provenance": "assets/island-buildings/sources/temple-level4.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        19,
+        1244,
+        1254
+      ],
+      "sourceSha256": "6a22c4405ca91fadc9d731f58bdad553db430922db07b07919be138ed6ec53a7",
+      "runtimeSha256": "232caeb1ba10e3d83da9d622df4c86034f245dca25a91f0cb5080a3519365944",
+      "sourceBytes": 2154498,
+      "runtimeBytes": 144790
+    },
+    {
+      "kind": "temple",
+      "level": 5,
+      "source": "assets/island-buildings/sources/temple-level5.png",
+      "runtime": "assets/island-buildings/temple-level5.webp",
+      "provenance": "assets/island-buildings/sources/temple-level5.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        18,
+        1254,
+        1254
+      ],
+      "sourceSha256": "202db020cfe89ba41c9aaeae95e77caaf484e03f6258468b47c120f67f1fd27e",
+      "runtimeSha256": "da486780a9b471793d78f9ef1a0962cc3015018abc7481a1396198f62d525713",
+      "sourceBytes": 2512014,
+      "runtimeBytes": 166500
+    },
+    {
+      "kind": "orbit",
+      "level": 1,
+      "source": "assets/island-buildings/sources/orbit-level1.png",
+      "runtime": "assets/island-buildings/orbit-level1.webp",
+      "provenance": "assets/island-buildings/sources/orbit-level1.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        39,
+        21,
+        1186,
+        1182
+      ],
+      "sourceSha256": "cf8b6810d7e48980a92c53319f5dfe7e15629bc4a9c90c7ab2c9ef069ab7beb8",
+      "runtimeSha256": "1b8a261743591ab803ac19fcfa5b982c387d6a3a1731f9e92727d5096206753b",
+      "sourceBytes": 1610992,
+      "runtimeBytes": 102186
+    },
+    {
+      "kind": "orbit",
+      "level": 2,
+      "source": "assets/island-buildings/sources/orbit-level2.png",
+      "runtime": "assets/island-buildings/orbit-level2.webp",
+      "provenance": "assets/island-buildings/sources/orbit-level2.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        23,
+        1208,
+        1228
+      ],
+      "sourceSha256": "41668ac8176060f54575aaabd1783ccbd9fb6cd83b54024744a34149b8d41f1e",
+      "runtimeSha256": "97d02a9e91e1bb98a1316a95f32b4b2fb3b485de805fa8d139c38a2d45e2958c",
+      "sourceBytes": 1894745,
+      "runtimeBytes": 125036
+    },
+    {
+      "kind": "orbit",
+      "level": 3,
+      "source": "assets/island-buildings/sources/orbit-level3.png",
+      "runtime": "assets/island-buildings/orbit-level3.webp",
+      "provenance": "assets/island-buildings/sources/orbit-level3.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        29,
+        1238,
+        1232
+      ],
+      "sourceSha256": "454b55a371d3e2067fefc0e3e443df68783bf256f7e7bd7748d6854f13e133cb",
+      "runtimeSha256": "01323d5146b872d3970b181635c3ade0983f0d1f6daf8a2948e854f5e087f179",
+      "sourceBytes": 2069675,
+      "runtimeBytes": 133232
+    },
+    {
+      "kind": "orbit",
+      "level": 4,
+      "source": "assets/island-buildings/sources/orbit-level4.png",
+      "runtime": "assets/island-buildings/orbit-level4.webp",
+      "provenance": "assets/island-buildings/sources/orbit-level4.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        31,
+        1243,
+        1254
+      ],
+      "sourceSha256": "f2c99ebb10662c70032e1f60f6f792e4ef2f16bfec4bc6c7a2e4f852f6d5e37e",
+      "runtimeSha256": "b154958162b7da7f66842d50b04cafe18ab0692dad3db7281933e68416ac7816",
+      "sourceBytes": 2257457,
+      "runtimeBytes": 141268
+    },
+    {
+      "kind": "orbit",
+      "level": 5,
+      "source": "assets/island-buildings/sources/orbit-level5.png",
+      "runtime": "assets/island-buildings/orbit-level5.webp",
+      "provenance": "assets/island-buildings/sources/orbit-level5.provenance.json",
+      "sourceSize": [
+        1254,
+        1254
+      ],
+      "runtimeSize": [
+        640,
+        640
+      ],
+      "alphaBounds": [
+        0,
+        25,
+        1253,
+        1254
+      ],
+      "sourceSha256": "8b5386a2a93de8c12ab429b9dd220f3ca8b21ef249cfa2489c468c346bba80b4",
+      "runtimeSha256": "78bd6e1c8ff4d87e1f235b7c8dd8ad90ed25661c118fc415598e6c0f8f1c8840",
+      "sourceBytes": 2294201,
+      "runtimeBytes": 155008
+    }
+  ]
+}

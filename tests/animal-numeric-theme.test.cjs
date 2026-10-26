@@ -10,7 +10,7 @@ test('Harvest baskets keep numeric labels and the fraction gauge', () => {
   assert.match(html, /function drawHarvestBasket\(/);
   assert.match(html, /drawCoreValueLabel\(ctx, c, drawX, drawY, r\)/);
   assert.match(html, /c\.fractionGauge/);
-  assert.match(html, /ToenowAnimals\.feedback\('number-pop', true\)/);
+  assert.doesNotMatch(html, /ToenowAnimals\.feedback\('number-pop', true\)/);
   assert.match(html, /ToenowAnimals\.feedback\('number-pop', false\)/);
 });
 test('Supply bags leave exact-sum, two-item minimum and overshoot logic intact', () => {

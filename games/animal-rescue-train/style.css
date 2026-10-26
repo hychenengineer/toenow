@@ -1026,3 +1026,14 @@ dialog .primary { min-height:44px; border-radius:8px; padding:10px 16px; }
 #success-dialog .fineprint { color: #52685b; }
 #result.lost { background: #f6ebd4; border-color: #cfb99a; }
 #result.lost h3 { color: #865236; }
+
+/* Pause uses the station's paper and green buttons. */
+#pause-dialog {
+  color-scheme: light; color: #304d43;
+  background: radial-gradient(ellipse at 50% 0, #e6efdd, transparent 55%), #fffaf0;
+  border: 1px solid #bdcbb6; border-radius: 28px 24px 30px 22px;
+  box-shadow: 0 16px 44px #36534426, inset 0 0 0 5px #ffffff80; text-align: center;
+}
+#pause-dialog::backdrop { background: #e2ecde; }
+#pause-dialog .primary { background: #3d7059; color: #fffdf7; border-color: #3d7059; }
+#pause-dialog button:focus-visible { outline-color: #aa7637; }

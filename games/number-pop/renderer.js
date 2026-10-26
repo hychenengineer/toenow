@@ -147,17 +147,10 @@ function renderArena() {
             scene.ctx.translate(ox, oy);
           }
 
-          const isHighCombo = scene.game.combo >= 5;
 
           // Soft garden paths and planted borders stay outside the number labels.
           scene.ctx.strokeStyle = 'rgba(132,150,92,.18)'; scene.ctx.lineWidth = 18;
           for (let y=90;y<scene.viewportH;y+=110) { scene.ctx.beginPath();scene.ctx.moveTo(0,y);scene.ctx.lineTo(scene.viewportW,y);scene.ctx.stroke(); }
-          if (scene.harvestPickup && performance.now() < scene.harvestPickup.until && window.ToenowAnimals) {
-            // Rabbit hops to the basket the player actually harvested.
-            const hop = Math.sin((scene.harvestPickup.until-performance.now())/650*Math.PI)*12;
-            window.ToenowAnimals.drawAnimal(scene.ctx,'rabbit',scene.harvestPickup.x,scene.harvestPickup.y-hop,56);
-          }
-
           // Render Active Quantum Cores
           for (let i = 0; i < scene.game.cores.length; i++) {
             const c = scene.game.cores[i];
@@ -208,59 +201,6 @@ function renderArena() {
             drawCoreValueLabel(scene.ctx, c, drawX, drawY, r);
 
             scene.ctx.restore();
-          }
-
-          // Render Pooled Particles & Shockwaves
-          for (let i = 0; i < scene.MAX_PARTICLES; i++) {
-            const p = scene.particlePool[i];
-            if (!p.active) continue;
-            if (p.isShockwave) {
-              scene.ctx.save();
-              scene.ctx.strokeStyle = 'hsla(' + p.hue + ', 95%, 68%, ' + p.alpha.toFixed(2) + ')';
-              scene.ctx.lineWidth = 3.5;
-              scene.ctx.beginPath();
-              scene.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-              scene.ctx.stroke();
-              scene.ctx.restore();
-            } else {
-              scene.ctx.fillStyle = 'hsla(' + p.hue + ', 95%, 68%, ' + p.alpha.toFixed(2) + ')';
-              scene.ctx.beginPath();
-              scene.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-              scene.ctx.fill();
-            }
-          }
-
-          // Render Floating Text Popups
-          for (let i = 0; i < scene.MAX_FLOATING_TEXTS; i++) {
-            const ft = scene.floatingTexts[i];
-            if (!ft.active) continue;
-            scene.ctx.save();
-            scene.ctx.globalAlpha = Math.max(0, ft.alpha);
-            scene.ctx.translate(ft.x, ft.y);
-            scene.ctx.scale(ft.scale, ft.scale);
-
-            scene.ctx.font = "800 20px 'JetBrains Mono', monospace";
-            scene.ctx.textAlign = 'center';
-            scene.ctx.lineWidth = 4;
-            scene.ctx.strokeStyle = 'rgba(6, 8, 15, 0.92)';
-            scene.ctx.strokeText(ft.text, 0, 0);
-            scene.ctx.fillStyle = ft.color;
-            scene.ctx.fillText(ft.text, 0, 0);
-
-            if (ft.subtext) {
-              scene.ctx.font = "700 12px 'Outfit', sans-serif";
-              scene.ctx.strokeText(ft.subtext, 0, 18);
-              scene.ctx.fillStyle = '#f8fafc';
-              scene.ctx.fillText(ft.subtext, 0, 18);
-            }
-            scene.ctx.restore();
-          }
-
-          // Subtle High-Combo Calm Border Tint (No Shake)
-          if (isHighCombo) {
-            scene.ctx.strokeStyle = 'rgba(232, 121, 249, 0.35)';
-            scene.ctx.lineWidth = 3;
-            scene.ctx.strokeRect(2, 2, scene.viewportW - 4, scene.viewportH - 4);
           }
 
           // Red Mistake Glitch Overlay

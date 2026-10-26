@@ -2960,7 +2960,6 @@
         const { gameId, category, score, isPractice } = payload;
         if (!gameId || typeof score !== 'number') return;
         if (isPractice) {
-          showToast(`Practice Completed: ${score} pts (Practice mode not recorded)`);
           return;
         }
         const gameConfig = GAMES_CONFIG.find(game => game.id === gameId);
@@ -2985,7 +2984,7 @@
           }
         }
 
-        const { isNewBest, bestScore, numericScore } = saveGameScore(gameId, category, score, wave);
+        const { numericScore } = saveGameScore(gameId, category, score, wave);
         exploration?.complete({ gameId, wave, isPractice, runId: currentExplorationRun });
 
         // Also ensure game's internal localStorage reflects the highest score and wave
@@ -3016,18 +3015,13 @@
           }
         } catch (_) {}
 
-        const updatedProfile = recalibrateCognitiveProfile(gameId, category, numericScore);
+        recalibrateCognitiveProfile(gameId, category, numericScore);
 
         renderBentoGrid();
         const lbSelect = document.getElementById('leaderboardGameSelect');
         if (lbSelect && lbSelect.value === gameId) {
           renderLeaderboardTable(gameId);
         }
-
-        const axisKey = category && updatedProfile[category] !== undefined ? category : 'puzzle';
-        showToast(
-          `Telemetry Synced: ${numericScore.toLocaleString()} pts (${isNewBest ? 'New Personal Best!' : `Best: ${bestScore.toLocaleString()}`}) — ${axisKey.toUpperCase()} Index calibrated to ${updatedProfile[axisKey]}.`
-        );
 
         // If authenticated with Supabase, sync score to cloud
         if (gameConfig.leaderboard !== false && supabaseClient && currentAuthUser) {

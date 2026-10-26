@@ -11,11 +11,6 @@ ToenowScreens.mount("number-pop");
           get resizeCanvas() { return resizeCanvas; },
           get ctx() { return ctx; },
           get game() { return game; },
-          get harvestPickup() { return harvestPickup; },
-          get MAX_PARTICLES() { return MAX_PARTICLES; },
-          get particlePool() { return particlePool; },
-          get MAX_FLOATING_TEXTS() { return MAX_FLOATING_TEXTS; },
-          get floatingTexts() { return floatingTexts; }
         });
 
 const IS_HEADLESS = Boolean(
@@ -180,112 +175,6 @@ const IS_HEADLESS = Boolean(
         // STRUCTURED PROGRESSIVE WAVE SEQUENCE (STRICT NUMERICAL CURRICULUM)
         // ============================================================================
         const { shouldTriggerPerkDraft, getWaveType, isBreatherWave, getTimerDecayMultiplier, getMaxBankableTime, getTimerStageInfo, formatSurvivalTime, getCoreCountForWave, getWaveTierName, parseFractionLabel, hasValueCollision, pickUniqueFromList, generateWaveItem, formatNearMissMessage } = window.ToenowGameModules['number-pop'].rules;
-
-        const MAX_PARTICLES = 400;
-        const particlePool = Array.from({ length: MAX_PARTICLES }, () => ({
-          active: false,
-          x: 0,
-          y: 0,
-          vx: 0,
-          vy: 0,
-          size: 3,
-          alpha: 1,
-          decay: 1.5,
-          hue: 190,
-          isShockwave: false,
-          radius: 0,
-          maxRadius: 0,
-        }));
-        let particleCursor = 0;
-
-        function spawnParticle(x, y, vx, vy, size, hue, decay) {
-          const p = particlePool[particleCursor];
-          particleCursor = (particleCursor + 1) % MAX_PARTICLES;
-          p.active = true;
-          p.x = x;
-          p.y = y;
-          p.vx = vx;
-          p.vy = vy;
-          p.size = size;
-          p.alpha = 1;
-          p.hue = hue;
-          p.decay = decay;
-          p.isShockwave = false;
-        }
-
-        function spawnShockwave(x, y, maxRadius, hue) {
-          const p = particlePool[particleCursor];
-          particleCursor = (particleCursor + 1) % MAX_PARTICLES;
-          p.active = true;
-          p.x = x;
-          p.y = y;
-          p.vx = 0;
-          p.vy = 0;
-          p.size = 2;
-          p.alpha = 1;
-          p.hue = hue;
-          p.decay = 2.4;
-          p.isShockwave = true;
-          p.radius = 10;
-          p.maxRadius = maxRadius;
-        }
-
-        function spawnShatterBurst(x, y, baseHue, count, isFever) {
-          const total = IS_HEADLESS ? Math.min(8, count) : count;
-          for (let i = 0; i < total; i++) {
-            const angle = (Math.PI * 2 * i) / total + (Math.random() - 0.5) * 0.4;
-            const speed = 90 + Math.random() * 240;
-            const hue = isFever ? (i * 45) % 360 : baseHue + (Math.random() - 0.5) * 30;
-            spawnParticle(
-              x,
-              y,
-              Math.cos(angle) * speed,
-              Math.sin(angle) * speed,
-              3 + Math.random() * 4,
-              hue,
-              1.4 + Math.random() * 0.9
-            );
-          }
-        }
-
-        const MAX_FLOATING_TEXTS = 32;
-        const floatingTexts = Array.from({ length: MAX_FLOATING_TEXTS }, () => ({
-          active: false,
-          x: 0,
-          y: 0,
-          vy: -55,
-          text: '',
-          subtext: '',
-          color: '#22d3ee',
-          alpha: 1,
-          scale: 1,
-        }));
-        let floatCursor = 0;
-
-        function spawnFloatingText(x, y, text, subtext, color) {
-          const ft = floatingTexts[floatCursor];
-          floatCursor = (floatCursor + 1) % MAX_FLOATING_TEXTS;
-          ft.active = true;
-          ft.x = x;
-          ft.y = y;
-          ft.vy = -64;
-          ft.text = text;
-          ft.subtext = subtext || '';
-          ft.color = color || '#22d3ee';
-          ft.alpha = 1;
-          ft.scale = 1.15;
-        }
-
-        const DUST_COUNT = IS_HEADLESS ? 18 : 48;
-        const ambientDust = Array.from({ length: DUST_COUNT }, () => ({
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
-          vx: (Math.random() - 0.5) * 18,
-          vy: -10 - Math.random() * 18,
-          size: 1.2 + Math.random() * 2,
-          hue: Math.random() < 0.5 ? 190 : 285,
-          alpha: 0.2 + Math.random() * 0.45,
-        }));
 
         // ============================================================================
         // GAME STATE & DOM REFERENCES
@@ -822,7 +711,7 @@ const pauseScore = document.getElementById('pause-score');
               core.popped = true;
               game.poppedInWave++;
               sound.playPop(game.poppedInWave, false, 'cyan');
-              spawnShatterBurst(core.x, core.y, core.hue, 20, false);
+
               if (!getLowestUnpoppedCore()) window.ToenowTutorials.complete('number-pop');
               syncHud();
               return;
@@ -832,8 +721,6 @@ const pauseScore = document.getElementById('pause-score');
             core.freezeTimer = 0;
             core.errorFlash = 0;
             core.popped = true;
-            if (window.ToenowAnimals) window.ToenowAnimals.feedback('number-pop', true);
-            harvestPickup = { x: core.x, y: core.y, until: performance.now() + 650 };
             game.combo += 1;
             game.shardsEarnedThisRun += 1;
 
@@ -860,17 +747,6 @@ const pauseScore = document.getElementById('pause-score');
             game.shakeTrauma = 0;
             game.hitstopTimer = 0;
 
-            spawnShatterBurst(core.x, core.y, core.hue, 20, false);
-
-            const comboTag = game.combo > 1 ? 'COMBO ' + game.combo + 'x' : '';
-            spawnFloatingText(
-              core.x,
-              core.y - 10,
-              '+' + pointsAdded,
-              comboTag,
-              isHighCombo ? 'var(--secondary-glow)' : 'var(--primary-glow)'
-            );
-
             // Check Wave Clear
             const remaining = game.cores.filter((c) => !c.popped).length;
             if (remaining === 0) {
@@ -885,31 +761,11 @@ const pauseScore = document.getElementById('pause-score');
                   game.timeLeft = maxBank;
                   const surplusPts = Math.round(surplus * 250);
                   game.score += surplusPts;
-                  spawnFloatingText(
-                    viewportW * 0.5,
-                    viewportH * 0.42,
-                    `+${surplusPts} FLAWLESS SURPLUS PTS!`,
-                    `TIME AT MAX CAP ${maxBank}s`,
-                    'var(--emerald-glow)'
-                  );
+
                 } else {
                   game.timeLeft += addedBonus;
-                  spawnFloatingText(
-                    viewportW * 0.5,
-                    viewportH * 0.42,
-                    '+2.5s FLAWLESS WAVE!',
-                    'WAVE ' + game.wave + ' CLEARED',
-                    'var(--emerald-glow)'
-                  );
+
                 }
-              } else {
-                spawnFloatingText(
-                  viewportW * 0.5,
-                  viewportH * 0.42,
-                  'WAVE ' + game.wave + ' CLEARED',
-                  '',
-                  'var(--primary-glow)'
-                );
               }
 
               game.waveTransitionTimer = 0.1;
@@ -939,14 +795,6 @@ const pauseScore = document.getElementById('pause-score');
             game.glitchTimer = 0.22;
             game.shakeTrauma = 0.35;
             sound.playMistakeGlitch();
-
-            spawnFloatingText(
-              core.x,
-              core.y - 12,
-              'COMBO BROKEN!',
-              'PICK THE LOWEST BASKET',
-              'var(--crimson-glow)'
-            );
 
             syncHud();
           }
@@ -1138,59 +986,13 @@ const pauseScore = document.getElementById('pause-score');
         // ============================================================================
         // SIMULATION UPDATE & RENDER LOOP
         // ============================================================================
-        function updatePhysicsAndParticles(dt, simDt) {
-          // Ambient dust
-          for (let i = 0; i < ambientDust.length; i++) {
-            const d = ambientDust[i];
-            d.x += d.vx * dt;
-            d.y += d.vy * dt;
-            if (d.y < -10) d.y = viewportH + 10;
-            if (d.x < -10) d.x = viewportW + 10;
-            if (d.x > viewportW + 10) d.x = -10;
-          }
-
-          // Pooled particles & shockwaves
-          for (let i = 0; i < MAX_PARTICLES; i++) {
-            const p = particlePool[i];
-            if (!p.active) continue;
-            if (p.isShockwave) {
-              p.radius += (p.maxRadius - p.radius) * dt * 8;
-              p.alpha -= p.decay * dt;
-              if (p.alpha <= 0 || p.radius >= p.maxRadius * 0.98) {
-                p.active = false;
-              }
-            } else {
-              p.x += p.vx * dt;
-              p.y += p.vy * dt;
-              p.vx *= 0.96;
-              p.vy *= 0.96;
-              p.alpha -= p.decay * dt;
-              if (p.alpha <= 0) {
-                p.active = false;
-              }
-            }
-          }
-
-          // Floating combat texts
-          for (let i = 0; i < MAX_FLOATING_TEXTS; i++) {
-            const ft = floatingTexts[i];
-            if (!ft.active) continue;
-            ft.y += ft.vy * dt;
-            ft.scale = Math.max(1.0, ft.scale - dt * 1.2);
-            ft.alpha -= dt * 1.15;
-            if (ft.alpha <= 0) {
-              ft.active = false;
-            }
-          }
-
+        function updatePhysics(dt, simDt) {
           const bounds = getArenaBounds();
           const active = [];
           for (let i = 0; i < game.cores.length; i++) {
             const c = game.cores[i];
             if (!c.popped) active.push(c);
           }
-
-          const isFever = game.feverTimeLeft > 0;
 
           // Update cores position, border bounce, and rotation
           for (let i = 0; i < active.length; i++) {
@@ -1218,17 +1020,6 @@ const pauseScore = document.getElementById('pause-score');
 
             clampCoreToSafeArena(c, bounds);
 
-            if (isFever && !IS_HEADLESS && Math.random() < 0.35) {
-              spawnParticle(
-                c.x + (Math.random() - 0.5) * c.radius * 0.8,
-                c.y + (Math.random() - 0.5) * c.radius * 0.8,
-                -c.vx * 0.25,
-                -c.vy * 0.25,
-                2.6,
-                (game.timeElapsed * 260 + c.id * 50) % 360,
-                2.4
-              );
-            }
           }
 
           // Soft-body mutual repulsion
@@ -1272,8 +1063,6 @@ const pauseScore = document.getElementById('pause-score');
             clampCoreToSafeArena(active[i], bounds);
           }
         }
-
-let harvestPickup = null;
 
 // Main Animation Loop
         let lastFrameTime = performance.now();
@@ -1337,9 +1126,9 @@ let harvestPickup = null;
                 triggerGameOver();
               }
             }
-            updatePhysicsAndParticles(dt, simDt);
+            updatePhysics(dt, simDt);
           } else if (game.state === 'title' || game.state === 'perk') {
-            updatePhysicsAndParticles(dt, dt * 0.55);
+            updatePhysics(dt, dt * 0.55);
           }
 
           renderArena();

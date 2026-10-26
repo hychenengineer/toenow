@@ -34,7 +34,7 @@
   },
   "flash-brain": {
     "name": "FLASH BRAIN",
-    "prompt": "Remember the beds. Yellow 1 goes first. Avoid thorns."
+    "prompt": "Remember where the elephants are."
   },
   "animal-rescue-train": {
     "name": "Animal Rescue Train",

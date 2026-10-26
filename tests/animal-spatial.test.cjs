@@ -20,14 +20,23 @@ test('otter leaves conceal target identity throughout shuffle and selection, eve
    assert.equal(target.animals.length,0);
  }
 });
-test('otter replaces the revealed core only at original reveal phases',()=>{
- for(const phase of ['lineup','wave_ready','insert']){
+test('otter stays visible while awaiting memory confirmation and hides during movement',()=>{
+ for(const phase of ['lineup','wave_ready','insert','memorize']){
    assert.equal(render(phase,true,null,1).animals[0]?.[0],'otter');
    assert.equal(render(phase,false,null,1).animals.length,0);
  }
  assert.equal(render('select',true,'correct',1).animals[0]?.[0],'otter');
  assert.equal(render('resolve',true,'missed',1).animals[0]?.[0],'otter');
  assert.equal(render('select',false,'wrong',1).animals.length,0);
+});
+
+test('otter target panel uses the pond paper palette',()=>{
+ const colors=[],labels=[];
+ const ctx=new Proxy({}, {get:(_,key)=>key==='fillText'?(label)=>labels.push(label):()=>{},set:(_,key,value)=>{if(key==='fillStyle')colors.push(value);return true;}});
+ const env={Math,ctx,state:{mode:'playing',phase:'lineup',config:{targetCount:1},shells:[]},viewportWidth:390,
+  getPlayboardGeometry:()=>({queueX:250,panelW:86,isMobile:false}),computeTargetLineupPositions:()=>[{x:250,y:100}],getCapsuleRadius:()=>24};
+ const paint=loadFunction('ball-track','drawTargetLineupPanel','function drawTrajectoryArcs(',env);paint();
+ assert.ok(colors.includes('#fffaf0'));assert.ok(colors.includes('#355f53'));assert.deepEqual(labels,['Find the otter']);
 });
 
 function loadFunction(game,name,next,env){

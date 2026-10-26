@@ -3,7 +3,7 @@
   else {root.ToenowTutorials=factory(root.ToenowTutorialConfig);root.ToenowTutorials.install(root);}
 })(globalThis,function(catalog){
   'use strict';
-  const VERSION=2,adapters=new Map();let current=null,refresh=()=>{};
+  const VERSION=2,adapters=new Map(),installations=new Map();let current=null,refresh=()=>{};
   function createProgress(storage){
     const memory=new Map(),key=id=>'toenow_tutorial_'+id+'_v'+VERSION;
     return {key,shouldShow(id){
@@ -15,12 +15,12 @@
       memory.set(id,value);try{storage?.setItem(key(id),value);}catch(_){}
     }};
   }
-  function createSession(id,adapter,progress){
+  function createSession(id,adapter,progress,options={}){
     if(!catalog[id]||!adapter||!['start','stop','getGuide'].every(k=>typeof adapter[k]==='function'))throw Error('Invalid game tutorial adapter: '+id);
     let active=false,done=false;
     return {id,get active(){return active;},get done(){return done;},
-      start(){if(active)return;active=true;adapter.start();},
-      stop(){if(!active)return;adapter.stop();active=false;},
+      start(){if(active)return;active=true;adapter.start(options);},
+      stop(confirmed=false){if(!active)return;adapter.stop(confirmed);active=false;},
       complete(){if(!active||done)return;done=true;progress.mark(id,'completed');},
       skip(){if(active&&!done)progress.mark(id,'skipped');},
       guide(){return active?adapter.getGuide():null;}
@@ -34,12 +34,13 @@
   function isComplete(id){return isActive(id)&&current.done;}
   function complete(id){if(!isActive(id))return false;current.complete();refresh();return true;}
   function getState(){return current?{id:current.id,active:current.active,complete:current.done,guide:current.guide()}:null;}
+  function showLesson(id,lesson){return installations.get(id)?.(false,{lesson})||false;}
   function install(win){
     const id=/\/games\/([^/]+)/.exec(win.location.pathname)?.[1];if(!catalog[id])return;
     const doc=win.document;let storage;try{storage=win.localStorage;}catch(_){}
     const progress=createProgress(storage);
     const screen={get startId(){return win.ToenowScreenConfig?.[id]?.startId||'btn-start-game';},get titleId(){return win.ToenowScreenConfig?.[id]?.titleId||'menu-screen';}};
-    let coach,highlight,prompt,finish,skip,cancel,pendingStart=false,bypass=false,raf,returnFocus;
+    let coach,highlight,prompt,finish,skip,cancel,advance,pendingStart=false,bypass=false,raf,returnFocus,sessionOptions={};
     const t=value=>win.ToenowI18n?.t(value)||value;
     function el(tag,className,text){const n=doc.createElement(tag);if(className)n.className=className;if(text)n.textContent=t(text);return n;}
     function control(text,action,attribute){const n=el('button','tutorial-coach-button',text);n.type='button';n.setAttribute(attribute,'');n.addEventListener('click',action);return n;}
@@ -47,7 +48,7 @@
     function close(launch){
       if(!current)return;win.cancelAnimationFrame(raf);
       // The engine must clean up while protection is still enabled.
-      current.stop();current=null;coach?.remove();highlight?.remove();coach=highlight=null;
+      current.stop(launch);current=null;coach?.remove();highlight?.remove();coach=highlight=null;
       delete doc.body.dataset.tutorial;
       if(launch&&pendingStart){
         pendingStart=false;
@@ -69,11 +70,12 @@
       const guide=current.guide()||{};
       if(guide.done&&!current.done)current.complete();
       const done=current.done;
-      const text=t(done?'You did it!':guide.prompt||catalog[id].prompt);
+      const text=t(done?(guide.completePrompt||'You did it!'):guide.prompt||catalog[id].prompt);
       if(prompt.textContent!==text)prompt.textContent=text;
-      finish.hidden=!done;finish.textContent=t(pendingStart?'START GAME':'Back to title');
+      finish.hidden=!done;finish.textContent=t(sessionOptions.lesson?(guide.finishLabel||'Continue challenge'):pendingStart?'START GAME':'Back to title');
+      advance.hidden=done||!guide.action;advance.textContent=t(guide.action?.label||'Continue');
       skip.hidden=done;skip.textContent=t('Skip tutorial');cancel.textContent=t('Close tutorial');
-      coach.querySelector('[data-tutorial-badge]').textContent=t('Tutorial — no timer, no score');
+      coach.querySelector('[data-tutorial-badge]').textContent=t(guide.badge||'Tutorial — no timer, no score');
       const rect=guide.rect;
       highlight.hidden=done||!rect||guide.waiting===true;
       if(!highlight.hidden){
@@ -82,27 +84,30 @@
       }
       // Put the compact instruction panel on the opposite edge to the real target.
       const top=rect&&rect.y+rect.height/2>win.innerHeight/2;
-      coach.dataset.edge=top?'top':'bottom';
+      coach.dataset.edge=guide.edge||(top?'top':'bottom');
     }
     function frame(){render();if(current?.active)raf=win.requestAnimationFrame(frame);}
-    function open(start=false){
-      if(current?.active)return;
+    function open(start=false,options={}){
+      if(current?.active)return false;
       const adapter=adapters.get(id);
       if(!adapter){console.error('Tutorial adapter not ready: '+id);return;}
-      pendingStart=start;returnFocus=doc.activeElement;
-      current=createSession(id,adapter,progress);doc.body.dataset.tutorial=id;
+      pendingStart=start;returnFocus=doc.activeElement;sessionOptions=options;
+      const sessionProgress=options.lesson?{mark:(_,value)=>adapter.markLesson?.(options.lesson,value)}:progress;
+      current=createSession(id,adapter,sessionProgress,{...options,replay:!start&&!options.lesson});doc.body.dataset.tutorial=id;
       current.start();
       coach=el('section','toenow-coach');coach.id='toenow-tutorial';coach.dataset.i18nIgnore='';coach.setAttribute('role','region');coach.setAttribute('aria-label',t('Play tutorial'));
       const header=el('div','tutorial-coach-header');const badge=el('span','','Tutorial — no timer, no score');badge.dataset.tutorialBadge='';header.appendChild(badge);
       cancel=control('Close tutorial',()=>close(false),'data-tutorial-cancel');coach.appendChild(header);
       prompt=el('p','tutorial-coach-prompt');prompt.id='tutorial-instruction';prompt.setAttribute('role','status');prompt.setAttribute('aria-live','polite');coach.appendChild(prompt);
       const controls=el('div','tutorial-coach-actions');
+      advance=control('Continue',()=>{if(!current?.done)current?.guide()?.action?.run();render();},'data-tutorial-advance');controls.appendChild(advance);
       skip=control('Skip tutorial',()=>{current.skip();close(true);},'data-tutorial-skip');controls.appendChild(skip);
       controls.appendChild(cancel);
       finish=control('START GAME',()=>close(true),'data-tutorial-finish');controls.appendChild(finish);coach.appendChild(controls);
       coach.addEventListener('keydown',event=>event.stopPropagation());
       highlight=el('div','tutorial-real-target');highlight.id='toenow-tutorial-highlight';highlight.setAttribute('aria-hidden','true');
       doc.body.append(highlight,coach);refresh=render;render();raf=win.requestAnimationFrame(frame);
+      return true;
     }
     function tutorialControl(target){return !!target.closest?.('#toenow-tutorial,.toenow-language-switch');}
     function blockedGameControl(target){
@@ -149,8 +154,9 @@
         else if(progress.shouldShow(id)&&(button?.id===screen.startId||!event.target.closest?.('button,a,input,select,textarea,summary'))){event.preventDefault();event.stopImmediatePropagation();open(true);}
       }
     },true);
+    installations.set(id,open);
     win.ToenowI18n?.subscribe(()=>render());
     return {open,progress};
   }
-  return {catalog,createProgress,createSession,register,isActive,isComplete,complete,getState,install};
+  return {catalog,createProgress,createSession,register,isActive,isComplete,complete,getState,showLesson,install};
 });

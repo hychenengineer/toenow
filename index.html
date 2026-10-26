@@ -745,6 +745,7 @@
     .theater-modal.open {
       opacity: 1;
       pointer-events: auto;
+      transition: none;
     }
 
     .theater-toolbar {
@@ -1649,7 +1650,7 @@
           ⛶ Fullscreen
         </button>
         <button type="button" class="theater-btn btn-danger" id="closeTheaterBtn">
-          ✕ Close Hub
+          ✕ Back to Explorer Island
         </button>
       </div>
     </div>
@@ -2411,7 +2412,13 @@
     const theaterTitle = document.getElementById('theaterTitle');
     const theaterStage = document.getElementById('theaterStage');
     let clearTheaterGameActions = () => {};
+    let onTheaterReady = null;
     gameViewer.addEventListener('load', () => {
+      if (currentMountedGame && gameViewer.contentDocument?.URL !== 'about:blank') {
+        const ready = onTheaterReady;
+        onTheaterReady = null;
+        ready?.();
+      }
       clearTheaterGameActions();
       const host = document.getElementById('theaterGameActions');
       host.replaceChildren();
@@ -2452,7 +2459,7 @@
       };
     });
 
-    function openTheaterModal(game) {
+    function openTheaterModal(game, onReady) {
       if (exploration && !exploration.isUnlocked(game.id)) {
         islandExplorer?.showLocation(game.id);
         return;
@@ -2503,12 +2510,14 @@
         }
       } catch (_) {}
 
+      onTheaterReady = typeof onReady === 'function' ? onReady : null;
       gameViewer.src = game.url;
       theaterModal.classList.add('open');
       theaterModal.setAttribute('aria-hidden', 'false');
     }
 
     function closeTheaterModal() {
+      onTheaterReady = null;
       clearTheaterGameActions();
       theaterModal.classList.remove('open');
       theaterModal.setAttribute('aria-hidden', 'true');

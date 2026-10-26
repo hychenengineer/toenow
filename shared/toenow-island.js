@@ -195,7 +195,12 @@
       const place=event.target.closest('[data-island-game]');
       if(place){showLocation(place.dataset.islandGame,place);return;}
       if(event.target.closest('.island-dialog-close'))dialog.close();
-      if(event.target.closest('.island-play-button')){const game=findGame(selectedId);if(!unlocked(selectedId))return;launchingGame=true;dialog.close();if(game)openGame(game);}
+      if(event.target.closest('.island-play-button')){
+        const game=findGame(selectedId);
+        if(!game||!unlocked(selectedId)||launchingGame)return;
+        launchingGame=true;
+        openGame(game,()=>{if(launchingGame)dialog.close();});
+      }
       if(event.target.closest('.island-mission-go')) { focusNext(); const id = exploration?.snapshot().unlocked.find(id => !exploration.snapshot().completed.includes(id)); if(id)showLocation(id,event.target); }
       if(event.target.closest('.island-discovery-go')) { const id = exploration.snapshot().pending; exploration.dismissDiscovery();render();focusPlace(id);showLocation(id,markers.querySelector(`[data-island-game="${id}"]`)); }
       if(event.target.closest('.island-discovery-later')) { exploration.dismissDiscovery();render();focusNext(); }

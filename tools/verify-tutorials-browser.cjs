@@ -44,8 +44,9 @@ async function assertProtected(page){
 async function complete(page,id,mobile=false){
   let taps=0;
   while(!(await page.evaluate(()=>ToenowTutorials.getState()?.complete))){
-    await page.waitForFunction(()=>{const s=ToenowTutorials.getState();return s?.complete||s?.guide?.rect&&!s.guide.waiting;},{},{timeout:20000});
+    await page.waitForFunction(()=>{const s=ToenowTutorials.getState();return s?.complete||s?.guide?.action||s?.guide?.rect&&!s.guide.waiting;},{},{timeout:20000});
     const state=await page.evaluate(()=>ToenowTutorials.getState());if(state.complete)break;
+    if(await page.locator('[data-tutorial-advance]').isVisible()){await page.locator('[data-tutorial-advance]').click();continue;}
     const r=state.guide.rect;
     const x=r.x+r.width/2,y=r.y+r.height/2;
     assert.ok(x>=0&&x<page.viewportSize().width&&y>=0&&y<page.viewportSize().height,id+' real target outside viewport');
@@ -77,8 +78,10 @@ async function complete(page,id,mobile=false){
       const scoreBefore=await page.locator('#tutorial-instruction').innerText();
       await page.waitForTimeout(300);assert.equal(await page.locator('#tutorial-instruction').innerText(),scoreBefore);
       await page.locator('[data-tutorial-finish]').click();await page.waitForTimeout(100);
+      if(id==='flash-brain'){await page.locator('[data-tutorial-finish]').waitFor({state:'visible'});await page.locator('[data-tutorial-finish]').click();}
       assert.equal(await page.locator('#toenow-tutorial').count(),0);
       await ready(page,id,lang);await page.locator('#'+startId(id)).click();await page.waitForTimeout(100);
+      if(id==='flash-brain'){await page.locator('[data-tutorial-finish]').waitFor({state:'visible'});await page.locator('[data-tutorial-finish]').click();}
       assert.equal(await page.locator('#toenow-tutorial').count(),0,id+' returning player repeated tutorial');
       await ready(page,id,lang);await page.locator('[data-tutorial-replay]').click();await page.locator('#toenow-tutorial').waitFor({state:'visible'});
       await page.keyboard.press('Escape');await page.locator('#'+startId(id)).waitFor({state:'visible'});
@@ -105,7 +108,9 @@ async function complete(page,id,mobile=false){
     {
       const context=await browser.newContext(),page=await context.newPage();await ready(page,'number-pop');
       await page.locator('#btn-start').focus();await page.keyboard.press('Enter');await page.locator('#toenow-tutorial').waitFor({state:'visible'});
-      await page.locator('.toenow-language-switch').click();assert.match(await page.locator('#tutorial-instruction').innerText(),/[\u4e00-\u9fff]/);
+      // Games no longer render a language-switch button. Exercise the same
+      // language event used by the Hub without depending on a removed control.
+      await page.evaluate(()=>ToenowI18n.setLanguage('zh-Hant'));assert.match(await page.locator('#tutorial-instruction').innerText(),/[\u4e00-\u9fff]/);
       await page.keyboard.press('r');assert.equal(await page.evaluate(()=>ToenowTutorials.isActive('number-pop')),true);
       await page.keyboard.press('Escape');assert.equal(await page.evaluate(k=>localStorage.getItem(k),tutorialKey('number-pop')),null);
       for(const key of ['Enter','Space']){await page.locator('[data-tutorial-replay]').focus();await page.keyboard.press(key);await page.locator('#toenow-tutorial').waitFor({state:'visible'});await page.keyboard.press('Escape');}

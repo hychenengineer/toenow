@@ -14,6 +14,8 @@
 .tutorial-coach-actions .tutorial-coach-button {min-height:44px;}
 .tutorial-coach-button {min-height:36px;padding:6px 10px;border:0;border-radius:9px;background:transparent;color:#426238;font:600 14px system-ui;cursor:pointer;text-decoration:underline;touch-action:manipulation;}
 .tutorial-coach-button[data-tutorial-finish] {background:#527447;color:white;min-height:44px;text-decoration:none;flex:1;}
+.tutorial-coach-button[data-tutorial-advance] {background:#527447;color:white;min-height:44px;text-decoration:none;flex:1;}
+.tutorial-coach-actions {flex-wrap:wrap;}
 .tutorial-coach-button[hidden],.tutorial-real-target[hidden] {display:none;}
 .tutorial-coach-button:focus-visible {outline:3px solid #28688c;outline-offset:2px;}
 body[data-tutorial][data-state] > .toenow-language-switch[data-placement='floating'] {top:calc(8px + env(safe-area-inset-top,0px));bottom:auto;height:44px;min-height:44px;}

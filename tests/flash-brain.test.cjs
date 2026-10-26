@@ -3,6 +3,15 @@ const assert = require('node:assert/strict');
 const fs = require('fs');
 const path = require('path');
 
+test('Flash Brain wave-clear notice only describes completed waves while playing',()=>{
+  const {describe}=require('../games/flash-brain/wave-clear.js');
+  const state={phase:'PHASE_CLEAR',waveState:{config:{wave:5}}};
+  assert.equal(describe(state,'playing').wave,5);
+  assert.equal(describe(state,'paused'),null);
+  assert.equal(describe(state,'title'),null);
+  assert.equal(describe({...state,phase:'PHASE_INPUT'},'playing'),null);
+});
+
 test('Flash garden progress adapter uses real SDK practice protection and normal milestones', () => {
   const vm = require('node:vm'), SDK = require('../shared/toenow-sdk.js');
   const previousWindow = global.window, previousStorage = global.localStorage;

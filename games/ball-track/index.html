@@ -900,6 +900,11 @@
           padding: 18px 16px;
         }
       }
+          #btn-confirm-memory[hidden] {display:none;}
+      body[data-phase='memorize'] #btn-overdrive {display:none;}
+      body[data-tutorial='ball-track'] .bottom-hud {bottom:168px;}
+      body[data-tutorial='ball-track'] #overdrive-mult-readout {display:none;}
+      body[data-tutorial='ball-track'] .overdrive-btn {padding:12px 16px;}
     </style>
   <link rel="stylesheet" href="../../assets/toenow-animals.css">
 <link rel="stylesheet" href="../../assets/toenow-game-hud.css">
@@ -978,8 +983,9 @@
       <div class="bottom-hud" id="bottom-hud"><div class="island-hud-task"><div class="hud-pill shield-pill" id="hud-time-rules" aria-label="Time adjustments">
               <span class="hud-label">Right +3s · Wrong -5s</span>
             </div></div>
-        <button class="overdrive-btn" id="btn-overdrive" type="button" aria-label="Hold Shift for Overdrive">
-          <span id="overdrive-btn-label">HOLD [SHIFT] FOR OVERDRIVE</span>
+        <button class="overdrive-btn" id="btn-confirm-memory" type="button" hidden>I remember — start moving</button>
+        <button class="overdrive-btn" id="btn-overdrive" type="button" aria-label="Hold Shift or this button to accelerate">
+          <span id="overdrive-btn-label">HOLD TO ACCELERATE · SHIFT</span>
         </button>
         <div class="overdrive-bet-readout" id="overdrive-mult-readout">BET MULTIPLIER: 1.0x -&gt; 3.5x</div>
       </div>
@@ -1651,6 +1657,7 @@
         const hudGaugeFillEl = document.getElementById('hud-gauge-fill');
 
         const btnOverdrive = document.getElementById('btn-overdrive');
+        const btnConfirmMemory = document.getElementById('btn-confirm-memory');
         const overdriveMultReadoutEl = document.getElementById('overdrive-mult-readout');
 
         const waveBannerEl = document.getElementById('wave-banner');
@@ -1903,7 +1910,10 @@
           const measuredHudBottom =
             hudEl && state.mode !== 'title' ? hudEl.getBoundingClientRect().bottom : 0;
           const hudTopClearance = Math.max(isMobile ? 148 : 118, measuredHudBottom + 10);
-          const hudBottomClearance = isMobile ? 84 : 90;
+          const bottomHud = document.getElementById('bottom-hud');
+          const coach = document.getElementById('toenow-tutorial');
+          const bottomTop = Math.min(bottomHud?.getBoundingClientRect().top ?? viewportHeight,coach?.getBoundingClientRect().top ?? viewportHeight);
+          const hudBottomClearance = Math.max(isMobile ? 84 : 90,viewportHeight-bottomTop+12);
           const availH = Math.max(200, viewportHeight - hudTopClearance - hudBottomClearance);
 
           const stageW = Math.min(viewportWidth * 0.94, 580);
@@ -2078,6 +2088,8 @@
         function setBodyState(mode, phase) {
           state.mode = mode;
           state.phase = phase;
+          btnConfirmMemory.hidden = mode !== 'playing' || phase !== 'memorize' || Boolean(window.ToenowTutorials?.isActive?.('ball-track'));
+          btnOverdrive.disabled = mode !== 'playing' || phase !== 'shuffle';
           bodyEl.setAttribute('data-mode', mode);
           bodyEl.setAttribute('data-phase', phase);
 
@@ -2257,6 +2269,18 @@
           setFrozenTimerHud(`TARGET LINEUP (${state.config.targetCount})`, '#22d3ee');
           audio.playRevealHum(state.config.targetCount);
         }
+
+        function confirmMemory() {
+          if(state.mode !== 'playing' || state.phase !== 'memorize')return;
+          for(const shell of state.shells)shell.shieldOpen=0;
+          waveBannerTitleEl.textContent='READY';
+          state.phaseElapsedMs=0;
+          state.phaseDurationMs=state.config.readyDurationMs;
+          setBodyState('playing','ready_banner');
+          setFrozenTimerHud('READY','#527f71');
+          audio.playReadyChime();
+        }
+        btnConfirmMemory.addEventListener('click',confirmMemory);
 
         function beginShuffleStep(stepIndex) {
           if (stepIndex >= state.swapSchedule.length) {
@@ -2795,7 +2819,7 @@
         // --- Simulation Update Loop ---
         function updateSimulation(dtSeconds) {
           if (Boolean(window.ToenowTutorials?.isActive?.('ball-track')) && Boolean(window.ToenowTutorials?.isComplete?.('ball-track'))) return;
-          if (state.mode === 'playing' && !window.ToenowTutorials?.isActive?.('ball-track')) {
+          if (state.mode === 'playing' && !['wave_ready','lineup','insert','memorize'].includes(state.phase) && !window.ToenowTutorials?.isActive?.('ball-track')) {
             state.runTimeSec = Math.max(0, state.runTimeSec - dtSeconds);
             syncRunTime();
             if (state.runTimeSec <= 0) { endTimedRun(); return; }
@@ -2891,8 +2915,7 @@
             }
 
             const targetOpen =
-              ((state.phase === 'lineup' || state.phase === 'wave_ready') && s.hasCore) ||
-              (state.phase === 'insert' && s.hasCore && state.phaseElapsedMs < state.phaseDurationMs * 0.72) ||
+              (['lineup','wave_ready','insert','memorize'].includes(state.phase) && s.hasCore) ||
               s.revealedState === 'correct' ||
               s.revealedState === 'wrong' ||
               s.revealedState === 'missed'
@@ -2957,7 +2980,7 @@
             }
           }
 
-          if (!(Boolean(window.ToenowTutorials?.isActive?.('ball-track')) && state.phase === 'select')) state.phaseElapsedMs += dtMs;
+          if (state.phase !== 'memorize' && !(Boolean(window.ToenowTutorials?.isActive?.('ball-track')) && state.phase === 'select')) state.phaseElapsedMs += dtMs;
 
           if (state.phase === 'wave_ready') {
             if (state.phaseElapsedMs >= state.phaseDurationMs) {
@@ -2977,7 +3000,7 @@
               for (const s of state.shells) {
                 s.x = s.baseX;
                 s.y = s.baseY;
-                s.shieldOpen = 0;
+                s.shieldOpen = s.hasCore ? 1 : 0;
                 s.trail.length = 0;
                 if (s.hasCore) {
                   s.scaleX = 1.08;
@@ -2986,13 +3009,10 @@
                 }
               }
               audio.playCoreLockLatch();
-              // Show "READY" in the center for 0.6s with steady mid tone (Timer strictly FROZEN)
-              waveBannerTitleEl.textContent = 'READY';
               state.phaseElapsedMs = 0;
-              state.phaseDurationMs = state.config.readyDurationMs;
-              setBodyState('playing', 'ready_banner');
-              setFrozenTimerHud('READY', '#38bdf8');
-              audio.playReadyChime();
+              state.phaseDurationMs = Infinity;
+              setBodyState('playing', 'memorize');
+              setFrozenTimerHud('Remember the leaf hiding the otter.','#527f71');
             }
           } else if (state.phase === 'ready_banner') {
             // "READY" (0.6s) -> Flash "GO!" (0.4s) in the center in vibrant yellow with ascending tone
@@ -3129,8 +3149,7 @@
             );
             hudMultEl.textContent = liveMult.toFixed(1).replace(/\.0$/, '') + 'x';
 
-
-          } else if (state.phase === 'wave_clear') {
+} else if (state.phase === 'wave_clear') {
             if (state.phaseElapsedMs >= state.phaseDurationMs) {
               if (checkMilestonePerkTrigger(state.wave)) {
                 return;
@@ -3238,24 +3257,23 @@
           ctx.save();
           ctx.globalAlpha = fadeAlpha;
 
-          ctx.fillStyle = 'rgba(10, 14, 26, 0.92)';
-          ctx.strokeStyle = 'rgba(34, 211, 238, 0.48)';
+          ctx.fillStyle = '#fffaf0';
+          ctx.strokeStyle = '#8eb6a8';
           ctx.lineWidth = 1.5;
           ctx.beginPath();
           ctx.roundRect(panelX, topY, panelW, panelH, 10);
           ctx.fill();
           ctx.stroke();
 
-          // Exact required container label: "TARGET"
           ctx.font = isMobile ? '800 10px "Outfit", sans-serif' : '800 12px "Outfit", sans-serif';
-          ctx.fillStyle = '#22d3ee';
+          ctx.fillStyle = '#355f53';
           ctx.textAlign = 'center';
-          ctx.fillText('TARGET', panelX + panelW * 0.5, topY + 20);
+          ctx.fillText(typeof window!=='undefined'?(window.ToenowI18n?.t('Find the otter')||'Find the otter'):'Find the otter', panelX + panelW * 0.5, topY + 20);
 
           // Draw queue cradle rings & curved Bezier insertion preview arcs
           for (let i = 0; i < lineupCoords.length; i++) {
             const pt = lineupCoords[i];
-            ctx.strokeStyle = 'rgba(34, 211, 238, 0.28)';
+            ctx.strokeStyle = 'rgba(82, 127, 113, 0.35)';
             ctx.lineWidth = 1.2;
             ctx.beginPath();
             ctx.arc(pt.x, pt.y, R + 4, 0, Math.PI * 2);
@@ -3268,8 +3286,8 @@
             const cpy = (s.lineupY + s.baseY) * 0.5 - 16;
             ctx.save();
             ctx.strokeStyle = state.phase === 'insert'
-              ? 'rgba(34, 211, 238, 0.42)'
-              : 'rgba(34, 211, 238, 0.18)';
+              ? 'rgba(82, 127, 113, 0.42)'
+              : 'rgba(82, 127, 113, 0.18)';
             ctx.lineWidth = 1.4;
             ctx.setLineDash([4, 5]);
             ctx.beginPath();
@@ -3353,7 +3371,7 @@
           const R = getCapsuleRadius();
           // Covered leaves have identical paint, veins and orientation regardless of contents.
           // Residual shutter animation must never disclose identity in shuffle/select.
-          const revealPhase = state.mode === 'title' || ['lineup', 'wave_ready', 'insert'].includes(state.phase);
+          const revealPhase = state.mode === 'title' || ['lineup', 'wave_ready', 'insert','memorize'].includes(state.phase);
           const revealed = shell.revealedState === 'correct' || shell.revealedState === 'missed';
           const visibleOtter = shell.hasCore && shell.shieldOpen > 0.15 && (revealPhase || revealed);
           ctx.save();ctx.translate(shell.x, shell.y);ctx.scale(shell.scaleX, shell.scaleY);
@@ -3543,10 +3561,12 @@
           start() { startNewGame(1, true); },
           stop() { state.isPractice = false; returnToTitle(); },
           getGuide() {
-            if (state.phase !== 'select') return { prompt: 'Remember the otter, then follow its leaf.', rect: null, waiting: true };
+            if(state.phase==='memorize')return {edge:'bottom',prompt:'Remember the leaf hiding the otter. Then hold Shift or the accelerate button to speed up movement.',waiting:true,action:{label:'I remember — start moving',run:confirmMemory}};
+            if(state.phase==='shuffle')return {edge:'bottom',prompt:'Follow the otter’s leaf. Hold Shift or the accelerate button to speed up.',waiting:true};
+            if (state.phase !== 'select') return {edge:'bottom', prompt: 'Watch the otter settle under a leaf.', rect: null, waiting: true };
             const target = state.shells.find(s => s.hasCore && !s.picked) || state.shells.find(s => s.hasCore);
             const bounds = canvas.getBoundingClientRect(), radius = getCapsuleRadius();
-            return { prompt: 'Tap the leaf hiding the otter.', rect: target ? { x: bounds.left + target.x - radius, y: bounds.top + target.y - radius, width: radius * 2, height: radius * 2 } : null, done: Boolean(window.ToenowTutorials?.isComplete?.('ball-track')) };
+            return {edge:'bottom', prompt: 'Tap the leaf hiding the otter.', rect: target ? { x: bounds.left + target.x - radius, y: bounds.top + target.y - radius, width: radius * 2, height: radius * 2 } : null, done: Boolean(window.ToenowTutorials?.isComplete?.('ball-track')) };
           }
         });
 

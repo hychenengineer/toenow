@@ -1,0 +1,14 @@
+.flash-wave-clear {
+  position:fixed;inset:0;z-index:30;display:grid;place-items:center;
+  background:rgba(36,61,39,.18);pointer-events:none;padding:20px;
+}
+.flash-wave-clear[hidden] {display:none;}
+.flash-wave-clear-card {
+  width:min(290px,100%);box-sizing:border-box;padding:24px;text-align:center;
+  color:#354d37;background:#fffdf3;border:2px solid #71925e;border-radius:24px;
+  box-shadow:0 8px 30px #23351e44;font-family:system-ui,sans-serif;
+}
+.flash-wave-clear-mark {display:block;color:#527447;font-size:42px;font-weight:800;line-height:1.2;}
+.flash-wave-clear-card h2 {font-size:28px;margin:8px 0;}
+.flash-wave-clear-card p {font-size:16px;margin:8px 0;}
+.flash-wave-clear-card p:last-child {font-size:14px;color:#527447;}

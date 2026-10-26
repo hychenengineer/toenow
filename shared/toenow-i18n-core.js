@@ -74,7 +74,7 @@
     'Create Free Account': '免費註冊帳號', 'Already a member?': '已有帳號？', 'Sign In': '登入',
     'Based on your game scores. Updates as you play.': '依各類遊戲成績整理，遊玩後逐步更新。',
     'Game Viewport': '遊戲視窗', 'Module Title': '遊戲名稱', '↺ Restart': '↺ 重新開始',
-    '⛶ Fullscreen': '⛶ 全螢幕', '✕ Close Hub': '✕ 返回遊戲中心', 'Toenow Game Sandbox': 'Toenow 遊戲視窗',
+    '⛶ Fullscreen': '⛶ 全螢幕', '✕ Back to Explorer Island': '✕ 回到探索島', 'Toenow Game Sandbox': 'Toenow 遊戲視窗',
     'Toenow Brain Matrix Drawer': 'Toenow 大腦能力面板', 'Toenow Brain Matrix': 'Toenow 大腦能力',
     'Operator Telemetry & 6-Axis Cognitive Hexagon': '玩家紀錄與六項認知能力雷達圖', 'Close Profile Drawer': '關閉個人檔案面板',
     'Account Telemetry Tier': '帳戶狀態', 'Cloud Sync Disabled (Guest Mode)': '雲端同步未啟用（訪客模式）',

@@ -22,6 +22,7 @@ async function instrument(page, id) {
   // This suite exercises title/result lifecycles for returning players.
   // First-play interception and lesson actions have their own browser matrix.
   await page.addInitScript(id=>localStorage.setItem('toenow_tutorial_'+id+'_v2','completed'),id);
+  if(id==='flash-brain')await page.addInitScript(()=>{for(const rule of ['thorns','priority'])localStorage.setItem('toenow_flash_lesson_'+rule+'_v1','completed');});
   if (id === 'flash-brain') {
     let js = fs.readFileSync(path.join(root,'games',id,'assets/index-cr-6j3L1.js'),'utf8');
     const marker = '},x=(e,t)=>{let n=p.current';
@@ -38,6 +39,9 @@ async function instrument(page, id) {
 }
 function structure(el) {
   return [el.tagName, el.className, ...[...el.children].map(structure)];
+}
+async function confirmReady(host,id) {
+  if(id==='flash-brain'){await host.locator('[data-tutorial-finish]').waitFor({state:'visible'});await host.locator('[data-tutorial-finish]').click();}
 }
 async function islandAppearance(host, cardSelector, species, stage) {
   const appearance = await host.locator(cardSelector).evaluate(card => {
@@ -80,6 +84,7 @@ async function run() {
         assert.deepEqual(titleShape,titleStructure,id+' title DOM differs');
         assert.equal(await title.locator('.unified-practice-btn').count(),1,id+' practice button');
         await page.locator('#'+c.startId).click();
+        await confirmReady(page,id);
         await page.evaluate(()=>window.__finishScreenTest());
         const end=page.locator('[data-toenow-screen="gameover"]');
         await end.waitFor({state:'visible'});
@@ -124,6 +129,7 @@ async function run() {
         assert.equal(shared.score,321); assert.equal(shared.wave,13); assert.equal(shared.level,3);
         await end.locator('[data-screen-action="retry"]').click();
         await end.waitFor({state:'hidden'});
+        await confirmReady(page,id);
         await page.evaluate(()=>window.__finishScreenTest());
         await end.locator('[data-screen-action="title"]').click();
         await end.waitFor({state:'hidden'}); await title.waitFor({state:'visible'});
@@ -138,6 +144,7 @@ async function run() {
       await page.locator('.unified-practice-btn').click();
       await page.locator('.unified-practice-level-btn[data-level="3"]').click();
       if(id==='flash-brain') await page.waitForURL(/autostart=1/);
+      await confirmReady(page,id);
       await page.waitForFunction(()=>typeof window.__finishScreenTest==='function');
       await page.evaluate(()=>window.__finishScreenTest());
       await page.locator('[data-toenow-screen="gameover"]').waitFor({state:'visible'});
@@ -151,6 +158,7 @@ async function run() {
       await embedded.setContent(`<iframe src="${base}/games/${id}/" style="width:100%;height:800px"></iframe>`);
       const frame=embedded.frameLocator('iframe');
       await frame.locator('#'+c.startId).click();
+      await confirmReady(frame,id);
       await embedded.frames()[1].evaluate(()=>window.__finishScreenTest());
       await frame.locator('[data-toenow-screen="gameover"]').waitFor({state:'visible'});
       result.iframe++; await embedded.close();

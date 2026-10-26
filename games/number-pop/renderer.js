@@ -203,6 +203,22 @@ function renderArena() {
             scene.ctx.restore();
           }
 
+          // A small press, then a local lift and fade: no trails or score text.
+          for (const basket of scene.game.harvests || []) {
+            const press = Math.min(1, basket.elapsed / 0.045);
+            const lift = Math.max(0, Math.min(1, (basket.elapsed - 0.045) / 0.155));
+            const easedLift = 1 - (1 - lift) * (1 - lift);
+            const scale = (1 - press * 0.1) * (1 - easedLift * 0.5);
+            const r = basket.radius * basket.spawnScale;
+            scene.ctx.save();
+            scene.ctx.globalAlpha = 1 - easedLift;
+            scene.ctx.translate(basket.x, basket.y - easedLift * 16);
+            scene.ctx.scale(scale, scale);
+            drawHarvestBasket(scene.ctx, 0, 0, r, false, false);
+            drawCoreValueLabel(scene.ctx, basket, 0, 0, r);
+            scene.ctx.restore();
+          }
+
           // Red Mistake Glitch Overlay
           if (scene.game.glitchTimer > 0) {
             const gAlpha = Math.min(0.24, scene.game.glitchTimer);

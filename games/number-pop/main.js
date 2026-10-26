@@ -290,6 +290,7 @@ const pauseScore = document.getElementById('pause-score');
           currentTheme: loadSelectedTheme(),
           totalShards: loadTotalShards(),
           cores: [],
+          harvests: [],
           shakeTrauma: 0,
           glitchTimer: 0,
           hitstopTimer: 0,
@@ -590,6 +591,7 @@ const pauseScore = document.getElementById('pause-score');
           game.totalMistakes = 0;
           game.poppedInWave = 0;
           game.shardsEarnedThisRun = 0;
+          game.harvests = [];
           game.empAvailable = false;
           game.perks = {};
           game.shakeTrauma = 0;
@@ -699,6 +701,14 @@ const pauseScore = document.getElementById('pause-score');
           return lowest;
         }
 
+        function collectCore(core) {
+          core.popped = true;
+          // The short visual continues across wave changes; scoring is immediate.
+          if (!window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
+            game.harvests.push({ ...core, elapsed: 0 });
+          }
+        }
+
         function handleCoreSelection(core) {
           if (!core || core.popped || game.state !== 'playing') return;
           if (window.ToenowTutorials?.isComplete('number-pop') && window.ToenowTutorials?.isActive('number-pop')) return;
@@ -708,7 +718,7 @@ const pauseScore = document.getElementById('pause-score');
 
           if (Math.abs(core.value - lowestCore.value) < 1e-6) {
             if (window.ToenowTutorials?.isActive('number-pop')) {
-              core.popped = true;
+              collectCore(core);
               game.poppedInWave++;
               sound.playPop(game.poppedInWave, false, 'cyan');
 
@@ -720,7 +730,7 @@ const pauseScore = document.getElementById('pause-score');
             // Always allow popping the target lowest core immediately even if it had freezeTimer from an earlier misclick
             core.freezeTimer = 0;
             core.errorFlash = 0;
-            core.popped = true;
+            collectCore(core);
             game.combo += 1;
             game.shardsEarnedThisRun += 1;
 
@@ -986,7 +996,9 @@ const pauseScore = document.getElementById('pause-score');
         // ============================================================================
         // SIMULATION UPDATE & RENDER LOOP
         // ============================================================================
-        function updatePhysics(dt, simDt) {
+        function updatePhysics(dt, simDt, visualDt = dt) {
+          for (const basket of game.harvests) basket.elapsed += visualDt;
+          game.harvests = game.harvests.filter(basket => basket.elapsed < 0.2);
           const bounds = getArenaBounds();
           const active = [];
           for (let i = 0; i < game.cores.length; i++) {
@@ -1126,9 +1138,9 @@ const pauseScore = document.getElementById('pause-score');
                 triggerGameOver();
               }
             }
-            updatePhysics(dt, simDt);
+            updatePhysics(dt, simDt, rawDt);
           } else if (game.state === 'title' || game.state === 'perk') {
-            updatePhysics(dt, dt * 0.55);
+            updatePhysics(dt, dt * 0.55, rawDt);
           }
 
           renderArena();
@@ -1253,4 +1265,3 @@ const pauseScore = document.getElementById('pause-score');
 
         requestAnimationFrame(frameLoop);
       })();
-    

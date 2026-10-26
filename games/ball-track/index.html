@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Ball Track</title>
+    <title>Target Track</title>
     <meta
       name="description"
-      content="Ball Track — Fun & fast tracking memory game. Watch the glowing balls run around the circle and tap the right ones!"
+      content="Remember the otters, follow their floating leaves, then find their hiding places."
     />
-    <meta property="og:title" content="Ball Track" />
+    <meta property="og:title" content="Target Track" />
     <meta
       property="og:description"
-      content="Memorize the glowing targets in the top-right lineup, follow the circular orbit shuffle, and tap the matching capsules."
+      content="Remember the otters, follow their floating leaves, then find their hiding places."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -43,7 +43,7 @@
 </head>
   <body data-mode="title" data-phase="idle">
     <div id="app-shell">
-      <canvas id="game-canvas" aria-label="Ball Track Game Board"></canvas>
+      <canvas id="game-canvas" aria-label="Target Track Game Board"></canvas>
 
       <!-- Responsive Top HUD -->
       <header class="hud-wrapper" id="hud-top"><div class="island-live-hud" data-metrics="2"><div class="island-hud-metric"><span class="island-hud-label">TIME</span><span class="hud-phase-timer island-hud-value" id="hud-timer">--</span></div><div class="island-hud-metric"><span class="island-hud-label">SCORE</span><span class="hud-value island-hud-value" id="hud-score">0</span></div><div class="island-hud-controls"><button class="icon-btn" id="btn-mute" type="button" title="Mute / Unmute Audio (M)" aria-label="Toggle Mute">
@@ -129,43 +129,6 @@
 
       <!-- Title Overlay -->
       <section class="overlay-screen unified-title-screen active" id="screen-title" aria-labelledby="title-heading" data-toenow-screen="title"></section>
-
-      <!-- Perk Selection Modal (No "UPGRADE" wording, strictly left-aligned descriptions) -->
-      <section class="overlay-screen" id="screen-perk" aria-labelledby="perk-title">
-        <div class="modal-card">
-          <div class="eyebrow-tag" id="perk-eyebrow">WAVE MILESTONE</div>
-          <h2 class="modal-title" id="perk-title">CHOOSE A PERK FOR NEXT WAVE</h2>
-          <p class="modal-subtitle" id="perk-subtitle">
-            Select one perk to carry into the next wave.
-          </p>
-
-          <div class="perk-grid">
-            <button class="perk-card" id="perk-btn-time" type="button">
-              <div class="perk-icon">+10s</div>
-              <div class="perk-card-info">
-                <div class="perk-card-name">Extra Time</div>
-                <div class="perk-card-desc">Recover up to 10 seconds.</div>
-              </div>
-            </button>
-
-            <button class="perk-card" id="perk-btn-surge" type="button">
-              <div class="perk-icon">2x</div>
-              <div class="perk-card-info">
-                <div class="perk-card-name">Double Surge</div>
-                <div class="perk-card-desc">Double the score if cleared without mistakes.</div>
-              </div>
-            </button>
-
-            <button class="perk-card" id="perk-btn-calm" type="button">
-              <div class="perk-icon">-15%</div>
-              <div class="perk-card-info">
-                <div class="perk-card-name">Calm Drift</div>
-                <div class="perk-card-desc">Shuffling speed slowed by 15%.</div>
-              </div>
-            </button>
-          </div>
-        </div>
-      </section>
 
       <!-- Pause Overlay (Anti-cheat blackout) -->
       <section class="overlay-screen unified-pause-screen" id="screen-pause" aria-labelledby="pause-title">

@@ -324,6 +324,20 @@
 
       /* Clean Bottom HUD: ONLY Overdrive Button & Bet Multiplier Readout (No Tab Prompts) */
       #btn-confirm-memory[hidden] {display:none;}
+      body[data-mode='playing'][data-phase='memorize'] #btn-confirm-memory:not([hidden]) {
+        animation: memory-reminder 2.4s ease-in-out 5s infinite;
+      }
+      @keyframes memory-reminder {
+        0%, 100% { box-shadow: 0 3px 10px #38513b18; }
+        50% { box-shadow: 0 0 0 3px #79b4a333, 0 0 20px #79b4a35c; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        body[data-mode='playing'][data-phase='memorize'] #btn-confirm-memory:not([hidden]) {
+          animation: none;
+          outline: 2px solid #79b4a355;
+          outline-offset: 2px;
+        }
+      }
       body[data-phase='memorize'] #btn-overdrive {display:none;}
       body[data-tutorial='ball-track'] .bottom-hud {bottom:14px;}
       body[data-tutorial='ball-track'] #overdrive-mult-readout {display:none;}
@@ -346,8 +360,7 @@
 
       body[data-mode='title'] .bottom-hud,
       body[data-mode='gameover'] .bottom-hud,
-      body[data-mode='paused'] .bottom-hud,
-      body[data-mode='perk'] .bottom-hud {
+      body[data-mode='paused'] .bottom-hud {
         opacity: 0;
         pointer-events: none;
         transform: translate(-50%, 14px);
@@ -595,90 +608,6 @@
         padding: 8px 10px;
         margin-bottom: 16px;
         line-height: 1.35;
-      }
-
-      /* Perk Cards: Strictly Left-Aligned Content & Description */
-      .perk-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 9px;
-        margin-bottom: 6px;
-        text-align: left;
-        align-items: stretch;
-      }
-
-      .perk-card {
-        width: 100%;
-        background: rgba(15, 21, 36, 0.92);
-        border: 1px solid rgba(148, 163, 184, 0.24);
-        border-radius: 10px;
-        padding: 12px 14px;
-        display: flex;
-        align-items: flex-start;
-        justify-content: flex-start;
-        gap: 12px;
-        text-align: left;
-        cursor: pointer;
-        transition: all 140ms ease;
-        color: var(--text-primary);
-      }
-
-      .perk-card:hover {
-        border-color: var(--cyan-core);
-        background: rgba(34, 211, 238, 0.11);
-        transform: translateY(-1px);
-        box-shadow: 0 6px 18px rgba(34, 211, 238, 0.16);
-      }
-
-      .perk-card:active {
-        transform: scale(0.98);
-      }
-
-      .perk-icon {
-        width: 34px;
-        height: 34px;
-        border-radius: 8px;
-        background: rgba(34, 211, 238, 0.14);
-        border: 1px solid rgba(34, 211, 238, 0.35);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 13px;
-        font-weight: 800;
-        color: var(--cyan-core);
-        flex-shrink: 0;
-        margin-top: 1px;
-      }
-
-      .perk-card-info {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: flex-start;
-        text-align: left;
-        gap: 3px;
-        min-width: 0;
-        flex: 1;
-      }
-
-      .perk-card-name {
-        font-family: 'Outfit', sans-serif;
-        font-size: 14px;
-        font-weight: 800;
-        letter-spacing: 0.03em;
-        text-transform: uppercase;
-        color: var(--text-primary);
-        text-align: left;
-        width: 100%;
-      }
-
-      .perk-card-desc {
-        font-size: 12px;
-        color: var(--text-secondary);
-        line-height: 1.35;
-        text-align: left;
-        width: 100%;
       }
 
       .stats-grid {

@@ -22,7 +22,7 @@ const EARLY_WAVE_TABLE = {
           10: { shells: 7, targets: 4, basePts: 750, rotating: true },
         };
 
-        function getWaveConfig(wave, bonusTimeBufferMs = 0, calmDriftCount = 0) {
+        function getWaveConfig(wave, bonusTimeBufferMs = 0) {
           const safeWave = Math.max(1, Math.floor(wave));
 
           let tier = 1;
@@ -105,15 +105,9 @@ const EARLY_WAVE_TABLE = {
             boardRotationSpeedRad = dir * Math.min(1.05, 0.52 + (safeWave - 20) * 0.035);
           }
 
-          // Calm Drift perk slows shuffling speed by 15% per stack
-          const calmSlowFactor = Math.pow(1 / 0.85, Math.max(0, calmDriftCount));
-          boardRotationSpeedRad /= calmSlowFactor;
-          innerRingSpeedRad /= calmSlowFactor;
-          outerRingSpeedRad /= calmSlowFactor;
-
           const swapCount = Math.min(14, 4 + Math.floor(safeWave * 0.75));
           const rawSwapDurationMs = Math.max(540, 740 - safeWave * 11);
-          const swapDurationMs = Math.round(rawSwapDurationMs * calmSlowFactor);
+          const swapDurationMs = rawSwapDurationMs;
 
           const lineupDurationMs = 1200; // 1.2s top-right TARGET lineup
           const insertDurationMs = 750; // Smooth Bezier insertion into circular orbit
@@ -158,16 +152,12 @@ const EARLY_WAVE_TABLE = {
             baseWavePoints,
             currentTotalScore,
             overdriveMultiplier,
-            hasDoubleSurge,
-            mistakesThisWave,
           } = params;
 
-          const doubleSurgeTriggered = Boolean(hasDoubleSurge && mistakesThisWave === 0);
-          const surgeMult = doubleSurgeTriggered ? 2.0 : 1.0;
           const odMult = Math.max(1.0, Math.min(3.5, overdriveMultiplier));
 
           if (wave <= 9) {
-            const clampedCombinedMult = Math.min(1.9, odMult * surgeMult);
+            const clampedCombinedMult = Math.min(1.9, odMult);
             const rawWaveScore = Math.round(baseWavePoints * clampedCombinedMult);
             const maxAllowedTotal = 4780;
             const cappedTotal = Math.min(maxAllowedTotal, currentTotalScore + rawWaveScore);
@@ -175,15 +165,13 @@ const EARLY_WAVE_TABLE = {
             return {
               waveScore,
               newTotalScore: cappedTotal,
-              doubleSurgeTriggered,
             };
           }
 
-          const waveScore = Math.round(baseWavePoints * odMult * surgeMult);
+          const waveScore = Math.round(baseWavePoints * odMult);
           return {
             waveScore,
             newTotalScore: currentTotalScore + waveScore,
-            doubleSurgeTriggered,
           };
         }
 

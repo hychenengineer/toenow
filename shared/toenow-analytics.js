@@ -4,7 +4,7 @@
   if (window.ToenowAnalytics) return;
   var measurementId = 'G-PWQER2ZXV5';
   var games = {
-    'number-pop': 'Number Pop', 'ball-track': 'Ball Track',
+    'number-pop': 'Number Pop', 'ball-track': 'Target Track',
     'block-match': 'Block Match', 'add-up': 'Add Up',
     'space-scale': 'Space Scale', 'tap-match': 'Tap Match',
     'spot-quick': 'Spot Quick', 'shadow-match': 'Shadow Match',

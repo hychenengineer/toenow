@@ -102,11 +102,7 @@ async function instrument(page, id) {
       await page.evaluate(()=>{__timedTest.prepare?.();__timedTest.setTime(.1);__timedTest.advance(.2)});
       await page.locator('[data-toenow-screen="gameover"]').waitFor({state:'visible'});
       assert.equal(await page.evaluate(()=>__timedTest.snapshot().time),0,'natural countdown ends run');
-      if (id==='ball-track') {
-        await page.evaluate(()=>{__timedTest.start();__timedTest.setTime(30);__QUANTUM_SHELL__.openPerkModalForWave(3)});
-        await page.locator('#perk-btn-time').click();
-        assert.equal(await page.evaluate(()=>__timedTest.snapshot().time),40,'former shield perk adds time');
-      }
+
       assert.deepEqual(errors,[]);
       const embedded = await context.newPage();
       await instrument(embedded,id);

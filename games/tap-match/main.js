@@ -433,7 +433,7 @@ ToenowScreens.mount("tap-match");
           state.activeWindowMs = cfg.activeWindowMs;
           state.spawnIntervalMs = cfg.spawnIntervalMs;
           state.maxConcurrentNodes = cfg.maxConcurrentNodes;
-          state.waveQuota = cfg.waveQuota;
+          state.waveQuota = tutorialActive() ? 1 : cfg.waveQuota;
           state.waveHits = 0;
           // Carry the run clock across waves; briefing never resets it.
           state.spawnCooldown = 250;
@@ -452,8 +452,8 @@ ToenowScreens.mount("tap-match");
 
           const winSec = (cfg.activeWindowMs / 1000).toFixed(2);
           elBriefGridSpeed.textContent = `${cfg.gridSize}x${cfg.gridSize} · ${cfg.speedLabel} (${winSec}s display)`;
-          elBriefQuota.textContent = `${cfg.waveQuota} Valid Hits`;
-          elBriefTime.textContent = `${Math.ceil(state.timeLeft)}s`;
+          elBriefQuota.textContent = `${state.waveQuota} Valid Hits`;
+          elBriefTime.textContent = tutorialActive() ? '∞' : `${Math.ceil(state.timeLeft)}s`;
           btnBeginWave.textContent = `[BEGIN WAVE ${waveNum}]`;
 
           renderWaveBriefingPreview();
@@ -465,6 +465,16 @@ ToenowScreens.mount("tap-match");
         function launchCurrentWaveFromBriefing() {
           audio.init();
           modalWaveBrief.classList.add('hidden');
+
+          if (tutorialActive()) {
+            const otherShapes = SHAPES.filter(shape => shape !== state.target.shape);
+            for (const [index, shape] of [[3, otherShapes[0]], [4, state.target.shape], [5, otherShapes[1]]]) {
+              Object.assign(state.nodes[index], { status: 'ACTIVE', shape, color: 'CYAN', glyph: 'DOT',
+                isTarget: shape === state.target.shape, elapsedMs: 100, durationMs: state.activeWindowMs });
+            }
+            state.phase = 'PLAYING';
+            return;
+          }
 
           // Crisp READY -> GO! countdown with frozen timer before nodes appear
           state.phase = 'STAGING';
@@ -756,11 +766,9 @@ btnReset.addEventListener('click', () => {
           start() {
             tutorialSnapshot = JSON.parse(JSON.stringify(state));
             Object.assign(state, { isPractice: true, score: 0, wave: 1, waveHits: 0, waveQuota: 1, faults: 0, streak: 0, peakStreak: 0, timeLeft: 60, gridSize: 3 });
-            state.target = generateTargetCriteria(1); buildNodeMatrix();
-            Object.assign(state.nodes[4], { status: 'ACTIVE', isTarget: true,
-              shape: state.target.shape || 'CIRCLE', color: state.target.color || 'CYAN', glyph: state.target.glyph || 'DOT', elapsedMs: 100, durationMs: 2200 });
-            state.phase = 'PLAYING'; penguinCollection.length = 0;
+            penguinCollection.length = 0;
             [modalStart, modalGameOver, modalWaveBrief, modalPause].forEach(m => { m.classList.add('hidden'); m.classList.remove('active'); });
+            prepareWaveBriefing(1);
             syncHud(); elTime.textContent = '∞';
           },
           stop() {
@@ -771,6 +779,11 @@ btnReset.addEventListener('click', () => {
             layoutMatrixGeometry(); syncHud();
           },
           getGuide() {
+            if (state.phase === 'BRIEFING') {
+              const box = btnBeginWave.getBoundingClientRect();
+              return { prompt: 'Look at the target and rules, then start the wave.',
+                rect: { x: box.x, y: box.y, width: box.width, height: box.height } };
+            }
             const node = state.nodes[4], box = canvas.getBoundingClientRect();
             return { prompt: 'Tap the card that matches the target above.', rect: { x: box.left + node.x - node.radius, y: box.top + node.y - node.radius, width: node.radius * 2, height: node.radius * 2 } };
           }

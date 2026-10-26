@@ -105,7 +105,7 @@
     'High-velocity quantitative processing, arithmetic synthesis, and numerical fluency.': '訓練快速數量處理、心算與數字運用能力。',
     'Multi-variable constraint balancing, relational inference, and symbolic deduction.': '訓練條件平衡、關係推理與符號推演能力。',
     'Working memory buffer, sequential recall, and working memory load retention.': '訓練工作記憶、順序回想與資訊保留能力。',
-    'Animal Rescue Train': '動物救援列車', 'Number Pop': '數字泡泡', 'Ball Track': '追蹤光球',
+    'Animal Rescue Train': '動物救援列車', 'Number Pop': '數字泡泡', 'Target Track': '目標追蹤',
     'Block Match': '方塊配對', 'Add Up': '加總挑戰', 'Space Scale': '太空天平', 'Tap Match': '點擊配對',
     'Spot Quick': '快眼辨識', 'Shadow Match': '影子配對', 'Flash Brain': '閃光記憶',
     'Plan the queues and rescue every animal. Five difficulty levels, growing stations, and no timer.': '安排隊伍，救援所有動物。五種難度、逐步擴大的車站，沒有時間限制。',

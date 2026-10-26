@@ -110,6 +110,12 @@ async function complete(page,id,mobile=false){
       const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
       await ready(page,id,lang);const before=await storage(page);
       await page.locator('#'+startId(id)).click();await page.locator('#toenow-tutorial').waitFor({state:'visible'});
+      if(id==='tap-match') {
+        assert.equal(await page.locator('#modal-wave-brief').isVisible(),true,'tutorial starts with the real target assignment');
+        assert.ok((await page.locator('#brief-target-name').innerText()).length>0,'mission identifies the target');
+        assert.equal(await page.locator('#brief-quota').innerText(),lang==='en'?'1 Valid Hits':'1 次有效命中');
+        assert.equal(await page.locator('#brief-time').innerText(),'∞','tutorial briefing has no timer');
+      }
       assert.equal(await page.locator('.tutorial-choice').count(),0,id+' duplicate game demo');
       assert.equal(await page.locator('#'+titleId(id)).isVisible(),false,id+' tutorial must use actual play scene');
       await page.waitForTimeout(250);await assertProtected(page);

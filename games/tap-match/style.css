@@ -237,6 +237,19 @@
         margin-bottom: 12px;
       }
 
+      body[data-tutorial='tap-match'] #modal-wave-brief {
+        position: fixed;
+        inset: 8px;
+      }
+      @media (max-height: 500px) {
+        body[data-tutorial='tap-match'] #modal-wave-brief { padding: 4px; }
+        body[data-tutorial='tap-match'] #modal-wave-brief .modal-card { padding: 12px 16px; }
+        body[data-tutorial='tap-match'] #modal-wave-brief .modal-title { font-size: 20px; margin: 4px 0 8px; }
+        body[data-tutorial='tap-match'] #modal-wave-brief .wave-preview-box { padding: 8px; margin-bottom: 8px; }
+        body[data-tutorial='tap-match'] #modal-wave-brief #wave-preview-canvas { width: 64px; height: 64px; }
+        body[data-tutorial='tap-match'] #modal-wave-brief .spec-list { margin: 8px 0; padding: 8px 0; gap: 4px; }
+        body[data-tutorial='tap-match'] #modal-wave-brief .action-row { margin-top: 8px; }
+      }
       .modal-kicker {
         font-family: 'JetBrains Mono', monospace;
         font-size: 11px;
@@ -369,4 +382,4 @@
       .action-btn:active {
         transform: scale(0.98);
       }
-    
+

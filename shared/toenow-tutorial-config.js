@@ -5,7 +5,7 @@
     "prompt": "Tap from smallest to largest."
   },
   "ball-track": {
-    "name": "BALL TRACK",
+    "name": "TARGET TRACK",
     "prompt": "Remember where the otter hides."
   },
   "block-match": {

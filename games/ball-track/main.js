@@ -23,7 +23,7 @@ ToenowScreens.mount("ball-track");
 
         // Initialize Toenow Game SDK
         const toenowSdk = typeof ToenowGameSDK !== 'undefined'
-          ? new ToenowGameSDK({ gameId: 'ball-track', category: 'spatial', gameTitle: 'Ball Track' })
+          ? new ToenowGameSDK({ gameId: 'ball-track', category: 'spatial', gameTitle: 'Target Track' })
           : null;
 
         let bestScore = 0;
@@ -79,14 +79,9 @@ ToenowScreens.mount("ball-track");
         const waveBannerTitleEl = document.getElementById('wave-banner-title');
 
         const screenTitleEl = document.getElementById('screen-title');
-        const screenPerkEl = document.getElementById('screen-perk');
         const screenPauseEl = document.getElementById('screen-pause');
         const screenGameoverEl = document.getElementById('screen-gameover');
 
-        const perkSubtitleEl = document.getElementById('perk-subtitle');
-        const perkBtnTime = document.getElementById('perk-btn-time');
-        const perkBtnSurge = document.getElementById('perk-btn-surge');
-        const perkBtnCalm = document.getElementById('perk-btn-calm');
 
         const pauseStatScoreEl = document.getElementById('pause-stat-score');
         const pauseStatWaveEl = document.getElementById('pause-stat-wave');
@@ -200,15 +195,15 @@ ToenowScreens.mount("ball-track");
         }
 
         function triggerCoreCrackBurst(x, y, isSuccess) {
-          const primaryColor = isSuccess ? '#22d3ee' : '#f43f5e';
-          const secondaryColor = isSuccess ? '#a5f3fc' : '#fda4af';
+          const primaryColor = isSuccess ? '#79b4a3' : '#f43f5e';
+          const secondaryColor = isSuccess ? '#e1c987' : '#fda4af';
 
           spawnParticle(x, y, 0, 0, 14, 0.36, primaryColor, 'ring');
 
-          const count = isSuccess ? 28 : 22;
+          const count = isSuccess ? 8 : 22;
           for (let i = 0; i < count; i++) {
             const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.25;
-            const speed = 75 + Math.random() * 210;
+            const speed = isSuccess ? 30 + Math.random() * 55 : 75 + Math.random() * 210;
             const color = i % 3 === 0 ? '#ffffff' : i % 2 === 0 ? primaryColor : secondaryColor;
             const kind = i % 4 === 0 ? 'shard' : 'spark';
             spawnParticle(
@@ -216,7 +211,7 @@ ToenowScreens.mount("ball-track");
               y,
               Math.cos(angle) * speed,
               Math.sin(angle) * speed,
-              kind === 'shard' ? 4 + Math.random() * 4 : 2 + Math.random() * 3,
+              isSuccess ? 2 + Math.random() * 2 : kind === 'shard' ? 4 + Math.random() * 4 : 2 + Math.random() * 3,
               0.28 + Math.random() * 0.34,
               color,
               kind
@@ -239,7 +234,7 @@ ToenowScreens.mount("ball-track");
 
         // --- Game State ---
         const state = {
-          mode: 'title', // 'title' | 'playing' | 'perk' | 'paused' | 'gameover'
+          mode: 'title', // 'title' | 'playing' | 'paused' | 'gameover'
           phase: 'idle', // 'idle' | 'wave_ready' | 'lineup' | 'insert' | 'ready_banner' | 'go_banner' | 'shuffle' | 'select' | 'wave_clear' | 'resolve' | 'defeat_beat'
           wave: 1,
           score: 0,
@@ -251,10 +246,6 @@ ToenowScreens.mount("ball-track");
           runTimeSec: ToenowTime.START_SECONDS,
           mistakesThisWave: 0,
           bonusTimeBufferMs: 0,
-          // Active Run Perks (Extra Time, Double Surge, Calm Drift)
-          perkDoubleSurge: false,
-          perkCalmDriftCount: 0,
-          pendingNextWave: 4,
           // Overdrive Acceleration State
           isOverdrive: false,
           overdriveHeldDurationMs: 0,
@@ -509,7 +500,6 @@ ToenowScreens.mount("ball-track");
           bodyEl.setAttribute('data-phase', phase);
 
           screenTitleEl.classList.toggle('active', mode === 'title');
-          screenPerkEl.classList.toggle('active', mode === 'perk');
           screenPauseEl.classList.toggle('active', mode === 'paused');
           screenGameoverEl.classList.toggle('active', mode === 'gameover');
 
@@ -575,8 +565,7 @@ ToenowScreens.mount("ball-track");
           if (window.ToenowAnimals) window.ToenowAnimals.setWave('ball-track', waveNum);
           state.config = getWaveConfig(
             waveNum,
-            state.bonusTimeBufferMs,
-            state.perkCalmDriftCount
+            state.bonusTimeBufferMs
           );
           state.bonusTimeBufferMs = 0;
           state.mistakesThisWave = 0;
@@ -782,8 +771,6 @@ ToenowScreens.mount("ball-track");
 
           state.mistakesThisWave = 0;
           state.bonusTimeBufferMs = 0;
-          state.perkDoubleSurge = false;
-          state.perkCalmDriftCount = 0;
           state.overdriveMultiplier = 1.0;
           state.overdriveHeldDurationMs = 0;
           state.isOverdrive = false;
@@ -791,33 +778,6 @@ ToenowScreens.mount("ball-track");
           state.hitstopMs = 0;
           floatingPopups.length = 0;
           initWave(startWave, true);
-        }
-
-        // --- Milestone Perk Modal Trigger (Every 3 Waves: Wave 3, 6, 9, 12...) ---
-        function checkMilestonePerkTrigger(clearedWave) {
-          if (clearedWave > 0 && clearedWave % 3 === 0) {
-            state.pendingNextWave = clearedWave + 1;
-            perkSubtitleEl.textContent = `Wave ${clearedWave} cleared! Choose a perk for Wave ${state.pendingNextWave}.`;
-            setBodyState('perk', 'idle');
-            return true;
-          }
-          return false;
-        }
-
-        function applyPerkChoice(perkType) {
-          audio.playUiClick(680);
-          if (document.activeElement && typeof document.activeElement.blur === 'function') {
-            document.activeElement.blur();
-          }
-          if (perkType === 'time') {
-            state.runTimeSec = Math.min(60, state.runTimeSec + 10);
-          } else if (perkType === 'surge') {
-            state.perkDoubleSurge = true;
-          } else if (perkType === 'calm') {
-            state.perkCalmDriftCount += 1;
-          }
-          updateHudReadouts();
-          initWave(state.pendingNextWave, true);
         }
 
         // --- Capsule Selection (Direct Click / Tap Only) ---
@@ -894,7 +854,6 @@ ToenowScreens.mount("ball-track");
             baseWavePoints: state.config.baseWavePoints,
             currentTotalScore: state.waveStartScore,
             overdriveMultiplier: state.overdriveMultiplier,
-            hasDoubleSurge: state.perkDoubleSurge,
             mistakesThisWave: state.mistakesThisWave,
           });
 
@@ -902,13 +861,10 @@ ToenowScreens.mount("ball-track");
           const pickedTargetsNow = state.shells.filter((s) => s.hasCore && s.picked).length;
           const unpickedTargets = totalTargets - pickedTargetsNow;
 
-          let pointsEarned = 0;
           if (unpickedTargets === 0) {
-            pointsEarned = Math.max(0, scoreCalc.waveScore - state.waveAwardedSoFar);
             state.score = scoreCalc.newTotalScore;
           } else {
             const share = Math.floor(scoreCalc.waveScore / totalTargets);
-            pointsEarned = share;
             state.waveAwardedSoFar += share;
             state.score = state.waveStartScore + state.waveAwardedSoFar;
           }
@@ -917,7 +873,6 @@ ToenowScreens.mount("ball-track");
           updateHudReadouts();
 
           state.hitstopMs = 45;
-          state.trauma = Math.min(1, state.trauma + 0.22);
           triggerCoreCrackBurst(shell.x, shell.y, true);
 
           if (unpickedTargets === 0) {
@@ -925,25 +880,6 @@ ToenowScreens.mount("ball-track");
           } else {
             audio.playCorrectTap(state.streak);
           }
-
-          const subtextParts = [];
-          if (state.overdriveMultiplier > 1.05) {
-            subtextParts.push(`OVERDRIVE ${state.overdriveMultiplier.toFixed(1)}x`);
-          }
-          if (unpickedTargets === 0 && scoreCalc.doubleSurgeTriggered) {
-            subtextParts.push('DOUBLE SURGE 2x');
-          }
-          if (subtextParts.length === 0) {
-            subtextParts.push(unpickedTargets === 0 ? 'WAVE CLEAR' : 'TARGET LOCKED');
-          }
-
-          spawnPopup(
-            shell.x,
-            shell.y - 48,
-            `+${pointsEarned}`,
-            subtextParts.join(' · '),
-            state.overdriveMultiplier > 1.05 ? '#ff7849' : '#22d3ee'
-          );
 
           if (unpickedTargets === 0) {
             hudPhaseTextEl.textContent = 'WAVE CLEAR';
@@ -1179,9 +1115,6 @@ ToenowScreens.mount("ball-track");
           returnToTitle();
         });
 
-        perkBtnTime.addEventListener('click', () => applyPerkChoice('time'));
-        perkBtnSurge.addEventListener('click', () => applyPerkChoice('surge'));
-        perkBtnCalm.addEventListener('click', () => applyPerkChoice('calm'));
 
         function easeInOutCubic(t) {
           return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -1566,9 +1499,6 @@ ToenowScreens.mount("ball-track");
 
 } else if (state.phase === 'wave_clear') {
             if (state.phaseElapsedMs >= state.phaseDurationMs) {
-              if (checkMilestonePerkTrigger(state.wave)) {
-                return;
-              }
               initWave(state.wave + 1, true);
             }
           } else if (state.phase === 'resolve') {
@@ -1621,8 +1551,6 @@ ToenowScreens.mount("ball-track");
             streak: state.streak,
             runTimeSec: state.runTimeSec,
             mistakesThisWave: state.mistakesThisWave,
-            perkDoubleSurge: state.perkDoubleSurge,
-            perkCalmDriftCount: state.perkCalmDriftCount,
             isOverdrive: state.isOverdrive,
             overdriveMultiplier: state.overdriveMultiplier,
             targetCount: state.config.targetCount,
@@ -1644,9 +1572,6 @@ ToenowScreens.mount("ball-track");
           startNewGame,
           jumpToWave: (waveNum) => {
             initWave(waveNum, false);
-          },
-          openPerkModalForWave: (clearedWave) => {
-            checkMilestonePerkTrigger(clearedWave);
           },
           setOverdrive: (active) => {
             setOverdriveState(active);

@@ -31,7 +31,7 @@
     "animalSpecies": "rabbit"
   },
   "ball-track": {
-    "name": "BALL TRACK",
+    "name": "TARGET TRACK",
     "icon": "🦦",
     "category": "SPACE",
     "description": "Remember the otters, follow their floating leaves, then find their hiding places.",

@@ -1798,7 +1798,7 @@
       },
       {
         id: 'ball-track',
-        title: 'Ball Track',
+        title: 'Target Track',
         category: 'spatial',
         icon: '🔮',
         url: 'games/ball-track/index.html',
@@ -2312,7 +2312,7 @@
               ${video}
             </button>
             <div class="game-tile-caption">
-              <h2>${locked ? '🔒 ' : ''}${game.title}</h2>
+              <h2>${locked ? '🔒 ' : ''}<span>${game.title}</span></h2>
               ${known ? '<button type="button" class="game-preview-button">Preview</button>' : ''}
               <button type="button" class="card-share-btn" data-share-game="${game.id}" title="Share challenge" aria-label="Share ${game.title}">↗</button>
             </div>

@@ -95,6 +95,7 @@
     const e = source => escapeHTML(t(source));
     let buildNotice = '';
     let buildBusy = false;
+    let rabbitMode = 'visit', rabbitProject = null, rabbitChat = 0, rabbitNotice = '', rabbitLastBuilt = '';
     const collection = materials ? root.ToenowMaterials : null;
     function homeState(id) { return materials?.snapshot().homes[id]; }
     function decorationArt(id) {
@@ -138,6 +139,13 @@
       if (!location || !game) return;
       const locked = !unlocked(selectedId);
       host.querySelector('.island-play-button').hidden = locked;
+      const rabbit = selectedId === 'number-pop' && !locked && materials && root.ToenowRabbitHome;
+      dialog.classList.toggle('is-rabbit-home', !!rabbit);
+      if (rabbit) {
+        host.querySelector('.island-play-button').hidden = true;
+        host.querySelector('.island-dialog-content').innerHTML = root.ToenowRabbitHome.markup({snapshot:materials.snapshot(),mode:rabbitMode,projectId:rabbitProject,chatIndex:rabbitChat,notice:rabbitNotice,lastBuilt:rabbitLastBuilt,t});
+        return;
+      }
       if (locked) {
         host.querySelector('.island-dialog-content').innerHTML = `<div class="island-locked-detail" aria-hidden="true">☁</div><h2 id="islandLocationTitle">${e(location.name)}</h2><p class="island-detail-description">${e('Complete Level 1 in an open game to reveal another place.')}</p><p class="island-real-progress">${e('Pass Wave 5 in normal play to unlock one new place.')}</p>`;
         return;
@@ -207,6 +215,7 @@
     }
     function showLocation(id, invoker) {
       if (!visibleLocations().some(l=>l.gameId===id)) return;
+      if (id !== selectedId || !dialog.open) { rabbitMode='visit';rabbitProject=null;rabbitNotice='';rabbitLastBuilt='';rabbitChat=0; }
       selectedId=id;locationSelect.value=id;renderDetail();
       buildNotice='';
       if (!dialog.open) {
@@ -224,7 +233,49 @@
       const target = id ? markers.querySelector(`[data-island-game="${id}"]`) : dialogInvoker;
       if (target?.isConnected) target.focus({preventScroll:true});
     }
+    function launchSelectedGame() {
+      const game=findGame(selectedId);
+      if(!game||!unlocked(selectedId)||launchingGame)return;
+      launchingGame=true;
+      openGame(game,()=>{if(launchingGame)dialog.close();});
+    }
     async function click(event) {
+      const rabbitAction=event.target.closest('[data-rabbit-action]');
+      if(rabbitAction){
+        const action=rabbitAction.dataset.rabbitAction;
+        const fromFooter=!!rabbitAction.closest('.rabbit-home-actions');
+        if(action==='play'){launchSelectedGame();return;}
+        if(action==='back'){dialog.close();return;}
+        rabbitNotice='';rabbitLastBuilt='';
+        if(action==='chat'){rabbitChat++;rabbitMode='visit';}
+        if(action==='build')rabbitMode=rabbitMode==='build'?'visit':'build';
+        if(action==='visit')rabbitMode='visit';
+        renderDetail();
+        host.querySelector(`${fromFooter?'.rabbit-home-actions ':''}[data-rabbit-action="${action==='visit'?'build':action}"]`)?.focus({preventScroll:true});
+        return;
+      }
+      const project=event.target.closest('[data-rabbit-project]'),tab=event.target.closest('[data-rabbit-tab]');
+      if(project||tab){const fromPicker=!!project?.closest('.rabbit-project-picker');rabbitMode='build';rabbitProject=project?project.dataset.rabbitProject:tab.dataset.rabbitTab==='decor'?'decor':null;rabbitNotice='';rabbitLastBuilt='';renderDetail();host.querySelector(project?`${fromPicker?'.rabbit-project-picker ':''}[data-rabbit-project="${rabbitProject}"]`:`[data-rabbit-tab="${tab.dataset.rabbitTab}"]`)?.focus({preventScroll:true});return;}
+      const confirm=event.target.closest('[data-rabbit-confirm]'),rabbitCraft=event.target.closest('[data-rabbit-craft]'),rabbitToggle=event.target.closest('[data-rabbit-toggle]');
+      if(confirm||rabbitCraft||rabbitToggle){
+        const button=confirm||rabbitCraft||rabbitToggle;
+        if(buildBusy||button.disabled||preview||selectedId!=='number-pop')return;
+        const id=confirm?.dataset.rabbitConfirm,kind=rabbitCraft?.dataset.rabbitCraft||rabbitToggle?.dataset.rabbitToggle;
+        const perform=()=>{
+          if(confirm){const p=root.ToenowRabbitHome.getModel(materials.snapshot()).projects.find(p=>p.id===id);return p?.available&&p.affordable?materials.upgrade('number-pop'):{ok:false};}
+          return rabbitCraft?materials.craft('number-pop',kind):materials.toggle('number-pop',kind);
+        };
+        buildBusy=true;
+        let result;
+        try { result=root.navigator?.locks?await root.navigator.locks.request('toenow-materials-v1',perform):perform(); }
+        catch (_) { result={ok:false}; }
+        finally { buildBusy=false; }
+        if(result.ok){rabbitNotice=confirm?'Our new building is ready!':rabbitCraft?'Decoration ready!':'Home updated.';rabbitLastBuilt=id||'';if(confirm){rabbitMode='visit';rabbitProject=null;}}
+        else rabbitNotice='Could not build. Check your materials and browser storage.';
+        render();
+        host.querySelector(confirm?'[data-rabbit-action="build"]':`[data-rabbit-toggle="${kind}"]`)?.focus({preventScroll:true});
+        return;
+      }
       const source=event.target.closest('[data-material-source]');
       if(source){buildNotice='';showLocation(source.dataset.materialSource,source);return;}
       const upgrade=event.target.closest('[data-build-upgrade]'),craft=event.target.closest('[data-build-craft]'),toggle=event.target.closest('[data-build-toggle]');
@@ -245,10 +296,7 @@
       if(place){showLocation(place.dataset.islandGame,place);return;}
       if(event.target.closest('.island-dialog-close'))dialog.close();
       if(event.target.closest('.island-play-button')){
-        const game=findGame(selectedId);
-        if(!game||!unlocked(selectedId)||launchingGame)return;
-        launchingGame=true;
-        openGame(game,()=>{if(launchingGame)dialog.close();});
+        launchSelectedGame();
       }
       if(event.target.closest('.island-mission-go')) { focusNext(); const id = exploration?.snapshot().unlocked.find(id => !exploration.snapshot().completed.includes(id)); if(id)showLocation(id,event.target); }
       if(event.target.closest('.island-discovery-go')) { const id = exploration.snapshot().pending; exploration.dismissDiscovery();render();focusPlace(id);showLocation(id,markers.querySelector(`[data-island-game="${id}"]`)); }

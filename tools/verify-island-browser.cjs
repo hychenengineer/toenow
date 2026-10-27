@@ -81,6 +81,7 @@ const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'.
    await page.locator(`[data-island-game="${place.gameId}"]`).click();
    await page.locator('.island-location-dialog').waitFor({state:'visible'});
    await readyArt('.island-location-dialog img[data-island-art]');
+   if(place.gameId==='number-pop'){assert.equal(await page.locator('.rabbit-yard').count(),1);await page.keyboard.press('Escape');continue;}
    assert.equal(await page.locator('.island-stage-gallery .island-stage-card').count(),5);
    assert.equal(await page.locator('.island-location-dialog .landmark-stage-5').count(),1);
    assert((await page.locator('.island-real-progress').innerText()).includes('尚未探索'));
@@ -120,7 +121,7 @@ const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'.
    html=html.slice(0,end)+'window.__islandFinish=()=>{game.score=120;game.wave=11;game.runDuration=60;triggerGameOver();};'+html.slice(end);
    return route.fulfill({contentType:'text/html',body:html});
   });
-  async function openNumber(){await page.locator('[data-island-game="number-pop"]').click();await page.locator('.island-play-button').click();return page.locator('#gameViewer').contentFrame();}
+  async function openNumber(){await page.locator('[data-island-game="number-pop"]').click();await page.locator('.rabbit-home-actions [data-rabbit-action="play"]').click();return page.locator('#gameViewer').contentFrame();}
   const practice=await openNumber();
   await practice.locator('.unified-practice-btn').click();
   await practice.locator('.unified-practice-level-btn[data-level="3"]').click();

@@ -2,6 +2,13 @@
   'use strict';
   // Display strings only. Game IDs, stored records and animal identifiers stay unchanged.
   const entries = {
+    'New vegetable patch':'新菜圃','Little greenhouse':'小溫室','Harvest stall':'採收攤位','Garden pergola':'花園棚架',
+    'Our home is full of little joys. Thank you!':'小屋充滿小小的幸福，謝謝你！','Just {count} more carrots for our next project!':'再收集 {count} 根紅蘿蔔，就能蓋下一個新地方！','Everything is ready. Shall we build together?':'材料齊了，一起動手建造吧！',
+    'Playing Number Pop brings carrots back to our garden.':'玩數字泡泡，就能帶紅蘿蔔回菜園。','Welcome back! Shall we grow our garden?':'歡迎回來！一起讓菜園成長吧！',
+    'Let’s make our little garden beautiful!':'一起把小菜園變漂亮吧！','Build & decorate':'建造與佈置','Building':'建設','Close building tools':'關閉建造工具',
+    'On display':'已擺放','In your collection':'已收藏','Visit Beaver for timber':'找海狸收集木材','Already part of our garden.':'已經是菜園的一部分了！','This is where our next project will grow.':'下一個新地方，就從這裡開始。','Build the earlier projects first.':'先完成前面的建設，再來蓋這個吧。',
+    'Built':'已建好','Build here':'在這裡建造','A small cottage, a starter patch and room to grow.':'一間簡單小屋、一小塊菜圃，還有等待建設的空地。',
+    'Talk to Rabbit':'找兔子聊天','Harvest together':'一起採收','Garden activities':'庭院活動','Our new building is ready!':'蓋好了！謝謝你幫我一起完成！',
     'My collection':'我的收藏', 'Play · Collect · Build':'遊玩・收集・建造','See five home stages':'看看五個建設階段',
     'Carrots':'紅蘿蔔','Shells':'貝殼','Timber':'木材','Nuts':'堅果','Ribbons':'緞帶','Fish':'小魚','Feathers':'羽毛','Color paper':'彩紙','Seeds':'種子','Bamboo':'竹子',
     'Harvest basket':'採收籃','Harvest cart':'採收車','Shell collection':'貝殼收藏','River jetty':'溪流碼頭','Tool rack':'工具架','Workshop sign':'工坊招牌','Nut basket':'堅果籃','Supply wagon':'補給推車','Parcel ribbons':'包裹緞帶','Gift stall':'禮物攤位','Pool flag':'池畔小旗','Shell slide':'貝殼滑梯','Journal stand':'圖鑑書架','Observation perch':'觀察平台','Paper garland':'彩紙吊飾','Festival stage':'慶典舞台','Flower pots':'小花盆','Picnic garden':'野餐花園','Station planter':'車站盆栽','Garden platform':'花園月台',

@@ -42,7 +42,7 @@ async function instrument(page,id){
  const page=await context.newPage();await instrument(page,'number-pop');await page.goto(base);await page.locator('#islandContinueGuest').count();
  await page.evaluate(()=>window.showIslandWelcome?.());const guest=page.locator('#welcomeGuestBtn');if(await guest.isVisible())await guest.click();
  await page.evaluate(()=>{document.querySelector('#islandWelcome')?.close();});
- await page.locator('[data-island-game="number-pop"]').click();await page.locator('.island-play-button').click();const frame=page.frameLocator('#gameViewer');await frame.locator('#'+catalog['number-pop'].startId).click();
- await frame.locator('body').evaluate(()=>{window.__materialOffset+=30000;window.__finishMaterialGame();});await frame.locator('.toenow-material-reward button').click();await page.locator('.island-build-panel').waitFor();checks.push('Hub iframe receipt → same home PASS');
+ await page.locator('[data-island-game="number-pop"]').click();await page.locator('.rabbit-home-actions [data-rabbit-action="play"]').click();const frame=page.frameLocator('#gameViewer');await frame.locator('#'+catalog['number-pop'].startId).click();
+ await frame.locator('body').evaluate(()=>{window.__materialOffset+=30000;window.__finishMaterialGame();});await frame.locator('.toenow-material-reward button').click();await page.locator('.rabbit-yard').waitFor();checks.push('Hub iframe receipt → same home PASS');
  assert.deepEqual(errors,[]);fs.writeFileSync(path.join(output,'lifecycle-results.json'),JSON.stringify({checks,errors},null,2));console.log(checks.join('\n'));
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

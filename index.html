@@ -777,11 +777,18 @@
     .theater-game-actions { display: flex; gap: 6px; margin-left: auto; }
     .theater-game-actions[hidden] { display: none; }
     .theater-game-actions button { width: 44px; height: 44px; padding: 10px; justify-content: center; flex-shrink: 0; }
-    .theater-game-actions svg { width: 20px; height: 20px; }
+    .theater-game-actions svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
+    .theater-game-actions .control-sound-off,
+    .theater-game-actions [data-muted="true"] .control-sound-on { display: none; }
+    .theater-game-actions [data-muted="true"] .control-sound-off { display: block; }
+    .theater-game-info:has(.theater-game-actions:not([hidden])) { flex: 1; min-width: 0; }
+    .theater-game-info:has(.theater-game-actions:not([hidden])) .theater-game-title { min-width: 0; overflow-wrap: anywhere; }
     .theater-toolbar:has(.theater-game-actions:not([hidden])) #restartGameBtn { display: none; }
     @media(max-width:560px) {
       .theater-toolbar:has(.theater-game-actions:not([hidden])) { padding: 8px 12px; gap: 8px; }
-      .theater-game-info:has(.theater-game-actions:not([hidden])) { width: 100%; gap: 8px; }
+      .theater-game-info:has(.theater-game-actions:not([hidden])) { width: 100%; flex: 0 0 100%; gap: 8px; }
+      .theater-game-info:has(.theater-game-actions:not([hidden])) .theater-game-icon { display: none; }
+      .theater-game-info:has(.theater-game-actions:not([hidden])) .theater-game-title { font-size: .9rem; }
     }
 
     .theater-controls {
@@ -2380,37 +2387,85 @@
       const host = document.getElementById('theaterGameActions');
       host.replaceChildren();
       host.hidden = true;
-      if (currentMountedGame?.id !== 'number-pop') return;
       const gameDoc = gameViewer.contentDocument;
-      const controls = gameDoc?.querySelector('.island-hud-controls');
-      if (!controls) return;
-      const originals = [...controls.querySelectorAll('button')];
-      const buttons = originals.map(original => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'theater-btn';
-        button.addEventListener('click', () => original.click());
-        host.appendChild(button);
-        return button;
-      });
+      if (!gameDoc) return;
+      let originals = [], buttons = [], controls = null;
+      const train = currentMountedGame?.id === 'animal-rescue-train';
+      const drift = currentMountedGame?.id === 'capybara-drift';
       function syncActions() {
-        host.hidden = !['playing','paused'].includes(gameDoc.body.dataset.state);
+        const nextControls = gameDoc.querySelector('.island-hud-controls');
+        const next = train ? [gameDoc.getElementById('restart')].filter(Boolean)
+          : drift ? ['sound', 'rest'].map(id => gameDoc.getElementById(id)).filter(Boolean)
+          : [...(nextControls?.querySelectorAll('button') || [])].filter(button => button.id !== 'btn-clear-selection');
+        if (!next.length) { host.hidden = true; return; }
+        if (next.length !== originals.length || next.some((node, i) => node !== originals[i])) {
+          originals = next; controls = nextControls; host.replaceChildren();
+          if (train) {
+            const pause = document.createElement('button');
+            pause.type = 'button'; pause.className = 'theater-btn';
+            pause.setAttribute('aria-label', 'Pause Game'); pause.title = 'Pause Game';
+            pause.innerHTML = '<svg viewBox="0 0 24 24"><use href="assets/toenow-control-icons.svg#pause"/></svg>';
+            pause.addEventListener('click', () => gameViewer.contentWindow.postMessage({
+              type: gameDoc.getElementById('pause-dialog').open ? 'GAME_RESUME' : 'GAME_PAUSE'
+            }, window.location.origin));
+            host.appendChild(pause);
+          }
+          buttons = originals.map(original => {
+            const button = document.createElement('button');
+            button.type = 'button'; button.className = 'theater-btn';
+            button.addEventListener('click', () => original.click());
+            host.appendChild(button); return button;
+          });
+          if (drift) {
+            const restart = document.createElement('button');
+            restart.type = 'button'; restart.className = 'theater-btn';
+            restart.setAttribute('aria-label', 'Restart Run'); restart.title = 'Restart Run';
+            restart.innerHTML = '<svg viewBox="0 0 24 24"><use href="assets/toenow-control-icons.svg#restart"/></svg>';
+            restart.addEventListener('click', () => gameViewer.contentWindow.postMessage({ type: 'GAME_RESTART' }, window.location.origin));
+            host.appendChild(restart);
+          }
+          // Keep game handlers in the iframe; standalone controls stay intact.
+          if (controls && controls.querySelectorAll('button').length === originals.length) controls.style.display = 'none';
+          else originals.forEach(original => original.style.setProperty('display', 'none', 'important'));
+        }
+        const live = train ? gameDoc.getElementById('play-screen') : drift ? gameDoc.getElementById('play-hud') : controls.closest('.island-live-hud');
+        host.hidden = drift ? live.hidden && gameDoc.getElementById('rest-panel').hidden
+          : !live?.getClientRects().length || gameDoc.defaultView.getComputedStyle(live).visibility === 'hidden';
+        const mode = gameDoc.body.dataset.state || gameDoc.body.dataset.mode;
+        if (mode && !['playing', 'paused'].includes(mode)) host.hidden = true;
+        if (!mode && !drift && [...gameDoc.querySelectorAll('[data-toenow-screen="title"], [data-toenow-screen="gameover"]')]
+          .some(screen => screen.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }))) host.hidden = true;
         originals.forEach((original, index) => {
           const button = buttons[index];
-          button.innerHTML = original.innerHTML;
-          button.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
-          button.setAttribute('aria-label', original.getAttribute('aria-label'));
-          button.title = original.title;
+          const copy = original.cloneNode(true);
+          copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+          // Preserve sprite URLs when copying from a game into the Hub.
+          copy.querySelectorAll('use[href]').forEach(node => node.setAttribute('href', new URL(node.getAttribute('href'), gameDoc.baseURI).href));
+          if (!drift && button.innerHTML !== copy.innerHTML) button.innerHTML = copy.innerHTML;
+          button.setAttribute('aria-label', original.getAttribute('aria-label') || original.title);
+          button.title = original.title; button.disabled = original.disabled;
+          for (const attr of ['aria-pressed', 'data-muted']) {
+            if (original.hasAttribute(attr)) button.setAttribute(attr, original.getAttribute(attr));
+            else button.removeAttribute(attr);
+          }
+          if (drift) {
+            const icon = index === 0 ? (original.getAttribute('aria-pressed') === 'true' ? 'sound-on' : 'sound-off') : 'pause';
+            if (button.dataset.icon !== icon) {
+              button.innerHTML = `<svg viewBox="0 0 24 24"><use href="assets/toenow-control-icons.svg#${icon}"/></svg>`;
+              button.dataset.icon = icon;
+            }
+            button.setAttribute('aria-label', index === 0 ? original.textContent : 'Pause Game');
+          }
         });
       }
+      // React mounts after iframe load and can replace controls on replay.
       const observer = new MutationObserver(syncActions);
-      observer.observe(controls, { subtree: true, attributes: true, childList: true });
-      observer.observe(gameDoc.body, { attributes: true, attributeFilter: ['data-state'] });
-      controls.style.display = 'none';
+      observer.observe(gameDoc.body, { subtree: true, attributes: true, childList: true, characterData: true });
       syncActions();
       clearTheaterGameActions = () => {
         observer.disconnect();
-        controls.style.removeProperty('display');
+        if (controls) controls.style.removeProperty('display');
+        originals.forEach(original => original.style.removeProperty('display'));
         host.replaceChildren();
         host.hidden = true;
       };
@@ -2511,7 +2566,7 @@
     }
 
     function toggleTheaterFullscreen() {
-      const target = currentMountedGame?.id === 'number-pop' ? theaterModal : theaterStage || theaterModal;
+      const target = theaterModal;
       if (!document.fullscreenElement) {
         if (target.requestFullscreen) {
           target.requestFullscreen().catch(() => {});

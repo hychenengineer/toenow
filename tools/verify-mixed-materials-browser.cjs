@@ -13,15 +13,15 @@ journey.chooseGuest();for(const id of journey.snapshot().order)journey.complete(
   const state=fixture(),cost=materials.upgradeRecipe(id,3),missing=Object.keys(cost).at(-1);state.balances[missing]=0;
   await page.evaluate(s=>{localStorage.setItem('toenow_materials_v1',JSON.stringify(s));window.dispatchEvent(new Event('focus'));},state);
   await page.locator(`[data-island-game="${id}"]`).click();
-  if(id==='number-pop')await page.locator('.rabbit-home-actions [data-rabbit-action="build"]').click();
-  const price=id==='number-pop'?'.rabbit-project-price':'.island-upgrade-row',confirm=id==='number-pop'?'[data-rabbit-confirm]':'[data-build-upgrade]';
+  await page.locator('.rabbit-home-actions [data-rabbit-action="build"]').click();
+  const price='.rabbit-project-price',confirm='[data-rabbit-confirm]';
   assert.equal(await page.locator(price+' [data-material-source]').count(),3);assert(await page.locator(confirm).isDisabled());
   await page.locator(price+` [data-material-source="${missing}"]`).click();assert.equal(await page.locator('#islandLocationTitle').innerText(),island.LOCATIONS.find(l=>l.gameId===missing).name);
-  await page.keyboard.press('Escape');await page.locator(`[data-island-game="${id}"]`).click();if(id==='number-pop')await page.locator('.rabbit-home-actions [data-rabbit-action="build"]').click();
+  await page.keyboard.press('Escape');await page.locator(`[data-island-game="${id}"]`).click();await page.locator('.rabbit-home-actions [data-rabbit-action="build"]').click();
   state.balances[missing]=cost[missing];await page.evaluate(s=>{localStorage.setItem('toenow_materials_v1',JSON.stringify(s));window.dispatchEvent(new Event('focus'));},state);
   assert.equal(await page.locator(confirm).isDisabled(),false);await page.locator(confirm).click();await page.waitForFunction(id=>ToenowMaterials.create({storage:localStorage}).snapshot().homes[id].stage===3,id);
   const after=await page.evaluate(()=>ToenowMaterials.create({storage:localStorage}).snapshot());for(const [source,n] of Object.entries(cost))assert.equal(after.balances[source],state.balances[source]-n);
-  if(id==='number-pop')await page.locator('.rabbit-home-actions [data-rabbit-action="build"]').click();assert.equal(await page.locator(price+' [data-material-source]').count(),4);
+  await page.locator('.rabbit-home-actions [data-rabbit-action="build"]').click();assert.equal(await page.locator(price+' [data-material-source]').count(),4);
   if(id==='number-pop'){await page.setViewportSize({width:390,height:844});await page.evaluate(()=>ToenowI18n.setLanguage('zh-Hant'));await page.screenshot({path:path.join(out,'rabbit-four-materials.png'),animations:'disabled'});await page.evaluate(()=>ToenowI18n.setLanguage('en'));await page.setViewportSize({width:1100,height:900});}
   await page.keyboard.press('Escape');checks.push(`${id}: missing source blocks spending, source travel, exact three-item deduction and four-item next recipe PASS`);
  }

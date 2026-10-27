@@ -1,39 +1,11 @@
+// Rabbit compatibility entry point; all scenes use the shared renderer.
 (function(root,factory){
-  if(typeof module==='object'&&module.exports)module.exports=factory(require('./toenow-materials.js'));
-  else root.ToenowRabbitHome=factory(root.ToenowMaterials);
-})(typeof globalThis!=='undefined'?globalThis:this,function(materials){
+  if(typeof module==='object'&&module.exports)module.exports=factory(require('./toenow-homes.js'),require('./toenow-homes-config.js'));
+  else root.ToenowRabbitHome=factory(root.ToenowHomes,root.ToenowHomesConfig);
+})(typeof globalThis!=='undefined'?globalThis:this,function(homes,configs){
   'use strict';
-  const PROJECTS=[
-    {id:'vegetable-patch',name:'New vegetable patch',stage:2,sprite:0,position:'patch'},
-    {id:'greenhouse',name:'Little greenhouse',stage:3,sprite:1,position:'greenhouse'},
-    {id:'harvest-stall',name:'Harvest stall',stage:4,sprite:2,position:'stall'},
-    {id:'pergola',name:'Garden pergola',stage:5,sprite:3,position:'pergola'}
-  ];
-  function getModel(snapshot={}){
-    const home=snapshot.homes?.['number-pop']||{},raw=home.stage;
-    const stage=Number.isInteger(raw)?Math.max(1,Math.min(5,raw)):1;
-    const balance=Number.isSafeInteger(snapshot.balances?.['number-pop'])?Math.max(0,snapshot.balances['number-pop']):0;
-    return {stage,balance,projects:PROJECTS.map(p=>{const recipe=materials.upgradeRecipe('number-pop',p.stage);return {...p,recipe,cost:materials.COSTS[p.stage],built:stage>=p.stage,available:stage+1===p.stage,affordable:Object.entries(recipe).every(([id,n])=>(snapshot.balances?.[id]||0)>=n)};}),
-      decorations:['welcome','together'].map((id,i)=>({id,sprite:i+4,name:materials.ITEMS['number-pop'][id],owned:Array.isArray(home.owned)&&home.owned.includes(id),placed:Array.isArray(home.owned)&&home.owned.includes(id)&&Array.isArray(home.placed)&&home.placed.includes(id),recipe:materials.recipe('number-pop',id)}))};
-  }
-  function getDialogue(snapshot,index=0){
-    const model=getModel(snapshot),next=model.projects.find(p=>p.available);
-    if(index%3===1){if(!next)return {text:'Our home is full of little joys. Thank you!',count:0};const missing=Object.entries(next.recipe).find(([id,n])=>(snapshot.balances?.[id]||0)<n);return missing?{text:'We still need {count} {material} for our next project!',count:missing[1]-(snapshot.balances?.[missing[0]]||0),material:materials.ITEMS[missing[0]].name}:{text:'Everything is ready. Shall we build together?',count:0};}
-    return {text:index%3===2?'Playing Number Pop brings carrots back to our garden.':model.balance?'Welcome back! Shall we grow our garden?':"Let’s make our little garden beautiful!",count:0};
-  }
-  function markup(options={}){
-    const {snapshot={},mode='visit',projectId,chatIndex=0,notice='',lastBuilt=''}=options;
-    const t=options.t||((s)=>s),escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    const e=s=>escape(t(s)),m=getModel(snapshot),building=mode==='build',decorating=projectId==='decor';
-    const selected=m.projects.find(p=>p.id===projectId)||m.projects.find(p=>p.available)||m.projects[m.projects.length-1];
-    const line=getDialogue(snapshot,chatIndex),dialogue=notice?t(notice):t(line.text).replace('{count}',line.count).replace('{material}',t(line.material||''));
-    const sprite=(n,extra='')=>`<span class="rabbit-sprite rabbit-sprite-${n}" ${extra} aria-hidden="true"></span>`;
-    function workbench(){
-      if(!building)return '';
-      const costs=cost=>`<span class="rabbit-material-costs">${Object.entries(cost).map(([id,n])=>`<button type="button" data-material-source="${id}">${materials.ITEMS[id].icon} ${e(materials.ITEMS[id].name)} ${snapshot.balances?.[id]||0} / ${n} ↗</button>`).join('')}</span>`;
-      return `<section class="rabbit-workbench" aria-label="${e('Build & decorate')}"><div class="rabbit-workbench-tabs"><button type="button" data-rabbit-tab="projects" aria-pressed="${!decorating}">${e('Building')}</button><button type="button" data-rabbit-tab="decor" aria-pressed="${decorating}">${e('Decorations')}</button><button type="button" data-rabbit-action="visit" aria-label="${e('Close building tools')}">×</button></div>${decorating?`<div class="rabbit-decoration-list">${m.decorations.map(d=>`<article><span class="rabbit-decoration-thumb">${sprite(d.sprite)}</span><div><strong>${e(d.name)}</strong><small>${d.owned?e(d.placed?'On display':'In your collection'):costs(d.recipe)}</small></div><button type="button" ${d.owned?`data-rabbit-toggle="${d.id}"`:`data-rabbit-craft="${d.id}"`} ${!d.owned&&Object.entries(d.recipe).some(([id,n])=>(snapshot.balances?.[id]||0)<n)?'disabled':''}>${e(d.owned?(d.placed?'Put away':'Place'):'Make')}</button></article>`).join('')}</div><button type="button" class="rabbit-partner-link" data-material-source="block-match">🪵 ${e('Visit Beaver for timber')} ↗</button>`:`<h3>${e(selected.name)}</h3><p>${e(selected.built?'Already part of our garden.':selected.available?'This is where our next project will grow.':'Build the earlier projects first.')}</p><div class="rabbit-project-price">${costs(selected.recipe)}<button type="button" data-rabbit-confirm="${selected.id}" ${selected.built||!selected.available||!selected.affordable?'disabled':''}>${e(selected.built?'Built':'Build here')}</button></div><div class="rabbit-project-picker">${m.projects.map(p=>`<button type="button" data-rabbit-project="${p.id}" aria-pressed="${selected.id===p.id}" title="${e(p.name)}">${p.built?'✓':p.stage-1}</button>`).join('')}</div>`}</section>`;
-    }
-    return `<section class="rabbit-home ${building?'is-building':''}" data-rabbit-stage="${m.stage}" data-rabbit-mode="${mode}"><header class="rabbit-home-header"><button type="button" data-rabbit-action="back">← ${e('My island')}</button><h2 id="islandLocationTitle">${e('Rabbit Harvest Garden')}</h2><span class="rabbit-home-balance" aria-label="${e('Carrots')}: ${m.balance}">🥕 <b>${m.balance}</b></span></header><div class="rabbit-canvas-frame"><div class="rabbit-yard"><img class="rabbit-home-background" src="assets/rabbit-home/background.webp" alt="${e('A small cottage, a starter patch and room to grow.')}" draggable="false"><button type="button" class="rabbit-character" data-rabbit-action="chat" aria-label="${e('Talk to Rabbit')}"><img src="assets/rabbit-home/rabbit.webp" alt="" draggable="false"></button><button type="button" class="rabbit-starter-patch" data-rabbit-action="play" aria-label="${e('Harvest together')} · ${e('Number Pop')}"><span aria-hidden="true">🥕</span></button>${m.projects.filter(p=>p.built||building).map(p=>`<button type="button" class="rabbit-project rabbit-project-${p.position} ${p.built?'is-built':'is-empty'} ${building&&selected.id===p.id?'is-selected':''} ${lastBuilt===p.id?'just-built':''}" data-rabbit-project="${p.id}" aria-label="${e(p.name)}${p.built?' · '+e('Built'):''}">${p.built?sprite(p.sprite,`data-rabbit-built="${p.id}"`):building&&selected.id===p.id?sprite(p.sprite,'data-rabbit-preview="true"'):''}${building?`<span class="rabbit-project-label">${p.built?'✓':'⚒'} ${e(p.name)}</span>`:''}</button>`).join('')}${m.decorations.filter(d=>d.placed).map(d=>`<span class="rabbit-placed-decoration rabbit-placed-${d.id}" data-rabbit-decoration="${d.id}">${sprite(d.sprite)}</span>`).join('')}${!building?`<button type="button" class="rabbit-build-sign" data-rabbit-action="build" aria-label="${e('Build & decorate')}">⚒</button>`:''}</div>${workbench()}</div><footer class="rabbit-home-footer"><div class="rabbit-dialogue"><span class="rabbit-portrait"><img src="assets/rabbit-home/rabbit.webp" alt=""></span><p role="status" aria-live="polite">${escape(dialogue)}</p></div><nav class="rabbit-home-actions" aria-label="${e('Garden activities')}"><button type="button" class="rabbit-primary" data-rabbit-action="play"><span aria-hidden="true">🥕</span><span>${e('Harvest together')}<small>${e('Number Pop')}</small></span></button><button type="button" data-rabbit-action="chat"><span aria-hidden="true">💬</span>${e('Talk to Rabbit')}</button><button type="button" data-rabbit-action="build" aria-pressed="${building}"><span aria-hidden="true">⚒</span>${e('Build & decorate')}</button></nav></footer></section>`;
-  }
-  return {PROJECTS,getModel,getDialogue,markup};
+  return {PROJECTS:configs.get('number-pop').projects,
+    getModel:(snapshot)=>homes.getModel('number-pop',snapshot),
+    getDialogue:(snapshot,index)=>homes.getDialogue('number-pop',snapshot,index),
+    markup:(options={})=>homes.markup({...options,gameId:'number-pop'})};
 });

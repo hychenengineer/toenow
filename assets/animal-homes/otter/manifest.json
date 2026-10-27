@@ -1,0 +1,29 @@
+{
+  "generator": "OpenAI imagegen (built-in)",
+  "assets": [
+    {
+      "kind": "background",
+      "source": "sources/background.png",
+      "runtime": "background.webp",
+      "sourceImage": "exec-c8a1a182-1d89-4d0b-b248-c2aa4295fc5e.png",
+      "width": 1448,
+      "height": 1086,
+      "hasAlpha": false,
+      "transparentFraction": 0,
+      "sha256": "7ab122e0e49e6c1aa1d8915d9445b919708d6f9f842d764166b8e1fc146ae62e",
+      "prompt": "Game environment background, 4:3 landscape. Warm hand-painted cozy children's storybook illustration matching a pastoral animal village game. Scene: a peaceful shallow woodland riverbank, tiny rounded riverside timber shelter at upper left, a single little floating leaf near the shore at x35% y45%; spacious grassy bank on the right and foreground, soft teal water behind. Eye-level slightly elevated view, perspective and scale suitable for adding a standing animal at left foreground (x20% y68%) and four independent building sprites on right half later. Only the modest starter home is present, clustered in leftmost 35% at top/middle; the right 60% is deliberately empty walkable buildable terrain with no structures. Full coherent environment filling canvas, soft natural lighting, painterly detailed edges, clear simple ground. No animals or people, no text, no signs with letters, no UI, no borders, no purchased future buildings. Keep foreground at x20% y68% uncluttered for character overlay."
+    },
+    {
+      "kind": "buildings",
+      "source": "sources/buildings.png",
+      "runtime": "buildings.webp",
+      "sourceImage": "exec-4e130008-91eb-4e90-a10f-fec6bf15122d.png",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "transparentFraction": 0.550957997639974,
+      "sha256": "908171d13218c21928cd9c1e1922a63535e9ff60cd4f699a39b68c3c27434c13",
+      "prompt": "Transparent sprite atlas for a cozy hand-painted storybook animal village game. Exactly SIX isolated objects, 3 columns x 2 rows, equal square cells, overall landscape 3:2. Top row left to right: a short set of rounded river stepping stones; a tiny reed-roof river shelter; a small timber dock with a tied leaf-shaped raft. Bottom row left to right: an open wooden riverside gazebo; a little bowl displaying colorful river shells; a tiny river jetty ornament with a blue flag. Each object centered in its own equal cell with at least 8% transparent padding, completely contained, no overlap or crossing cells. All same warm painted woodland style, three-quarter slightly elevated perspective. Fully transparent alpha around and between objects and through open spaces. NO backdrop, no colored gradient, no ground plates, no cast shadows outside object, no scenery, no characters, no text, no UI, no grid lines. Only the six specified objects; retain transparent alpha."
+    }
+  ]
+}

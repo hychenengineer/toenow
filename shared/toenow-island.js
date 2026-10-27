@@ -139,11 +139,11 @@
       if (!location || !game) return;
       const locked = !unlocked(selectedId);
       host.querySelector('.island-play-button').hidden = locked;
-      const rabbit = selectedId === 'number-pop' && !locked && materials && root.ToenowRabbitHome;
+      const rabbit = !locked && materials && root.ToenowHomesConfig?.get(selectedId) && root.ToenowHomes;
       dialog.classList.toggle('is-rabbit-home', !!rabbit);
       if (rabbit) {
         host.querySelector('.island-play-button').hidden = true;
-        host.querySelector('.island-dialog-content').innerHTML = root.ToenowRabbitHome.markup({snapshot:materials.snapshot(),mode:rabbitMode,projectId:rabbitProject,chatIndex:rabbitChat,notice:rabbitNotice,lastBuilt:rabbitLastBuilt,t});
+        host.querySelector('.island-dialog-content').innerHTML = root.ToenowHomes.markup({gameId:selectedId,language:root.ToenowI18n?.language,snapshot:materials.snapshot(),mode:rabbitMode,projectId:rabbitProject,chatIndex:rabbitChat,notice:rabbitNotice,lastBuilt:rabbitLastBuilt,t});
         return;
       }
       if (locked) {
@@ -259,17 +259,19 @@
       const confirm=event.target.closest('[data-rabbit-confirm]'),rabbitCraft=event.target.closest('[data-rabbit-craft]'),rabbitToggle=event.target.closest('[data-rabbit-toggle]');
       if(confirm||rabbitCraft||rabbitToggle){
         const button=confirm||rabbitCraft||rabbitToggle;
-        if(buildBusy||button.disabled||preview||selectedId!=='number-pop')return;
+        if(buildBusy||button.disabled||preview||!unlocked(selectedId)||!root.ToenowHomesConfig?.get(selectedId))return;
+        const homeId=selectedId;
         const id=confirm?.dataset.rabbitConfirm,kind=rabbitCraft?.dataset.rabbitCraft||rabbitToggle?.dataset.rabbitToggle;
         const perform=()=>{
-          if(confirm){const p=root.ToenowRabbitHome.getModel(materials.snapshot()).projects.find(p=>p.id===id);return p?.available&&p.affordable?materials.upgrade('number-pop'):{ok:false};}
-          return rabbitCraft?materials.craft('number-pop',kind):materials.toggle('number-pop',kind);
+          if(confirm){const p=root.ToenowHomes.getModel(homeId,materials.snapshot()).projects.find(p=>p.id===id);return p?.available&&p.affordable?materials.upgrade(homeId):{ok:false};}
+          return rabbitCraft?materials.craft(homeId,kind):materials.toggle(homeId,kind);
         };
         buildBusy=true;
         let result;
         try { result=root.navigator?.locks?await root.navigator.locks.request('toenow-materials-v1',perform):perform(); }
         catch (_) { result={ok:false}; }
         finally { buildBusy=false; }
+        if(selectedId!==homeId)return;
         if(result.ok){rabbitNotice=confirm?'Our new building is ready!':rabbitCraft?'Decoration ready!':'Home updated.';rabbitLastBuilt=id||'';if(confirm){rabbitMode='visit';rabbitProject=null;}}
         else rabbitNotice='Could not build. Check your materials and browser storage.';
         render();
@@ -316,6 +318,14 @@
     }
     function recoverArt(event) {
       const image = event.target;
+      const home=image.closest?.('.animal-home');
+      if(home&&image.matches('img')){
+        const id=home.dataset.homeId,theme=animals.getTheme(id);
+        if(image.matches('.rabbit-home-background')){
+          const fallback=doc.createElement('img');fallback.className='home-background-fallback';fallback.alt='';fallback.src=animals.getBuildingAsset(id,1);image.replaceWith(fallback);return;
+        }
+        if(image.closest('.rabbit-character,.rabbit-portrait')){image.replaceWith(doc.createTextNode(theme?.icon||'♡'));return;}
+      }
       if (!image.matches?.('img[data-island-art]')) return;
       const container = image.closest('[data-building-kind]');
       if (!container) return;

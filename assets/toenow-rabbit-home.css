@@ -54,3 +54,7 @@
 .rabbit-project-price>.rabbit-material-costs { flex-basis: 100%; }
 .rabbit-decoration-list article:has(.rabbit-material-costs) { grid-template-columns: 42px minmax(0,1fr); }
 .rabbit-decoration-list article:has(.rabbit-material-costs)>button { grid-column: 2; justify-self: end; }
+.home-background-fallback { position:absolute;left:2%;top:1%;width:39%;height:45%;object-fit:contain;pointer-events:none; }
+.rabbit-home .rabbit-character { font-size:clamp(40px,9vw,110px); }
+.rabbit-portrait { text-align:center;font-size:30px; }
+.animal-home[data-home-id="tap-match"] .rabbit-sprite-4 { clip-path:inset(0 0 0 9%); }

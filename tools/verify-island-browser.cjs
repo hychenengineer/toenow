@@ -81,10 +81,8 @@ const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'.
    await page.locator(`[data-island-game="${place.gameId}"]`).click();
    await page.locator('.island-location-dialog').waitFor({state:'visible'});
    await readyArt('.island-location-dialog img[data-island-art]');
-   if(place.gameId==='number-pop'){assert.equal(await page.locator('.rabbit-yard').count(),1);await page.keyboard.press('Escape');continue;}
-   assert.equal(await page.locator('.island-stage-gallery .island-stage-card').count(),5);
-   assert.equal(await page.locator('.island-location-dialog .landmark-stage-5').count(),1);
-   assert((await page.locator('.island-real-progress').innerText()).includes('尚未探索'));
+   assert.equal(await page.locator('.animal-home[data-home-id="'+place.gameId+'"]').count(),1);
+   assert.equal(await page.locator('.rabbit-yard').count(),1);
    await page.keyboard.press('Escape');
   }
   // Open a map button with the keyboard, then change language inside the native dialog.
@@ -108,7 +106,7 @@ const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'.
   await page.evaluate(()=>ToenowI18n.setLanguage('zh-Hant'));
   await page.locator('[data-island-game="flash-brain"]').click();
   await page.locator('.island-location-dialog').waitFor({state:'visible'});
-  await page.locator('.island-play-button').click();
+  await page.locator('.rabbit-home-actions [data-rabbit-action="play"]').click();
   await page.locator('#theaterModal.open').waitFor({state:'visible'});
   await page.locator('#gameViewer').contentFrame().locator('[data-toenow-screen="title"]').waitFor({state:'visible'});
   assert((await page.locator('#gameViewer').getAttribute('src')).includes('flash-brain'));
@@ -174,7 +172,7 @@ const output = process.env.TOENOW_ISLAND_OUTPUT_DIR || path.resolve(__dirname,'.
   const fallback=await fallbackContext.newPage();await fallback.goto(base,{waitUntil:'domcontentloaded'});
   await fallback.locator('[data-island-game="animal-rescue-train"] [data-art-fallback="true"]').waitFor();
   await fallback.locator('[data-island-game="animal-rescue-train"]').click();
-  await fallback.locator('.island-play-button').click();
+  await fallback.locator('.rabbit-home-actions [data-rabbit-action="play"]').click();
   await fallback.locator('#theaterModal.open').waitFor();
   assert((await fallback.locator('#gameViewer').getAttribute('src')).includes('animal-rescue-train'));
   // Independently decode all fifty shipped assets, not just the default stage.

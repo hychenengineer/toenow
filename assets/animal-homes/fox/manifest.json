@@ -1,0 +1,29 @@
+{
+  "generator": "OpenAI imagegen (built-in)",
+  "assets": [
+    {
+      "kind": "background",
+      "source": "sources/background.png",
+      "runtime": "background.webp",
+      "sourceImage": "exec-cebd235f-e0fa-4e2f-82d5-b88c726c0a85.png",
+      "width": 1448,
+      "height": 1086,
+      "hasAlpha": false,
+      "transparentFraction": 0,
+      "sha256": "ad6bc3e3353564299de65362a526adb2b764d8d0ef0344bb3bd229cdf3413ebd",
+      "prompt": "Game environment background, 4:3 landscape. Warm hand-painted cozy children's storybook illustration matching a pastoral animal village game. Scene: a cozy woodland parcel-post garden, tiny warm brick-and-timber weighhouse at upper left, one small parcel and weighing scale near x35% y45%; spacious grassy right yard and foreground, soft orange and lavender wildflowers. Eye-level slightly elevated view, perspective and scale suitable for adding a standing animal at left foreground (x20% y68%) and four independent building sprites on right half later. Only the modest starter home is present, clustered in leftmost 35% at top/middle; the right 60% is deliberately empty walkable buildable terrain with no structures. Full coherent environment filling canvas, soft natural lighting, painterly detailed edges, clear simple ground. No animals or people, no text, no signs with letters, no UI, no borders, no purchased future buildings. Keep foreground at x20% y68% uncluttered for character overlay."
+    },
+    {
+      "kind": "buildings",
+      "source": "sources/buildings.png",
+      "runtime": "buildings.webp",
+      "sourceImage": "exec-042f1e02-86b9-4320-8eae-0977f5cc19af.png",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "transparentFraction": 0.5036741892496744,
+      "sha256": "f17540b61a993038a07120131e5e9c51634450c1e8e3abef7bec0c9d4258e471",
+      "prompt": "Transparent sprite atlas for a cozy hand-painted storybook animal village game. Exactly SIX isolated objects, 3 columns x 2 rows, equal square cells, overall landscape 3:2. Top row left to right: a small parcel sorting table; a little wooden scale shed; a wooden parcel service counter. Bottom row left to right: a wooden arch decorated with colorful ribbons; a little bundle of decorative parcel ribbons on a wooden stand; a small gift stall with wrapped parcels. Each object centered in its own equal cell with at least 8% transparent padding, completely contained, no overlap or crossing cells. All same warm painted woodland style, three-quarter slightly elevated perspective. Fully transparent alpha around and between objects and through open spaces. NO backdrop, no colored gradient, no ground plates, no cast shadows outside object, no scenery, no characters, no text, no UI, no grid lines. Only the six specified objects; retain transparent alpha."
+    }
+  ]
+}

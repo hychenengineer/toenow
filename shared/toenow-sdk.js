@@ -6,12 +6,13 @@
     module.exports = factory(
       require('./toenow-levels.js'),
       require('./toenow-security.js'),
-      require('./toenow-platform.js')
+      require('./toenow-platform.js'),
+      require('./toenow-materials.js')
     );
   } else {
-    root.ToenowGameSDK = factory(root.ToenowLevels, root.ToenowSecurity, root.ToenowPlatform);
+    root.ToenowGameSDK = factory(root.ToenowLevels, root.ToenowSecurity, root.ToenowPlatform, root.ToenowMaterials);
   }
-})(typeof self !== 'undefined' ? self : this, function (ToenowLevels, ToenowSecurity, ToenowPlatform) {
+})(typeof self !== 'undefined' ? self : this, function (ToenowLevels, ToenowSecurity, ToenowPlatform, ToenowMaterials) {
   'use strict';
   var instances = {};
 
@@ -63,6 +64,7 @@
     };
     this.isPractice = false;
     this.runActive = false;
+    try { this.materialLedger = ToenowMaterials?.create({ storage: typeof localStorage !== 'undefined' ? localStorage : null }); } catch (_) {}
     instances[this.gameId] = this;
     this.runStartTime = Date.now();
     this.platform = ToenowPlatform ? new ToenowPlatform(this.config) : null;
@@ -182,6 +184,7 @@
   };
 
   ToenowGameSDK.prototype.reportGameOver = function (options) {
+    this.finishMaterials(options);
     this.runActive = false;
     options = options || {};
     var rawScore = Math.max(0, Math.round(Number(options.score) || 0));
@@ -265,6 +268,10 @@
     this.runStartWave = Math.max(1, Number(options.wave) || 1);
     this.progressLevel = 0;
     this.setPracticeMode(options.isPractice !== undefined ? options.isPractice : this.isPractice);
+    this.cancelMaterials();
+    const isLesson = typeof window !== 'undefined' && window.ToenowTutorials?.isActive?.(this.gameId);
+    this.materialRun = this.materialLedger?.beginRun(this.gameId, { wave: this.runStartWave, isPractice: this.isPractice, isPreview: options.isPreview || isLesson });
+    if (typeof window !== 'undefined') window.ToenowMaterialUI?.clear();
     try {
       if (typeof window !== 'undefined' && window.ToenowAnalytics) {
         window.ToenowAnalytics.startGame(this.gameId, { wave: options.wave || 1, isPractice: this.isPractice });
@@ -273,6 +280,25 @@
   };
 
   ToenowGameSDK.getInstance = function (gameId) { return instances[gameId] || null; };
+  ToenowGameSDK.prototype.cancelMaterials = function () {
+    this.materialLedger?.cancelRun(this.materialRun);
+    this.materialRun = null;
+    this.materialGeneration = (this.materialGeneration || 0) + 1;
+  };
+  ToenowGameSDK.prototype.finishMaterials = function (options) {
+    const token = this.materialRun, generation = this.materialGeneration;
+    this.materialRun = null;
+    const data = Object.assign({}, options, { isPractice: this.isPractice || options?.isPractice,
+      isPreview: options?.isPreview || (typeof window !== 'undefined' && window.ToenowTutorials?.isActive?.(this.gameId)) });
+    const finish = () => {
+      const reward = this.materialLedger?.finishRun(token, data) || { amount: 0 };
+      if (typeof window !== 'undefined' && generation === this.materialGeneration && (reward.amount || reward.error)) window.ToenowMaterialUI?.show(this.gameId, reward);
+      return reward;
+    };
+    // Serialize writes from other same-origin game/Hub tabs where Web Locks exist.
+    if (typeof window !== 'undefined' && window.navigator?.locks) return window.navigator.locks.request('toenow-materials-v1', finish);
+    return finish();
+  };
   ToenowGameSDK.prototype.reportProgress = function (options) {
     options = options || {};
     var wave = options.wave;

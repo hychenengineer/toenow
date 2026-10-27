@@ -83,7 +83,7 @@
   }
 
   function mount(options) {
-    const { host, listHost, levels, openGame, exploration } = options;
+    const { host, listHost, levels, openGame, exploration, materials } = options;
     if (!host) return null;
     const doc = host.ownerDocument, root = doc.defaultView;
     let storage; try { storage = root.localStorage; } catch (_) {}
@@ -93,10 +93,31 @@
     let view = exploration ? 'island' : read(storage, VIEW_KEY) === 'list' ? 'list' : 'island';
     const t = source => root.ToenowI18n?.t(source) || source;
     const e = source => escapeHTML(t(source));
+    let buildNotice = '';
+    let buildBusy = false;
+    const collection = materials ? root.ToenowMaterials : null;
+    function homeState(id) { return materials?.snapshot().homes[id]; }
+    function decorationArt(id) {
+      const item=collection?.ITEMS[id],home=homeState(id);
+      return !item||!home?.placed.length?'':`<span class="island-home-decorations" aria-label="${e('Home decorations')}">${home.placed.map(kind=>`<span data-home-decoration="${kind}" title="${e(item[kind])}">${kind==='welcome'?item.icon:item.decor}</span>`).join('')}</span>`;
+    }
+    function buildPanel(id) {
+      if(!materials)return '';
+      const state=materials.snapshot(),item=collection.ITEMS[id],home=state.homes[id],cost=collection.COSTS[home.stage+1];
+      const costHTML=recipe=>Object.entries(recipe).map(([source,n])=>`<button type="button" class="island-material-source" data-material-source="${source}">${collection.ITEMS[source].icon} ${e(collection.ITEMS[source].name)} ${state.balances[source]} / ${n} <span aria-hidden="true">↗</span></button>`).join('');
+      return `<section class="island-build-panel" aria-label="${e('Build your home')}"><div class="island-build-heading"><div><small>${e('HOME STAGE')} ${home.stage} / 5</small><h3>${e('Build your home')}</h3></div><span class="island-material-balance">${item.icon} ${state.balances[id]} <small>${e(item.name)}</small></span></div><p>${e('Play this game to collect its special material.')}</p>${home.stage<5?`<div class="island-upgrade-row"><div><strong>${e('Next home stage')} ${home.stage+1}</strong><span>${item.icon} ${state.balances[id]} / ${cost}</span></div><button type="button" data-build-upgrade ${preview||state.balances[id]<cost?'disabled':''}>${e('Upgrade home')}</button></div>`:`<p class="island-home-complete">${e('Home complete! Keep collecting decorations.')}</p>`}<h4>${e('Decorations')}</h4><div class="island-recipe-list">${['welcome','together'].map(kind=>{const owned=home.owned.includes(kind),recipe=collection.recipe(id,kind),afford=Object.entries(recipe).every(([source,n])=>state.balances[source]>=n);return `<article class="island-recipe"><div class="island-recipe-icon" aria-hidden="true">${kind==='welcome'?item.icon:item.decor}</div><div><strong>${e(item[kind])}</strong><small>${e(kind==='welcome'?'A little gift for this home':'Made with an animal friend')}</small><div class="island-recipe-cost">${owned?'':costHTML(recipe)}</div></div><button type="button" ${owned?`data-build-toggle="${kind}"`:`data-build-craft="${kind}"`} ${preview||(!owned&&!afford)?'disabled':''}>${e(owned?(home.placed.includes(kind)?'Put away':'Place'):'Make')}</button></article>`;}).join('')}</div><p class="island-build-status" role="status">${e(buildNotice)}</p><small class="island-build-save-note">${e('Materials and homes are saved in this browser.')}</small></section>`;
+    }
     host.className = 'island-shell';
     host.setAttribute('data-i18n-ignore', '');
     host.innerHTML = `<div class="island-topline"><div class="island-intro"><p class="island-eyebrow" data-island-text="ANIMAL FRIENDS / NEW DISCOVERIES"></p><h1 data-island-text="An island of animals. A world to discover."></h1><p class="island-intro-copy" data-island-text="Meet your animal friends. Help with their challenges and watch their homes grow."></p></div><div class="island-view-switch" role="group" aria-label="Hub view"><button type="button" id="islandMapViewBtn" data-view="island" data-island-text="My island"></button><button type="button" id="islandListViewBtn" data-view="list" data-island-text="Game list"></button></div></div><div class="island-map-panel"><div class="island-map-toolbar"><div class="island-counter" aria-live="polite"></div><div class="island-preview-control"><label for="islandStagePreview" data-island-text="Appearance preview"></label><select id="islandStagePreview"><option value="0" data-island-text="My records"></option>${[1,2,3,4,5].map(n=>`<option value="${n}">Level ${n}</option>`).join('')}</select></div></div><p class="island-preview-note" hidden data-island-text="Visual preview only. Your game records stay unchanged."></p><div class="island-map-viewport" role="region" aria-label="Island exploration map" tabindex="0"><div class="island-map-world"><div class="island-map-markers"></div><div class="island-cartouche" aria-hidden="true"><span>TOENOW</span><span data-island-text="EXPLORER'S ISLAND"></span></div></div></div><div class="island-map-bottom"><label for="islandLocationSelect" data-island-text="Travel to a place"></label><select id="islandLocationSelect"></select><span data-island-text="Swipe the map to explore. Select a place to see its challenge."></span></div><div class="island-legend"><span data-island-text="Five stages, one growing landmark"></span><div>${[1,2,3,4,5].map(n=>`<span>LVL ${n}</span>`).join('<span aria-hidden="true">—</span>')}</div><p data-island-text="Animal homes grow with your highest level reached in normal play. Practice runs do not advance the island."></p></div></div><dialog class="island-location-dialog" aria-labelledby="islandLocationTitle"><button type="button" class="island-dialog-close" aria-label="Close location">×</button><div class="island-dialog-content"></div><button type="button" class="island-play-button" data-island-text="Enter challenge"></button></dialog>`;
     const dialog = host.querySelector('dialog');
+    let bag;
+    if(materials){
+      const details=doc.createElement('details');details.className='island-material-bag';
+      details.innerHTML=`<summary>${e('My collection')} <span>${e('Play · Collect · Build')}</span></summary><div class="island-material-inventory"></div>`;
+      host.querySelector('.island-topline').after(details);bag=details;
+      host.querySelector('.island-legend p').dataset.islandText='Collect materials in normal play to build animal homes. Challenge levels stay separate.';
+    }
     const markers = host.querySelector('.island-map-markers');
     const locationSelect = host.querySelector('#islandLocationSelect');
     const previewSelect = host.querySelector('#islandStagePreview');
@@ -122,17 +143,30 @@
         return;
       }
       const p = getProgress(selectedId, storage, levels);
-      const displayLevel = preview || p.level;
+      const displayLevel = preview || homeState(selectedId)?.stage || p.level;
       host.querySelector('.island-dialog-content').innerHTML = `<div class="island-detail-art" data-stage="${displayLevel}">${landmark(location.kind,displayLevel,location.color)}</div><p class="island-detail-eyebrow">${e('A place to discover')} · ${e(game.title)}</p><h2 id="islandLocationTitle">${e(location.name)}</h2><p class="island-detail-description">${e(game.description || '')}</p><p class="island-real-progress">${p.explored ? `${e('Highest level reached')}: LVL ${p.level} · ${e('Wave')} ${p.wave}` : e('Not yet explored. Your first adventure starts at Level 1.')}</p><div class="island-stage-gallery" aria-label="${e('Five landmark stages')}">${[1,2,3,4,5].map(n=>`<div class="island-stage-card ${n===displayLevel?'is-current':''}" data-stage="${n}">${landmark(location.kind,n,location.color)}<span>LVL ${n}</span><small>${e(levels.LEVELS[n-1].name)}</small></div>`).join('')}</div><p class="island-detail-footnote">${e(preview ? 'Visual preview only. Your game records stay unchanged.' : 'Reach the next level in normal play to grow this landmark.')}</p>`;
+      if(materials){
+        host.querySelector('.island-detail-art').insertAdjacentHTML('beforeend',decorationArt(selectedId));
+        host.querySelector('.island-detail-footnote').textContent=t('Collect materials to choose how this home grows.');
+        host.querySelectorAll('.island-stage-card').forEach((card,i)=>{card.querySelector('span:not(.island-landmark)').textContent=`${t('HOME STAGE')} ${i+1}`;card.querySelector('small').textContent=i===0?t('A cozy beginning'):t('More room for friends');});
+        host.querySelector('.island-real-progress').insertAdjacentHTML('afterend',buildPanel(selectedId));
+        const gallery=host.querySelector('.island-stage-gallery');
+        const stages=doc.createElement('details');stages.className='island-home-stage-preview';
+        const summary=doc.createElement('summary');summary.textContent=t('See five home stages');stages.append(summary);
+        gallery.before(stages);stages.append(gallery);
+      }
     }
     function render() {
+      if(bag){const state=materials.snapshot();bag.querySelector('summary').innerHTML=`${e('My collection')} <span>${e('Play · Collect · Build')}</span>`;bag.querySelector('.island-material-inventory').innerHTML=Object.entries(collection.ITEMS).map(([id,item])=>`<button type="button" data-material-source="${id}" aria-label="${e(item.name)} ${state.balances[id]}"><span>${item.icon}</span><strong>${state.balances[id]}</strong><small>${e(item.name)}</small></button>`).join('');}
       const focusedGameId = doc.activeElement?.closest('[data-island-game]')?.dataset.islandGame;
       const journey = exploration?.snapshot();
       const exploring = journey?.mode === 'explore';
       const nextId = journey?.unlocked.find(id => !journey.completed.includes(id));
       const nextPlace = LOCATIONS.find(l => l.gameId === nextId);
       const allOpen = journey && journey.unlocked.length >= LOCATIONS.filter(l => findGame(l.gameId)).length;
-      host.dataset.journey = exploring ? (allOpen ? 'complete' : 'explore') : 'open';
+      // Discovery keeps the same map controls after the final place opens.
+      host.dataset.journey = exploring ? 'explore' : 'open';
+      if (exploration) { view = 'island'; preview = 0; category = 'all'; }
       const pendingPlace = LOCATIONS.find(l => l.gameId === journey?.pending);
       const nextLockedPlace = LOCATIONS.find(l => l.gameId === journey?.order.find(id => !journey.unlocked.includes(id)));
       guidance.hidden = !exploring;
@@ -161,10 +195,10 @@
       const explored = all.filter(l=>getProgress(l.gameId,storage,levels).explored).length;
       host.querySelector('.island-counter').textContent = exploring ? `${journey.unlocked.length} / ${all.length} ${t('places open')}` : `${explored} / ${all.length} ${t('places explored')}`;
       markers.innerHTML = visible.map(l=>{
-        const game = findGame(l.gameId), p=getProgress(l.gameId,storage,levels), stage=preview||p.level;
+        const game = findGame(l.gameId), p=getProgress(l.gameId,storage,levels), stage=preview||homeState(l.gameId)?.stage||p.level;
         const locked = !unlocked(l.gameId);
         if (locked) return `<button type="button" class="island-location is-locked" data-island-game="${l.gameId}" data-stage="1" data-locked="true" style="left:${l.x}%;top:${l.y}%;--place-color:${l.color}" aria-label="${e(l.name)} · ${e('Still in the mist')}"><span class="island-mist-art" aria-hidden="true">${landmark(l.kind,1,l.color)}</span><span class="island-mist-cloud" aria-hidden="true"></span><span class="island-lock" aria-hidden="true">🔒</span></button>`;
-        return `<button type="button" class="island-location ${p.explored?'is-explored':''} ${l.gameId === nextId && exploring ? 'is-next' : ''} ${l.gameId === journey?.pending ? 'is-discovered' : ''}" aria-disabled="false" data-island-game="${l.gameId}" data-stage="${stage}" style="left:${l.x}%;top:${l.y}%;--place-color:${l.color}" aria-label="${e(l.name)} · ${e(game.title)} · ${e(p.explored?'Highest level reached':'Not yet explored')}${p.explored?' '+p.level:''}">${landmark(l.kind,stage,l.color)}<span class="island-place-label">${e(l.name)}<small>${e(game.title)}</small><span class="island-stage-dots" aria-hidden="true">${[1,2,3,4,5].map(n=>`<i class="${n<=stage?'is-filled':''}"></i>`).join('')}<b>${preview?e('Preview'):p.explored?'LVL '+p.level:e('Explore')}</b></span></span></button>`;
+        return `<button type="button" class="island-location ${p.explored?'is-explored':''} ${l.gameId === nextId && exploring ? 'is-next' : ''} ${l.gameId === journey?.pending ? 'is-discovered' : ''}" aria-disabled="false" data-island-game="${l.gameId}" data-stage="${stage}" style="left:${l.x}%;top:${l.y}%;--place-color:${l.color}" aria-label="${e(l.name)} · ${e(game.title)} · ${e(materials?'HOME STAGE':p.explored?'Highest level reached':'Not yet explored')} ${materials?stage:p.explored?p.level:''}">${landmark(l.kind,stage,l.color)}${decorationArt(l.gameId)}<span class="island-place-label">${e(l.name)}<small>${e(game.title)}</small><span class="island-stage-dots" aria-hidden="true">${[1,2,3,4,5].map(n=>`<i class="${n<=stage?'is-filled':''}"></i>`).join('')}<b>${preview?e('Preview'):materials?e('HOME STAGE')+' '+stage:p.explored?'LVL '+p.level:e('Explore')}</b></span></span></button>`;
       }).join('');
       locationSelect.innerHTML = visible.map(l=>`<option value="${l.gameId}">${e(l.name)} · ${e(findGame(l.gameId).title)}</option>`).join('');
       locationSelect.value = selectedId;
@@ -174,6 +208,7 @@
     function showLocation(id, invoker) {
       if (!visibleLocations().some(l=>l.gameId===id)) return;
       selectedId=id;locationSelect.value=id;renderDetail();
+      buildNotice='';
       if (!dialog.open) {
         dialogInvoker = invoker || doc.activeElement;
         launchingGame = false;
@@ -189,7 +224,21 @@
       const target = id ? markers.querySelector(`[data-island-game="${id}"]`) : dialogInvoker;
       if (target?.isConnected) target.focus({preventScroll:true});
     }
-    function click(event) {
+    async function click(event) {
+      const source=event.target.closest('[data-material-source]');
+      if(source){buildNotice='';showLocation(source.dataset.materialSource,source);return;}
+      const upgrade=event.target.closest('[data-build-upgrade]'),craft=event.target.closest('[data-build-craft]'),toggle=event.target.closest('[data-build-toggle]');
+      if(materials&&(upgrade||craft||toggle)){
+        if(preview||buildBusy||(upgrade||craft||toggle).disabled)return;
+        buildBusy=true;
+        const id=selectedId;
+        const perform=()=>upgrade?materials.upgrade(id):craft?materials.craft(id,craft.dataset.buildCraft):materials.toggle(id,toggle.dataset.buildToggle);
+        const result=root.navigator?.locks?await root.navigator.locks.request('toenow-materials-v1',perform):perform();
+        buildBusy=false;
+        buildNotice=result.ok?(upgrade?'Your home has grown!':craft?'Decoration ready!':'Home updated.'):'Could not build. Check your materials and browser storage.';
+        const kind=craft?.dataset.buildCraft||toggle?.dataset.buildToggle;
+        render();host.querySelector(upgrade?'[data-build-upgrade]':`[data-build-toggle="${kind}"]`)?.focus({preventScroll:true});return;
+      }
       const viewButton=event.target.closest('button[data-view]');
       if(viewButton){view=viewButton.dataset.view;try{storage?.setItem(VIEW_KEY,view);}catch(_){}render();return;}
       const place=event.target.closest('[data-island-game]');

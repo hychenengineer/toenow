@@ -15,6 +15,7 @@
   <script src="shared/toenow-security.js"></script>
   <script src="shared/toenow-platform.js"></script>
   <script src="shared/toenow-analytics.js"></script>
+  <script src="shared/toenow-materials.js"></script>
   <script src="shared/toenow-sdk.js"></script>
   <script src="shared/toenow-i18n-core.js"></script>
   <script src="shared/toenow-i18n-games-a.js"></script>
@@ -1501,12 +1502,14 @@
     }
   </style>
   <link rel="stylesheet" href="assets/toenow-game-previews.css">
+  <link rel="stylesheet" href="assets/capybara-entry.css">
   <script src="shared/toenow-game-previews.js"></script>
   <link rel="stylesheet" href="assets/toenow-hub-themes.css">
   <script src="shared/toenow-hub-themes.js"></script>
-  <link rel="stylesheet" href="assets/toenow-island.css?v=island-20261026-3">
-  <script src="shared/toenow-island.js?v=island-20261026-3"></script>
-  <script src="shared/toenow-exploration.js?v=island-20261026-3"></script>
+  <link rel="stylesheet" href="assets/toenow-island.css?v=materials-20261026-1">
+  <link rel="stylesheet" href="assets/toenow-materials.css?v=materials-20261026-1">
+  <script src="shared/toenow-island.js?v=materials-20261026-1"></script>
+  <script src="shared/toenow-exploration.js?v=island-20261026-4"></script>
 <link rel="stylesheet" href="assets/toenow-animals.css">
 </head>
 <body>
@@ -1554,7 +1557,7 @@
             <option value="calm" data-source="Calm Practice Room">Calm Practice Room</option>
           </select>
         </label>
-        <button type="button" class="btn-action" id="openLeaderboardBtn">
+        <button type="button" class="btn-action" id="openLeaderboardBtn" hidden disabled>
           <span>🏆</span>
           <span>Leaderboard</span>
         </button>
@@ -1574,6 +1577,11 @@
        ========================================== -->
   <main class="main-container">
     <section id="islandExplorer" aria-label="Island explorer"></section>
+    <section class="carefree-entry" aria-labelledby="carefree-entry-title">
+      <img src="assets/capybara-drift-preview.png" alt="" width="155" height="100">
+      <div><span class="carefree-kicker">CAREFREE ISLAND</span><h2 id="carefree-entry-title">Capybara Drift</h2><p>No timer. No rush. Just drift.</p></div>
+      <button id="open-capybara" type="button">Visit Capybara</button>
+    </section>
     <div id="hubListView" class="hub-list-view">
     <section class="hub-challenge-hero" id="hubChallengeHero" aria-labelledby="hubChallengeTitle" data-i18n-ignore>
       <div>
@@ -1661,6 +1669,15 @@
   <!-- ==========================================
        GLOBAL LEADERBOARDS MODAL
        ========================================== -->
+  <dialog id="leaderboardUnlockNotice" class="leaderboard-unlock-notice" aria-labelledby="leaderboardUnlockTitle" aria-describedby="leaderboardUnlockDescription">
+    <span class="unlock-trophy" aria-hidden="true">🏆</span>
+    <h2 id="leaderboardUnlockTitle" data-leaderboard-text="Leaderboard unlocked!">Leaderboard unlocked!</h2>
+    <p id="leaderboardUnlockDescription" data-leaderboard-text="You completed Level 1 in all 10 games. See how your scores compare!">You completed Level 1 in all 10 games. See how your scores compare!</p>
+    <div class="leaderboard-unlock-actions">
+      <button type="button" id="viewUnlockedLeaderboardBtn" data-leaderboard-text="View leaderboard">View leaderboard</button>
+      <button type="button" id="dismissLeaderboardNoticeBtn" data-leaderboard-text="Continue exploring">Continue exploring</button>
+    </div>
+  </dialog>
   <div class="modal-overlay" id="leaderboardModal" aria-hidden="true" role="dialog" aria-label="Toenow Global Arena">
     <div class="leaderboard-dialog">
       <div class="lb-header">
@@ -1782,6 +1799,13 @@
        ============================================================================ */
     const GAMES_CONFIG = [
       {
+        id: 'capybara-drift', title: 'Capybara Drift', category: 'relax', icon: '🍊',
+        url: 'games/capybara-drift/index.html', preview: 'assets/capybara-drift-preview.png',
+        difficulty: 1, leaderboard: false,
+        description: 'Float with Capybara. Collect little joys, meet friends, and take your time.',
+        scoreKey: 'capybara_drift_best_score_v1', waveKey: 'capybara_drift_best_wave_v1'
+      },
+      {
         id: 'animal-rescue-train',
         title: 'Animal Rescue Train',
         category: 'logic',
@@ -1878,6 +1902,7 @@
     ];
 
     const CATEGORY_META = {
+      relax: { label: 'Relax', description: 'Carefree Island' },
       puzzle: {
         label: 'Pattern',
         description: 'Pattern recognition, non-verbal geometric synthesis, and visual lattice solving.'
@@ -2225,6 +2250,8 @@
      * and dynamic cold-start benchmark anchoring.
      */
     function recalibrateCognitiveProfile(gameId, category, rawScore) {
+      // Joy points have no cognitive benchmark and must not alter training ratings.
+      if (GAMES_CONFIG.find(game => game.id === gameId)?.category === 'relax') return;
       const profile = getUserProfile();
       profile._lastTrained = profile._lastTrained || {};
       const now = Date.now();
@@ -2277,16 +2304,31 @@
     let gamePreviewController = null;
     let islandExplorer = null;
     let exploration = null;
+    let materials = null;
+    let hubReadyForNotices = false;
     let currentExplorationRun = null;
     function refreshExploration() {
       exploration?.reconcile();
       renderBentoGrid();
     }
+    function showLeaderboardUnlockNotice() {
+      if (!hubReadyForNotices || !exploration?.isLeaderboardUnlocked()) return;
+      const notice = document.getElementById('leaderboardUnlockNotice');
+      for (const node of notice.querySelectorAll('[data-leaderboard-text]')) {
+        node.textContent = window.ToenowI18n?.t(node.dataset.leaderboardText) || node.dataset.leaderboardText;
+      }
+      // Let players finish the current game before announcing access on the Hub.
+      if (exploration.shouldShowLeaderboardNotice() && !notice.open && !theaterModal.classList.contains('open')) notice.showModal();
+    }
     function renderBentoGrid() {
       if (exploration) {
-        const journey = exploration.snapshot();
-        document.body.dataset.exploration = journey.unlocked.length === journey.order.length ? 'complete' : 'explore';
+        document.body.dataset.exploration = 'explore';
       }
+      const leaderboardButton = document.getElementById('openLeaderboardBtn');
+      const leaderboardUnlocked = exploration?.isLeaderboardUnlocked() || false;
+      leaderboardButton.hidden = !leaderboardUnlocked;
+      leaderboardButton.disabled = !leaderboardUnlocked;
+      showLeaderboardUnlockNotice();
       gamePreviewController?.destroy();
       gamePreviewController = null;
       const grid = document.getElementById('gamesBentoGrid');
@@ -2308,7 +2350,7 @@
       }
 
       grid.innerHTML = filtered.map(game => {
-        const locked = exploration && !exploration.isUnlocked(game.id);
+        const locked = game.category !== 'relax' && exploration && !exploration.isUnlocked(game.id);
         const known = ['animal-rescue-train','number-pop','ball-track','block-match','add-up','space-scale','tap-match','spot-quick','shadow-match','flash-brain'].includes(game.id);
         const poster = known ? 'assets/animal-gameplay-previews/' + game.id + '-poster.png' : (game.preview || 'assets/number-pop-preview.png');
         const video = known ? '<video muted playsinline loop preload="none" data-src="assets/animal-gameplay-previews/' + game.id + '.webm" aria-hidden="true"></video>' : '';
@@ -2472,7 +2514,7 @@
     });
 
     function openTheaterModal(game, onReady) {
-      if (exploration && !exploration.isUnlocked(game.id)) {
+      if (game.category !== 'relax' && exploration && !exploration.isUnlocked(game.id)) {
         islandExplorer?.showLocation(game.id);
         return;
       }
@@ -2552,7 +2594,7 @@
 
     function restartCurrentGame() {
       if (!currentMountedGame) return;
-      if (currentMountedGame.id === 'animal-rescue-train') {
+      if (currentMountedGame.id === 'animal-rescue-train' || currentMountedGame.id === 'capybara-drift') {
         gameViewer.contentWindow.postMessage({ type: 'GAME_RESTART' }, window.location.origin);
         return;
       }
@@ -2951,7 +2993,11 @@
       if (!payload || typeof payload !== 'object') return;
 
       if (payload.type === 'CLOSE_GAME') {
-        if (event.source === gameViewer.contentWindow && event.origin === window.location.origin) closeTheaterModal();
+        if (event.source === gameViewer.contentWindow && event.origin === window.location.origin) {
+          const homeId = currentMountedGame?.id;
+          closeTheaterModal();
+          if (payload.home && homeId) islandExplorer?.showLocation(homeId);
+        }
         return;
       }
 
@@ -3257,7 +3303,20 @@
       const leaderboardModal = document.getElementById('leaderboardModal');
       const lbSelect = document.getElementById('leaderboardGameSelect');
 
+      const unlockNotice = document.getElementById('leaderboardUnlockNotice');
+      unlockNotice.addEventListener('close', () => exploration?.dismissLeaderboardNotice());
+      document.getElementById('dismissLeaderboardNoticeBtn').addEventListener('click', () => {
+        exploration?.dismissLeaderboardNotice(); unlockNotice.close();
+      });
+      document.getElementById('viewUnlockedLeaderboardBtn').addEventListener('click', () => {
+        exploration?.dismissLeaderboardNotice(); unlockNotice.close();
+        document.getElementById('openLeaderboardBtn').click();
+      });
+      window.addEventListener('toenow:languagechange', showLeaderboardUnlockNotice);
+
+      document.getElementById('open-capybara').addEventListener('click', () => openTheaterModal(GAMES_CONFIG.find(game => game.id === 'capybara-drift')));
       document.getElementById('openLeaderboardBtn').addEventListener('click', () => {
+        if (!exploration?.isLeaderboardUnlocked()) return;
         populateLeaderboardDropdown();
         leaderboardModal.classList.add('open');
         leaderboardModal.setAttribute('aria-hidden', 'false');
@@ -3461,6 +3520,10 @@
 
     // Boot Toenow Hub
     (function bootstrapToenow() {
+      if (window.ToenowMaterials) {
+        let storage; try { storage = window.localStorage; } catch (_) {}
+        materials = window.ToenowMaterials.create({ storage });
+      }
       if (window.ToenowExploration) {
         let storage; try { storage = window.localStorage; } catch (_) {}
         let ownerId;
@@ -3484,7 +3547,7 @@
         games: GAMES_CONFIG,
         levels: ToenowLevels,
         openGame: openTheaterModal,
-        exploration
+        exploration, materials
       });
       discoverAdditionalGames();
       const authReady = initAuthListener().catch(() => {});
@@ -3505,6 +3568,10 @@
           openTheaterModal(game);
         }
       }
+      hubReadyForNotices = true;
+      showLeaderboardUnlockNotice();
+      const homeId = params.get('home');
+      if (homeId && GAMES_CONFIG.some(game => game.id === homeId)) islandExplorer?.showLocation(homeId);
     })();
   </script>
 </body>

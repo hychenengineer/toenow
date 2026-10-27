@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const GAMES = [
+  { id: 'capybara-drift', path: 'games/capybara-drift/index.html', startBtn: 'btn-start' },
   { id: 'animal-rescue-train', path: 'games/animal-rescue-train/index.html', startBtn: 'btn-start-game', external: true },
   { id: 'number-pop', path: 'games/number-pop/index.html', startBtn: 'btn-start' },
   { id: 'ball-track', path: 'games/ball-track/index.html', startBtn: 'btn-start-game' },
@@ -181,6 +182,7 @@ for (const game of GAMES) {
     };
     sandbox.ToenowScreens = require('./helpers/screen-engine-adapter.cjs').adapter(doc);
     sandbox.ToenowTime = require('../shared/toenow-time.js');
+    if (game.id === 'capybara-drift') sandbox.ToenowGameSDK = require('../shared/toenow-sdk.js');
     sandbox.scrollTo = () => {};
     sandbox.window = sandbox;
     if (game.id === 'add-up') sandbox.PointerEvent = function () {};

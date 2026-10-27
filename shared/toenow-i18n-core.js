@@ -2,6 +2,21 @@
   'use strict';
   // Display strings only. Game IDs, stored records and animal identifiers stay unchanged.
   const entries = {
+    'My collection':'我的收藏', 'Play · Collect · Build':'遊玩・收集・建造','See five home stages':'看看五個建設階段',
+    'Carrots':'紅蘿蔔','Shells':'貝殼','Timber':'木材','Nuts':'堅果','Ribbons':'緞帶','Fish':'小魚','Feathers':'羽毛','Color paper':'彩紙','Seeds':'種子','Bamboo':'竹子',
+    'Harvest basket':'採收籃','Harvest cart':'採收車','Shell collection':'貝殼收藏','River jetty':'溪流碼頭','Tool rack':'工具架','Workshop sign':'工坊招牌','Nut basket':'堅果籃','Supply wagon':'補給推車','Parcel ribbons':'包裹緞帶','Gift stall':'禮物攤位','Pool flag':'池畔小旗','Shell slide':'貝殼滑梯','Journal stand':'圖鑑書架','Observation perch':'觀察平台','Paper garland':'彩紙吊飾','Festival stage':'慶典舞台','Flower pots':'小花盆','Picnic garden':'野餐花園','Station planter':'車站盆栽','Garden platform':'花園月台',
+    'Home decorations':'小屋裝飾','HOME STAGE':'建設階段','Build your home':'佈置動物的家','Next home stage':'下一階段','Upgrade home':'升級小屋','Decorations':'裝飾',
+    'Play this game to collect its special material.':'玩這個遊戲，收集專屬物品。','Home complete! Keep collecting decorations.':'小屋完成了！繼續收集喜歡的裝飾。',
+    'A little gift for this home':'給小屋的一份小禮物','Made with an animal friend':'和動物朋友一起製作','Put away':'收起','Place':'擺放','Make':'製作',
+    'Your home has grown!':'小屋升級了！','Decoration ready!':'裝飾完成了！','Home updated.':'佈置完成！','Could not build. Check your materials and browser storage.':'未能建造，請確認材料與瀏覽器儲存空間。',
+    'Materials and homes are saved in this browser.':'材料與小屋佈置儲存在目前的瀏覽器。',
+    'Collect materials to choose how this home grows.':'收集物品，親手讓動物的家成長。','A cozy beginning':'溫馨的小起點','More room for friends':'讓朋友有更多空間',
+    'Collect materials in normal play to build animal homes. Challenge levels stay separate.':'正式遊玩收集物品，建造動物的家。建設階段與挑戰等級分開。',
+    'Materials could not be saved.':'材料未能儲存。','Allow browser storage to collect materials.':'允許瀏覽器儲存，才能收集材料。',
+    'Saved to your island. Build at the animal home.':'已收入小島收藏，回動物的家就能建造。','Build on island':'回小島建造',
+    'Leaderboard unlocked!': '排行榜已解鎖！',
+    'You completed Level 1 in all 10 games. See how your scores compare!': '你已完成全部 10 款遊戲的 Level 1，現在可以查看排行榜了！',
+    'View leaderboard': '查看排行榜', 'Continue exploring': '繼續探索',
     'Next place': '下一個地點',
     'Welcome to TOENOW': '歡迎來到 TOENOW', 'Your adventure starts here.': '你的探索，從這裡開始。',
     'Create account': '建立帳號', 'Continue as a guest': '以訪客繼續',

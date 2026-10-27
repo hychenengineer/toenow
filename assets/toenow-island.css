@@ -95,9 +95,18 @@ html[data-hub-theme] .island-location-dialog .toenow-language-switch { backgroun
 .island-shell { padding-top: 14px; }
 .island-topline { margin-bottom: 10px; justify-content: flex-end; }
 .island-intro { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-body[data-exploration="explore"] .category-tabs,
-body[data-exploration="explore"] :is(.hub-theme-control,#openLeaderboardBtn),
+.category-tabs,
+.hub-theme-control,
+#openLeaderboardBtn[hidden],
 .island-shell[data-journey="explore"] :is(.island-view-switch,.island-preview-control,.island-map-bottom,.island-legend) { display: none; }
+.leaderboard-unlock-notice { margin: auto; width: min(440px,calc(100% - 32px)); padding: 28px; border: 1px solid var(--border-glass); border-radius: 24px; background: var(--bg-card); color: var(--text-primary); box-shadow: var(--hub-shadow); text-align: center; }
+.leaderboard-unlock-notice::backdrop { background: #18233966; }
+.leaderboard-unlock-notice .unlock-trophy { font-size: 2.5rem; }
+.leaderboard-unlock-notice h2 { font-size: 1.4rem; margin: 12px 0; }
+.leaderboard-unlock-notice p { color: var(--text-secondary); line-height: 1.6; }
+.leaderboard-unlock-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 22px; }
+.leaderboard-unlock-actions button { min-height: 44px; padding: 10px 16px; border-radius: 12px; border: 1px solid var(--border-glass); background: var(--bg-elevated); color: var(--text-primary); font: 600 .9rem/1.4 system-ui,sans-serif; cursor: pointer; }
+.leaderboard-unlock-actions button:first-child { background: var(--accent-cyan); color: var(--hub-on-accent); }
 .island-shell[data-journey="explore"] .island-topline { margin: 0; }
 .island-shell[data-journey="explore"] .island-map-toolbar { justify-content: center; padding: 10px; }
 .island-shell[data-journey="explore"] .island-counter { color: var(--accent-cyan); }

@@ -1208,3 +1208,7 @@ body[data-state='gameover'] .unified-gameover-screen {
   .unified-title-screen .unified-animal-art,
   .unified-gameover-screen .unified-animal-art { width: 126px; height: 80px; }
 }
+/* Material receipt is independent of score tiles and keeps result actions intact. */
+.toenow-material-reward { width: 100%; box-sizing: border-box; display: grid; gap: 6px; padding: 12px 16px; margin: 8px 0 12px; border: 1px solid #d6dfb6; border-radius: 16px; background: #f2f6df; color: #365435; text-align: center; font: 600 14px/1.4 system-ui,sans-serif; }
+.toenow-material-reward span { font-size: 12px; font-weight: 400; }
+.toenow-material-reward button { min-height: 44px; border: 0; border-radius: 10px; background: #38644e; color: #fff; font: inherit; cursor: pointer; }

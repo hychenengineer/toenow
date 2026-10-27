@@ -4,6 +4,7 @@
   if (window.ToenowAnalytics) return;
   var measurementId = 'G-PWQER2ZXV5';
   var games = {
+    'capybara-drift': 'Capybara Drift',
     'number-pop': 'Number Pop', 'ball-track': 'Target Track',
     'block-match': 'Block Match', 'add-up': 'Add Up',
     'space-scale': 'Space Scale', 'tap-match': 'Tap Match',

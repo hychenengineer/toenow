@@ -14,6 +14,7 @@
   // Max Points per Second & Max Points per Wave to prevent instant speed/memory hacks
   // NOTE: Score itself has NO CEILING! A player can reach 500,000+ pts legally as long as duration/waves match.
   var GAME_PLAUSIBILITY_PROFILES = {
+    'capybara-drift': { maxPtsPerSec: 20, maxPtsPerWave: 1000, minDurationPerWaveSec: 0.1 },
     'animal-rescue-train': { maxPtsPerSec: 100, maxPtsPerWave: 30, minDurationPerWaveSec: 0.1 },
     'number-pop': { maxPtsPerSec: 850, maxPtsPerWave: 6000, minDurationPerWaveSec: 2.0 },
     'ball-track': { maxPtsPerSec: 600, maxPtsPerWave: 4500, minDurationPerWaveSec: 3.0 },

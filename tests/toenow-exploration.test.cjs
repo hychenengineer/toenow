@@ -2,12 +2,36 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const levels = require('../shared/toenow-levels.js');
 const { create, STORAGE_KEY } = require('../shared/toenow-exploration.js');
-const gameIds = Object.keys(levels.GAME_STORAGE_KEYS);
+const gameIds = Object.keys(levels.GAME_STORAGE_KEYS).filter(id => levels.GAME_STORAGE_KEYS[id].island !== 'carefree');
 function store(initial = {}) {
   const values = { ...initial };
   return { getItem: key => values[key] ?? null, setItem: (key, value) => { values[key] = String(value); }, values };
 }
 const make = storage => create({ storage, levels, gameIds, random: () => 0.25 });
+
+test('Leaderboard stays locked until every game clears Level 1, including the last discovered place', () => {
+  const storage = store(), flow = make(storage);
+  assert.equal(flow.isLeaderboardUnlocked(), false);
+  const order = flow.snapshot().order;
+  for (const gameId of order.slice(0, -1)) flow.complete({ gameId, wave: 6, completedLevel: 1 });
+  assert.equal(flow.snapshot().unlocked.length, 10);
+  assert.equal(flow.isLeaderboardUnlocked(), false, 'opening the last place is not completing it');
+  flow.complete({ gameId: order.at(-1), wave: 1, completedLevel: 1, isPractice: true });
+  assert.equal(flow.isLeaderboardUnlocked(), false, 'practice cannot unlock the leaderboard');
+  flow.complete({ gameId: order.at(-1), wave: 1, completedLevel: 1 });
+  assert.equal(flow.isLeaderboardUnlocked(), true);
+  assert.equal(flow.shouldShowLeaderboardNotice(), true);
+  flow.dismissLeaderboardNotice();
+  assert.equal(make(storage).shouldShowLeaderboardNotice(), false, 'dismissed notice stays dismissed after reload');
+  assert.equal(make(storage).isLeaderboardUnlocked(), true, 'earned access survives reload');
+});
+
+test('Leaderboard unlocks when all saved normal Level 1 milestones reconcile', () => {
+  const storage = store({ toenow_game_milestones_v1: JSON.stringify(Object.fromEntries(gameIds.map(id => [id, 1]))) });
+  const flow = make(storage); flow.reconcile();
+  assert.equal(flow.isLeaderboardUnlocked(), true);
+  assert.equal(create({ storage: store(), levels, gameIds: [] }).isLeaderboardUnlocked(), false);
+});
 
 test('Moving map landmarks preserves the existing route and earned discoveries', () => {
   const locations = require('../shared/toenow-island.js').LOCATIONS;

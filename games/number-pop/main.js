@@ -942,7 +942,7 @@ const pauseScore = document.getElementById('pause-score');
         function bindFastButton(id, handler) {
           const el = document.getElementById(id);
           if (!el) return;
-          let lastTriggered = 0;
+          let lastTriggered = -Infinity;
           const invoke = (e) => {
             const now = performance.now();
             if (now - lastTriggered < 250) return;

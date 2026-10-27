@@ -5,6 +5,13 @@
 })(globalThis, function (root) {
   'use strict';
   let progressSdk = null;
+  function startRun() {
+    if (!root.ToenowGameSDK || root.ToenowTutorials?.isActive('flash-brain')) return;
+    if (!progressSdk) progressSdk = new root.ToenowGameSDK({ gameId: 'flash-brain', category: 'memory' });
+    const params = new URLSearchParams(root.location.search);
+    progressSdk.startRun({ wave: Math.max(1, Number(params.get('wave')) || 1), isPractice: params.get('practice') === '1' });
+  }
+  function finishRun(result) { return progressSdk?.finishMaterials({ score: Math.round(result.finalScore), wave: Number(result.reachedWave || result.wavesCleared || result.wave) || 1 }); }
   function reportProgress(wave) {
     if (!root.document || !root.ToenowGameSDK || root.ToenowTutorials?.isActive('flash-brain')) return;
     if (root.document.body.dataset.state !== 'playing') {
@@ -47,5 +54,5 @@
     root.ToenowAnimals?.setWave?.('flash-brain', wave);
     if (status !== 'IGNORED') root.ToenowAnimals?.feedback?.('flash-brain', status !== 'MISTAKE');
   }
-  return { isAnimalVisible, drawCell, feedback, reportProgress };
+  return { isAnimalVisible, drawCell, feedback, reportProgress, startRun, finishRun };
 });

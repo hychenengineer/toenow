@@ -13,10 +13,11 @@ function progress(gameId, store) {
   return island.getProgress(gameId, store, levels);
 }
 
-test('Island has one distinct named location for every registered game', () => {
+test('Explorers Island has one distinct location per explorer game; Carefree games stay separate', () => {
   assert(Array.isArray(island.LOCATIONS), 'island location registry is implemented');
   assert.equal(island.LOCATIONS.length, 10);
-  assert.deepEqual(island.LOCATIONS.map(l => l.gameId).sort(), Object.keys(levels.GAME_STORAGE_KEYS).sort());
+  assert.deepEqual(island.LOCATIONS.map(l => l.gameId).sort(), Object.keys(levels.GAME_STORAGE_KEYS).filter(id=>levels.GAME_STORAGE_KEYS[id].island!=='carefree').sort());
+  assert.equal(levels.GAME_STORAGE_KEYS['capybara-drift'].island,'carefree');
   assert.equal(new Set(island.LOCATIONS.map(l => l.name)).size, 10);
   for (const l of island.LOCATIONS) {
     assert(l.x >= 8 && l.x <= 92 && l.y >= 10 && l.y <= 86);

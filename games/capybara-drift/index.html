@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"><title>Capybara Drift · Carefree Island</title>
+<link rel="stylesheet" href="../../assets/unified-title-menu.css"><link rel="stylesheet" href="style.css">
+<script src="../../shared/toenow-analytics.js"></script><script src="../../shared/toenow-levels.js"></script><script src="../../shared/toenow-security.js"></script><script src="../../shared/toenow-platform.js"></script><script src="../../shared/toenow-sdk.js"></script>
+<script src="../../shared/toenow-i18n-core.js"></script><script src="../../shared/toenow-i18n-games-a.js"></script><script src="../../shared/toenow-i18n-games-b.js"></script><script src="../../shared/toenow-i18n.js"></script>
+<script src="../../shared/toenow-screen-config.js"></script><script src="../../shared/toenow-screens.js"></script>
+</head><body>
+<main id="river-app">
+ <canvas id="river" tabindex="0" aria-label="Drag to drift. Arrow keys also work."></canvas>
+ <header class="river-header"><a id="back-hub" href="../../index.html">← <span>Back to Hub</span></a><span class="island-label">CAREFREE ISLAND</span><button id="sound" type="button" aria-pressed="false">Sound off</button></header>
+ <section id="play-hud" hidden><div class="score-pill"><span>JOY POINTS</span><strong id="score">0</strong></div><div class="scene-pill"><span id="scene">Bamboo Brook</span><small><span>FRIENDS</span> <b id="friends">0</b></small></div><button id="rest" type="button">Take a break</button></section>
+ <div id="drift-hint" class="drift-hint" hidden><span>Drag gently. There is no hurry.</span></div>
+ <p id="notice" role="status" aria-live="polite" hidden></p>
+ <section id="title-screen" data-toenow-screen="title"></section>
+ <section id="gameover-screen" data-toenow-screen="gameover" hidden></section>
+ <section id="rest-panel" class="river-overlay" role="dialog" aria-modal="true" aria-labelledby="rest-title" hidden><div class="rest-card"><span class="eyebrow">A LITTLE BREATHER</span><h2 id="rest-title">Stay a little longer?</h2><p>Everything can wait.</p><p class="wallet-line"><span>Saved joy</span> <strong id="wallet">0</strong></p><button id="resume" class="warm-button" type="button">Keep drifting</button><button id="wardrobe" type="button">Choose a float</button><div id="shop" hidden><p>Collect joy to bring home a new float.</p><div id="shop-items"></div><p id="shop-status" role="status"></p></div><button id="finish" type="button">Finish this drift</button><button id="rest-hub" type="button">Back to Hub</button></div></section>
+ <aside id="title-extras"><button id="continue" class="warm-button" type="button" hidden>Continue your drift</button><span>Carefree Island · No timer. No rush.</span></aside>
+</main>
+<script src="engine.js"></script><script src="main.js"></script>
+</body></html>

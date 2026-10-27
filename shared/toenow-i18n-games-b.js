@@ -1,6 +1,18 @@
 (function (root) {
   'use strict';
   const entries = {
+    'No timer. No rush. Just drift.':'沒有倒數，慢慢漂就好。','Visit Capybara':'找水豚玩',
+    'Capybara Drift':'水豚漂漂泉','CAPYBARA DRIFT':'水豚漂漂泉','RELAX':'放鬆','Relax':'放鬆','CAREFREE ISLAND':'無憂島','Carefree Island':'無憂島',
+    'Float with Capybara. Collect little joys, meet friends, and take your time.':'和水豚慢慢漂，收集小快樂，遇見新朋友。',
+    'Drag gently to collect bubbles, yuzu, petals and friends. Arrow keys also work.':'輕輕拖動，收集泡泡、柚子、花瓣和朋友，也能用方向鍵操作。',
+    'No timer, no penalties. Take a break anytime. Saved joy buys new floats. Practice does not save progress.':'沒有倒數、不扣分，隨時都能休息。累積悠閒點數換泳圈；練習不儲存進度。',
+    'Drag to drift. Arrow keys also work.':'拖動水豚漂流，也能用方向鍵操作。',
+    'JOY POINTS':'悠閒點數','FRIENDS':'朋友','Take a break':'休息一下','Drag gently. There is no hurry.':'輕輕拖動，慢慢來就好。',
+    'Bamboo Brook':'竹林小溪','Petal Lagoon':'花瓣潟湖','Gentle Rain':'細雨時光','Starlight Springs':'星光溫泉',
+    'A LITTLE BREATHER':'歇一會兒','Stay a little longer?':'再坐一會兒？','Everything can wait.':'什麼事都可以慢慢來。','Saved joy':'已存悠閒點數','Keep drifting':'繼續漂流','Choose a float':'挑選泳圈','Finish this drift':'結束這趟漂流',
+    'Collect joy to bring home a new float.':'收集悠閒點數，帶一個新泳圈回家。','Continue your drift':'繼續上次漂流','Carefree Island · No timer. No rush.':'無憂島 · 沒有倒數，慢慢來。',
+    'Peach float':'蜜桃泳圈','Flower float':'花朵泳圈','Yuzu float':'柚子泳圈','Mint float':'薄荷泳圈','Wearing':'使用中','Wear it':'換上','joy':'悠閒點數',
+    'A lovely new look!':'換好泳圈囉！','A little more joy to collect.':'再收集一點悠閒點數就能換囉。','Practice leaves your saved joy untouched.':'練習不會更動已存的悠閒點數。','A new friend is drifting with you.':'新朋友加入漂流囉。','Sound off':'音效關','Sound on':'音效開',
     'Tap Match': '目標快點', 'TAP MATCH': '目標快點',
     'Spot Quick': '快速辨識', 'SPOT QUICK': '快速辨識',
     'Shadow Match': '剪影配對', 'SHADOW MATCH': '剪影配對',

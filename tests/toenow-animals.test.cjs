@@ -10,8 +10,8 @@ test('Animal island provides one distinct partner and habitat for each existing 
  assert.equal(typeof animals.getTheme,'function','animal theme API exists');
  const themes=Object.keys(levels.GAME_STORAGE_KEYS).map(id=>animals.getTheme(id));
  assert(themes.every(Boolean));
- assert.equal(new Set(themes.map(t=>t.species)).size,10);
- assert.equal(new Set(themes.map(t=>t.place)).size,10);
+ assert.equal(new Set(themes.map(t=>t.species)).size,themes.length);
+ assert.equal(new Set(themes.map(t=>t.place)).size,themes.length);
  assert(themes.every(t=>t.task&&t.taskZh&&t.placeZh));
  assert.equal(animals.getTheme('unknown'),null);
 });

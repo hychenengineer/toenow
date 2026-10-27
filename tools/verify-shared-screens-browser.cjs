@@ -10,6 +10,7 @@ const keys = require('../shared/toenow-levels.js').GAME_STORAGE_KEYS;
 const root = path.resolve(__dirname, '..');
 const base = process.env.TOENOW_TEST_URL || 'http://127.0.0.1:8766';
 const hooks = {
+  'capybara-drift': `state.score=321;state.wave=13;state.elapsed=600;finishDrift();`,
   'number-pop': `game.score=321;game.wave=13;triggerGameOver();`,
   'ball-track': `state.score=321;state.wave=13;saveRecords(state.score,state.wave);state.frozenSnapshot={score:321,wave:13,best:bestScore};showGameOverModal();`,
   'block-match': `state.score=321;state.wave=13;state.wavesCleared=12;triggerGameOver();`,

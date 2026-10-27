@@ -5,6 +5,7 @@
 })(typeof globalThis!=='undefined'?globalThis:this,function(root,levels){
   'use strict';
   const THEMES={
+    'capybara-drift':{species:'capybara',icon:'🍊',place:'Capybara Drifting Springs',placeZh:'水豚漂漂泉',kind:'springs',task:'Float with Capybara. Collect little joys, meet friends, and take your time.',taskZh:'和水豚慢慢漂，收集小快樂，遇見新朋友。'},
     'animal-rescue-train':{species:'panda',icon:'🐼',place:'Panda Rescue Station',placeZh:'熊貓救援車站',kind:'station',task:'Help the panda stationmaster board every animal safely.',taskZh:'幫熊貓站長安排乘車順序，讓每隻動物安全上車。'},
     'number-pop':{species:'rabbit',icon:'🐰',place:'Rabbit Harvest Garden',placeZh:'兔子採收園',kind:'music',task:'Collect numbered harvest baskets from lowest to highest with Rabbit.',taskZh:'和兔子一起，依數值從小到大收取採收籃。'},
     'ball-track':{species:'otter',icon:'🦦',place:'Otter River Shelter',placeZh:'水獺溪流小屋',kind:'orbit',task:'Remember the otters, follow their floating leaves, then find their hiding places.',taskZh:'記住指定水獺，追蹤浮葉移動，再找出牠們躲藏的位置。'},

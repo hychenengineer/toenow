@@ -2,6 +2,7 @@
   'use strict';
   // Display strings only. Game IDs, stored records and animal identifiers stay unchanged.
   const entries = {
+    'We still need {count} {material} for our next project!':'下一個建設還需要 {count} 個{material}！',
     'New vegetable patch':'新菜圃','Little greenhouse':'小溫室','Harvest stall':'採收攤位','Garden pergola':'花園棚架',
     'Our home is full of little joys. Thank you!':'小屋充滿小小的幸福，謝謝你！','Just {count} more carrots for our next project!':'再收集 {count} 根紅蘿蔔，就能蓋下一個新地方！','Everything is ready. Shall we build together?':'材料齊了，一起動手建造吧！',
     'Playing Number Pop brings carrots back to our garden.':'玩數字泡泡，就能帶紅蘿蔔回菜園。','Welcome back! Shall we grow our garden?':'歡迎回來！一起讓菜園成長吧！',

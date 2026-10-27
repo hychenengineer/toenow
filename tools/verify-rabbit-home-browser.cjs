@@ -22,7 +22,7 @@ journey.chooseGuest();for(const id of journey.snapshot().order)journey.complete(
  await page.locator('.rabbit-project-picker [data-rabbit-project="greenhouse"]').click();assert(await page.locator('.rabbit-project-picker [data-rabbit-project="greenhouse"]').evaluate(n=>n===document.activeElement));
  await page.locator('.rabbit-project-picker [data-rabbit-project="vegetable-patch"]').click();checks.push('Starter garden, contextual chat, keyboard picker and no-spend build preview PASS');
  // Test fixture earns materials through the ledger with a controlled clock; not a claim of real play.
- await page.evaluate(()=>{let now=1000;const api=ToenowMaterials.create({storage:localStorage,now:()=>now});for(const id of ['number-pop','block-match'])for(let i=0;i<60;i++){const r=api.beginRun(id,{wave:1});now+=30000;api.finishRun(r,{score:10,wave:1});}window.dispatchEvent(new Event('focus'));});
+ await page.evaluate(()=>{let now=1000;const api=ToenowMaterials.create({storage:localStorage,now:()=>now});for(const id of Object.keys(ToenowMaterials.ITEMS))for(let i=0;i<60;i++){const r=api.beginRun(id,{wave:1});now+=30000;api.finishRun(r,{score:10,wave:1});}window.dispatchEvent(new Event('focus'));});
  for(const id of ['vegetable-patch','greenhouse','harvest-stall','pergola']){
   if(!await page.locator('[data-rabbit-confirm]').count())await page.locator('.rabbit-home-actions [data-rabbit-action="build"]').click();
   await page.locator(`[data-rabbit-confirm="${id}"]`).click();await page.locator(`[data-rabbit-built="${id}"]`).waitFor();

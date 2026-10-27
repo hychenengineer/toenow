@@ -15,7 +15,7 @@
     banner.replaceChildren();
     const title=root.document.createElement('strong'),detail=root.document.createElement('span');
     if(reward.error){title.textContent=t('Materials could not be saved.');detail.textContent=t('Allow browser storage to collect materials.');}
-    else {title.textContent=`${item.icon} +${reward.amount} ${t(item.name)}`;const next=root.ToenowMaterials.COSTS[reward.stage+1];detail.textContent=next?`${t('Next home stage')}: ${item.icon} ${reward.balance} / ${next}`:t('Home complete! Keep collecting decorations.');}
+    else {title.textContent=`${item.icon} +${reward.amount} ${t(item.name)}`;const state=root.ToenowMaterials.create({storage:root.localStorage}).snapshot(),next=root.ToenowMaterials.upgradeRecipe(id,state.homes[id].stage+1);detail.textContent=next?`${t('Next home stage')}: ${Object.entries(next).map(([source,n])=>`${root.ToenowMaterials.ITEMS[source].icon} ${state.balances[source]} / ${n}`).join(' · ')}`:t('Home complete! Keep collecting decorations.');}
     banner.append(title,detail);
     if(reward.amount){const button=root.document.createElement('button');button.type='button';button.textContent=t('Build on island');button.onclick=()=>{if(root.parent!==root)root.parent.postMessage({type:'CLOSE_GAME',gameId:id,home:true},root.location.origin);else root.location.href='../../?home='+encodeURIComponent(id);};banner.append(button);}
   }

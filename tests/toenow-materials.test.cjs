@@ -5,11 +5,36 @@ const file='../shared/toenow-materials.js';
 const materials=fs.existsSync(require('node:path').join(__dirname,file))?require(file):{};
 function fixture(values={}){let now=1000;const storage={getItem:k=>values[k]??null,setItem:(k,v)=>{values[k]=v;}};assert.equal(typeof materials.create,'function','materials ledger exists');return {api:materials.create({storage,now:()=>now}),values,storage,advance:()=>{now+=30000;}};}
 function earn(f,id='number-pop',wave=1){const run=f.api.beginRun(id,{wave:1,isPractice:false});f.advance();return f.api.finishRun(run,{score:10,wave,isPractice:false});}
+
+test('all ten homes progress from one to three to four material recipes with balanced collaboration',()=>{
+ const demand=Object.fromEntries(Object.keys(materials.ITEMS).map(id=>[id,0]));
+ for(const id of Object.keys(materials.ITEMS)){
+  for(const [stage,count] of [[2,1],[3,3],[4,4],[5,4]]){const cost=materials.upgradeRecipe(id,stage);assert.equal(Object.keys(cost).length,count);assert.equal(Object.values(cost).reduce((a,b)=>a+b,0),materials.COSTS[stage]);assert(cost[id]>0);}
+  const cost=materials.recipe(id,'together');assert.equal(Object.keys(cost).length,4);for(const source of Object.keys(cost))demand[source]++;
+ }
+ assert.deepEqual(Object.values(demand),Array(10).fill(4));
+ assert.deepEqual(materials.upgradeRecipe('number-pop',3),{'number-pop':12,'block-match':8,'flash-brain':4});
+ assert.equal(materials.upgradeRecipe('number-pop',6),null);assert.equal(materials.upgradeRecipe('unknown',3),null);
+});
+
+test('a missing collaboration material prevents all spending; success deducts every ingredient once',()=>{
+ const f=fixture();for(let i=0;i<7;i++)earn(f);assert(f.api.upgrade('number-pop').ok);
+ const before=JSON.stringify(f.api.snapshot());assert.equal(f.api.upgrade('number-pop').ok,false);assert.equal(JSON.stringify(f.api.snapshot()),before);
+ for(let i=0;i<2;i++)earn(f,'block-match');earn(f,'flash-brain');
+ assert(f.api.upgrade('number-pop').ok);const state=f.api.snapshot();assert.equal(state.homes['number-pop'].stage,3);
+ for(const id of ['number-pop','block-match','flash-brain'])assert.equal(state.balances[id],0);
+ assert.equal(f.api.upgrade('number-pop').ok,false);
+});
+
+test('existing built stages and owned decorations survive the recipe change without retroactive costs',()=>{
+ const f=fixture({toenow_materials_v1:JSON.stringify({version:1,balances:{'number-pop':7},homes:{'number-pop':{stage:4,owned:['welcome','together'],placed:['together']}}})});
+ assert.deepEqual(f.api.snapshot().homes['number-pop'],{stage:4,owned:['welcome','together'],placed:['together']});assert.equal(f.api.snapshot().balances['number-pop'],7);assert.equal(f.api.craft('number-pop','together').ok,false);assert.equal(f.api.snapshot().balances['number-pop'],7);
+});
 test('exactly ten explorer games own distinct materials; carefree is excluded',()=>{assert.equal(Object.keys(materials.ITEMS||{}).length,10);assert.equal(new Set(Object.values(materials.ITEMS).map(i=>i.key)).size,10);assert.equal(materials.ITEMS['capybara-drift'],undefined);});
 test('normal play credits only its own item, survives reload, and cannot repeat a receipt',()=>{const f=fixture();const run=f.api.beginRun('number-pop',{wave:1});f.advance();assert.equal(f.api.finishRun(run,{score:10,wave:1}).amount,4);assert.equal(f.api.finishRun(run,{score:10,wave:1}).amount,0);const copy=materials.create({storage:f.storage});assert.equal(copy.snapshot().balances['number-pop'],4);assert.equal(copy.snapshot().balances['block-match'],0);});
 test('practice, preview, zero work, unknown and implausible attempts do not award',()=>{const f=fixture();for(const options of [{isPractice:true},{isPreview:true}]){const run=f.api.beginRun('number-pop',options);f.advance();assert.equal(f.api.finishRun(run,{score:10,wave:1}).amount,0);}assert.equal(f.api.finishRun('unknown',{score:10,wave:1}).amount,0);const short=f.api.beginRun('number-pop',{});assert.equal(f.api.finishRun(short,{score:10,wave:1}).amount,0);const bad=f.api.beginRun('number-pop',{});f.advance();assert.equal(f.api.finishRun(bad,{score:99999999,wave:1}).amount,0);const zero=f.api.beginRun('number-pop',{});f.advance();assert.equal(f.api.finishRun(zero,{score:0,wave:1}).amount,0);assert.equal(f.api.snapshot().balances['number-pop'],0);});
 test('own material upgrades are affordable, atomic and separate from challenge records',()=>{const f=fixture({qcc_best_wave_v1:'1'});assert.equal(f.api.upgrade('number-pop').ok,false);for(let i=0;i<4;i++)earn(f);assert.equal(f.api.upgrade('number-pop').ok,true);assert.equal(f.api.snapshot().homes['number-pop'].stage,2);assert.equal(f.api.snapshot().balances['number-pop'],0);assert.equal(f.values.qcc_best_wave_v1,'1');assert.equal(f.api.upgrade('number-pop').ok,false);});
-test('starter and collaboration decorations spend exact recipes once and can be toggled',()=>{const f=fixture();earn(f);assert.equal(f.api.craft('number-pop','welcome').ok,true);assert.equal(f.api.craft('number-pop','welcome').ok,false);assert.equal(f.api.toggle('number-pop','welcome').ok,true);assert.equal(f.api.snapshot().homes['number-pop'].placed.includes('welcome'),false);for(let i=0;i<3;i++)earn(f);assert.equal(f.api.craft('number-pop','together').ok,false);earn(f,'block-match');assert.equal(f.api.craft('number-pop','together').ok,true);assert.equal(f.api.snapshot().balances['number-pop'],0);assert.equal(f.api.snapshot().balances['block-match'],0);});
+test('starter and collaboration decorations spend exact recipes once and can be toggled',()=>{const f=fixture();earn(f);assert.equal(f.api.craft('number-pop','welcome').ok,true);assert.equal(f.api.craft('number-pop','welcome').ok,false);assert.equal(f.api.toggle('number-pop','welcome').ok,true);assert.equal(f.api.snapshot().homes['number-pop'].placed.includes('welcome'),false);for(let i=0;i<2;i++)earn(f);assert.equal(f.api.craft('number-pop','together').ok,false);for(const id of ['block-match','flash-brain','animal-rescue-train'])earn(f,id);assert.equal(f.api.craft('number-pop','together').ok,true);assert.equal(f.api.snapshot().balances['number-pop'],0);assert.equal(f.api.snapshot().balances['block-match'],0);});
 test('legacy challenge stage is preserved once and later high scores do not build houses',()=>{const f=fixture({qcc_best_wave_v1:'16'});assert.equal(f.api.snapshot().homes['number-pop'].stage,4);earn(f);f.values.qcc_best_wave_v1='21';assert.equal(materials.create({storage:f.storage}).snapshot().homes['number-pop'].stage,4);});
 test('latest balance is read for sequential clients and storage errors never report success',()=>{const f=fixture();const other=materials.create({storage:f.storage});earn(f);assert.equal(other.craft('number-pop','welcome').ok,true);assert.equal(f.api.craft('number-pop','welcome').ok,false);const denied=materials.create({storage:{getItem(){return null;},setItem(){throw Error('Denied');}},now:()=>30000});const run=denied.beginRun('number-pop',{});assert.equal(denied.finishRun(run,{score:10,wave:1}).amount,0);assert.equal(denied.upgrade('number-pop').ok,false);});
 test('malformed balances cannot create spendable resources',()=>{for(const balance of [-2,1.5,'100',Infinity]){const f=fixture({toenow_materials_v1:JSON.stringify({balances:{'number-pop':balance},homes:{},version:1})});assert.equal(f.api.snapshot().balances['number-pop'],0);assert.equal(f.api.craft('number-pop','welcome').ok,false);}});

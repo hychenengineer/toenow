@@ -17,10 +17,15 @@
     'flash-brain':{key:'seed',icon:'🌱',name:'Seeds',partner:'number-pop',welcome:'Flower pots',together:'Picnic garden',decor:'🌷'},
     'animal-rescue-train':{key:'bamboo',icon:'🎋',name:'Bamboo',partner:'flash-brain',welcome:'Station planter',together:'Garden platform',decor:'🚉'}
   };
-  const COSTS=[0,0,16,32,56,88];
+  // Every item participates in four collaboration recipes, including its own home.
+  const PARTNER_ORDER=['number-pop','block-match','flash-brain','animal-rescue-train','space-scale','shadow-match','spot-quick','ball-track','tap-match','add-up'];
+  const BUILD_AMOUNTS={2:[16],3:[12,8,4],4:[16,12,8,4],5:[24,16,12,8]};
+  const COSTS=[0,0,16,24,40,60]; // Total ingredients, never an own-item price.
   const validId=id=>Object.prototype.hasOwnProperty.call(ITEMS,id);
   const integer=(n,fallback=0)=>Number.isSafeInteger(n)&&n>=0&&n<=100000000?n:fallback;
-  function recipe(id,kind){if(!validId(id))return null;return kind==='welcome'?{[id]:4}:kind==='together'?{[id]:12,[ITEMS[id].partner]:4}:null;}
+  function combine(id,amounts){if(!validId(id)||!amounts)return null;const start=PARTNER_ORDER.indexOf(id);return Object.fromEntries(amounts.map((n,i)=>[PARTNER_ORDER[(start+i)%PARTNER_ORDER.length],n]));}
+  function upgradeRecipe(id,stage){return combine(id,Number.isInteger(stage)?BUILD_AMOUNTS[stage]:null);}
+  function recipe(id,kind){return combine(id,kind==='welcome'?[4]:kind==='together'?[8,4,4,4]:null);}
   function create(options={}){
     const storage=options.storage,now=options.now||Date.now,runs=new Map();
     function read(key){try{return storage?.getItem(key);}catch(_){return null;}}
@@ -72,10 +77,10 @@
         if(!save(state))return {amount:0,error:'storage'};
         return {gameId:id,amount,balance:state.balances[id],stage:state.homes[id].stage};
       },
-      upgrade(id){const home=load().homes[id];if(!home||home.stage>=5)return {ok:false,reason:'max'};return spend(id,{[id]:COSTS[home.stage+1]},h=>{h.stage++;return true;});},
+      upgrade(id){const home=load().homes[id];if(!home||home.stage>=5)return {ok:false,reason:'max'};return spend(id,upgradeRecipe(id,home.stage+1),h=>{h.stage++;return true;});},
       craft(id,kind){return spend(id,recipe(id,kind),h=>{if(h.owned.includes(kind))return false;h.owned.push(kind);h.placed.push(kind);return true;});},
       toggle(id,kind){const state=load(),home=state.homes[id];if(!home?.owned.includes(kind))return {ok:false};home.placed=home.placed.includes(kind)?home.placed.filter(k=>k!==kind):[...home.placed,kind];return {ok:save(state)};}
     };
   }
-  return {STORAGE_KEY,ITEMS,COSTS,recipe,create};
+  return {STORAGE_KEY,ITEMS,COSTS,upgradeRecipe,recipe,create};
 });

@@ -15,9 +15,9 @@
   <script src="shared/toenow-security.js"></script>
   <script src="shared/toenow-platform.js"></script>
   <script src="shared/toenow-analytics.js"></script>
-  <script src="shared/toenow-materials.js"></script>
-  <script src="shared/toenow-sdk.js"></script>
-  <script src="shared/toenow-i18n-core.js"></script>
+  <script src="shared/toenow-materials.js?v=materials-20261027-2"></script>
+  <script src="shared/toenow-sdk.js?v=materials-20261027-2"></script>
+  <script src="shared/toenow-i18n-core.js?v=materials-20261027-2"></script>
   <script src="shared/toenow-i18n-games-a.js"></script>
   <script src="shared/toenow-i18n-games-b.js"></script>
   <script src="shared/toenow-i18n-animals.js"></script>
@@ -2513,6 +2513,13 @@
       };
     });
 
+    // Version game documents too: returning browsers may cache their old script lists.
+    function versionedGameUrl(url) {
+      const target = new URL(url, window.location.href);
+      target.searchParams.set('v', 'materials-20261027-2');
+      return target.href;
+    }
+
     function openTheaterModal(game, onReady) {
       if (game.category !== 'relax' && exploration && !exploration.isUnlocked(game.id)) {
         islandExplorer?.showLocation(game.id);
@@ -2565,7 +2572,7 @@
       } catch (_) {}
 
       onTheaterReady = typeof onReady === 'function' ? onReady : null;
-      gameViewer.src = game.url;
+      gameViewer.src = versionedGameUrl(game.url);
       theaterModal.classList.add('open');
       theaterModal.setAttribute('aria-hidden', 'false');
     }
@@ -2598,7 +2605,7 @@
         gameViewer.contentWindow.postMessage({ type: 'GAME_RESTART' }, window.location.origin);
         return;
       }
-      const targetUrl = currentMountedGame.url;
+      const targetUrl = versionedGameUrl(currentMountedGame.url);
       gameViewer.src = 'about:blank';
       setTimeout(() => {
         if (currentMountedGame) {

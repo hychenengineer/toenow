@@ -16,7 +16,7 @@ const base = process.env.TOENOW_TEST_URL || 'http://127.0.0.1:8770';
       let js = fs.readFileSync(path.join(__dirname, '../games/number-pop/main.js'), 'utf8');
       const end = js.lastIndexOf('})();');
       js = js.slice(0, end) + `window.__quietPop={hold:()=>{game.state='paused';},release:()=>{game.state='playing';},harvests:()=>game.harvests?.map(c=>({elapsed:c.elapsed,x:c.x,y:c.y}))||[],advance:dt=>{updatePhysics(dt,0);renderArena();},effects:()=>({particles:typeof particlePool==='undefined'?0:particlePool.filter(p=>p.active).length,text:typeof floatingTexts==='undefined'?0:floatingTexts.filter(p=>p.active).length,pickup:typeof harvestPickup==='undefined'?false:!!harvestPickup}),wrong:()=>{const c=game.cores.filter(c=>!c.popped).sort((a,b)=>b.value-a.value)[0];handleCoreSelection(c);return c.errorFlash;}};` + js.slice(end);
-      await page.route('**/games/number-pop/main.js', r => r.fulfill({ contentType: 'application/javascript', body: js }));
+      await page.route('**/games/number-pop/main.js*', r => r.fulfill({ contentType: 'application/javascript', body: js }));
       await page.goto(base + '/games/number-pop/');
       await page.evaluate(lang => ToenowI18n.setLanguage(lang), lang);
       await page.locator('#btn-start').click();

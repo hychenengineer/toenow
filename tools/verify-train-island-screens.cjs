@@ -13,7 +13,7 @@ const out=path.resolve(__dirname,'../artifacts/island-screens');
       let source=fs.readFileSync(path.resolve(__dirname,'../games/animal-rescue-train/game.js'),'utf8');
       const end=source.lastIndexOf('})();');
       source=source.slice(0,end)+'window.__finishTrainScreen=()=>{game.state.status="won";render();};'+source.slice(end);
-      await page.route('**/animal-rescue-train/game.js',route=>route.fulfill({contentType:'application/javascript',body:source}));
+      await page.route('**/animal-rescue-train/game.js*',route=>route.fulfill({contentType:'application/javascript',body:source}));
       await page.goto(base+'/games/animal-rescue-train/');
       await page.evaluate(l=>ToenowI18n.setLanguage(l),lang);
       await page.locator('#menu-screen').waitFor({state:'visible'});

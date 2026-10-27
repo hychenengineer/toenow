@@ -28,7 +28,7 @@ const base = process.env.TOENOW_TEST_URL || 'http://127.0.0.1:8770';
       let js = fs.readFileSync(path.join(__dirname, '../games/space-scale/main.js'), 'utf8');
       const end = js.lastIndexOf('})();');
       js = js.slice(0, end) + `window.__equalScales={start:w=>startNewGame(w,true),state:()=>({score,puzzle:currentPuzzle})};` + js.slice(end);
-      await page.route('**/games/space-scale/main.js', r => r.fulfill({ contentType: 'application/javascript', body: js }));
+      await page.route('**/games/space-scale/main.js*', r => r.fulfill({ contentType: 'application/javascript', body: js }));
       await page.goto(base + '/games/space-scale/');
       await page.evaluate(lang => ToenowI18n.setLanguage(lang), lang);
       for (const wave of [1, 6, 11, 16, 21]) {

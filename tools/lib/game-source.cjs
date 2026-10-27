@@ -27,8 +27,9 @@ function readGamePage(file, { styles = true } = {}) {
 }
 
 function readSource(file, encoding) {
-  return encoding === 'utf8' && path.extname(String(file)) === '.html'
-    ? readGamePage(file) : fs.readFileSync(file, encoding);
+  const filename = String(file).split(/[?#]/)[0];
+  return encoding === 'utf8' && path.extname(filename) === '.html'
+    ? readGamePage(filename) : fs.readFileSync(filename, encoding);
 }
 
 module.exports = { readGamePage, readSource };

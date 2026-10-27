@@ -18,7 +18,7 @@ const output = 'artifacts/block-mirror-lessons';
         localStorage.setItem('chip_defrag_high_score_v5', '9999');
         localStorage.setItem('block_match_best_wave', '25');
       }, lang);
-      await context.route('**/games/block-match/main.js', route => {
+      await context.route('**/games/block-match/main.js*', route => {
         const source = fs.readFileSync('games/block-match/main.js', 'utf8');
         const end = source.lastIndexOf('})();');
         const hook = `window.__mirrorTest={

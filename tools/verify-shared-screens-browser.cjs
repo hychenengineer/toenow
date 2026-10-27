@@ -30,7 +30,7 @@ async function instrument(page, id) {
     const marker = '},x=(e,t)=>{let n=p.current';
     assert.ok(js.includes(marker), 'Flash Brain hook location');
     js = js.replace(marker, `};window.__finishScreenTest=()=>{const e=p.current;if(!e)throw Error('Engine not initialized');e.score=321;e.waveState.config.wave=13;e.wavesCleared=12;e.highestLevel=3;e.peakCombo=2;b()};let x=(e,t)=>{let n=p.current`);
-    await page.route('**/assets/index-cr-6j3L1.js', route => route.fulfill({contentType:'application/javascript',body:js}));
+    await page.route('**/assets/index-cr-6j3L1.js*', route => route.fulfill({contentType:'application/javascript',body:js}));
   } else {
     // Instrument only the controller so the browser still loads every real
     // external dependency, stylesheet and renderer from the production page.
@@ -38,7 +38,7 @@ async function instrument(page, id) {
     const end = js.lastIndexOf('})();');
     assert.ok(end > 0, id + ' hook location');
     js = js.slice(0,end) + `window.__finishScreenTest=()=>{${hooks[id]}};` + js.slice(end);
-    await page.route('**/games/' + id + '/main.js', route => route.fulfill({contentType:'application/javascript',body:js}));
+    await page.route('**/games/' + id + '/main.js*', route => route.fulfill({contentType:'application/javascript',body:js}));
   }
 }
 function structure(el) {

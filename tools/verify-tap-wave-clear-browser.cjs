@@ -15,7 +15,7 @@ const output = 'artifacts/tap-wave-clear';
         localStorage.setItem('toenow_language_v1', lang);
         localStorage.setItem('toenow_tutorial_tap-match_v2', 'completed');
       }, lang);
-      await context.route('**/games/tap-match/main.js', route => {
+      await context.route('**/games/tap-match/main.js*', route => {
         const source = fs.readFileSync('games/tap-match/main.js', 'utf8');
         const end = source.lastIndexOf('})();');
         const hook = `window.__clearTest={

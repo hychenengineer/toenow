@@ -16,8 +16,8 @@ const hooks={
 async function instrument(page,id){
  if(id==='flash-brain'){
   let source=fs.readFileSync(path.resolve(__dirname,'../games/flash-brain/assets/index-cr-6j3L1.js'),'utf8');const marker='},x=(e,t)=>{let n=p.current';assert(source.includes(marker));source=source.replace(marker,'};window.__finishMaterialGame=()=>{const e=p.current;e.score=10;e.waveState.config.wave=1;b()};let x=(e,t)=>{let n=p.current');
-  await page.route('**/assets/index-cr-6j3L1.js',r=>r.fulfill({contentType:'application/javascript',body:source}));
- }else{const filename=id==='animal-rescue-train'?'game.js':'main.js';let source=fs.readFileSync(path.resolve(__dirname,'../games',id,filename),'utf8');const at=source.lastIndexOf('})();');assert(at>0,id);source=source.slice(0,at)+`window.__finishMaterialGame=()=>{${hooks[id]}};`+source.slice(at);await page.route(`**/games/${id}/${filename}`,r=>r.fulfill({contentType:'application/javascript',body:source}));}
+  await page.route('**/assets/index-cr-6j3L1.js*',r=>r.fulfill({contentType:'application/javascript',body:source}));
+ }else{const filename=id==='animal-rescue-train'?'game.js':'main.js';let source=fs.readFileSync(path.resolve(__dirname,'../games',id,filename),'utf8');const at=source.lastIndexOf('})();');assert(at>0,id);source=source.slice(0,at)+`window.__finishMaterialGame=()=>{${hooks[id]}};`+source.slice(at);await page.route(`**/games/${id}/${filename}*`,r=>r.fulfill({contentType:'application/javascript',body:source}));}
 }
 (async()=>{fs.mkdirSync(output,{recursive:true});const browser=await chromium.launch({channel:'msedge',headless:true});const checks=[],errors=[];try{
  const context=await browser.newContext({viewport:{width:1100,height:900}});await context.route('https://**',r=>r.abort());

@@ -41,7 +41,7 @@ test('blocked storage does not prevent live switching or translation', () => {
 test('every game and Hub load the same catalogs before the runtime', () => {
   const root = path.resolve(__dirname, '..');
   const pages = ['index.html', ...fs.readdirSync(path.join(root, 'games')).filter(id => fs.existsSync(path.join(root, 'games', id, 'index.html'))).map(id => `games/${id}/index.html`)];
-  assert.equal(pages.length, 12);
+  assert.equal(pages.length, 13);
   for (const page of pages) {
     const html = fs.readFileSync(path.join(root, page), 'utf8');
     const runtime = html.indexOf('toenow-i18n.js');

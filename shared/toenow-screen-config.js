@@ -1,5 +1,13 @@
 // Data only. The shared renderer owns every title and result template.
 (function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.ToenowScreenConfig=factory();})(typeof globalThis!=='undefined'?globalThis:this,function(){return {
+  "carefree-farm": {
+    "presentation":"visit", "practiceId":"btn-farm-practice", "name":"Carefree Farm", "icon":"🌿", "category":"RELAX",
+    "description":"Plant a little, raise a friend, grow together.",
+    "rules":[{"label":"HOW TO PLAY","text":"Tap a plot to plant or harvest. Feed crops to your baby animals."},{"label":"TIP","text":"Harvest different crops and raise animals to open new fields. Everything keeps growing while you are away."}],
+    "titleId":"title-screen","endId":"gameover-screen","headingId":"screen-game-title","startId":"btn-start","retryId":"btn-retry","returnId":"btn-title",
+    "fields":{"score":"go-score","bestScore":"go-best-score","wave":"go-wave","combo":"go-combo","level":"go-level"},
+    "titleArt":"../../assets/carefree-farm/sheep.webp","startLabel":"Visit your farm","practiceLabel":"Preview farm","visitHeading":"A lovely day on the farm","shareLabel":"Share farm"
+  },
   "capybara-drift": {
     "presentation": "visit", "practiceId":"btn-journey-practice",
     "name": "CAPYBARA HOT SPRING GARDEN", "icon": "🍊", "category": "RELAX",

@@ -162,5 +162,5 @@ test('Hub index.html scripts have zero syntax errors and render all game cards c
   assert.ok(grid.innerHTML.length > 0, 'gamesBentoGrid must render content');
 
   const gameCardCount = (grid.innerHTML.match(/data-game-id=/g) || []).length;
-  assert.equal(gameCardCount, 11, 'All 11 games should render on the hub dashboard');
+  assert.equal(gameCardCount, 12, 'All 12 games should render on the hub dashboard');
 });

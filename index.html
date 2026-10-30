@@ -21,6 +21,7 @@
   <script src="shared/toenow-i18n-games-a.js"></script>
   <script src="shared/toenow-i18n-games-b.js"></script>
   <script src="shared/toenow-i18n-animals.js"></script>
+<script src="shared/toenow-i18n-farm.js"></script>
 <script src="shared/toenow-i18n.js"></script>
 <script src="shared/toenow-animals.js"></script>
   <style>
@@ -1586,6 +1587,11 @@
       <div><span class="carefree-kicker">CAREFREE ISLAND</span><h2 id="carefree-entry-title">Capybara Hot Spring Garden</h2><p>A little spring, a world of possibilities.</p></div>
       <button id="open-capybara" type="button">Visit Capybara</button>
     </section>
+    <section class="carefree-entry" aria-labelledby="carefree-farm-title">
+      <img src="assets/carefree-farm-preview.png" alt="" width="155" height="100">
+      <div><span class="carefree-kicker">CAREFREE ISLAND</span><h2 id="carefree-farm-title">Carefree Farm</h2><p>Plant a little, raise a friend, grow together.</p></div>
+      <button id="open-carefree-farm" type="button">Open Carefree Farm</button>
+    </section>
     <div id="hubListView" class="hub-list-view">
     <section class="hub-challenge-hero" id="hubChallengeHero" aria-labelledby="hubChallengeTitle" data-i18n-ignore>
       <div>
@@ -1802,6 +1808,7 @@
        1. UNIVERSAL GAME MOUNTING & RESOLUTION
        ============================================================================ */
     const GAMES_CONFIG = [
+      { id: 'carefree-farm', title: 'Carefree Farm', category: 'relax', icon: '🌿', url: 'games/carefree-farm/index.html', preview: 'assets/carefree-farm-preview.png', difficulty: 1, leaderboard: false, description: 'Plant a little, raise a friend, grow together.', scoreKey: 'carefree_farm_best_score_v1', waveKey: 'carefree_farm_best_wave_v1' },
       {
         id: 'capybara-drift', title: 'Capybara Hot Spring Garden', category: 'relax', icon: '🍊',
         url: 'games/capybara-drift/index.html', preview: 'assets/capybara-hot-spring-garden-preview.png',
@@ -2605,7 +2612,7 @@
 
     function restartCurrentGame() {
       if (!currentMountedGame) return;
-      if (currentMountedGame.id === 'animal-rescue-train' || currentMountedGame.id === 'capybara-drift') {
+      if (currentMountedGame.id === 'animal-rescue-train' || currentMountedGame.id === 'capybara-drift' || currentMountedGame.id === 'carefree-farm') {
         gameViewer.contentWindow.postMessage({ type: 'GAME_RESTART' }, window.location.origin);
         return;
       }
@@ -3327,6 +3334,7 @@
       });
       window.addEventListener('toenow:languagechange', showLeaderboardUnlockNotice);
 
+      document.getElementById('open-carefree-farm').addEventListener('click', () => openTheaterModal(GAMES_CONFIG.find(game => game.id === 'carefree-farm')));
       document.getElementById('open-capybara').addEventListener('click', () => openTheaterModal(GAMES_CONFIG.find(game => game.id === 'capybara-drift')));
       document.getElementById('openLeaderboardBtn').addEventListener('click', () => {
         if (!exploration?.isLeaderboardUnlocked()) return;

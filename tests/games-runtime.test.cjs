@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const GAMES = [
+  { id: 'carefree-farm', path: 'games/carefree-farm/index.html', startBtn: 'btn-start' },
   { id: 'capybara-drift', path: 'games/capybara-drift/index.html', startBtn: 'btn-start' },
   { id: 'animal-rescue-train', path: 'games/animal-rescue-train/index.html', startBtn: 'btn-start-game', external: true },
   { id: 'number-pop', path: 'games/number-pop/index.html', startBtn: 'btn-start' },
@@ -136,6 +137,14 @@ for (const game of GAMES) {
       `Start button ID [${game.startBtn}] not found in ${game.path}`
     );
 
+    if (game.id === 'carefree-farm') {
+      assert.equal(require('../shared/toenow-screen-config.js')[game.id].presentation, 'visit');
+      assert.equal(existingIds.has('title-best-level') || existingIds.has('titleBestLevel'),false);
+      assert.ok(existingIds.has('btn-farm-practice'));
+      assert.ok(existingIds.has('fields') && existingIds.has('pasture'));
+      for(const file of ['model.js','main.js'])new (require('node:vm').Script)(fs.readFileSync(path.resolve(__dirname,'../games/carefree-farm',file),'utf8'));
+      return; // Real DOM, transactions and storage are exercised in verify-carefree-farm-browser.cjs.
+    }
     if(game.id==='capybara-drift'){assert.ok(existingIds.has('garden'));assert.equal(require('../shared/toenow-screen-config.js')[game.id].presentation,'visit');return;}
     // Verify HTML contains title-best-level or title record
     const hasBestLevel = existingIds.has('title-best-level') || existingIds.has('titleBestLevel');

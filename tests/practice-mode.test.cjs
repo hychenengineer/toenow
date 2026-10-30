@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const GAMES = [
+  { id: 'carefree-farm', path: 'games/carefree-farm/index.html', titleCardId: 'title-screen' },
   { id: 'capybara-drift', path: 'games/capybara-drift/index.html', titleCardId: 'title-screen' },
   { id: 'animal-rescue-train', path: 'games/animal-rescue-train/index.html', titleCardId: 'menu-screen', controller: 'games/animal-rescue-train/game.js' },
   { id: 'number-pop', path: 'games/number-pop/index.html', titleCardId: 'title-screen' },
@@ -27,6 +28,13 @@ GAMES.forEach(({ id, path: relPath, titleCardId, controller }) => {
     assert.ok(html.includes('shared/toenow-levels.js'), `${id} must include shared/toenow-levels.js`);
 
     // Journey practice uses the same trip length and no difficulty/wave picker.
+    if (id === 'carefree-farm') {
+      const config=require('../shared/toenow-screen-config.js')[id];
+      assert.equal(config.presentation,'visit');
+      assert.ok(source.includes("$('btn-farm-practice').onclick=()=>start(true)"));
+      assert.ok(source.includes('if(isPractice||blocked)return'));
+      return;
+    }
     if (id === 'capybara-drift') {
       const screens = require('../shared/toenow-screens.js');
       const config = screens.catalog[id];

@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
-const games = ['capybara-drift','number-pop','ball-track','block-match','add-up','space-scale','tap-match','spot-quick','shadow-match','flash-brain'];
+const games = ['carefree-farm','capybara-drift','number-pop','ball-track','block-match','add-up','space-scale','tap-match','spot-quick','shadow-match','flash-brain'];
 
 test('nine games use one screen library without copied title or result templates', () => {
   for (const id of games) {
@@ -70,7 +70,7 @@ test('shared screen copy is escaped and missing/non-finite results are safe', ()
 
 test('shared screen templates provide identical result fields and three actions for all games', () => {
   const screens = require('../shared/toenow-screens.js');
-  for (const id of games.filter(id => id !== 'capybara-drift')) {
+  for (const id of games.filter(id => require('../shared/toenow-screen-config.js')[id].presentation !== 'visit')) {
     const title = screens.titleMarkup(id);
     const end = screens.gameOverMarkup(id);
     assert.match(title, /unified-title-card/);
@@ -99,7 +99,7 @@ test('membership invitation follows replay and preserves the three game actions'
   const screens = require('../shared/toenow-screens.js');
   for (const id of games) {
     const html = screens.gameOverMarkup(id);
-    if(id==='capybara-drift'){assert.doesNotMatch(html,/data-membership-invite/);assert.equal((html.match(/data-screen-action=/g)||[]).length,3);continue;}
+    if(screens.catalog[id].presentation==='visit'){assert.doesNotMatch(html,/data-membership-invite/);assert.equal((html.match(/data-screen-action=/g)||[]).length,3);continue;}
     assert.ok(html.indexOf('data-membership-invite') > html.indexOf('data-screen-action="retry"'));
     assert.ok(html.indexOf('data-membership-invite') < html.indexOf('data-screen-action="share"'));
     assert.match(html, /Create Free Account/);

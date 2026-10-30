@@ -8,7 +8,8 @@ const levels=require('../shared/toenow-levels.js');
 
 test('Animal island provides one distinct partner and habitat for each existing game',()=>{
  assert.equal(typeof animals.getTheme,'function','animal theme API exists');
- const themes=Object.keys(levels.GAME_STORAGE_KEYS).map(id=>animals.getTheme(id));
+ // The persistent farm owns several species and has no cognitive-island landmark.
+ const themes=Object.keys(levels.GAME_STORAGE_KEYS).filter(id=>id!=='carefree-farm').map(id=>animals.getTheme(id));
  assert(themes.every(Boolean));
  assert.equal(new Set(themes.map(t=>t.species)).size,themes.length);
  assert.equal(new Set(themes.map(t=>t.place)).size,themes.length);
@@ -17,7 +18,7 @@ test('Animal island provides one distinct partner and habitat for each existing 
 });
 test('Animal building stages are bounded and follow the shared five-tier wave mapping',()=>{
  assert.equal(typeof animals.getBuildingAsset,'function');
- for(const id of Object.keys(levels.GAME_STORAGE_KEYS)){
+ for(const id of Object.keys(levels.GAME_STORAGE_KEYS).filter(id=>id!=='carefree-farm')){
   const textures=new Set();
   for(let n=1;n<=5;n++)textures.add(animals.getBuildingAsset(id,n));
   assert.equal(textures.size,5);

@@ -3,3 +3,18 @@
 @media(max-height:450px){.island-label{display:none}#garden-hint{top:45px;font-size:11px}.utility{bottom:88px}.editing{bottom:88px}#materials{bottom:5px;padding:4px}#materials button{padding:3px 12px}.unified-animal-art{max-height:65px!important}dialog{padding:14px}}
 @media(max-width:600px){#materials button{min-width:34px;padding:6px 5px}#materials{justify-content:space-around}#materials small{font-size:8px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+#garden{background:radial-gradient(ellipse at 50% 42%,#f0efd6 0%,#d7e2c3 48%,#b6c99e 100%)}
+#garden[data-palette=moonlight]{background:radial-gradient(ellipse at 50% 42%,#a5bfc0,#6e9190 60%,#456c70)}
+#garden[data-palette=sunset]{background:radial-gradient(ellipse at 50% 42%,#f7e8c8,#e0d4b0 60%,#c0c49c)}
+#garden[data-palette=rain]{background:radial-gradient(ellipse at 50% 42%,#d2dfd5,#a9bfb0 65%,#8fa99c)}
+#garden-loading{position:fixed;inset:0;z-index:100;display:grid;place-content:center;justify-items:center;background:#dce8cceF;color:#375b4e;text-align:center;padding:24px}
+#garden-loading p{max-width:320px}
+.book-card canvas{height:auto;aspect-ratio:5/3}
+@media(max-height:450px) and (min-width:601px){
+ .utility{top:90px;bottom:auto;left:12px;flex-direction:column;width:150px;gap:7px}
+ .utility button{font-size:11px;padding:8px;min-height:38px}
+ .editing{top:90px;bottom:auto;right:12px;display:grid;grid-template-columns:1fr 1fr;width:112px}
+ .editing button{font-size:11px;padding:8px;min-height:38px}
+ .editing #undo,.editing #redo{grid-column:span 2}
+ #notice{top:auto;bottom:79px;font-size:11px;padding:7px 14px}
+}

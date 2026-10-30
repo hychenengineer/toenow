@@ -1,6 +1,8 @@
 (function (root) {
   'use strict';
   const entries = {
+    'Loading garden…':'正在載入花園…','Try again':'再試一次',
+    'The garden could not load. Please try again.':'無法載入花園，請再試一次。',
     '← Back to Hub':'← 回到大廳',
     'Capybara Hot Spring Garden':'水豚溫泉花園','CAPYBARA HOT SPRING GARDEN':'水豚溫泉花園',
     'A little spring, a world of possibilities.':'小小溫泉，無限可能。','A little spring, a world of possibilities. Build, splash, and welcome friends.':'從小小溫泉開始，打造花園、玩水，迎接動物朋友。',

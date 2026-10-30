@@ -1,6 +1,18 @@
 (function (root) {
   'use strict';
   const entries = {
+    '← Back to Hub':'← 回到大廳',
+    'Capybara Hot Spring Garden':'水豚溫泉花園','CAPYBARA HOT SPRING GARDEN':'水豚溫泉花園',
+    'A little spring, a world of possibilities.':'小小溫泉，無限可能。','A little spring, a world of possibilities. Build, splash, and welcome friends.':'從小小溫泉開始，打造花園、玩水，迎接動物朋友。',
+    'Swim with a tap. Choose a material and tap to build. Nearby pieces connect naturally.':'輕點水面讓水豚游泳，選擇素材後輕點建造，相鄰物件會自然連接。',
+    'Arrow keys move your cursor; Enter places a piece. Undo anytime. Preview leaves your saved garden untouched.':'方向鍵移動游標，Enter 放置素材，隨時都能復原。體驗模式不會更動已儲存的花園。',
+    'Visit your spring':'來泡溫泉','Preview garden':'體驗花園','A lovely little visit':'一段美好的溫泉時光','Come back whenever you like.':'想來的時候，隨時都歡迎。','Visit again':'再來玩一會兒','Share garden':'分享花園',
+    'Hot spring garden':'溫泉花園','Garden tools':'花園工具','Building materials':'建造素材','Edit garden':'編輯花園','Tap the water to swim':'輕點水面，和水豚一起游泳','Tap to grow your garden':'輕點放置，慢慢打造花園',
+    'Swim':'游泳','Water':'水池','Stone':'石頭','Wood':'木頭','Bamboo':'竹子','Flowers':'花朵','Light':'燈籠','Remove':'移除','Undo':'復原','Redo':'重做','Zoom out':'縮小','Zoom in':'放大',
+    'Postcard album':'明信片相簿','Save postcard':'留下明信片','Postcard saved':'已留下這一刻','Your first postcard is waiting.':'第一張明信片，等你留下美好時光。',
+    'Return to spring':'回到溫泉','Restart visit':'重新開始這次造訪','Restore garden layout':'恢復初始花園','Restore the starting layout? Your collection and postcards will stay.':'要恢復最初的花園配置嗎？收藏和明信片都會保留。','Restore layout':'恢復配置','Keep my garden':'保留我的花園','Finish visit':'結束這次造訪','Preview leaves your saved garden untouched.':'體驗模式不會更動已儲存的花園。',
+    'Duck':'鴨子','Frog':'青蛙','Turtle':'烏龜','Otter':'水獺','Rabbit':'兔子','Butterfly':'蝴蝶','Firefly':'螢火蟲','morning':'清晨','golden':'金色午後','sunset':'夕陽','moonlight':'月光','rain':'細雨','mist':'薄霧','petals':'飄落花瓣',
+
     'No timer. No rush. Just drift.':'沒有倒數，慢慢漂就好。','Visit Capybara':'找水豚玩',
     'Capybara Drift':'水豚漂漂泉','CAPYBARA DRIFT':'水豚漂漂泉','RELAX':'放鬆','Relax':'放鬆','CAREFREE ISLAND':'無憂島','Carefree Island':'無憂島',
     'Float with Capybara. Collect little joys, meet friends, and take your time.':'和水豚慢慢漂，收集小快樂，遇見新朋友。',

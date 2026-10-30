@@ -66,6 +66,14 @@ async function run() {
   const dimensions = new Map();
   try {
     for (const [id,c] of Object.entries(catalog).filter(([id])=>!process.env.TOENOW_TEST_GAMES || process.env.TOENOW_TEST_GAMES.split(',').includes(id))) {
+      if(c.presentation==='visit'){
+        for(const width of [1100,390])for(const lang of ['en','zh-Hant']){
+          const p=await browser.newPage({viewport:{width,height:850}});await p.addInitScript(l=>localStorage.setItem('toenow_language_v1',l),lang);await p.goto(base+'/games/'+id+'/');
+          const title=p.locator('#'+c.titleId);assert.equal(await title.getAttribute('data-toenow-screen-owner'),'ToenowScreens');assert.equal(await title.locator('[data-screen-record]').count(),0);await p.locator('#'+c.startId).click();await p.locator('#rest').click();await p.locator('#finish').click();const end=p.locator('#'+c.endId);await end.waitFor({state:'visible'});assert.equal(await end.getAttribute('data-toenow-screen-owner'),'ToenowScreens');assert.equal(await end.locator('[data-screen-action]').count(),3);assert.equal(await end.locator('[data-screen-field]').count(),0);await p.evaluate(()=>Object.defineProperty(navigator,'share',{configurable:true,value:d=>{window.__visitShare=d;return Promise.resolve();}}));await end.locator('[data-screen-action="share"]').click();assert(await p.evaluate(()=>!!window.__visitShare.text));await p.locator('#'+c.retryId).click();await p.locator('#rest').click();await p.locator('#finish').click();await p.locator('#'+c.returnId).click();await title.waitFor({state:'visible'});const before=await p.evaluate(()=>({...localStorage}));await p.locator('#'+c.practiceId).click();await p.locator('#rest').click();await p.locator('#finish').click();assert.deepEqual(await p.evaluate(()=>({...localStorage})),before);result.standalone++;await p.close();
+        }
+        result.practice++;const p=await browser.newPage();await p.goto(base+'/');await p.setContent(`<iframe src="${base}/games/${id}/" style="width:100%;height:800px"></iframe>`);const f=p.frameLocator('iframe');await f.locator('#'+c.startId).click();await f.locator('#rest').click();await f.locator('#finish').click();await f.locator('#'+c.endId).waitFor({state:'visible'});result.iframe++;await p.close();continue;
+      }
+
       for (const width of [1100,390]) for (const lang of ['en','zh-Hant']) {
         const page = await browser.newPage({viewport:{width,height:850}});
         await page.addInitScript(k=>{localStorage.setItem(k.score,'900');localStorage.setItem(k.wave,'21');},keys[id]);

@@ -136,6 +136,7 @@ for (const game of GAMES) {
       `Start button ID [${game.startBtn}] not found in ${game.path}`
     );
 
+    if(game.id==='capybara-drift'){assert.ok(existingIds.has('garden'));assert.equal(require('../shared/toenow-screen-config.js')[game.id].presentation,'visit');return;}
     // Verify HTML contains title-best-level or title record
     const hasBestLevel = existingIds.has('title-best-level') || existingIds.has('titleBestLevel');
     assert.ok(

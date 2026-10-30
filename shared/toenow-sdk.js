@@ -197,7 +197,7 @@
       }
     } catch (_) {}
 
-    if (!isPractice) {
+    if (!isPractice && this.category !== 'relax') {
       this.saveBestRecords(rawScore, rawWave);
     }
 

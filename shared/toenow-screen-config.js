@@ -1,9 +1,10 @@
 // Data only. The shared renderer owns every title and result template.
 (function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.ToenowScreenConfig=factory();})(typeof globalThis!=='undefined'?globalThis:this,function(){return {
   "capybara-drift": {
-    "name": "CAPYBARA DRIFT", "icon": "🍊", "category": "RELAX",
-    "description": "Float with Capybara. Collect little joys, meet friends, and take your time.",
-    "rules": [{"label":"HOW TO PLAY","text":"Drag gently to collect bubbles, yuzu, petals and friends. Arrow keys also work."},{"label":"TIP","text":"No timer, no penalties. Take a break anytime. Saved joy buys new floats. Practice does not save progress."}],
+    "presentation": "visit", "practiceId":"btn-journey-practice",
+    "name": "CAPYBARA HOT SPRING GARDEN", "icon": "🍊", "category": "RELAX",
+    "description": "A little spring, a world of possibilities. Build, splash, and welcome friends.",
+    "rules": [{"label":"HOW TO PLAY","text":"Swim with a tap. Choose a material and tap to build. Nearby pieces connect naturally."},{"label":"TIP","text":"Arrow keys move your cursor; Enter places a piece. Undo anytime. Preview leaves your saved garden untouched."}],
     "titleId":"title-screen", "endId":"gameover-screen", "headingId":"screen-game-title", "startId":"btn-start", "retryId":"btn-retry", "returnId":"btn-title",
     "fields":{"score":"go-score","bestScore":"go-best-score","wave":"go-wave","combo":"go-combo","level":"go-level"},
     "animalSpecies":"capybara"

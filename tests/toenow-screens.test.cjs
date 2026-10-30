@@ -70,7 +70,7 @@ test('shared screen copy is escaped and missing/non-finite results are safe', ()
 
 test('shared screen templates provide identical result fields and three actions for all games', () => {
   const screens = require('../shared/toenow-screens.js');
-  for (const id of games) {
+  for (const id of games.filter(id => id !== 'capybara-drift')) {
     const title = screens.titleMarkup(id);
     const end = screens.gameOverMarkup(id);
     assert.match(title, /unified-title-card/);
@@ -99,6 +99,7 @@ test('membership invitation follows replay and preserves the three game actions'
   const screens = require('../shared/toenow-screens.js');
   for (const id of games) {
     const html = screens.gameOverMarkup(id);
+    if(id==='capybara-drift'){assert.doesNotMatch(html,/data-membership-invite/);assert.equal((html.match(/data-screen-action=/g)||[]).length,3);continue;}
     assert.ok(html.indexOf('data-membership-invite') > html.indexOf('data-screen-action="retry"'));
     assert.ok(html.indexOf('data-membership-invite') < html.indexOf('data-screen-action="share"'));
     assert.match(html, /Create Free Account/);
@@ -106,4 +107,24 @@ test('membership invitation follows replay and preserves the three game actions'
     assert.match(html, /data-account-action="signin"/);
     assert.equal((html.match(/data-screen-action=/g) || []).length, 3);
   }
+});
+
+test('journeys show discoveries without competitive records',()=>{
+ const screens=require('../shared/toenow-screens.js');
+ const title=screens.titleMarkup('capybara-drift'),end=screens.gameOverMarkup('capybara-drift');
+ assert.doesNotMatch(title+end,/BEST SCORE|BEST LEVEL|LVL|WAVE REACHED|PEAK COMBO|SHARE SCORE|data-screen-field="score"/);
+ assert.match(title,/Visit your spring/);assert.match(title,/data-screen-practice/);assert.match(end,/data-visit-summary/);
+ assert.equal((end.match(/data-screen-action=/g)||[]).length,3);
+});
+test('journey summary uses actual finds and safe text',()=>{
+ const screens=require('../shared/toenow-screens.js'),nodes=new Map();
+ const host={dataset:{},classList:{add(){}},setAttribute(){},replaceChildren(){},querySelector(selector){
+ if(!nodes.has(selector))nodes.set(selector,{textContent:'',innerHTML:'',listeners:{},addEventListener(event,fn){this.listeners[event]=fn;}});return nodes.get(selector);}};
+ let practiced;screens.renderTitle(host,'capybara-drift',{onPractice(...args){practiced=args;}});nodes.get('[data-screen-practice]').listeners.click();assert.deepEqual(practiced,[1,true]);
+ screens.renderGameOver(host,'capybara-drift');
+ const journey={items:[{name:'<Flower>',icon:'🌸',count:2,isNew:true}],friend:'Otter',scene:'Moonlight',material:'Wood',collectionCount:7};
+ screens.updateGameOver('capybara-drift',{score:900,wave:99,visit:['<Flower>','Otter']});
+ assert.equal(nodes.get('[data-visit-summary]').textContent,'<Flower> · Otter');assert.doesNotMatch(screens.gameOverMarkup('capybara-drift'),/Back on the bank|>Your little journey<|journey-details|data-membership-invite|modal-subtitle/);
+ assert.match(screens.journeyShareText(journey),/Otter/);assert.doesNotMatch(screens.journeyShareText(journey),/score|wave|LVL/i);
+ screens.updateGameOver('capybara-drift',{visit:[]});assert.equal(nodes.get('[data-visit-summary]').textContent,'');
 });

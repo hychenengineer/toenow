@@ -1582,8 +1582,8 @@
   <main class="main-container">
     <section id="islandExplorer" aria-label="Island explorer"></section>
     <section class="carefree-entry" aria-labelledby="carefree-entry-title">
-      <img src="assets/capybara-drift-preview.png" alt="" width="155" height="100">
-      <div><span class="carefree-kicker">CAREFREE ISLAND</span><h2 id="carefree-entry-title">Capybara Drift</h2><p>No timer. No rush. Just drift.</p></div>
+      <img src="assets/capybara-hot-spring-garden-preview.png" alt="" width="155" height="100">
+      <div><span class="carefree-kicker">CAREFREE ISLAND</span><h2 id="carefree-entry-title">Capybara Hot Spring Garden</h2><p>A little spring, a world of possibilities.</p></div>
       <button id="open-capybara" type="button">Visit Capybara</button>
     </section>
     <div id="hubListView" class="hub-list-view">
@@ -1803,10 +1803,10 @@
        ============================================================================ */
     const GAMES_CONFIG = [
       {
-        id: 'capybara-drift', title: 'Capybara Drift', category: 'relax', icon: '🍊',
-        url: 'games/capybara-drift/index.html', preview: 'assets/capybara-drift-preview.png',
+        id: 'capybara-drift', title: 'Capybara Hot Spring Garden', category: 'relax', icon: '🍊',
+        url: 'games/capybara-drift/index.html', preview: 'assets/capybara-hot-spring-garden-preview.png',
         difficulty: 1, leaderboard: false,
-        description: 'Float with Capybara. Collect little joys, meet friends, and take your time.',
+        description: 'A little spring, a world of possibilities. Build, splash, and welcome friends.',
         scoreKey: 'capybara_drift_best_score_v1', waveKey: 'capybara_drift_best_wave_v1'
       },
       {
@@ -2472,10 +2472,10 @@
           }
           // Keep game handlers in the iframe; standalone controls stay intact.
           if (controls && controls.querySelectorAll('button').length === originals.length) controls.style.display = 'none';
-          else originals.forEach(original => original.style.setProperty('display', 'none', 'important'));
+          else originals.forEach(original => {if(drift&&original.id==='rest')original.style.removeProperty('display');else original.style.setProperty('display', 'none', 'important');});
         }
         const live = train ? gameDoc.getElementById('play-screen') : drift ? gameDoc.getElementById('play-hud') : controls.closest('.island-live-hud');
-        host.hidden = drift ? live.hidden && gameDoc.getElementById('rest-panel').hidden
+        host.hidden = drift ? false
           : !live?.getClientRects().length || gameDoc.defaultView.getComputedStyle(live).visibility === 'hidden';
         const mode = gameDoc.body.dataset.state || gameDoc.body.dataset.mode;
         if (mode && !['playing', 'paused'].includes(mode)) host.hidden = true;
@@ -3032,6 +3032,8 @@
         }
         const gameConfig = GAMES_CONFIG.find(game => game.id === gameId);
         if (!gameConfig) return;
+        // Relax visits have no competitive records or exploration progression.
+        if (gameConfig.category === 'relax') return;
 
         const wave = payload.wave || (typeof payload.level === 'number' ? (payload.level - 1) * 5 + 1 : 1);
         const durationSec = Math.max(0.5, (Number(payload.duration) ? Number(payload.duration) / 1000 : Number(payload.runDuration) || 10));

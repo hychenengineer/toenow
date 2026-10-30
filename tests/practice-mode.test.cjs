@@ -26,12 +26,21 @@ GAMES.forEach(({ id, path: relPath, titleCardId, controller }) => {
     // 1. Must load shared/toenow-levels.js
     assert.ok(html.includes('shared/toenow-levels.js'), `${id} must include shared/toenow-levels.js`);
 
-    // 2. Must call setupPracticeMode
-    assert.ok(source.includes('setupPracticeMode') || source.includes('sdk.setupPractice('), `${id} must use shared practice setup`);
+    // Journey practice uses the same trip length and no difficulty/wave picker.
+    if (id === 'capybara-drift') {
+      const screens = require('../shared/toenow-screens.js');
+      const config = screens.catalog[id];
+      assert.equal(config.presentation, 'visit');
+      assert.equal(config.practiceId, 'btn-journey-practice');
+      const rendered = screens.expandHTML(html, id);
+      assert.ok(rendered.includes(`id="${config.practiceId}"`), 'Shared renderer owns the journey practice button');
+      assert.ok(source.includes("$('btn-journey-practice').onclick=()=>start(true)"), 'Garden preview starts directly with isolation enabled');
+      assert.ok(!source.includes('sdk.setupPractice(') && !source.includes('setupPracticeMode'), 'Journeys must not offer difficulty waves');
+    } else assert.ok(source.includes('setupPracticeMode') || source.includes('sdk.setupPractice('), `${id} must use shared practice setup`);
 
     // 3. Must target an existing container ID in HTML
     assert.ok(html.includes(`id="${titleCardId}"`) || html.includes(`id='${titleCardId}'`), `${id} must have container #${titleCardId}`);
-    assert.ok(controller ? html.includes('unified-title-card') : html.includes(`#${titleCardId}`), `${id} practice container must be discoverable by the shared helper`);
+    assert.ok(id==='capybara-drift' || (controller ? html.includes('unified-title-card') : html.includes(`#${titleCardId}`)), `${id} practice container must be discoverable by the shared helper`);
 
     // 4. Must accept (startWave, isPractice) in its start routine
     assert.ok(source.includes('isPractice'), `${id} start routine must accept isPractice flag`);

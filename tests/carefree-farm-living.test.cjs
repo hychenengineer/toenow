@@ -1,6 +1,12 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const F=require('../games/carefree-farm/model.js');
 const legacy=require('./fixtures/carefree-farm-v1.json');
+test('collect receipt reports the exact awarded product and bonus quantity once',()=>{
+ for(const species of Object.keys(F.ANIMALS))for(const bonus of [false,true]){
+  const s=F.create(1000),a=s.animals[0];a.species=species;a.growth=3;a.ready=true;a.bonus=bonus;const product=F.ANIMALS[species].product;
+  const receipt=F.act(s,{type:'collect',animal:0},1000);assert.equal(receipt.collected,product);assert.equal(receipt.quantity,bonus?2:1);assert.equal(s.inventory[product],receipt.quantity);assert.equal(a.ready,false);assert.equal(a.bonus,false);assert(!F.act(s,{type:'collect',animal:0},1000).ok);assert.equal(s.inventory[product],receipt.quantity);
+ }
+});
 test('old pig saves become grass-fed horses without losing progress, goods or orders',()=>{
  const old=F.create(1000);old.level=2;old.plots=Array(6).fill(null);old.animals.push({...old.animals[0],species:'pig',growth:2,friendship:37,due:5000,gift:'pumpkin'});old.inventory.truffle=7;old.collection=['pig-0'];old.orders[0].needs={truffle:3};
  const raw=JSON.stringify(old),loaded=F.load({getItem:()=>raw},1000);assert(!loaded.blocked);const s=loaded.state;

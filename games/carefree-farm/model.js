@@ -91,7 +91,7 @@
     if(!(s.inventory[action.crop]>0))return fail('Grow this food first.');
     s.inventory[action.crop]--;a.bonus=action.crop===spec.favorite;a.due=now+spec.seconds*1000*(a.bonus?0.75:1);break;
    }
-   case 'collect':if(!a?.ready)return fail('No produce yet.');add(ANIMALS[a.species].product,a.bonus?2:1);a.ready=false;a.bonus=false;break;
+   case 'collect':{if(!a?.ready)return fail('No produce yet.');const collected=ANIMALS[a.species].product,quantity=a.bonus?2:1;add(collected,quantity);a.ready=false;a.bonus=false;return {ok:true,collected,quantity};}
    case 'gift':{
     if(!a?.gift)return fail('No surprise yet.');const gift=a.gift;
     if(CROPS[gift])unlock(s,gift);add(gift,2);a.gift=null;

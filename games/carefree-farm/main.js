@@ -6,7 +6,7 @@
  let normalSession=null,baseRaw=null,conflict=false,saleItem='',saleQuantity='1',rewardReceipt=null;
  const sdk=new window.ToenowGameSDK({gameId:ID,category:'relax',hasWaves:false,gameTitle:'Carefree Farm',onStart:o=>start(!!o?.isPractice),onPause:pause,onResume:resume,onRestart:()=>start(isPractice)});
  const art=species=>'../../assets/carefree-farm/'+species+'.webp';
- const rewardArt=id=>'../../assets/carefree-farm/'+(F.CROPS[id]?'crop-'+id+'.webp':'rewards/'+id+'.webp');
+ const rewardArt=id=>'../../assets/carefree-farm/'+(F.CROPS[id]?'crop-'+id+'.webp':'rewards/'+id+(Object.values(F.ANIMALS).some(a=>a.product===id)?'.svg':'.webp'));
  const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const text=value=>esc(t(value));
  const itemIcon=id=>F.CROPS[id]?`<img class="crop-art" src="../../assets/carefree-farm/crop-${id}.webp" alt="">`:F.ITEMS[id].icon;
@@ -45,7 +45,7 @@
   const perform=()=>{
    if(!isPractice&&!blocked&&!unsaved){const loaded=F.load(storage);if(loaded.blocked)blocked=true;else{state=loaded.state;baseRaw=readBase();}}
    const result=F.act(state,action);
-   if(result.ok){persist();if(result.sold)notify(t('Sold')+' ×'+result.sold+' · 🪙 '+result.total);else if(result.delivered)notify(t('Order delivered!'));else if(result.decorated)notify(t('A cozy new corner!'));else if(result.gift){rewardReceipt={...result};openPanel('reward');}else if(action.type==='upgrade')notify(t('Your farm has grown!'));else if(action.type==='buyAnimal'){selectedAnimal=state.animals.length-1;tab='pasture';notify(t('Welcome, little friend!'));}else if(action.type==='harvest')notify(t('Harvest added to your basket.'));}
+   if(result.ok){persist();if(result.sold)notify(t('Sold')+' ×'+result.sold+' · 🪙 '+result.total);else if(result.delivered)notify(t('Order delivered!'));else if(result.decorated)notify(t('A cozy new corner!'));else if(result.gift||result.collected){rewardReceipt={...result};openPanel('reward');}else if(action.type==='upgrade')notify(t('Your farm has grown!'));else if(action.type==='buyAnimal'){selectedAnimal=state.animals.length-1;tab='pasture';notify(t('Welcome, little friend!'));}else if(action.type==='harvest')notify(t('Harvest added to your basket.'));}
    else notify(t(result.reason));render();if($('panel').open)renderPanel();
   };
   try{if(!isPractice&&navigator.locks)await navigator.locks.request('toenow-carefree-farm',perform);else perform();}finally{busy=false;$('play').setAttribute('aria-busy','false');}
@@ -81,9 +81,10 @@
   const title={reward:'A little surprise!',orders:'Village orders',collection:'Keepsake collection',decorations:'Make it your home',growth:'Farm milestones',inventory:'Warehouse / Sell',shop:'Farm shop',crops:'Crop collection'};
   $('panel-title').textContent=t(title[panelType]);let html='';
   if(panelType==='reward'&&rewardReceipt){
-   const r=rewardReceipt,k=F.KEEPSAKES.find(k=>k.id===r.keepsake);
+   const r=rewardReceipt,item=r.collected||r.gift,k=F.KEEPSAKES.find(k=>k.id===r.keepsake);
    const card=(id,name,quantity)=>'<div class="reward-card"><img src="'+rewardArt(id)+'" alt="'+text(name)+'"><strong>'+text(name)+'</strong><b>×'+quantity+'</b></div>';
-   html='<p class="panel-intro">'+text('Your friend brought you these gifts.')+'</p><div class="reward-grid">'+card(r.gift,F.ITEMS[r.gift].name,r.quantity)+(k?card(k.id,k.name,1):'')+card('stamp','Friendship stamp',r.stamps)+'</div>'+(k?'<p class="reward-note">'+text('New keepsake added to your collection!')+'</p>':'')+'<button class="primary reward-done" data-reward-close="true">'+text('Lovely!')+'</button>';
+   if(r.collected)$('panel-title').textContent=t('Collected!');
+   html='<p class="panel-intro">'+text(r.collected?'Added to your warehouse.':'Your friend brought you these gifts.')+'</p><div class="reward-grid '+(r.collected?'single':'')+'">'+card(item,F.ITEMS[item].name,r.quantity)+(k?card(k.id,k.name,1):'')+(r.stamps?card('stamp','Friendship stamp',r.stamps):'')+'</div>'+(k?'<p class="reward-note">'+text('New keepsake added to your collection!')+'</p>':'')+'<button class="primary reward-done" data-reward-close="true">'+text('Lovely!')+'</button>';
   }else if(panelType==='growth'){
    const next=F.STAGES[state.level],req=F.requirements(state);
    html=`<p class="panel-intro">${text('Grow crops and raise different animals to open each new field.')}</p>`;

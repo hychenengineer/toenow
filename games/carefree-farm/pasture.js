@@ -2,7 +2,7 @@
  'use strict';
  const host=document.getElementById('animals'),actors=new Map(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
  let decorations='',previous=0;
- const source=(species,pose)=>'../../assets/carefree-farm/motion/'+species+'-'+pose+'.webp';
+ const source=(species,pose)=>'../../assets/carefree-farm/motion/'+(pose===1||pose===2?'walk-v2/':'')+species+'-'+pose+'.webp';
  function update(state,selected,t){
   for(const [i,actor] of actors)if(i>=state.animals.length){actor.node.remove();actors.delete(i);}
   state.animals.forEach((animal,i)=>{

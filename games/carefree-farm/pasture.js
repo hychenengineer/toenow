@@ -21,16 +21,18 @@
  function build(a){
   if(!textures?.[a.species]?.hind||!app)return;if(a.root)a.root.destroy({children:true});
   const r=rigs[a.species];a.root=new P.Container();a.shadow=new P.Graphics();a.root.addChild(a.shadow);a.facing=new P.Container();a.root.addChild(a.facing);a.legs=[];
-  for(const [name,part,offset,phase]of feet){const far=name.endsWith('right'),top=r[part+'Top']??r.top,leg=createMesh(textures[a.species][part],r.width*(far?.9:1),r.bottom-top-(far?4:0));Object.assign(leg,{name,phase,far,x:r[part]+offset,y:top});leg.mesh.position.set(leg.x,leg.y);if(far)leg.mesh.tint=0xb6aa96;a.facing.addChild(leg.mesh);a.legs.push(leg);}
+  for(const [name,part,offset,phase]of feet){const far=name.endsWith('right'),top=(r[part+'Top']??r.top)-14,leg=createMesh(textures[a.species][part],r.width*(far?.9:1),r.bottom-top-(far?4:0));Object.assign(leg,{name,phase,far,x:r[part]+offset,y:top});leg.mesh.position.set(leg.x,leg.y);if(far)leg.mesh.tint=0xb6aa96;a.facing.addChild(leg.mesh);a.legs.push(leg);}
   const [x,y,w,h]=r.body;a.body=new P.Sprite(textures[a.species].body);a.body.position.set(x,y);a.body.width=w;a.body.height=h;a.facing.addChild(a.body);app.stage.addChild(a.root);pose(a,0);layout();
  }
  function pose(a,dt){
   if(!a.legs)return;
-  const target=a.walking?1:0;a.strength=reduced.matches?0:a.strength+(target-a.strength)*Math.min(1,dt*14);
-  if(a.walking)a.gait+=dt/1.25;
-  for(const leg of a.legs){const phase=(a.gait+leg.phase)%1,swing=phase>=.65,q=swing?(phase-.65)/.35:phase/.65;
-   leg.dx=(swing?-7.2+14.4*q*q*(3-2*q):7.2-14.4*q)*a.strength;leg.lift=(swing?Math.sin(Math.PI*q)*2.2:0)*a.strength;
-   for(let row=0;row<5;row++){const t=row/4,shift=leg.dx*t+(row===2?leg.lift*.35:0),half=leg.width/2*[1,.9,.8,.8,.92][row],y=leg.height*t-leg.lift*t*t;leg.positions[row*4]=shift-half;leg.positions[row*4+1]=y;leg.positions[row*4+2]=shift+half;leg.positions[row*4+3]=y;}
+  const target=a.walking?1:0;a.strength=reduced.matches?0:a.strength+(target-a.strength)*Math.min(1,dt*5);
+  // Advance the four-beat walk from distance, matching planted feet to ground speed.
+  const scale=110/280*(a.animal.growth<3?.8:1);
+  if(a.walking)a.gait+=Math.abs(a.x-a.oldX)/scale/(12/.72);
+  for(const leg of a.legs){const phase=(a.gait+leg.phase)%1,swing=phase>=.72,q=swing?(phase-.72)/.28:phase/.72;
+   leg.dx=(swing?-6+12*q*q*(3-2*q):6-12*q)*a.strength;leg.lift=(swing?Math.sin(Math.PI*q)*2:0)*a.strength;
+   for(let row=0;row<5;row++){const t=row/4,shift=leg.dx*Math.max(0,(t-.25)/.75)+(row===2?leg.lift*.2:0),half=leg.width/2*[1,.9,.8,.8,.92][row],y=leg.height*t-leg.lift*t*t;leg.positions[row*4]=shift-half;leg.positions[row*4+1]=y;leg.positions[row*4+2]=shift+half;leg.positions[row*4+3]=y;}
    leg.mesh.geometry.getBuffer('aPosition').update();
   }
   a.facing.scale.x=a.direction;a.facing.position.x=a.direction===1?0:320;
@@ -49,12 +51,12 @@
   for(const [i,a]of actors){const count=Math.min(columns,actors.size-Math.floor(i/columns)*columns),cell=(width-34)/count,limit=Math.max(0,Math.min(24,(cell-130)/2-3));a.x=Math.max(-limit,Math.min(limit,a.x));const x=17+cell*((i%columns)+.5)-65+a.x,y=65+Math.floor(i/columns)*130;a.node.style.left=x+'px';a.node.style.top=y+'px';a.node.style.zIndex=String(10+Math.floor(i/columns));if(a.root){a.shadow.clear().ellipse(160,251,83,10).fill({color:0x435c3a,alpha:.16});if(a.selected)a.shadow.ellipse(160,251,88,13).stroke({color:0xfff4b9,width:2,alpha:.9});const scale=110/280*(a.animal.growth<3?.8:1);a.root.scale.set(scale);a.root.position.set(x+65-160*scale,y+110-280*scale);a.root.zIndex=Math.floor(i/columns);}}
  }
  function frame(time){const dt=Math.min(.05,(time-previous)/1000||0);previous=time;const active=!document.hidden&&!host.closest('[hidden]')&&document.getElementById('farm-app').dataset.state==='playing'&&!document.querySelector('dialog[open]');
-  if(active){for(const a of actors.values()){a.oldX=a.x;a.wantsWalk=false;if(!reduced.matches&&!a.freeze){a.time+=dt;if(a.time%15<7){a.direction=Math.floor(a.time/15)%2===0?1:-1;a.x+=a.direction*dt*7;a.wantsWalk=true;}}}layout();for(const a of actors.values()){a.walking=a.wantsWalk&&Math.abs(a.x-a.oldX)>.0001;a.node.dataset.walking=String(a.walking);pose(a,dt);}}
+  if(active){for(const a of actors.values()){a.oldX=a.x;a.wantsWalk=false;if(!reduced.matches&&!a.freeze){a.time+=dt;if(a.time%15<7){a.direction=Math.floor(a.time/15)%2===0?1:-1;a.x+=a.direction*dt*3;a.wantsWalk=true;}}}layout();for(const a of actors.values()){a.walking=a.wantsWalk&&Math.abs(a.x-a.oldX)>.0001;a.node.dataset.walking=String(a.walking);pose(a,dt);}}
   if(app?.renderer&&!host.closest('[hidden]')&&!document.hidden)app.render();if(!disposed)raf=requestAnimationFrame(frame);
  }
  const observer=new ResizeObserver(layout);observer.observe(host);
  const ready=(async()=>{try{app=new P.Application();await app.init({canvas,preference:'webgl',autoStart:false,antialias:true,backgroundAlpha:0,resolution:Math.min(devicePixelRatio||1,2),autoDensity:true,preserveDrawingBuffer:true});app.stage.sortableChildren=true;const loaded={};
-   await Promise.all(Object.keys(rigs).map(async species=>{const parts=await Promise.all(['body','front','hind'].map(part=>P.Assets.load(asset(species,part))));loaded[species]={body:parts[0]};for(let i=1;i<3;i++){const t=parts[i],top=Math.round(t.height*.38);loaded[species][i===1?'front':'hind']=new P.Texture({source:t.source,frame:new P.Rectangle(0,top,t.width,t.height-top)});}}));
+   await Promise.all(Object.keys(rigs).map(async species=>{const parts=await Promise.all(['body','front','hind'].map(part=>P.Assets.load(asset(species,part))));loaded[species]={body:parts[0]};for(let i=1;i<3;i++){const t=parts[i],top=Math.round(t.height*.25);loaded[species][i===1?'front':'hind']=new P.Texture({source:t.source,frame:new P.Rectangle(0,top,t.width,t.height-top)});}}));
    if(disposed){if(app?.renderer)app.destroy(false,{children:true});app=null;return;}textures=loaded;canvas.dataset.renderer='pixi-webgl';host.classList.add('pixi-ready');for(const a of actors.values())build(a);layout();app.render();
   }catch(error){renderError=String(error);canvas.dataset.renderer='unavailable';if(app?.renderer)app.destroy(false,{children:true});app=null;textures=null;for(const a of actors.values()){a.root=null;a.legs=null;const img=document.createElement('img');img.className='pasture-fallback';img.src='../../assets/carefree-farm/'+a.species+'.webp';img.alt='';a.node.prepend(img);}}
  })();

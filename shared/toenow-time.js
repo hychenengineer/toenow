@@ -6,7 +6,7 @@
   'use strict';
   return Object.freeze({
     START_SECONDS: 60,
-    correct: seconds => Math.min(60, Math.max(0, seconds) + 3),
+    correct: (seconds, bonus = 3) => Math.min(60, Math.max(0, seconds) + bonus),
     wrong: seconds => Math.max(0, seconds - 5)
   });
 });

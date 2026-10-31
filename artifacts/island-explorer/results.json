@@ -4,180 +4,70 @@
       "width": 1440,
       "language": "en",
       "theme": "bright",
-      "status": "PASS"
-    },
-    {
-      "width": 1440,
-      "language": "en",
-      "theme": "arena",
-      "status": "PASS"
-    },
-    {
-      "width": 1440,
-      "language": "en",
-      "theme": "calm",
+      "minRowClearance": 8.1065673828125,
       "status": "PASS"
     },
     {
       "width": 1440,
       "language": "zh-Hant",
       "theme": "bright",
-      "status": "PASS"
-    },
-    {
-      "width": 1440,
-      "language": "zh-Hant",
-      "theme": "arena",
-      "status": "PASS"
-    },
-    {
-      "width": 1440,
-      "language": "zh-Hant",
-      "theme": "calm",
+      "minRowClearance": 18.65625,
       "status": "PASS"
     },
     {
       "width": 1024,
       "language": "en",
       "theme": "bright",
-      "status": "PASS"
-    },
-    {
-      "width": 1024,
-      "language": "en",
-      "theme": "arena",
-      "status": "PASS"
-    },
-    {
-      "width": 1024,
-      "language": "en",
-      "theme": "calm",
+      "minRowClearance": 19.48150634765625,
       "status": "PASS"
     },
     {
       "width": 1024,
       "language": "zh-Hant",
       "theme": "bright",
-      "status": "PASS"
-    },
-    {
-      "width": 1024,
-      "language": "zh-Hant",
-      "theme": "arena",
-      "status": "PASS"
-    },
-    {
-      "width": 1024,
-      "language": "zh-Hant",
-      "theme": "calm",
+      "minRowClearance": 30.03125,
       "status": "PASS"
     },
     {
       "width": 768,
       "language": "en",
       "theme": "bright",
-      "status": "PASS"
-    },
-    {
-      "width": 768,
-      "language": "en",
-      "theme": "arena",
-      "status": "PASS"
-    },
-    {
-      "width": 768,
-      "language": "en",
-      "theme": "calm",
+      "minRowClearance": 22.2940673828125,
       "status": "PASS"
     },
     {
       "width": 768,
       "language": "zh-Hant",
       "theme": "bright",
-      "status": "PASS"
-    },
-    {
-      "width": 768,
-      "language": "zh-Hant",
-      "theme": "arena",
-      "status": "PASS"
-    },
-    {
-      "width": 768,
-      "language": "zh-Hant",
-      "theme": "calm",
+      "minRowClearance": 32.84375,
       "status": "PASS"
     },
     {
       "width": 390,
       "language": "en",
       "theme": "bright",
-      "status": "PASS"
-    },
-    {
-      "width": 390,
-      "language": "en",
-      "theme": "arena",
-      "status": "PASS"
-    },
-    {
-      "width": 390,
-      "language": "en",
-      "theme": "calm",
+      "minRowClearance": 22.2940673828125,
       "status": "PASS"
     },
     {
       "width": 390,
       "language": "zh-Hant",
       "theme": "bright",
-      "status": "PASS"
-    },
-    {
-      "width": 390,
-      "language": "zh-Hant",
-      "theme": "arena",
-      "status": "PASS"
-    },
-    {
-      "width": 390,
-      "language": "zh-Hant",
-      "theme": "calm",
+      "minRowClearance": 32.84375,
       "status": "PASS"
     },
     {
       "width": 320,
       "language": "en",
       "theme": "bright",
-      "status": "PASS"
-    },
-    {
-      "width": 320,
-      "language": "en",
-      "theme": "arena",
-      "status": "PASS"
-    },
-    {
-      "width": 320,
-      "language": "en",
-      "theme": "calm",
+      "minRowClearance": 22.2940673828125,
       "status": "PASS"
     },
     {
       "width": 320,
       "language": "zh-Hant",
       "theme": "bright",
-      "status": "PASS"
-    },
-    {
-      "width": 320,
-      "language": "zh-Hant",
-      "theme": "arena",
-      "status": "PASS"
-    },
-    {
-      "width": 320,
-      "language": "zh-Hant",
-      "theme": "calm",
+      "minRowClearance": 32.84375,
       "status": "PASS"
     }
   ],
@@ -185,7 +75,7 @@
   "statesPerLocation": 5,
   "illustratedAssets": 50,
   "artFallback": "PASS",
-  "previewIsolation": "PASS",
+  "simpleMapLayout": "PASS",
   "gameLaunch": "PASS",
   "normalAndPractice": "PASS",
   "storageAndReload": "PASS",

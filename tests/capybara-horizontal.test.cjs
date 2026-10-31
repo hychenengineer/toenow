@@ -1,0 +1,4 @@
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const R=require('../games/capybara-drift/river-route.js');
+test('horizontal river projects approaching pickups from right to left',()=>{const s={elapsed:10};for(const [w,h]of [[390,844],[844,390],[1100,850]]){const a=R.screen(s,.5,.1,w,h),b=R.screen(s,.5,.7,w,h);assert(a.x>b.x);assert.equal(a.x,w*.9);assert(b.y>0&&b.y<h);}});
+test('horizontal touch maps vertical swipes to river steering without scrolling the trip',()=>{const s={elapsed:20};for(const [w,h]of [[390,844],[844,390]])for(const x of [.2,.5,.8]){const p=R.screen(s,x,.66,w,h),input=R.input(s,p.x,p.y,w,h);assert(Math.abs(input.x-x)<1e-9);assert(Math.abs(input.y-.66)<1e-9);const down=R.input(s,p.x,p.y+25,w,h);assert(down.x>input.x);assert.equal(down.y,input.y);}});

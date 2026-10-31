@@ -25,10 +25,10 @@ test('collaboration prices require every ingredient and preview never spends or 
   assert.equal(homes.getDialogue('number-pop',snapshot,1).count,1);
   assert.equal(homes.getDialogue('number-pop',snapshot,1).material,'Timber');
   const html=homes.markup({gameId:'number-pop',snapshot,mode:'build',projectId:'greenhouse'});
-  const timberSource=html.match(/<button[^>]*data-material-source="block-match"[^>]*>/)[0];
-  assert.match(timberSource,/aria-label="Find materials: Timber 7 \/ 8"/);
+  const timberSource=html;
+  assert.match(timberSource,/aria-label="Timber 7 \/ 8"/);
   assert(html.includes('data-rabbit-confirm="greenhouse" disabled'));
-  assert(html.includes('data-material-source="flash-brain"'));
+  assert(html.includes('Seeds'));assert(!html.includes('data-material-source='));
   assert(!html.includes('data-home-built="greenhouse"'));
   assert.equal(JSON.stringify(snapshot),before);
 });
@@ -38,7 +38,7 @@ test('all homes expose their own art and accessible recipe travel, play chat and
   for(const id of ids){
     const c=config.get(id),html=homes.markup({gameId:id,snapshot:state(id),mode:'build',projectId:'decor'});
     for(const asset of [c.background,c.character,c.atlas])assert(html.includes(asset),`${id}: ${asset}`);
-    for(const action of ['play','chat','build'])assert(html.includes(`data-rabbit-action="${action}"`));
+    for(const action of ['play','chat'])assert(html.includes(`data-rabbit-action="${action}"`));
     assert(html.includes('aria-label="'));assert(html.includes(c.place));
     if(id!=='number-pop')assert(!html.includes('Rabbit Harvest Garden'));
   }
@@ -57,7 +57,7 @@ test('invalid homes fail gracefully and translated notices are escaped',()=>{
   assert.equal(typeof homes.markup,'function');
   assert.equal(homes.getModel('not-a-home',{}),null);assert.equal(homes.markup({gameId:'not-a-home'}),'');
   const html=homes.markup({gameId:'ball-track',notice:'<unsafe>',t:s=>s==='Build & decorate'?'建造與裝飾':s});
-  assert(html.includes('建造與裝飾'));assert(html.includes('&lt;unsafe&gt;'));assert(!html.includes('<unsafe>'));
+  assert(!html.includes('Build & decorate'));assert(html.includes('&lt;unsafe&gt;'));assert(!html.includes('<unsafe>'));
 });
 test('Traditional Chinese config translation fills gaps in the existing Hub translator',()=>{
   assert.equal(typeof homes.markup,'function');

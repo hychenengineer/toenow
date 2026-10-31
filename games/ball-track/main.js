@@ -828,6 +828,7 @@ ToenowScreens.mount("ball-track");
             return;
           }
 
+          toenowSdk?.recordCorrectAnswer();
           // 2. Correct Target Capsule Selected! (Opens to reveal glowing cyan core)
           shell.picked = true;
           shell.revealedState = 'correct';

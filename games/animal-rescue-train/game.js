@@ -35,6 +35,7 @@
   let elapsedBank = saved?.elapsedMs ?? 0;
   let runStarted = Date.now();
   let reported = saved?.reported ?? false;
+  let materialRescueHighWater = 0;
   let hasSave = Boolean(saved);
   let selected = null;
   let paused = false;
@@ -114,7 +115,7 @@
     sdk.resume();
     levelIndex = ToenowLevels.getLevelInfo(wave).level - 1;
     game = new RescueTrain.Game(picker.pick(wave));
-    actions = []; reported = false; selected = null;
+    actions = []; reported = false; selected = null; materialRescueHighWater = 0;
     persist(); showPlay();
   }
   function retry() { sdk.startRun({ wave, isPractice }); loadRound(); }
@@ -198,7 +199,14 @@
   }
   $('btn-start-game').addEventListener('click', () => sdk.start({ wave: 1, isPractice: false }));
   sdk.setupPractice((startWave, practice) => sdk.start({ wave: startWave, isPractice: practice }));
-  $('continue').addEventListener('click', () => { selected = null; sdk.startRun({ wave, isPractice }); showPlay(); });
+  $('continue').addEventListener('click', () => {
+    selected = null;
+    if (!sdk.materialRun) {
+      sdk.startRun({ wave, isPractice });
+      materialRescueHighWater = rescued();
+    }
+    showPlay();
+  });
   $('menu').addEventListener('click', () => {
     closeSuccess();
     if (tutorialActive()) return;
@@ -218,6 +226,12 @@
     if (paused || !button || button.disabled || selected === null || (tutorialActive() && window.ToenowTutorials.isComplete('animal-rescue-train'))) return;
     const queue = selected, carIndex = Number(button.dataset.car);
     if (!game.move(queue, carIndex)) return;
+    // Departed animals count once per puzzle; undo/reboarding cannot farm progress.
+    if (!tutorialActive() && game.state.status !== 'lost') {
+      const count = rescued();
+      for (let n = materialRescueHighWater + 1; n <= count; n++) sdk.recordCorrectAnswer('rescued-' + n);
+      materialRescueHighWater = Math.max(materialRescueHighWater, count);
+    }
     if (!tutorialActive()) window.ToenowAnimals?.feedback('animal-rescue-train', game.state.status !== 'lost');
     actions.push([queue, carIndex]); selected = null; render(); reportResult(); persist();
     const departure = game.state.departure;

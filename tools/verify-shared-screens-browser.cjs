@@ -10,7 +10,7 @@ const keys = require('../shared/toenow-levels.js').GAME_STORAGE_KEYS;
 const root = path.resolve(__dirname, '..');
 const base = process.env.TOENOW_TEST_URL || 'http://127.0.0.1:8766';
 const hooks = {
-  'capybara-drift': `state.score=321;state.wave=13;state.elapsed=600;finishDrift();`,
+  'capybara-drift': `state.inventory={[E.POOLS.collectibles[0].id]:2};state.newFinds=[E.POOLS.collectibles[0].id];state.friends=1;state.elapsed=E.DURATION;state.completed=true;finishDrift();window.__journeyExpected=journeySummary();`,
   'number-pop': `game.score=321;game.wave=13;triggerGameOver();`,
   'ball-track': `state.score=321;state.wave=13;saveRecords(state.score,state.wave);state.frozenSnapshot={score:321,wave:13,best:bestScore};showGameOverModal();`,
   'block-match': `state.score=321;state.wave=13;state.wavesCleared=12;triggerGameOver();`,
@@ -42,7 +42,9 @@ async function instrument(page, id) {
   }
 }
 function structure(el) {
-  return [el.tagName, el.className, ...[...el.children].map(structure)];
+  // Material receipts are optional and have their own browser suites.
+  // Their content/layout is covered by the material receipt browser suites.
+  return [el.tagName, el.className, ...[...el.children].filter(n=>!n.classList.contains('toenow-material-reward')).map(structure)];
 }
 async function confirmReady(host,id) {
   if(id==='flash-brain')assert.equal(await host.locator('#toenow-tutorial').count(),0,'no startup tutorial for returning players');
@@ -56,6 +58,7 @@ async function islandAppearance(host, cardSelector, species, stage) {
   assert.ok(rgb(appearance.background).every(n => n > 210), 'Island card uses light paper');
   assert.ok(rgb(appearance.color).every(n => n < 130), 'Island card uses dark readable ink');
   const art = host.locator('[data-screen-animal-art]');
+  if(species==='capybara'&&await host.getAttribute('data-toenow-screen')==='gameover'){assert.equal(await art.count(),0);return;}
   assert.ok((await art.getAttribute('src')).endsWith(species+'-level'+stage+'.webp'), 'Artwork follows this game and level');
   await art.evaluate(img => img.decode());
 }
@@ -66,6 +69,8 @@ async function run() {
   const dimensions = new Map();
   try {
     for (const [id,c] of Object.entries(catalog).filter(([id])=>!process.env.TOENOW_TEST_GAMES || process.env.TOENOW_TEST_GAMES.split(',').includes(id))) {
+      // Persistent Carefree games (garden and farm) use the real rest/finish
+      // lifecycle instead of an injected score/wave game-over hook.
       if(c.presentation==='visit'){
         for(const width of [1100,390])for(const lang of ['en','zh-Hant']){
           const p=await browser.newPage({viewport:{width,height:850}});await p.addInitScript(l=>localStorage.setItem('toenow_language_v1',l),lang);await p.goto(base+'/games/'+id+'/');
@@ -73,7 +78,7 @@ async function run() {
         }
         result.practice++;const p=await browser.newPage();await p.goto(base+'/');await p.setContent(`<iframe src="${base}/games/${id}/" style="width:100%;height:800px"></iframe>`);const f=p.frameLocator('iframe');await f.locator('#'+c.startId).click();await f.locator('#rest').click();await f.locator('#finish').click();await f.locator('#'+c.endId).waitFor({state:'visible'});result.iframe++;await p.close();continue;
       }
-
+      const journey = c.presentation === 'journey';
       for (const width of [1100,390]) for (const lang of ['en','zh-Hant']) {
         const page = await browser.newPage({viewport:{width,height:850}});
         await page.addInitScript(k=>{localStorage.setItem(k.score,'900');localStorage.setItem(k.wave,'21');},keys[id]);
@@ -83,24 +88,28 @@ async function run() {
         await page.evaluate(({lang,keys})=>{localStorage.setItem(keys.score,'900');localStorage.setItem(keys.wave,'21');ToenowI18n.setLanguage(lang);},{lang,keys:keys[id]});
         const title = page.locator('[data-toenow-screen="title"]');
         await title.waitFor({state:'visible'});
-        await islandAppearance(title,'.unified-title-card',c.animalSpecies,5);
+        await islandAppearance(title,'.unified-title-card',c.animalSpecies,journey?1:5);
         if (process.env.TOENOW_SCREENSHOTS) {
           fs.mkdirSync(process.env.TOENOW_SCREENSHOTS,{recursive:true});
           await page.screenshot({path:path.join(process.env.TOENOW_SCREENSHOTS,`${id}-${width}-${lang}-title.png`)});
         }
         assert.equal(await title.getAttribute('data-toenow-screen-owner'),'ToenowScreens');
+        if (!journey) {
         assert.equal(await title.locator('[data-screen-record="score"]').innerText(),'900',id+' saved title score');
         assert.equal(await title.locator('[data-screen-record="level"]').innerText(),lang==='en'?'LVL 5 · MASTER':'第 5 級 · 大師',id+' saved title level');
         const titleShape = await title.locator('.unified-title-card').evaluate(structure);
         if (!titleStructure) titleStructure=titleShape;
         assert.deepEqual(titleShape,titleStructure,id+' title DOM differs');
-        assert.equal(await title.locator('.unified-practice-btn').count(),1,id+' practice button');
+        } else {
+          assert.equal(await title.locator('[data-screen-record]').count(),0,id+' no rank records');
+        }
+        assert.equal(await title.locator(journey?'[data-screen-practice]':'.unified-practice-btn').count(),1,id+' practice button');
         await page.locator('#'+c.startId).click();
         await confirmReady(page,id);
         await page.evaluate(()=>window.__finishScreenTest());
         const end=page.locator('[data-toenow-screen="gameover"]');
         await end.waitFor({state:'visible'});
-        await islandAppearance(end,'.modal-card',c.animalSpecies,3);
+        await islandAppearance(end,'.modal-card',c.animalSpecies,journey?1:3);
         const buttons = await end.evaluate(el => {
           const retry = getComputedStyle(el.querySelector('[data-screen-action="retry"]'));
           const back = getComputedStyle(el.querySelector('[data-screen-action="title"]'));
@@ -111,6 +120,7 @@ async function run() {
         await page.waitForTimeout(400);
         if (process.env.TOENOW_SCREENSHOTS) await page.screenshot({path:path.join(process.env.TOENOW_SCREENSHOTS,`${id}-${width}-${lang}-end.png`)});
         assert.equal(await end.getAttribute('data-toenow-screen-owner'),'ToenowScreens');
+        if (!journey) {
         const endShape = await end.locator('.modal-card').evaluate(structure);
         if (!endStructure) endStructure=endShape;
         assert.deepEqual(endShape,endStructure,id+' result DOM differs');
@@ -118,27 +128,45 @@ async function run() {
         assert.equal(await end.locator('[data-screen-field="bestScore"]').innerText(),'900');
         assert.equal(await end.locator('[data-screen-field="wave"]').innerText(),'13');
         assert.equal(await end.locator('[data-screen-field="level"]').innerText(),lang==='en'?'LVL 3 · ADVANCED':'第 3 級 · 進階');
+        } else {
+          assert.equal(await end.locator('[data-screen-field]').count(),0,id+' no competitive result fields');
+          assert.equal(await end.locator('[data-journey-items]').count(),1);
+          const expected=await page.evaluate(()=>window.__journeyExpected);
+          const finds=end.locator('[data-journey-items]');
+          assert.equal(await finds.locator('[role="img"]').first().getAttribute('aria-label'),expected.items[0].name+' ×2');
+          assert.equal((await finds.innerText()).replace(/\s/g,''),expected.items[0].icon+'×2');
+          assert.equal(await end.locator('[data-journey-friends] [role="img"]').first().getAttribute('aria-label'),expected.friends[0].name+' ×1');
+          assert.equal(await end.locator('.journey-details,.toenow-result-heading,.modal-subtitle,[data-membership-invite]').count(),0);
+
+        }
         await page.mouse.move(0,0); await page.waitForTimeout(400);
-        const geometry=await end.evaluate(el=>{const card=el.querySelector('.modal-card');const r=card.getBoundingClientRect();return {left:r.left,right:r.right,height:r.height,gridHeight:el.querySelector('.stat-grid').getBoundingClientRect().height,overflow:card.scrollWidth>card.clientWidth,buttons:[...el.querySelectorAll('.modal-actions button')].map(b=>{const r=b.getBoundingClientRect();return [r.width,r.height]})};});
+        // Compare the common screen geometry independently of optional receipts.
+        // Restore immediately; screenshots and interaction tests keep the receipt.
+        const geometry=await end.evaluate(el=>{const receipt=el.querySelector('.toenow-material-reward'),display=receipt?.style.display;if(receipt)receipt.style.display='none';try{const card=el.querySelector('.modal-card');const r=card.getBoundingClientRect();return {left:r.left,right:r.right,height:r.height,gridHeight:el.querySelector('.stat-grid')?.getBoundingClientRect().height || 0,overflow:card.scrollWidth>card.clientWidth,buttons:[...el.querySelectorAll('.modal-actions button')].map(b=>{const r=b.getBoundingClientRect();return [r.width,r.height]})};}finally{if(receipt)receipt.style.display=display;}});
         assert.ok(geometry.left>=0&&geometry.right<=width+.1&&!geometry.overflow,id+' screen overflow');
         assert.equal(geometry.buttons.length,3);
         geometry.buttons.forEach(size=>assert.ok(Math.abs(size[0]-geometry.buttons[0][0])<.1&&Math.abs(size[1]-geometry.buttons[0][1])<.1,id+' unequal buttons'));
         const sizeKey=width+'/'+lang, actualSize=[geometry.right-geometry.left,geometry.height,geometry.gridHeight];
+        if (!journey) {
         if (!dimensions.has(sizeKey)) dimensions.set(sizeKey,actualSize);
         actualSize.forEach((value,index)=>assert.ok(Math.abs(value-dimensions.get(sizeKey)[index])<.1,id+' result dimensions differ from other games: '+actualSize));
+        }
         for (const liveLanguage of ['zh-Hant','en',lang]) {
           await page.evaluate(l=>ToenowI18n.setLanguage(l),liveLanguage);
           await page.waitForTimeout(30);
-          assert.equal(await end.locator('[data-screen-field="level"]').innerText(),liveLanguage==='en'?'LVL 3 · ADVANCED':'第 3 級 · 進階',id+' live language switch');
+          if (journey) {const actual=await end.locator('[data-journey-items]').innerText();assert.ok(actual.includes('×2'));assert.equal(await end.locator('.journey-details').count(),0);}
+          else assert.equal(await end.locator('[data-screen-field="level"]').innerText(),liveLanguage==='en'?'LVL 3 · ADVANCED':'第 3 級 · 進階',id+' live language switch');
         }
         if (process.env.TOENOW_SCREENSHOTS && width===1100 && lang==='en') {
           fs.mkdirSync(process.env.TOENOW_SCREENSHOTS,{recursive:true});
           await page.screenshot({path:path.join(process.env.TOENOW_SCREENSHOTS,id+'-shared-end.png')});
         }
-        await page.evaluate(()=>{ToenowLevels.shareScore=data=>window.__sharedScreenScore=data;});
+        await page.evaluate(()=>{ToenowLevels.shareScore=data=>window.__sharedScreenScore=data;Object.defineProperty(navigator,'share',{configurable:true,value:data=>{window.__sharedJourney=data;return Promise.resolve();}});});
         await end.locator('[data-screen-action="share"]').click();
         const shared=await page.evaluate(()=>window.__sharedScreenScore);
-        assert.equal(shared.score,321); assert.equal(shared.wave,13); assert.equal(shared.level,3);
+        if (journey) {
+          const memory=await page.evaluate(()=>window.__sharedJourney);assert.ok(memory.text);assert.doesNotMatch(memory.text,/LVL|score|wave/i);const expected=await page.evaluate(()=>window.__journeyExpected);assert.ok(memory.text.includes(expected.items[0].name));assert.ok(memory.text.includes(expected.friend));assert.ok(memory.text.includes('×2'));
+        } else {assert.equal(shared.score,321); assert.equal(shared.wave,13); assert.equal(shared.level,3);}
         await end.locator('[data-screen-action="retry"]').click();
         await end.waitFor({state:'hidden'});
         await confirmReady(page,id);
@@ -153,8 +181,8 @@ async function run() {
       await page.addInitScript(k=>{localStorage.setItem(k.score,'17');localStorage.setItem(k.wave,'2');},keys[id]);
       await instrument(page,id); await page.goto(base+'/games/'+id+'/');
       await page.evaluate(k=>{localStorage.setItem(k.score,'17');localStorage.setItem(k.wave,'2');},keys[id]);
-      await page.locator('.unified-practice-btn').click();
-      await page.locator('.unified-practice-level-btn[data-level="3"]').click();
+      await page.locator(journey?'[data-screen-practice]':'.unified-practice-btn').click();
+      if (!journey) await page.locator('.unified-practice-level-btn[data-level="3"]').click();
       if(id==='flash-brain') await page.waitForURL(/autostart=1/);
       await confirmReady(page,id);
       await page.waitForFunction(()=>typeof window.__finishScreenTest==='function');

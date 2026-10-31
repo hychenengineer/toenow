@@ -333,11 +333,11 @@ ToenowScreens.mount("tap-match");
               }
 
               const pts = computeHitPoints(state.wave, state.streak);
-              if (!tutorialActive()) state.score += pts;
+              if (!tutorialActive()) { toenowSdk?.recordCorrectAnswer(); state.score += pts; }
               state.waveHits++;
               if (!tutorialActive()) window.ToenowAnimals?.feedback('tap-match', true);
               penguinCollection.push({ x: hitNode.x, y: hitNode.y, shape: hitNode.shape, color: hitNode.color, glyph: hitNode.glyph, started: performance.now() });
-              if (!tutorialActive()) state.timeLeft = ToenowTime.correct(state.timeLeft);
+              if (!tutorialActive()) state.timeLeft = ToenowTime.correct(state.timeLeft, 0.2);
 
               hitNode.status = 'HIT_FEEDBACK';
               hitNode.feedbackMs = 240;

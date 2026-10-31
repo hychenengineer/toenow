@@ -115,7 +115,7 @@
     let bag;
     if(materials){
       const details=doc.createElement('details');details.className='island-material-bag';
-      details.innerHTML=`<summary>${e('My collection')} <span>${e('Play · Collect · Build')}</span></summary><div class="island-material-inventory"></div>`;
+      details.innerHTML=`<summary>${e('My collection')} <span>${e('Play · Collect · Build')}</span></summary><p class="island-material-rule">${e('Every 5 successful actions earns 1 material. Progress carries over.')}</p><div class="island-material-inventory"></div>`;
       host.querySelector('.island-topline').after(details);bag=details;
       host.querySelector('.island-legend p').dataset.islandText='Collect materials in normal play to build animal homes. Challenge levels stay separate.';
     }
@@ -165,7 +165,7 @@
       }
     }
     function render() {
-      if(bag){const state=materials.snapshot();bag.querySelector('summary').innerHTML=`${e('My collection')} <span>${e('Play · Collect · Build')}</span>`;bag.querySelector('.island-material-inventory').innerHTML=Object.entries(collection.ITEMS).map(([id,item])=>`<button type="button" data-material-source="${id}" aria-label="${e(item.name)} ${state.balances[id]}"><span>${item.icon}</span><strong>${state.balances[id]}</strong><small>${e(item.name)}</small></button>`).join('');}
+      if(bag){const state=materials.snapshot();const rule=bag.querySelector('.island-material-rule');if(rule)rule.textContent=t('Every 5 successful actions earns 1 material. Progress carries over.');bag.querySelector('summary').innerHTML=`${e('My collection')} <span>${e('Play · Collect · Build')}</span>`;bag.querySelector('.island-material-inventory').innerHTML=Object.entries(collection.ITEMS).map(([id,item])=>`<span class="island-inventory-item" aria-label="${e(item.name)} ${state.balances[id]}"><span>${item.icon}</span><strong>${state.balances[id]}</strong><small>${e(item.name)}</small></span>`).join('');}
       const focusedGameId = doc.activeElement?.closest('[data-island-game]')?.dataset.islandGame;
       const journey = exploration?.snapshot();
       const exploring = journey?.mode === 'explore';
@@ -248,14 +248,13 @@
         if(action==='back'){dialog.close();return;}
         rabbitNotice='';rabbitLastBuilt='';
         if(action==='chat'){rabbitChat++;rabbitMode='visit';}
-        if(action==='build')rabbitMode=rabbitMode==='build'?'visit':'build';
-        if(action==='visit')rabbitMode='visit';
+        if(action==='visit'){rabbitMode='visit';rabbitProject=null;}
         renderDetail();
-        host.querySelector(`${fromFooter?'.rabbit-home-actions ':''}[data-rabbit-action="${action==='visit'?'build':action}"]`)?.focus({preventScroll:true});
+        host.querySelector(`${fromFooter?'.rabbit-home-actions ':''}[data-rabbit-action="${action==='visit'?'play':action}"]`)?.focus({preventScroll:true});
         return;
       }
-      const project=event.target.closest('[data-rabbit-project]'),tab=event.target.closest('[data-rabbit-tab]');
-      if(project||tab){const fromPicker=!!project?.closest('.rabbit-project-picker');rabbitMode='build';rabbitProject=project?project.dataset.rabbitProject:tab.dataset.rabbitTab==='decor'?'decor':null;rabbitNotice='';rabbitLastBuilt='';renderDetail();host.querySelector(project?`${fromPicker?'.rabbit-project-picker ':''}[data-rabbit-project="${rabbitProject}"]`:`[data-rabbit-tab="${tab.dataset.rabbitTab}"]`)?.focus({preventScroll:true});return;}
+      const project=event.target.closest('[data-rabbit-project]'),decor=event.target.closest('[data-rabbit-decor]');
+      if(project||decor){rabbitMode='build';rabbitProject=project?project.dataset.rabbitProject:decor.dataset.rabbitDecor;rabbitNotice='';rabbitLastBuilt='';renderDetail();host.querySelector(project?`[data-rabbit-project="${rabbitProject}"]`:`[data-rabbit-decor="${rabbitProject}"]`)?.focus({preventScroll:true});return;}
       const confirm=event.target.closest('[data-rabbit-confirm]'),rabbitCraft=event.target.closest('[data-rabbit-craft]'),rabbitToggle=event.target.closest('[data-rabbit-toggle]');
       if(confirm||rabbitCraft||rabbitToggle){
         const button=confirm||rabbitCraft||rabbitToggle;
@@ -275,11 +274,11 @@
         if(result.ok){rabbitNotice=confirm?'Our new building is ready!':rabbitCraft?'Decoration ready!':'Home updated.';rabbitLastBuilt=id||'';if(confirm){rabbitMode='visit';rabbitProject=null;}}
         else rabbitNotice='Could not build. Check your materials and browser storage.';
         render();
-        host.querySelector(confirm?'[data-rabbit-action="build"]':`[data-rabbit-toggle="${kind}"]`)?.focus({preventScroll:true});
+        host.querySelector(confirm?`[data-rabbit-project="${id}"]`:`[data-rabbit-decor="${kind}"]`)?.focus({preventScroll:true});
         return;
       }
       const source=event.target.closest('[data-material-source]');
-      if(source){buildNotice='';showLocation(source.dataset.materialSource,source);return;}
+      if(source)return;
       const upgrade=event.target.closest('[data-build-upgrade]'),craft=event.target.closest('[data-build-craft]'),toggle=event.target.closest('[data-build-toggle]');
       if(materials&&(upgrade||craft||toggle)){
         if(preview||buildBusy||(upgrade||craft||toggle).disabled)return;

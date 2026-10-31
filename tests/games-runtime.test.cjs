@@ -101,6 +101,7 @@ function createMockDOM(html) {
   }
 
   const doc = {
+    documentElement: { lang: 'en' },
     body: getOrCreateElement('body'),
     getElementById: (id) => {
       if (existingIds.has(id)) {
@@ -137,31 +138,35 @@ for (const game of GAMES) {
       `Start button ID [${game.startBtn}] not found in ${game.path}`
     );
 
+    // Cognitive games show level records; the shared journey variant has none.
+    const hasBestLevel = existingIds.has('title-best-level') || existingIds.has('titleBestLevel');
     if (game.id === 'carefree-farm') {
       assert.equal(require('../shared/toenow-screen-config.js')[game.id].presentation, 'visit');
-      assert.equal(existingIds.has('title-best-level') || existingIds.has('titleBestLevel'),false);
+      assert.equal(hasBestLevel,false);
       assert.ok(existingIds.has('btn-farm-practice'));
       assert.ok(existingIds.has('fields') && existingIds.has('pasture'));
       for(const file of ['model.js','main.js'])new (require('node:vm').Script)(fs.readFileSync(path.resolve(__dirname,'../games/carefree-farm',file),'utf8'));
       return; // Real DOM, transactions and storage are exercised in verify-carefree-farm-browser.cjs.
     }
-    if(game.id==='capybara-drift'){assert.ok(existingIds.has('garden'));assert.equal(require('../shared/toenow-screen-config.js')[game.id].presentation,'visit');return;}
-    // Verify HTML contains title-best-level or title record
-    const hasBestLevel = existingIds.has('title-best-level') || existingIds.has('titleBestLevel');
-    assert.ok(
-      hasBestLevel,
-      `Unified title best level element missing in ${game.path}`
-    );
+    if (game.id === 'capybara-drift') {
+      assert.equal(require('../shared/toenow-screen-config.js')[game.id].presentation, 'visit');
+      assert.equal(hasBestLevel, false, 'Relax journeys must not imply difficulty levels');
+      assert.ok(existingIds.has('btn-journey-practice'), 'Shared journey renderer provides practice');
+      assert.ok(!existingIds.has('trip-clock'), 'Open-ended garden has no trip clock');
+      assert.ok(existingIds.has('garden'), 'Garden canvas exists; actual runtime is covered in verify-hot-spring-garden.cjs');
+      return;
+    } else assert.ok(hasBestLevel, `Unified title best level element missing in ${game.path}`);
 
     // Setup sandboxed execution environment
+    const stored = new Map();
     const sandbox = {
       window: null,
       document: doc,
       navigator: { webdriver: false, userAgent: 'NodeTestRunner' },
       localStorage: {
-        getItem: () => null,
-        setItem: () => {},
-        removeItem: () => {}
+        getItem: key => stored.get(key) ?? null,
+        setItem: (key, value) => stored.set(key, String(value)),
+        removeItem: key => stored.delete(key)
       },
       location: { search: '', href: 'http://localhost/' },
       performance: { now: () => Date.now() },
@@ -172,6 +177,7 @@ for (const game of GAMES) {
       setInterval: () => 1,
       clearInterval: () => {},
       devicePixelRatio: 1,
+      matchMedia: query => ({ media: query, matches: false, addEventListener() {}, removeEventListener() {} }),
       AudioContext: function () {
         return {
           currentTime: 0,
@@ -310,6 +316,22 @@ for (const game of GAMES) {
       arena.dispatchEvent({ ...event, type: 'pointerdown', pointerType: 'mouse' });
       arena.dispatchEvent({ ...event, type: 'mousedown' });
       assert.equal(reactor.getState().nodes[0].selected, true, 'Mouse selects exactly once');
+    }
+    if (game.id === 'capybara-drift') {
+      // Exercise the actual direct practice handler and landing, without a wave
+      // selector. Normal-play progress must survive this practice journey.
+      elements.get('btn-title').dispatchEvent({ type: 'click' });
+      assert.ok(stored.has('capybara_drift_progress_v1'), 'Normal start created a real saved journey');
+      const keys = require('../shared/toenow-levels.js').GAME_STORAGE_KEYS['capybara-drift'];
+      stored.set(keys.score, '150');
+      stored.set(keys.wave, '1');
+      const before = JSON.stringify([...stored]);
+      const practice = elements.get('btn-journey-practice');
+      assert.ok(practice._listeners?.click?.length, 'Practice button is wired');
+      practice.dispatchEvent({ type: 'click' });
+      assert.equal(elements.get('trip-clock').textContent, '1:30');
+      elements.get('finish').dispatchEvent({ type: 'click' });
+      assert.equal(JSON.stringify([...stored]), before, 'Practice start and landing cannot overwrite saved progress');
     }
   });
 }

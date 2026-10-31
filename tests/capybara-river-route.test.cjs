@@ -1,0 +1,4 @@
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const R=require('../games/capybara-drift/river-route.js');
+test('riverbanks stay straight and parallel throughout travel and eddy stays',()=>{for(const elapsed of [0,20,45,90])for(const flowTime of [0,30,1000])for(const y of [0,.2,.5,.72,1]){assert.equal(R.center({elapsed,flowTime},y),.5);assert.equal(R.heading({elapsed,flowTime},y,390,844),0);}});
+test('projection and touch inversion agree on straight river at every viewport',()=>{for(const width of [320,390,844,1100])for(const elapsed of [0,20,40,80]){const s={elapsed};for(const y of [.2,.55,.72,.85])for(const x of [.12,.25,.5,.75,.88]){const p=R.project(s,x,y,width);assert(p>0&&p<width);assert(Math.abs(R.unproject(s,p,y,width)-x)<1e-9);assert(Number.isFinite(R.heading(s,y,width,600)));}}});

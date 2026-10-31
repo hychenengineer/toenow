@@ -58,3 +58,24 @@
 .rabbit-home .rabbit-character { font-size:clamp(40px,9vw,110px); }
 .rabbit-portrait { text-align:center;font-size:30px; }
 .animal-home[data-home-id="tap-match"] .rabbit-sprite-4 { clip-path:inset(0 0 0 9%); }
+/* Every plot stays available while its recipe is shown below the yard. */
+.rabbit-workbench { position: relative; inset: auto; width: 100%; border-radius: 0; border-width: 1px 0 0; padding: 12px 18px; box-shadow: none; }
+.rabbit-workbench>header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.rabbit-workbench>header h3 { margin: 0; }
+.rabbit-workbench>header button { flex-shrink: 0; }
+.rabbit-home-actions { grid-template-columns: 1.5fr 1fr; }
+.rabbit-project.is-empty::before { display: none !important; }
+.rabbit-project [data-rabbit-preview],.rabbit-decoration-slot [data-rabbit-preview] { opacity: .35; filter: saturate(.35); outline: 2px dashed #597845; outline-offset: -8px; border-radius: 25%; }
+.rabbit-project.is-selected,.rabbit-decoration-slot.is-selected { outline: 3px solid #8063a5; outline-offset: -3px; border-radius: 18px; }
+.rabbit-project-patch { top: 50%; width: 22%; }
+.rabbit-project-stall { left: 71%; top: 60%; width: 26%; }
+.rabbit-home .rabbit-decoration-slot { position: absolute; padding: 0; background: transparent; border: 0; aspect-ratio: 1; height: auto; z-index: 3; min-height: 44px; }
+.rabbit-home .rabbit-placed-welcome { left: 32%; top: 65%; width: 13%; }
+.rabbit-home .rabbit-placed-together { left: 51%; top: 79%; width: 14%; }
+.rabbit-decoration-slot .rabbit-project-label { font-size: clamp(9px,1vw,11px); min-width: 0; width: max-content; max-width: 135%; padding: 3px 5px; }
+.rabbit-material-costs { grid-template-columns: repeat(auto-fit,minmax(135px,1fr)); }
+.rabbit-material-cost { display: block; padding: 8px 10px; border-radius: 10px; background: #eee9d4; font-size: 12px; line-height: 1.4; overflow-wrap: anywhere; }
+.rabbit-material-cost b { white-space: nowrap; }
+.rabbit-material-cost small { display: block; opacity: .8; margin-top: 2px; }
+.rabbit-project-price { display: flex; margin-top: 8px; }
+@media(max-width:700px){.rabbit-project-label{min-width:0;max-width:125%;font-size:9px;}.rabbit-decoration-slot .rabbit-project-label{font-size:8px;}.rabbit-material-costs{grid-template-columns:repeat(2,minmax(0,1fr));}.rabbit-material-cost{font-size:11px;padding:6px;}}

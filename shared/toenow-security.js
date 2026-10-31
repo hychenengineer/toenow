@@ -16,13 +16,15 @@
   var GAME_PLAUSIBILITY_PROFILES = {
     'capybara-drift': { maxPtsPerSec: 20, maxPtsPerWave: 1000, minDurationPerWaveSec: 0.1 },
     'animal-rescue-train': { maxPtsPerSec: 100, maxPtsPerWave: 30, minDurationPerWaveSec: 0.1 },
-    'number-pop': { maxPtsPerSec: 850, maxPtsPerWave: 6000, minDurationPerWaveSec: 2.0 },
+    'number-pop': { maxPtsPerSec: 850, maxPtsPerWave: 6000, minDurationPerWaveSec: 4 / 6 },
     'ball-track': { maxPtsPerSec: 600, maxPtsPerWave: 4500, minDurationPerWaveSec: 3.0 },
     'spot-quick': { maxPtsPerSec: 750, maxPtsPerWave: 5000, minDurationPerWaveSec: 2.0 },
     'tap-match': { maxPtsPerSec: 800, maxPtsPerWave: 5500, minDurationPerWaveSec: 2.5 },
     'add-up': { maxPtsPerSec: 900, maxPtsPerWave: 6500, minDurationPerWaveSec: 2.5 },
     'block-match': { maxPtsPerSec: 700, maxPtsPerWave: 4800, minDurationPerWaveSec: 2.0 },
-    'space-scale': { maxPtsPerSec: 650, maxPtsPerWave: 5000, minDurationPerWaveSec: 3.0 },
+    // One answer can earn 320 base + 110 speed + 350 streak points.
+    // Advancing waits for a 0.28s collapse, not three seconds of thinking time.
+    'space-scale': { maxPtsPerSec: 780 * 6, maxPtsPerWave: 5000, minDurationPerWaveSec: 0.28 },
     'shadow-match': { maxPtsPerSec: 650, maxPtsPerWave: 4500, minDurationPerWaveSec: 2.5 },
     'flash-brain': { maxPtsPerSec: 800, maxPtsPerWave: 6000, minDurationPerWaveSec: 2.0 },
     'default': { maxPtsPerSec: 1000, maxPtsPerWave: 8000, minDurationPerWaveSec: 1.5 }
@@ -80,8 +82,14 @@
     var ptsPerSec = score / durationSec;
     // Allow a small grace margin for short starter runs
     var allowedPtsPerSec = profile.maxPtsPerSec;
+    if (gameId === 'number-pop') {
+      // Harvests grow by 25 points per wave, then receive up to 2.625x combo.
+      // Bound input at six taps/sec and include the 625-point time-bank bonus
+      // for each four-tap starter board. A fixed 850/sec rejects skilled play.
+      allowedPtsPerSec = (100 + wave * 25) * 2.625 * 6 + 625 * 6 / 4;
+    }
     if (durationSec < 10) {
-      allowedPtsPerSec = profile.maxPtsPerSec * 1.5;
+      allowedPtsPerSec *= 1.5;
     }
 
     // Check 1: Rate of score gain per second (Speed / Instant-Add Hack)

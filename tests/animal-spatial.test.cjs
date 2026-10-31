@@ -49,7 +49,7 @@ function loadFunction(game,name,next,env){
 }
 test('timber carving removes only excess cells and preserves required cells with original penalty',()=>{
  const feedback=[];const noop=()=>{};
- const env={Math,gameMode:'playing',mirrorLesson:null,mirrorReady:false,state:{freezeTimer:0,score:0,combo:1,peakCombo:1,timeLeft:40,totalShards:0,highScore:99999,mistakesInWave:0},
+ const env={Math,toenowSdk:null,gameMode:'playing',mirrorLesson:null,mirrorReady:false,state:{freezeTimer:0,score:0,combo:1,peakCombo:1,timeLeft:40,totalShards:0,highScore:99999,mistakesInWave:0},
  board:{config:{gridSize:2},activeGrid:[[2,1],[2,0]],remainingExcess:2,blocksShatteredInWave:0},layout:{leftBox:{}},
  window:{ToenowAnimals:{feedback:(...args)=>feedback.push(args)}},getCellCenter:()=>({x:0,y:0}),CORRECT_TAP_TIME_BONUS:.8,MAX_TIME_CAP_SECONDS:100,
  WRONG_TAP_TIME_PENALTY:1.5,MISTAKE_FREEZE_SECONDS:.35,shakeTrauma:0,redGlitchTimer:0,
@@ -66,7 +66,7 @@ test('timber carving removes only excess cells and preserves required cells with
 test('raccoon theater keeps correct-card award and wrong-card time penalty',()=>{
  for(const isCorrect of [true,false]){
   const feedback=[];const noop=()=>{};
-  const env={Math,state:{mode:'playing',transitionType:'none',setup:{cards:[{isCorrect}],spec:{level:2,parSeconds:3}},waveElapsed:5,totalAttempts:0,correctAttempts:0,wavesResolved:0,score:0,combo:2,peakCombo:2,timeRemaining:40},
+  const env={Math,toenowSdk:null,state:{mode:'playing',transitionType:'none',setup:{cards:[{isCorrect}],spec:{level:2,parSeconds:3}},waveElapsed:5,totalAttempts:0,correctAttempts:0,wavesResolved:0,score:0,combo:2,peakCombo:2,timeRemaining:40},
   window:{ToenowAnimals:{feedback:(...args)=>feedback.push(args)}},sound:{playLockSuccess:noop,playFaultBuzz:noop},syncHUD:noop};
   const pick=loadFunction('shadow-match','handleCardSelection','// ============================================================================',env);
   pick(0);assert.equal(env.state.score,isCorrect?1600:0);assert.equal(env.state.timeRemaining,isCorrect?40:37);

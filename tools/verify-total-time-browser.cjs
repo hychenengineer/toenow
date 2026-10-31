@@ -68,8 +68,10 @@ async function instrument(page, id) {
       assert.equal(await page.evaluate(()=>__timedTest.snapshot().time),60);
       await page.evaluate(()=>__timedTest.setTime(40));
       await page.evaluate(()=>__timedTest.correct());
-      assert.equal(await page.evaluate(()=>__timedTest.snapshot().time),43,'correct adds 3s');
+      assert.equal(await page.evaluate(()=>__timedTest.snapshot().time),id==='tap-match'?40.2:43,'game-specific correct-answer bonus');
       await page.evaluate(()=>{__timedTest.setTime(59);__timedTest.correct()});
+      assert.equal(await page.evaluate(()=>__timedTest.snapshot().time),id==='tap-match'?59.2:60,'game-specific bonus near cap');
+      await page.evaluate(()=>{__timedTest.setTime(59.9);__timedTest.correct()});
       assert.equal(await page.evaluate(()=>__timedTest.snapshot().time),60,'reward capped at sixty');
       await page.evaluate(()=>__timedTest.setTime(60));
       for(let i=0;i<6;i++) await page.evaluate(()=>__timedTest.wrong());

@@ -731,6 +731,7 @@ const pauseScore = document.getElementById('pause-score');
             core.freezeTimer = 0;
             core.errorFlash = 0;
             collectCore(core);
+            toenowSdk?.recordCorrectAnswer();
             game.combo += 1;
             game.shardsEarnedThisRun += 1;
 
@@ -959,6 +960,7 @@ const pauseScore = document.getElementById('pause-score');
         }
 
         function handleQuitOrRestartRun(nextAction) {
+          toenowSdk?.cancelMaterials();
           if (!game.isPractice && game.score > 0) {
             saveRecords(game.score, game.wave);
             saveBestSurvival(game.runDuration);

@@ -14,3 +14,11 @@ test('wrong answers remove five seconds and clamp at zero', () => {
   assert.equal(clock.wrong(2), 0);
   assert.equal(clock.wrong(0), 0);
 });
+
+test('Tap Match can award only 0.2 seconds per correct target while keeping the cap',()=>{
+ assert.equal(clock.correct(40,.2),40.2);
+ assert.equal(clock.correct(59,.2),59.2);
+ assert.equal(clock.correct(59.9,.2),60);
+ assert.equal(clock.correct(60,.2),60);
+ assert.equal(clock.correct(40),43);
+});

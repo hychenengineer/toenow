@@ -179,7 +179,7 @@
       },
       {
         "label": "LEVELS",
-        "text": "The grid gets bigger as you play. Start with 60 seconds. Right answers add 3 seconds; wrong answers remove 5 seconds. Maximum 60 seconds. No wave time limit."
+        "text": "The grid gets bigger as you play. Start with 60 seconds. Right answers add 0.2 seconds; wrong answers remove 5 seconds. Maximum 60 seconds. No wave time limit."
       }
     ],
     "titleId": "modal-start",

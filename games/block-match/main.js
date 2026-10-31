@@ -468,6 +468,7 @@ var isHeadless = Boolean(navigator.webdriver || /HeadlessChrome/i.test(navigator
               return;
             }
 
+            toenowSdk?.recordCorrectAnswer();
             var blockScore = Math.round(50 * state.combo);
             state.score += blockScore;
             state.totalShards++;

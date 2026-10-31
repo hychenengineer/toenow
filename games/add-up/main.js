@@ -550,6 +550,7 @@ const IS_HEADLESS =
               window.ToenowTutorials.complete('add-up');
               return;
             }
+            toenowSdk?.recordCorrectAnswer();
             // EXACT MATCH!
             if (window.ToenowAnimals) window.ToenowAnimals.feedback('add-up', true);
             supplyDeliveryUntil = performance.now() + 800;

@@ -194,7 +194,7 @@
 
   class GardenRenderer {
     constructor(canvas) {
-      this.canvas = canvas; this.zoom = 1; this.ripples = [];
+      this.canvas = canvas; this.zoom = 1; this.pan = {x:0,y:0}; this.ripples = [];
       this.swimmer = { q: 0, r: 0 }; this.target = { q: 0, r: 0 };
       this.fruit = { q: .6, r: .2 }; this.cursor = { q: 0, r: 0 };
       this.size = 1; this.ox = this.oy = 0; this.disposed = false;
@@ -246,8 +246,17 @@
       const bottom = compact ? 4 : shortLandscape ? 78 : width < 600 ? 205 : 172;
       const available = Math.max(55, height - top - bottom);
       const size = Math.max(3, Math.min((width - (compact ? 8 : shortLandscape ? 330 : 34)) / (maxX - minX), available / (maxY - minY), compact ? 100 : 112)) * (compact ? 1 : this.zoom);
-      return { size, ox: width / 2 - (minX + maxX) * size / 2, oy: top + available / 2 - (minY + maxY) * size / 2 };
+      return { size, ox: width / 2 - (minX + maxX) * size / 2 + (compact ? 0 : this.pan.x), oy: top + available / 2 - (minY + maxY) * size / 2 + (compact ? 0 : this.pan.y) };
     }
+    moveCamera(profile, dx, dy, zoom = this.zoom, anchor = {x:this.w/2,y:this.h/2}) {
+      const before = this.layout(profile);
+      this.zoom = Math.max(.5, Math.min(3, zoom));
+      const after = this.layout(profile), ratio = after.size / before.size;
+      this.pan.x += anchor.x + (before.ox-anchor.x)*ratio - after.ox + dx;
+      this.pan.y += anchor.y + (before.oy-anchor.y)*ratio - after.oy + dy;
+      Object.assign(this, this.layout(profile));
+    }
+    resetCamera() { this.zoom=1; this.pan={x:0,y:0}; }
     point(q, r) { const p = xy(q, r); return { x: this.ox + p.x * this.size, y: this.oy + p.y * this.size }; }
     input(x, y) {
       const r = (y - this.oy) / (this.size * .94), q = (x - this.ox) / (this.size * 1.72) - r * .5;
@@ -279,11 +288,11 @@
       if (this.canvas.dataset.palette !== profile.palette) this.canvas.dataset.palette = profile.palette;
       this.app.render();
     }
-    postcard(canvas, profile) {
+    postcard(canvas, profile, width = 400, height = 240) {
       // Temporary scene, same GPU context; album cards are plain 2D canvases.
       if (!this.scene || this.disposed) return;
       const scene = new GardenScene(this.textures);
-      const width = 400, height = 240, fit = this.layout(profile, width, height, true);
+      const fit = this.layout(profile, width, height, true);
       scene.build(profile);
       const first = profile.cells.find(c => c.type === 'water') || { q: 0, r: 0 };
       scene.animate(0, true, first, { q: first.q + .5, r: first.r }, [], first, null);

@@ -462,6 +462,7 @@ ToenowScreens.mount("shadow-match");
 
           if(window.ToenowAnimals) window.ToenowAnimals.feedback('shadow-match', chosenCard.isCorrect);
           if (chosenCard.isCorrect) {
+            toenowSdk?.recordCorrectAnswer();
             state.correctAttempts += 1;
             state.wavesResolved += 1;
 

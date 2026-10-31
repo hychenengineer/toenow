@@ -8,3 +8,21 @@ test('visitors avoid recent repeats and discoveries idempotent, postcards capped
 test('capacity, duplicate cells, undo bounds and last water protection',()=>{const p=E.defaults(),h=E.history();for(let q=-12;q<=12;q++)for(let r=-12;r<=12;r++)E.edit(p,h,q,r,'water');a.equal(p.cells.length,E.MAX_CELLS);a(h.past.length<=40);a.equal(E.edit(p,h,12,12,'stone'),false);const one=E.sanitize({version:1,cells:[{q:0,r:0,type:'water'},{q:0,r:0,type:'water'}]});a.equal(one.cells.length,1);a.equal(E.edit(one,E.history(),0,0,'erase'),false);});
 test('malformed arrays and unsupported schemas fall back without importing ambiguous wallets',()=>{for(const raw of [null,[],{version:99},{version:1,cells:'bad',postcards:[null,{}, {timestamp:1,cells:[null]}],cosmetics:['unknown','mint','mint'],visitors:['unknown']}])a.doesNotThrow(()=>E.sanitize(raw));const s=storage({capybara_drift_progress_v1:'{"wallet":999,"owned":"mint"}'});a.deepEqual(E.load(s).cosmetics,['peach']);a.equal(Object.keys(s.data).length,1);});
 test('postcards keep immutable scene snapshots and storage roundtrips',()=>{const p=E.defaults();const card=E.postcard(p,42),before=JSON.stringify(card);E.edit(p,E.history(),4,0,'bamboo');p.equipped='mint';a.equal(JSON.stringify(card),before);const s=storage();a.equal(E.save(s,p,false),true);a.equal(E.load(s).postcards[0].timestamp,42);a.equal(E.save(null,p,false),false);});
+test('restore postcard after reload preserves album and collection and backs up current garden',()=>{
+ const s=storage(),p=E.defaults();p.cosmetics.push('mint');p.equipped='mint';const card=E.postcard(p,42);
+ E.edit(p,E.history(),4,0,'bamboo');p.palette='rain';p.equipped='peach';p.discoveries.push('otter');E.save(s,p,false);
+ const loaded=E.load(s),before=JSON.parse(JSON.stringify(loaded));
+ a.equal(E.restorePostcard(loaded,loaded.postcards[0],99),true);
+ a.deepEqual(loaded.cells,card.cells);a.equal(loaded.palette,card.palette);a.equal(loaded.equipped,'mint');
+ a.deepEqual(loaded.discoveries,before.discoveries);a.equal(loaded.postcards.length,2);
+ a.deepEqual(loaded.postcards[1].cells,before.cells);a.equal(loaded.postcards[1].palette,'rain');
+ E.save(s,loaded,false);a.deepEqual(E.load(s).cells,card.cells);
+ loaded.cells[0].type='stone';a.equal(loaded.postcards[0].cells[0].type,'water');
+});
+test('restore rejects unusable postcards without changes and retains selected card in a full album',()=>{
+ const p=E.defaults(),before=JSON.stringify(p);
+ a.equal(E.restorePostcard(p,{timestamp:1,cells:[{q:0,r:0,type:'stone'}]}),false);a.equal(JSON.stringify(p),before);
+ for(let n=0;n<E.MAX_POSTCARDS;n++)E.postcard(p,n);
+ const first=JSON.parse(JSON.stringify(p.postcards[0]));a.equal(E.restorePostcard(p,first,100),true);
+ a.equal(p.postcards.length,E.MAX_POSTCARDS);a(p.postcards.some(c=>c.timestamp===0));a(p.postcards.some(c=>c.timestamp===100));
+});

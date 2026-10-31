@@ -17,5 +17,14 @@
  function discover(p,id){if(ANIMALS.includes(id)&&!p.discoveries.includes(id))p.discoveries.push(id);}
  function visit(p,rng=Math.random){const available=ANIMALS.filter(x=>!p.recent.includes(x)),id=available[Math.min(available.length-1,Math.floor(rng()*available.length))]||'duck';p.recent=[...p.recent,id].slice(-3);p.visitors=[id,'duck'].filter((x,i,a)=>a.indexOf(x)===i);discover(p,id);p.visits++;p.palette=PALETTES[(PALETTES.indexOf(p.palette)+1+Math.floor(rng()*5))%PALETTES.length];return id;}
  function postcard(p,now=Date.now()){const card={timestamp:now,palette:p.palette,visitors:[...p.visitors],equipped:p.equipped,cells:clone(p.cells)};p.postcards.push(card);p.postcards=p.postcards.slice(-MAX_POSTCARDS);return card;}
- return {KEY,MAX_CELLS,MAX_POSTCARDS,TYPES,ANIMALS,PALETTES,defaults,sanitize,load,save,features,history,edit,undo,redo,visit,discover,postcard,neighbors};
+ function restorePostcard(p,card,now=Date.now()){
+  if(!card||!Array.isArray(card.cells)||!card.cells.some(c=>valid(c)&&c.type==='water'))return false;
+  const scene=sanitize({...p,...card,postcards:[]});
+  // Retain the selected postcard even when the album is full and it is oldest.
+  if(p.postcards.length>=MAX_POSTCARDS)p.postcards.splice(JSON.stringify(p.postcards[0])===JSON.stringify(card)?1:0,1);
+  postcard(p,now);
+  for(const key of ['cells','palette','visitors','equipped'])p[key]=clone(scene[key]);
+  return true;
+ }
+ return {KEY,MAX_CELLS,MAX_POSTCARDS,TYPES,ANIMALS,PALETTES,defaults,sanitize,load,save,features,history,edit,undo,redo,visit,discover,postcard,restorePostcard,neighbors};
 });

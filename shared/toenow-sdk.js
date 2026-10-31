@@ -269,6 +269,7 @@
     this.progressLevel = 0;
     this.setPracticeMode(options.isPractice !== undefined ? options.isPractice : this.isPractice);
     this.cancelMaterials();
+    this.materialCorrectCount = 0;
     const isLesson = typeof window !== 'undefined' && window.ToenowTutorials?.isActive?.(this.gameId);
     this.materialRun = this.materialLedger?.beginRun(this.gameId, { wave: this.runStartWave, isPractice: this.isPractice, isPreview: options.isPreview || isLesson });
     if (typeof window !== 'undefined') window.ToenowMaterialUI?.clear();
@@ -280,6 +281,11 @@
   };
 
   ToenowGameSDK.getInstance = function (gameId) { return instances[gameId] || null; };
+  ToenowGameSDK.prototype.recordCorrectAnswer = function (key) {
+    if (!this.runActive || this.isPractice || (typeof window !== 'undefined' && window.ToenowTutorials?.isActive?.(this.gameId))) return 0;
+    this.materialCorrectCount = this.materialLedger?.recordSuccess(this.materialRun, key) || 0;
+    return this.materialCorrectCount;
+  };
   ToenowGameSDK.prototype.cancelMaterials = function () {
     this.materialLedger?.cancelRun(this.materialRun);
     this.materialRun = null;
@@ -291,8 +297,9 @@
     const data = Object.assign({}, options, { isPractice: this.isPractice || options?.isPractice,
       isPreview: options?.isPreview || (typeof window !== 'undefined' && window.ToenowTutorials?.isActive?.(this.gameId)) });
     const finish = () => {
-      const reward = this.materialLedger?.finishRun(token, data) || { amount: 0 };
-      if (typeof window !== 'undefined' && generation === this.materialGeneration && (reward.amount || reward.error)) window.ToenowMaterialUI?.show(this.gameId, reward);
+      const reward = this.materialLedger?.finishRun(token, data) || { amount: 0, reason: 'no-run' };
+      if (!reward.amount && !reward.error && (data.isPractice || data.isPreview)) reward.reason = data.isPractice ? 'practice' : 'preview';
+      if (typeof window !== 'undefined' && generation === this.materialGeneration && (token || data.isPractice || reward.amount || reward.error)) window.ToenowMaterialUI?.show(this.gameId, reward);
       return reward;
     };
     // Serialize writes from other same-origin game/Hub tabs where Web Locks exist.
@@ -343,7 +350,11 @@
     options.duration = Math.max(0, Number(options.duration) || Date.now() - this.runStartTime);
     if (!this.isPractice) {
       var check = this.verifyScorePlausibility(options.score, options.wave, options.duration / 1000);
-      if (!check.isValid) return check;
+      if (!check.isValid) {
+        this.finishMaterials(options);
+        this.runActive = false;
+        return check;
+      }
     }
     return this.reportGameOver(options);
   };

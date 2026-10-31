@@ -2,8 +2,8 @@
 .island-material-bag summary { cursor: pointer; min-height: 48px; padding: 13px 0; font-weight: 750; }
 .island-material-bag summary span { float: right; font-weight: 400; font-size: .78rem; padding-top: 3px; }
 .island-material-inventory { display: grid; grid-template-columns: repeat(10,minmax(0,1fr)); gap: 8px; padding-bottom: 16px; }
-.island-material-inventory button { display: grid; justify-items: center; gap: 4px; padding: 10px 3px; border: 1px solid #e1dec9; border-radius: 12px; background: #fffefa; color: #355645; cursor: pointer; min-height: 70px; }
-.island-material-inventory button>span { font-size: 23px; }.island-material-inventory small { font-size: 11px; }
+.island-material-inventory .island-inventory-item { display: grid; justify-items: center; gap: 4px; padding: 10px 3px; border: 1px solid #e1dec9; border-radius: 12px; background: #fffefa; color: #355645; min-height: 70px; }
+.island-material-inventory .island-inventory-item>span { font-size: 23px; }.island-material-inventory small { font-size: 11px; }
 .island-build-panel { border: 1px solid #d7ddbf; background: #fffaf0; color: #355645; border-radius: 20px; padding: 20px; margin: 16px 0; text-align: left; }
 .island-build-panel h3 { margin: 4px 0 0; font-size: 1.15rem; }.island-build-panel h4 { margin: 20px 0 10px; }
 .island-build-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }

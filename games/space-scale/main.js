@@ -354,6 +354,7 @@ const pauseScoreEl = document.getElementById('pause-score');
           if (window.ToenowAnimals) window.ToenowAnimals.feedback('space-scale', isCorrect);
 
           if (isCorrect) {
+            toenowSdk?.recordCorrectAnswer();
             globalTimeSec = ToenowTime.correct(globalTimeSec);
             streak++;
             hudComboEl.textContent = streak + 'x';

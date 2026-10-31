@@ -387,6 +387,7 @@ ToenowScreens.mount("spot-quick");
           if (!cand || cand.depleted) return;
 
           if (cand.correct) {
+            toenowSdk?.recordCorrectAnswer();
             const basePts = getCurrentScoreTier(state.elapsedInWave, state.focusWindow);
             const streakBonus = Math.min(state.streak, 4) * 5;
             const totalAward = basePts + streakBonus;

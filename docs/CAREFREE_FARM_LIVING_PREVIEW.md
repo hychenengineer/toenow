@@ -2,7 +2,7 @@
 
 Local preview: http://127.0.0.1:8774/games/carefree-farm/
 
-Implemented 2026-10-30. Publication requested 2026-10-31: prepared on an isolated checkout of origin/preview; only the farm update is included. Commit uses [CF-Pages-Skip] to omit Cloudflare builds.
+Implemented 2026-10-30. This version is local only; no commit, push or deployment was performed for this update.
 
 ## Player changes
 - Five species appear as transparent illustrated animals directly on the grass, with idle, walking and grazing poses. Baby animals are smaller. Pointer/focus pauses a moving animal for selection. Reduced-motion, hidden tabs, paused visits and open dialogs suspend movement.
@@ -26,7 +26,3 @@ PASS: inspected desktop and mobile screenshots; corrected unequal atlas row boun
 NOT VERIFIED: physical iPad Safari, long-term player retention or exact hours to complete the new progression. Milestone pacing is an initial balance pass.
 
 Screenshots and logs: `artifacts/carefree-farm/`, including `living-pasture.png`, `living-mobile.png`, `living-sale.png`, `living-orders.png`, `living-browser.log`, `full-living-tests.log`, `shared-living.log`.
-
-## Isolated preview publication validation (2026-10-31)
-
-PASS: preview checkout npm test (7 pretests + 239 main tests), living browser 9 groups, existing farm browser 14 groups, shared screens 8 standalone / 2 iframe / 2 practice, and both storage regressions. The smaller test count versus the development checkout reflects unrelated local work intentionally excluded from publication.

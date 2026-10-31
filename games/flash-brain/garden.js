@@ -51,6 +51,7 @@
     ctx.restore();
   }
   function feedback(status, wave) {
+    if (status === 'CORRECT' || status === 'WAVE_CLEARED') progressSdk?.recordCorrectAnswer();
     root.ToenowAnimals?.setWave?.('flash-brain', wave);
     if (status !== 'IGNORED') root.ToenowAnimals?.feedback?.('flash-brain', status !== 'MISTAKE');
   }

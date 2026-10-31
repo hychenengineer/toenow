@@ -3,6 +3,31 @@ const assert = require('node:assert/strict');
 const ToenowSecurity = require('../shared/toenow-security.js');
 const ToenowPlatform = require('../shared/toenow-platform.js');
 
+test('Fox fast answers and wrong-answer timeout are valid before three seconds per wave',()=>{
+  for(const score of [7868,12098]){
+    assert.equal(ToenowSecurity.verifyScorePlausibility({gameId:'space-scale',score,wave:19,durationSec:20}).isValid,true);
+  }
+  assert.equal(ToenowSecurity.verifyScorePlausibility({gameId:'space-scale',score:14000,wave:20,durationSec:10}).isValid,true);
+  assert.equal(ToenowSecurity.verifyScorePlausibility({gameId:'space-scale',score:99999999,wave:20,durationSec:20}).isValid,false);
+  assert.equal(ToenowSecurity.verifyScorePlausibility({gameId:'space-scale',score:1000,wave:20,durationSec:1}).isValid,false);
+});
+
+test('Number Pop accepts actual harvest scoring through wave 22 at a normal tapping pace', () => {
+  const rules = require('../games/number-pop/rules.js');
+  let score = 0, combo = 0, taps = 0;
+  for (let wave = 1; wave <= 22; wave++) {
+    for (let n = 0; n < rules.getCoreCountForWave(wave, 0); n++) {
+      combo++; taps++;
+      score += Math.round((100 + wave * 25) * (1 + Math.min(combo, 5) * .15) * (combo >= 5 ? 1.5 : 1));
+    }
+  }
+  assert(taps / 90 < 2, 'fewer than two successful taps per second');
+  assert(score > 120000);
+  assert.equal(ToenowSecurity.verifyScorePlausibility({gameId:'number-pop',score,wave:22,durationSec:90}).isValid, true);
+  assert.equal(ToenowSecurity.verifyScorePlausibility({gameId:'number-pop',score,wave:22,durationSec:30}).isValid, true);
+  assert.equal(ToenowSecurity.verifyScorePlausibility({gameId:'number-pop',score,wave:22,durationSec:1}).isValid, false);
+});
+
 test('Anti-Cheat: 100,000+ points on Number Pop is VALID when duration & wave are proportional', () => {
   // Scenario: Skilled player survives 300 seconds (5 min) reaching Wave 22 and scores 125,000 pts
   const validMasterRun = {

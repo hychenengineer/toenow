@@ -10,6 +10,14 @@
 #garden-loading{position:fixed;inset:0;z-index:100;display:grid;place-content:center;justify-items:center;background:#dce8cceF;color:#375b4e;text-align:center;padding:24px}
 #garden-loading p{max-width:320px}
 .book-card canvas{height:auto;aspect-ratio:5/3}
+.postcard-open{display:block;width:100%;padding:0;overflow:hidden;border-radius:12px}
+#book.postcard-view{width:900px;max-width:94vw}
+#postcard-detail{grid-column:1/-1;min-width:0}
+#postcard-detail canvas{width:100%;height:auto;aspect-ratio:5/3;border-radius:16px}
+#postcard-detail button{margin:4px;max-width:100%}
+#postcard-detail p{line-height:1.5}
+@media(min-width:601px) and (min-height:451px){.utility{bottom:156px}}
+@media(max-width:600px){.editing{left:8px;right:8px;justify-content:flex-end;gap:3px}.editing button{padding:8px;font-size:10px}}
 @media(max-height:450px) and (min-width:601px){
  .utility{top:90px;bottom:auto;left:12px;flex-direction:column;width:150px;gap:7px}
  .utility button{font-size:11px;padding:8px;min-height:38px}

@@ -3,7 +3,7 @@
  const F=window.CarefreeFarm,ID='carefree-farm',$=id=>document.getElementById(id),t=x=>window.ToenowI18n?.t(x)||x;
  let storage;try{storage=window.localStorage;}catch(_){}
  let state=F.create(),isPractice=false,blocked=false,unsaved=false,mode='title',tab='fields',selectedCrop='grass',selectedAnimal=0,panelType='',shopTab='animals',noticeTimer,busy=false;
- let normalSession=null,baseRaw=null,conflict=false,saleItem='',saleQuantity='1',rewardReceipt=null;
+ let normalSession=null,baseRaw=null,conflict=false,saleItem='',saleQuantity='1',rewardReceipt=null,showPlantWarning=false;
  const sdk=new window.ToenowGameSDK({gameId:ID,category:'relax',hasWaves:false,gameTitle:'Carefree Farm',onStart:o=>start(!!o?.isPractice),onPause:pause,onResume:resume,onRestart:()=>start(isPractice)});
  const art=species=>'../../assets/carefree-farm/'+species+'.webp';
  const rewardArt=id=>'../../assets/carefree-farm/'+(F.CROPS[id]?'crop-'+id+'.webp':'rewards/'+id+(Object.values(F.ANIMALS).some(a=>a.product===id)?'.svg':'.webp'));
@@ -30,7 +30,7 @@
   if(preview){state=F.create();blocked=false;unsaved=false;conflict=false;}
   else if(!unsaved){const loaded=F.load(storage);state=loaded.state;blocked=loaded.blocked;baseRaw=readBase();conflict=false;}
   F.advance(state);mode='playing';$('farm-app').dataset.state=mode;sdk.startRun({isPractice});
-  selectedAnimal=0;selectedCrop='grass';tab='fields';visibility('title-screen',false);visibility('gameover-screen',false);visibility('play',true);$('rest').hidden=false;$('preview-label').hidden=!isPractice;
+  selectedAnimal=0;selectedCrop='grass';showPlantWarning=false;tab='fields';visibility('title-screen',false);visibility('gameover-screen',false);visibility('play',true);$('rest').hidden=false;$('preview-label').hidden=!isPractice;
   if(!preview&&!blocked&&!baseRaw)persist();render();
  }
  function showTitle(){mode='title';$('farm-app').dataset.state=mode;visibility('play',false);visibility('gameover-screen',false);visibility('title-screen',true);$('rest').hidden=true;window.ToenowScreens.updateTitle(ID,{bestScore:0,bestWave:1});translate();}
@@ -46,12 +46,13 @@
    if(!isPractice&&!blocked&&!unsaved){const loaded=F.load(storage);if(loaded.blocked)blocked=true;else{state=loaded.state;baseRaw=readBase();}}
    const result=F.act(state,action);
    if(result.ok){persist();if(result.sold)notify(t('Sold')+' ×'+result.sold+' · 🪙 '+result.total);else if(result.delivered)notify(t('Order delivered!'));else if(result.decorated)notify(t('A cozy new corner!'));else if(result.gift||result.collected){rewardReceipt={...result};openPanel('reward');}else if(action.type==='upgrade')notify(t('Your farm has grown!'));else if(action.type==='buyAnimal'){selectedAnimal=state.animals.length-1;tab='pasture';notify(t('Welcome, little friend!'));}else if(action.type==='harvest')notify(t('Harvest added to your basket.'));}
-   else notify(t(result.reason));render();if($('panel').open)renderPanel();
+   else {if(action.type==='plant')showPlantWarning=true;notify(t(result.reason));}render();if($('panel').open)renderPanel();
   };
   try{if(!isPractice&&navigator.locks)await navigator.locks.request('toenow-carefree-farm',perform);else perform();}finally{busy=false;$('play').setAttribute('aria-busy','false');}
  }
  function render(){
   selectedAnimal=Math.min(selectedAnimal,state.animals.length-1);
+  const crop=F.CROPS[selectedCrop],insufficient=showPlantWarning&&state.coins<crop.cost;$('plant-notice').hidden=!insufficient;$('plant-notice').textContent=insufficient?t('Not enough coins. Grass seeds are free.')+' '+t('Needed')+': 🪙 '+crop.cost+' · '+t('You have')+': 🪙 '+state.coins:'';
   $('coins').textContent=state.coins.toLocaleString();$('farm-level').textContent=t('Farm level')+' '+state.level+' · '+t('Animal spaces')+' '+state.animals.length+'/'+F.STAGES[state.level-1].capacity;
   for(const name of ['fields','pasture']){$(name).hidden=tab!==name;$('tab-'+name).setAttribute('aria-selected',String(tab===name));$('tab-'+name).tabIndex=tab===name?0:-1;}
   $('fields-badge').textContent=state.plots.filter(p=>p&&p.due<=Date.now()).length||'';
@@ -64,7 +65,7 @@
   }).join('')+(state.level<5?`<button class="plot locked" data-open="growth">🔒 ${text('Next field')} · ${text('Farm level')} ${state.level+1} ↗</button>`:'');
   window.CarefreePasture.update(state,selectedAnimal,t);
   const a=state.animals[selectedAnimal],spec=F.ANIMALS[a.species];
-  $('animal-care').innerHTML=`<div class="care-info"><h3>${selectedAnimal===0?text('Cotton'):text(spec.name)} <small>${text(a.growth<3?'Baby':'Grown up')}</small></h3><div class="growth-track" role="progressbar" aria-label="${text('Growth')}" aria-valuenow="${a.growth}" aria-valuemin="0" aria-valuemax="3"><i style="width:${a.growth/3*100}%"></i></div><p>${a.growth<3?a.growth+' / 3 · '+text('Meals to grow up'):text(a.species==='horse'?'Brings back':'Produces')+' '+text(F.ITEMS[spec.product].name)}</p><p>${text('Favorite food')} · ${F.CROPS[spec.favorite].icon} ${text(F.CROPS[spec.favorite].name)}</p><p class="bond-label">♥ ${text(F.BONDS[F.bond(a)].name)} · ${a.friendship}/160 · ${text(a.trait)}</p></div><div class="care-actions"><button data-action="pet" ${a.petReadyAt>Date.now()?'disabled':''}>♡ ${text('Pet')} ${a.petReadyAt>Date.now()?'<span data-due="'+a.petReadyAt+'">'+remaining(a.petReadyAt)+'</span>':''}</button>${a.gift?`<button class="primary" data-action="gift">🎁 ${text('Open surprise')}</button>`:''}${a.ready?`<button class="primary" data-action="collect">${F.ITEMS[spec.product].icon} ${text('Collect')}</button>`:a.due?`<button disabled>${text('Growing')} · <span data-due="${a.due}">${remaining(a.due)}</span></button>`:[spec.food,spec.favorite].map(id=>`<button data-feed="${id}" ${state.inventory[id]>0?'':'disabled'}>${F.CROPS[id].icon} ${text('Feed')} · ${state.inventory[id]||0}</button>`).join('')}</div>`;
+  $('animal-care').innerHTML=`<div class="care-info"><h3>${text(F.animalName(state,selectedAnimal))} <small>${text(spec.name)} · ${text(a.growth<3?'Baby':'Grown up')}</small></h3><div class="growth-track" role="progressbar" aria-label="${text('Growth')}" aria-valuenow="${a.growth}" aria-valuemin="0" aria-valuemax="3"><i style="width:${a.growth/3*100}%"></i></div><p>${a.growth<3?a.growth+' / 3 · '+text('Meals to grow up'):text(a.species==='horse'?'Brings back':'Produces')+' '+text(F.ITEMS[spec.product].name)}</p><p>${text('Favorite food')} · ${F.CROPS[spec.favorite].icon} ${text(F.CROPS[spec.favorite].name)}</p><p class="bond-label">♥ ${text(F.BONDS[F.bond(a)].name)} · ${a.friendship}/160 · ${text(a.trait)}</p></div><div class="care-actions"><button data-action="pet" ${a.petReadyAt>Date.now()?'disabled':''}>♡ ${text('Pet')} ${a.petReadyAt>Date.now()?'<span data-due="'+a.petReadyAt+'">'+remaining(a.petReadyAt)+'</span>':''}</button>${a.gift?`<button class="primary" data-action="gift">🎁 ${text('Open surprise')}</button>`:''}${a.ready?`<button class="primary" data-action="collect">${F.ITEMS[spec.product].icon} ${text('Collect')}</button>`:a.due?`<button disabled>${text('Growing')} · <span data-due="${a.due}">${remaining(a.due)}</span></button>`:[spec.food,spec.favorite].map(id=>`<button data-feed="${id}" ${state.inventory[id]>0?'':'disabled'}>${F.CROPS[id].icon} ${text('Feed')} · ${state.inventory[id]||0}</button>`).join('')}</div>`;
   $('inventory-open').innerHTML='🧺 <strong>'+text('Warehouse / Sell')+'</strong> <span>↗</span>';
   $('inventory-open').setAttribute('aria-label',t('Warehouse / Sell'));warning();translate();
  }
@@ -116,7 +117,7 @@
  document.querySelector('.tabs').addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();tab=tab==='fields'?'pasture':'fields';render();$('tab-'+tab).focus();}});
  $('farm-app').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b||b.disabled)return;const d=b.dataset;
-  if(d.rewardClose){$('panel').close();}else if(d.crop){selectedCrop=d.crop;render();}else if(d.plot!==undefined){const plot=Number(d.plot);act(state.plots[plot]?{type:'harvest',plot}:{type:'plant',plot,crop:selectedCrop});}
+  if(d.rewardClose){$('panel').close();}else if(d.crop){selectedCrop=d.crop;showPlantWarning=true;render();if(state.coins<F.CROPS[selectedCrop].cost)notify(t('Not enough coins. Grass seeds are free.'));}else if(d.plot!==undefined){const plot=Number(d.plot);act(state.plots[plot]?{type:'harvest',plot}:{type:'plant',plot,crop:selectedCrop});}
   else if(d.animal!==undefined){selectedAnimal=Number(d.animal);render();}
   else if(d.feed)act({type:'feed',animal:selectedAnimal,crop:d.feed});
   else if(d.action)act({type:d.action,animal:selectedAnimal});else if(d.open)openPanel(d.open);

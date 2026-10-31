@@ -16,6 +16,8 @@
   alpaca:{name:'Alpaca',food:'grass',favorite:'cabbage',product:'fleece',gift:'rainbow',cost:150,seconds:90,level:4},
   llama:{name:'Llama',food:'grass',favorite:'oats',product:'parcel',gift:'souvenir',cost:180,seconds:100,level:4}
  };
+ const ANIMAL_NAMES={"sheep":["Cotton","Cloud","Mochi","Pearl","Daisy","Snowball","Velvet","Luna"],"horse":["Maple","Willow","Breeze","Comet","Hazel","Pippin","River","Sunny"],"cow":["Buttercup","Cocoa","Cloverbell","Honey","Pudding","Peaches","Biscuit","Cinnamon"],"alpaca":["Marshmallow","Pompom","Misty","Toffee","Pebble","Nori","Teddy","Sprout"],"llama":["Scout","Amber","Cedar","Fern","Echo","Sage","Wren","Juniper"]};
+ function animalName(state,index){const a=state.animals[index];if(!a)return '';const ordinal=state.animals.slice(0,index).filter(friend=>friend.species===a.species).length;return ANIMAL_NAMES[a.species]?.[ordinal]||'Friend';}
  const GOODS={wool:{name:'Wool',icon:'🧶',sell:18},forage:{name:'Forage bundle',icon:'🌾',sell:24},milk:{name:'Milk',icon:'🥛',sell:25},fleece:{name:'Alpaca fleece',icon:'🧵',sell:30},parcel:{name:'Gathering basket',icon:'🧺',sell:32},bouquet:{name:'Meadow bouquet',icon:'💐',sell:22},rainbow:{name:'Rainbow yarn',icon:'🌈',sell:35},souvenir:{name:'Little keepsake',icon:'🎀',sell:40}};
  const ITEMS={...CROPS,...GOODS};
  const STAGES=[
@@ -151,5 +153,5 @@
   catch(_){return {state:create(now),blocked:true};}
  }
  function save(storage,s,preview=false){if(preview)return true;try{if(!valid(s))return false;storage.setItem(KEY,JSON.stringify(s));return true;}catch(_){return false;}}
- return {KEY,CROPS,ANIMALS,GOODS,ITEMS,STAGES,BONDS,TRAITS,KEEPSAKES,DECORATIONS,bond,create,advance,act,requirements,load,save,valid};
+ return {KEY,CROPS,ANIMALS,ANIMAL_NAMES,animalName,GOODS,ITEMS,STAGES,BONDS,TRAITS,KEEPSAKES,DECORATIONS,bond,create,advance,act,requirements,load,save,valid};
 });

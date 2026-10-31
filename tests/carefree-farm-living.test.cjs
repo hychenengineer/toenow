@@ -1,6 +1,13 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const F=require('../games/carefree-farm/model.js');
 const legacy=require('./fixtures/carefree-farm-v1.json');
+test('animal names are personal, distinct for duplicate species and stable across reload',()=>{
+ for(const species of Object.keys(F.ANIMALS)){
+  const s=F.create(1000);s.level=5;s.plots=Array(15).fill(null);s.animals=Array.from({length:8},()=>({...s.animals[0],species}));
+  const names=s.animals.map((_,i)=>F.animalName(s,i));assert.equal(new Set(names).size,8);assert(names.every(n=>n&&!/\d/.test(n)&&n!==F.ANIMALS[species].name));
+  const loaded=F.load({getItem:()=>JSON.stringify(s)},1000).state;assert.deepEqual(loaded.animals.map((_,i)=>F.animalName(loaded,i)),names);
+ }
+});
 test('collect receipt reports the exact awarded product and bonus quantity once',()=>{
  for(const species of Object.keys(F.ANIMALS))for(const bonus of [false,true]){
   const s=F.create(1000),a=s.animals[0];a.species=species;a.growth=3;a.ready=true;a.bonus=bonus;const product=F.ANIMALS[species].product;

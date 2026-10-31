@@ -10,3 +10,5 @@
 .pixi-ready .roaming-animal .animal-shadow{display:none}
 
 .reward-grid.single{grid-template-columns:minmax(0,220px);justify-content:center}
+
+#plant-notice{margin:0 0 12px;padding:12px 15px;border:1px solid #d6a05d;border-radius:12px;background:#fff0ca;color:#784b25;font-size:14px;font-weight:600;line-height:1.6}

@@ -3,7 +3,7 @@
  const P=window.PIXI,host=document.getElementById('animals'),actors=new Map(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const canvas=document.createElement('canvas');canvas.className='pasture-canvas';canvas.setAttribute('aria-hidden','true');host.prepend(canvas);
  const rigs={
-  sheep:{body:[35,25,250,165],top:164,bottom:249,front:218,hind:91,width:48},
+  sheep:{body:[35,25,250,165],top:164,frontTop:145,bottom:249,front:204,hind:91,width:48},
   horse:{body:[20,16,275,165],top:139,bottom:249,front:206,hind:106,width:46},
   cow:{body:[20,18,275,155],top:148,bottom:249,front:219,hind:101,width:50},
   alpaca:{body:[35,0,250,184],top:158,bottom:249,front:224,hind:90,width:46},
@@ -21,7 +21,7 @@
  function build(a){
   if(!textures?.[a.species]?.hind||!app)return;if(a.root)a.root.destroy({children:true});
   const r=rigs[a.species];a.root=new P.Container();a.shadow=new P.Graphics();a.root.addChild(a.shadow);a.facing=new P.Container();a.root.addChild(a.facing);a.legs=[];
-  for(const [name,part,offset,phase]of feet){const far=name.endsWith('right'),leg=createMesh(textures[a.species][part],r.width*(far?.9:1),r.bottom-r.top-(far?4:0));Object.assign(leg,{name,phase,far,x:r[part]+offset,y:r.top});leg.mesh.position.set(leg.x,leg.y);if(far)leg.mesh.tint=0xb6aa96;a.facing.addChild(leg.mesh);a.legs.push(leg);}
+  for(const [name,part,offset,phase]of feet){const far=name.endsWith('right'),top=r[part+'Top']??r.top,leg=createMesh(textures[a.species][part],r.width*(far?.9:1),r.bottom-top-(far?4:0));Object.assign(leg,{name,phase,far,x:r[part]+offset,y:top});leg.mesh.position.set(leg.x,leg.y);if(far)leg.mesh.tint=0xb6aa96;a.facing.addChild(leg.mesh);a.legs.push(leg);}
   const [x,y,w,h]=r.body;a.body=new P.Sprite(textures[a.species].body);a.body.position.set(x,y);a.body.width=w;a.body.height=h;a.facing.addChild(a.body);app.stage.addChild(a.root);pose(a,0);layout();
  }
  function pose(a,dt){

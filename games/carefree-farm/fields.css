@@ -1,0 +1,22 @@
+/* Ground-level beds: the soil and crops share the meadow's perspective. */
+#field-scene{padding:48px 7% 24px;min-height:300px}
+#plots{gap:18px 8px;align-items:center}
+#plots .plot{min-height:100px;aspect-ratio:1.45;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;isolation:isolate;overflow:visible;transform:none}
+#plots .plot::before{content:"";position:absolute;inset:32% -3% 3%;background:url('../../assets/carefree-farm/soil-bed.webp') center/100% 100% no-repeat;z-index:-1;pointer-events:none;transition:filter .15s}
+#plots .plot:hover::before{filter:brightness(1.1)}
+#plots .plot:focus-visible{outline:3px dashed #fff5bf;outline-offset:2px;border-radius:35%}
+#plots .plot .sprouts{position:absolute;inset:0;width:100%;height:100%;display:block!important;filter:none;pointer-events:none}
+#plots .sprouts .crop-art{position:absolute;width:37%;height:52%;object-fit:contain;filter:drop-shadow(0 2px 1px #49331e44);transform-origin:50% 85%;transform:none;opacity:1}
+#plots .sprouts .crop-art:nth-child(1){left:14%;top:5%}
+#plots .sprouts .crop-art:nth-child(2){left:49%;top:7%}
+#plots .sprouts .crop-art:nth-child(3){left:10%;top:30%}
+#plots .sprouts .crop-art:nth-child(4){left:51%;top:32%}
+#plots .sprouts.young .crop-art{transform:scale(.48)}
+#plots .plot .label{position:absolute;bottom:0;z-index:2;margin:0;padding:3px 8px;background:#fff8dfed;color:#5b492e;font-size:11px;box-shadow:0 2px 4px #594c3120;pointer-events:none}
+#plots .plot.ready .label{background:transparent;box-shadow:none;font-size:25px;bottom:-5px;padding:0;filter:drop-shadow(0 0 4px #fff6b5)}
+#plots .plot.empty>span:first-child{font-size:24px;color:#fff4c8;opacity:.8;margin-top:18%;text-shadow:0 1px 3px #563d23}
+#plots .plot.empty .label{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%)}
+#plots .plot.locked{grid-column:1/-1;aspect-ratio:auto;min-height:44px;font-size:12px;background:transparent;color:#4c6035;border:0;box-shadow:none;text-shadow:0 1px #fff9dc;gap:6px}
+#plots .plot.locked::before{display:none}
+@media(max-width:580px){#field-scene{padding:34px 12px 20px;min-height:225px}#plots{gap:16px 3px}#plots .plot{min-height:78px;aspect-ratio:1.2}#plots .plot .label{font-size:10px;padding:2px 5px}#plots .plot.ready .label{font-size:22px}#plots .plot.locked{font-size:11px}}
+@media(prefers-reduced-motion:reduce){#plots .plot::before{transition:none}}

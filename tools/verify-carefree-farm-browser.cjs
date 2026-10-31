@@ -17,7 +17,7 @@ const KEY='toenow_carefree_farm_v1';
   assert.equal(await p.locator('.plot.empty').count(),3);assert.equal(await p.locator('.roaming-animal').count(),1);checks++;
   await p.screenshot({path:path.join(out,'desktop-fields.png'),fullPage:true});
   await click('#tab-pasture');await p.screenshot({path:path.join(out,'desktop-pasture.png'),fullPage:true});
-  await click('[data-feed="grass"]');await p.waitForFunction(k=>JSON.parse(localStorage.getItem(k)).animals[0].due>Date.now(),KEY);await p.clock.fastForward(41000);await click('[data-action="gift"]');
+  await click('[data-feed="grass"]');await p.waitForFunction(k=>JSON.parse(localStorage.getItem(k)).animals[0].due>Date.now(),KEY);await p.clock.fastForward(41000);await click('[data-action="gift"]');await click('[data-reward-close]');
   assert((await p.evaluate(k=>JSON.parse(localStorage.getItem(k)),KEY)).unlocked.includes('clover'));checks++;
   for(let n=0;n<2;n++){await click('[data-feed="grass"]');await p.clock.fastForward(41000);}
   assert.equal((await p.evaluate(k=>JSON.parse(localStorage.getItem(k)),KEY)).animals[0].growth,2); // third meal is persisted as due; reload settles it
@@ -40,14 +40,14 @@ const KEY='toenow_carefree_farm_v1';
   const grown=await p.evaluate(k=>JSON.parse(localStorage.getItem(k)),KEY);assert.equal(grown.animals[0].growth,3);checks++;
   // Full real UI visit lifecycle and preview isolation.
   await click('#rest');await click('#finish');await click('#btn-title');
-  const before=await p.evaluate(()=>({...localStorage}));await click('#btn-farm-practice');await click('[data-plot="0"]');await click('#tab-pasture');await click('[data-feed="grass"]');await p.clock.fastForward(61000);await click('[data-action="gift"]');await click('#rest');await click('#finish');assert.deepEqual(await p.evaluate(()=>({...localStorage})),before);checks++;
+  const before=await p.evaluate(()=>({...localStorage}));await click('#btn-farm-practice');await click('[data-plot="0"]');await click('#tab-pasture');await click('[data-feed="grass"]');await p.clock.fastForward(61000);await click('[data-action="gift"]');await click('[data-reward-close]');await click('#rest');await click('#finish');assert.deepEqual(await p.evaluate(()=>({...localStorage})),before);checks++;
   // Responsive layouts, bilingual UI and image loading.
   for(const width of [390,1100])for(const lang of ['en','zh-Hant']){
    const q=await browser.newPage({viewport:{width,height:900}});q.on('pageerror',e=>errors.push(e.message));await q.addInitScript(l=>localStorage.setItem('toenow_language_v1',l),lang);await q.goto(base+'/games/carefree-farm/');await q.locator('#btn-start').click();
    assert.equal(await q.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
    assert.match(await q.locator('#farm-level').textContent(),lang==='en'?/Farm level/:/農場等級/);
    await q.screenshot({path:path.join(out,`${width}-${lang}-fields.png`),fullPage:true});await q.locator('#tab-pasture').click();
-   await q.locator('.roaming-animal img').evaluate(img=>img.decode());await q.screenshot({path:path.join(out,`${width}-${lang}-pasture.png`),fullPage:true});checks++;await q.close();
+   await q.locator('.roaming-animal image').evaluateAll(imgs=>Promise.all(imgs.map(i=>{const img=new Image();img.src=i.getAttribute('href');return img.decode();})));await q.screenshot({path:path.join(out,`${width}-${lang}-pasture.png`),fullPage:true});checks++;await q.close();
   }
   // Malformed saves survive untouched. No reset or automatic overwrite.
   const bad=await browser.newPage();await bad.addInitScript(k=>localStorage.setItem(k,'{broken'),KEY);await bad.goto(base+'/games/carefree-farm/');await bad.locator('#btn-start').click();await bad.locator('[data-plot="0"]').click();assert.equal(await bad.evaluate(k=>localStorage.getItem(k),KEY),'{broken');assert(await bad.locator('#save-warning').isVisible());await bad.close();checks++;
@@ -55,7 +55,7 @@ const KEY='toenow_carefree_farm_v1';
   const F=require('../games/carefree-farm/model.js'),fixture=F.create(Date.now());fixture.level=5;fixture.coins=2000;fixture.plots=Array(15).fill(null);fixture.unlocked=Object.keys(F.CROPS);
   const mature=await browser.newPage({viewport:{width:1100,height:1000}});mature.on('pageerror',e=>errors.push(e.message));await mature.clock.install();await mature.addInitScript(({key,fixture})=>{localStorage.setItem(key,JSON.stringify(fixture));localStorage.setItem('toenow_language_v1','zh-Hant');},{key:KEY,fixture});await mature.goto(base+'/games/carefree-farm/');
   const mclick=async selector=>{await mature.locator(selector).click();await mature.waitForFunction(()=>document.getElementById('play').getAttribute('aria-busy')!=='true');};
-  await mclick('#btn-start');await mclick('#shop-open');for(const species of ['pig','cow','alpaca','llama','sheep','sheep','sheep'])await mclick(`[data-buy="${species}"]`);
+  await mclick('#btn-start');await mclick('#shop-open');for(const species of ['horse','cow','alpaca','llama','sheep','sheep','sheep'])await mclick(`[data-buy="${species}"]`);
   assert.equal(await mature.locator('[data-buy]:enabled').count(),0);await mclick('#panel-close');assert.equal(await mature.locator('.roaming-animal').count(),8);assert.equal(await mature.locator('.animal-placeholder').count(),0);await mature.clock.fastForward(5000);await mature.screenshot({path:path.join(out,'expanded-pasture.png'),fullPage:true});
   await mclick('#tab-fields');for(let i=0;i<15;i++){await mclick(`[data-crop="${Object.keys(F.CROPS)[i%12]}"]`);await mclick(`[data-plot="${i}"]`);}await mature.clock.fastForward(151000);
   assert.equal(await mature.locator('.plot.ready').count(),15);await mature.screenshot({path:path.join(out,'expanded-fields.png'),fullPage:true});

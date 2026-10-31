@@ -11,12 +11,12 @@
  };
  const ANIMALS={
   sheep:{name:'Sheep',food:'grass',favorite:'clover',product:'wool',gift:'clover',cost:55,seconds:40,level:1},
-  pig:{name:'Pig',food:'carrot',favorite:'pumpkin',product:'truffle',gift:'pumpkin',cost:70,seconds:60,level:2},
+  horse:{name:'Horse',food:'grass',favorite:'carrot',product:'forage',gift:'pumpkin',cost:70,seconds:60,level:2},
   cow:{name:'Cow',food:'grass',favorite:'corn',product:'milk',gift:'bouquet',cost:110,seconds:75,level:3},
   alpaca:{name:'Alpaca',food:'grass',favorite:'cabbage',product:'fleece',gift:'rainbow',cost:150,seconds:90,level:4},
   llama:{name:'Llama',food:'grass',favorite:'oats',product:'parcel',gift:'souvenir',cost:180,seconds:100,level:4}
  };
- const GOODS={wool:{name:'Wool',icon:'🧶',sell:18},truffle:{name:'Truffle',icon:'🍄',sell:24},milk:{name:'Milk',icon:'🥛',sell:25},fleece:{name:'Alpaca fleece',icon:'🧵',sell:30},parcel:{name:'Gathering basket',icon:'🧺',sell:32},bouquet:{name:'Meadow bouquet',icon:'💐',sell:22},rainbow:{name:'Rainbow yarn',icon:'🌈',sell:35},souvenir:{name:'Little keepsake',icon:'🎀',sell:40}};
+ const GOODS={wool:{name:'Wool',icon:'🧶',sell:18},forage:{name:'Forage bundle',icon:'🌾',sell:24},milk:{name:'Milk',icon:'🥛',sell:25},fleece:{name:'Alpaca fleece',icon:'🧵',sell:30},parcel:{name:'Gathering basket',icon:'🧺',sell:32},bouquet:{name:'Meadow bouquet',icon:'💐',sell:22},rainbow:{name:'Rainbow yarn',icon:'🌈',sell:35},souvenir:{name:'Little keepsake',icon:'🎀',sell:40}};
  const ITEMS={...CROPS,...GOODS};
  const STAGES=[
   {plots:3,capacity:1,harvests:0,varieties:0,species:0,adults:0,cost:0,orders:0},
@@ -27,7 +27,7 @@
  ];
  const BONDS=[{xp:0,name:'Getting acquainted'},{xp:12,name:'Familiar faces'},{xp:35,name:'Good friends'},{xp:80,name:'Close companions'},{xp:160,name:'One little family'}];
  const TRAITS=['Curious','Gentle','Playful','Dreamy'];
- const keepsakeNames={sheep:['Pressed clover','Tiny wool heart','Silver pasture bell','Cloud-soft ribbon'],pig:['Polished pebble','Lucky wooden button','Mushroom sketch','Little treasure map'],cow:['Daisy bookmark','Meadow postcard','Golden milk charm','Wildflower wreath'],alpaca:['Soft pompom','Pastel tassel','Rainbow spool','Handwoven friendship band'],llama:['Travel feather','Mountain stone','Woven travel patch','Sunrise compass']};
+ const keepsakeNames={sheep:['Pressed clover','Tiny wool heart','Silver pasture bell','Cloud-soft ribbon'],horse:['Lucky horseshoe','Braided mane ribbon','Meadow trail map','Little riding bell'],cow:['Daisy bookmark','Meadow postcard','Golden milk charm','Wildflower wreath'],alpaca:['Soft pompom','Pastel tassel','Rainbow spool','Handwoven friendship band'],llama:['Travel feather','Mountain stone','Woven travel patch','Sunrise compass']};
  const KEEPSAKES=Object.entries(keepsakeNames).flatMap(([species,names])=>names.map((name,i)=>({id:species+'-'+i,species,name,bond:i,icon:['🍀','🎀','🔔','💝'][i]})));
  const DECORATIONS={flowerbed:{name:'Flower border',orders:3,stamps:4,coins:120},picnic:{name:'Picnic corner',orders:8,stamps:10,coins:400},pond:{name:'Little duck pond',orders:15,stamps:20,coins:1000},arch:{name:'Friendship arch',orders:25,stamps:30,coins:2500}};
  const integer=n=>Number.isSafeInteger(n)&&n>=0;
@@ -96,7 +96,7 @@
     if(!a?.gift)return fail('No surprise yet.');const gift=a.gift;
     if(CROPS[gift])unlock(s,gift);add(gift,2);a.gift=null;
     const found=KEEPSAKES.find(k=>k.species===a.species&&k.bond<=bond(a)&&!s.collection.includes(k.id));
-    if(found)s.collection.push(found.id);s.stamps++;return {ok:true,gift,keepsake:found?.id||null};
+    if(found)s.collection.push(found.id);s.stamps++;return {ok:true,gift,quantity:2,stamps:1,keepsake:found?.id||null};
    }
    case 'pet':if(!a)return fail('Choose an animal.');if(a.petReadyAt>now)return fail('Your friend is still enjoying that cuddle.');a.friendship=Math.min(160,a.friendship+1);a.petReadyAt=now+600000;return {ok:true,petted:true};
    case 'sell':{
@@ -139,8 +139,15 @@
   if(!validBase(s)||s.version!==2)return false;
   return integer(s.stamps)&&integer(s.completedOrders)&&integer(s.nextOrderId)&&s.nextOrderId>3&&s.animals.every(a=>integer(a.friendship)&&a.friendship<=160&&integer(a.petReadyAt)&&TRAITS.includes(a.trait))&&Array.isArray(s.collection)&&new Set(s.collection).size===s.collection.length&&s.collection.every(id=>KEEPSAKES.some(k=>k.id===id))&&Array.isArray(s.decorations)&&new Set(s.decorations).size===s.decorations.length&&s.decorations.every(id=>own(DECORATIONS,id))&&Array.isArray(s.orders)&&s.orders.length===3&&new Set(s.orders.map(o=>o?.id)).size===3&&s.orders.every(o=>o&&integer(o.id)&&o.id>0&&o.id<s.nextOrderId&&typeof o.requester==='string'&&integer(o.coins)&&integer(o.stamps)&&o.needs&&typeof o.needs==='object'&&!Array.isArray(o.needs)&&Object.keys(o.needs).length>0&&Object.entries(o.needs).every(([id,n])=>own(ITEMS,id)&&integer(n)&&n>0));
  }
+ function migrateHorse(s){
+  if(!s||![1,2].includes(s.version))return;
+  if(Array.isArray(s.animals))for(const a of s.animals)if(a?.species==='pig')a.species='horse';
+  const rename=items=>{if(items&&Object.hasOwn(items,'truffle')){const n=items.truffle,existing=items.forage??0;if(!integer(n)||!integer(existing)||!integer(n+existing))throw Error('Invalid legacy goods');items.forage=n+existing;delete items.truffle;}};
+  rename(s.inventory);if(Array.isArray(s.orders))for(const o of s.orders)rename(o?.needs);
+  if(Array.isArray(s.collection))s.collection=s.collection.map(id=>typeof id==='string'?id.replace(/^pig-([0-3])$/,'horse-$1'):id);
+ }
  function load(storage,now=Date.now()){
-  try{const raw=storage.getItem(KEY);if(!raw)return {state:create(now),blocked:false};const s=JSON.parse(raw);if(s?.version===1&&validBase(s))addProgression(s);if(!valid(s))throw Error('Invalid save');return {state:advance(s,now),blocked:false};}
+  try{const raw=storage.getItem(KEY);if(!raw)return {state:create(now),blocked:false};const s=JSON.parse(raw);migrateHorse(s);if(s?.version===1&&validBase(s))addProgression(s);if(!valid(s))throw Error('Invalid save');return {state:advance(s,now),blocked:false};}
   catch(_){return {state:create(now),blocked:true};}
  }
  function save(storage,s,preview=false){if(preview)return true;try{if(!valid(s))return false;storage.setItem(KEY,JSON.stringify(s));return true;}catch(_){return false;}}

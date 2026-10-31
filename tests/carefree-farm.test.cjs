@@ -24,11 +24,11 @@ test('all five stages are reachable through legal actions starting from a fresh 
 });
 test('farm expansion requires farming and animal milestones, not only coins',()=>{
  const s=F.create(1000);s.coins=10000;
- assert.equal(s.plots.length,3);assert(!F.act(s,{type:'upgrade'},1000).ok);assert(!F.act(s,{type:'buyAnimal',species:'pig'},1000).ok);
+ assert.equal(s.plots.length,3);assert(!F.act(s,{type:'upgrade'},1000).ok);assert(!F.act(s,{type:'buyAnimal',species:'horse'},1000).ok);
  s.harvests=6;s.harvested=['grass','carrot'];s.animals[0].growth=3;
  assert(F.act(s,{type:'upgrade'},1000).ok);assert.equal(s.level,2);assert.equal(s.plots.length,6);assert(s.unlocked.includes('corn'));
  assert(!F.act(s,{type:'buyAnimal',species:'sheep'},1000).ok,'reserve early capacity for different species so progression cannot deadlock');
- assert(F.act(s,{type:'buyAnimal',species:'pig'},1000).ok);assert(!F.act(s,{type:'buyAnimal',species:'sheep'},1000).ok);
+ assert(F.act(s,{type:'buyAnimal',species:'horse'},1000).ok);assert(!F.act(s,{type:'buyAnimal',species:'sheep'},1000).ok);
  assert(!F.act(s,{type:'upgrade'},1000).ok);
  for(let level=3;level<=5;level++){
  const next=F.STAGES[level-1];s.completedOrders=next.orders;s.harvests=next.harvests;s.harvested=Object.keys(F.CROPS).filter(k=>s.unlocked.includes(k)).slice(0,next.varieties);

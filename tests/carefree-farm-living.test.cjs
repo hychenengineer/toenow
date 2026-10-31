@@ -1,21 +1,27 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const F=require('../games/carefree-farm/model.js');
 const legacy=require('./fixtures/carefree-farm-v1.json');
+test('old pig saves become grass-fed horses without losing progress, goods or orders',()=>{
+ const old=F.create(1000);old.level=2;old.plots=Array(6).fill(null);old.animals.push({...old.animals[0],species:'pig',growth:2,friendship:37,due:5000,gift:'pumpkin'});old.inventory.truffle=7;old.collection=['pig-0'];old.orders[0].needs={truffle:3};
+ const raw=JSON.stringify(old),loaded=F.load({getItem:()=>raw},1000);assert(!loaded.blocked);const s=loaded.state;
+ assert.equal(s.animals[1].species,'horse');assert.equal(s.animals[1].friendship,37);assert.equal(s.animals[1].growth,2);assert.equal(s.animals[1].due,5000);assert.equal(s.animals[1].gift,'pumpkin');assert.equal(s.inventory.forage,7);assert(!('truffle' in s.inventory));assert.deepEqual(s.orders[0].needs,{forage:3});assert.deepEqual(s.collection,['horse-0']);assert.equal(s.coins,old.coins);assert.equal(F.ANIMALS.horse.food,'grass');assert.equal(F.ANIMALS.pig,undefined);assert(F.valid(s));
+ assert.deepEqual(F.load({getItem:()=>JSON.stringify(s)},1000).state,s);F.advance(s,5000);assert.equal(s.animals[1].growth,3);F.advance(s,10000);assert.equal(s.animals[1].growth,3);
+});
 test('malformed progression data never overwrites the stored farm',()=>{
  for(const corrupt of [s=>s.orders[0].needs={unknown:2},s=>s.orders[1].id=s.orders[0].id,s=>s.collection=['unknown'],s=>s.animals[0].friendship=-1,s=>s.decorations=['unknown']]){
   const state=F.create(1000);corrupt(state);const raw=JSON.stringify(state);let writes=0;const store={getItem:()=>raw,setItem(){writes++;}};assert(F.load(store,1000).blocked);assert(!F.save(store,state));assert.equal(writes,0);
  }
 });
-test('new animal progression content has Chinese translations and all four motion poses',()=>{
+test('new animal progression content has Chinese translations and all body and limb assets',()=>{
  const catalog=require('../shared/toenow-i18n-farm.js').entries,fs=require('node:fs'),path=require('node:path');
  for(const name of [...F.BONDS.map(b=>b.name),...F.TRAITS,...F.KEEPSAKES.map(k=>k.name),...Object.values(F.DECORATIONS).map(d=>d.name)])assert(catalog[name],name);
- for(const species of Object.keys(F.ANIMALS))for(let pose=0;pose<4;pose++)assert(fs.existsSync(path.join(__dirname,'../assets/carefree-farm/motion',species+'-'+pose+'.webp')));
+ for(const species of Object.keys(F.ANIMALS))for(const part of ['body','front','hind'])assert(fs.existsSync(path.join(__dirname,'../assets/carefree-farm/rig-v1',species+'-'+part+'.webp')));
 });
 test('v1 migration preserves a mature farm and pending rewards without writing on read',()=>{
  const raw=JSON.stringify(legacy),store={getItem:()=>raw,setItem(){throw Error('must not write on read');}};
  const {state,blocked}=F.load(store,1000);assert.equal(blocked,false);assert.equal(state.version,2);
  for(const key of ['level','coins','plots','inventory','unlocked','harvests','harvested'])assert.deepEqual(state[key],legacy[key]);
- state.animals.forEach((a,i)=>{for(const key of Object.keys(legacy.animals[i]))assert.deepEqual(a[key],legacy.animals[i][key]);assert.equal(a.friendship,0);});
+ state.animals.forEach((a,i)=>{for(const key of Object.keys(legacy.animals[i]))assert.deepEqual(a[key],key==='species'&&legacy.animals[i][key]==='pig'?'horse':legacy.animals[i][key]);assert.equal(a.friendship,0);});
  assert.equal(state.orders.length,3);assert(F.valid(state));
  F.advance(state,60000);assert.equal(state.animals[0].friendship,2);F.advance(state,1e8);assert.equal(state.animals[0].friendship,2);
 });

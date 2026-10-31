@@ -47,7 +47,7 @@ const KEY='toenow_carefree_farm_v1';
    assert.equal(await q.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
    assert.match(await q.locator('#farm-level').textContent(),lang==='en'?/Farm level/:/農場等級/);
    await q.screenshot({path:path.join(out,`${width}-${lang}-fields.png`),fullPage:true});await q.locator('#tab-pasture').click();
-   await q.locator('.roaming-animal image').evaluateAll(imgs=>Promise.all(imgs.map(i=>{const img=new Image();img.src=i.getAttribute('href');return img.decode();})));await q.screenshot({path:path.join(out,`${width}-${lang}-pasture.png`),fullPage:true});checks++;await q.close();
+   await q.evaluate(()=>CarefreePasture.ready);assert.equal(await q.locator('.pasture-canvas').getAttribute('data-renderer'),'pixi-webgl');await q.screenshot({path:path.join(out,`${width}-${lang}-pasture.png`),fullPage:true});checks++;await q.close();
   }
   // Malformed saves survive untouched. No reset or automatic overwrite.
   const bad=await browser.newPage();await bad.addInitScript(k=>localStorage.setItem(k,'{broken'),KEY);await bad.goto(base+'/games/carefree-farm/');await bad.locator('#btn-start').click();await bad.locator('[data-plot="0"]').click();assert.equal(await bad.evaluate(k=>localStorage.getItem(k),KEY),'{broken');assert(await bad.locator('#save-warning').isVisible());await bad.close();checks++;

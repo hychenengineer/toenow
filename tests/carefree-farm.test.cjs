@@ -11,12 +11,13 @@ test('all five stages are reachable through legal actions starting from a fresh 
  const s=F.create(1000);let time=1000;
  const action=a=>{const result=F.act(s,a,time);assert(result.ok,JSON.stringify(a)+' '+result.reason);};
  const harvest=crop=>{action({type:'plant',plot:0,crop});time+=F.CROPS[crop].seconds*1000;action({type:'harvest',plot:0});};
- const earn=coins=>{let iterations=0;while(s.coins<coins){assert(++iterations<1000);harvest('grass');for(let i=0;i<3;i++)action({type:'sell',item:'grass'});}};
+ const earn=coins=>{let iterations=0;while(s.coins<coins){assert(++iterations<3000);harvest('grass');for(let i=0;i<3;i++)action({type:'sell',item:'grass'});}};
  for(let level=2;level<=5;level++){
   const next=F.STAGES[level-1];
   while(new Set(s.animals.map(a=>a.species)).size<next.species){const species=Object.keys(F.ANIMALS).find(k=>F.ANIMALS[k].level<=s.level&&!s.animals.some(a=>a.species===k));earn(F.ANIMALS[species].cost);action({type:'buyAnimal',species});}
   for(let i=0;i<next.adults;i++)while(s.animals[i].growth<3){const spec=F.ANIMALS[s.animals[i].species];if(!s.inventory[spec.food]){earn(F.CROPS[spec.food].cost);harvest(spec.food);}action({type:'feed',animal:i,crop:spec.food});time+=spec.seconds*1000;F.advance(s,time);}
   while(s.harvested.length<next.varieties){const crop=s.unlocked.find(k=>!s.harvested.includes(k));assert(crop,'enough crop varieties before next gate');earn(F.CROPS[crop].cost);harvest(crop);}
+  while(s.completedOrders<next.orders){const order=s.orders[0];for(const [id,n]of Object.entries(order.needs)){while((s.inventory[id]||0)<n){if(F.CROPS[id]){earn(F.CROPS[id].cost);harvest(id);}else{const i=s.animals.findIndex(a=>F.ANIMALS[a.species].product===id),spec=F.ANIMALS[s.animals[i].species];if(s.animals[i].ready)action({type:'collect',animal:i});else{if(!s.inventory[spec.food]){earn(F.CROPS[spec.food].cost);harvest(spec.food);}action({type:'feed',animal:i,crop:spec.food});time+=spec.seconds*1000;F.advance(s,time);}}}}action({type:'fulfill',order:order.id});}
   while(s.harvests<next.harvests)harvest('grass');earn(next.cost);action({type:'upgrade'});assert.equal(s.level,level);
  }
  assert.equal(s.plots.length,15);assert.equal(s.unlocked.length,12);assert(F.valid(s));
@@ -24,13 +25,13 @@ test('all five stages are reachable through legal actions starting from a fresh 
 test('farm expansion requires farming and animal milestones, not only coins',()=>{
  const s=F.create(1000);s.coins=10000;
  assert.equal(s.plots.length,3);assert(!F.act(s,{type:'upgrade'},1000).ok);assert(!F.act(s,{type:'buyAnimal',species:'pig'},1000).ok);
- s.harvests=4;s.harvested=['grass'];s.animals[0].growth=3;
+ s.harvests=6;s.harvested=['grass','carrot'];s.animals[0].growth=3;
  assert(F.act(s,{type:'upgrade'},1000).ok);assert.equal(s.level,2);assert.equal(s.plots.length,6);assert(s.unlocked.includes('corn'));
  assert(!F.act(s,{type:'buyAnimal',species:'sheep'},1000).ok,'reserve early capacity for different species so progression cannot deadlock');
  assert(F.act(s,{type:'buyAnimal',species:'pig'},1000).ok);assert(!F.act(s,{type:'buyAnimal',species:'sheep'},1000).ok);
  assert(!F.act(s,{type:'upgrade'},1000).ok);
  for(let level=3;level<=5;level++){
- const next=F.STAGES[level-1];s.harvests=next.harvests;s.harvested=Object.keys(F.CROPS).filter(k=>s.unlocked.includes(k)).slice(0,next.varieties);
+ const next=F.STAGES[level-1];s.completedOrders=next.orders;s.harvests=next.harvests;s.harvested=Object.keys(F.CROPS).filter(k=>s.unlocked.includes(k)).slice(0,next.varieties);
  while(s.animals.length<next.species){const species=Object.keys(F.ANIMALS).find(k=>F.ANIMALS[k].level<=s.level&&!s.animals.some(a=>a.species===k));assert(F.act(s,{type:'buyAnimal',species},1000).ok);}
  s.animals.forEach(a=>a.growth=3);assert(F.act(s,{type:'upgrade'},1000).ok);assert.equal(s.level,level);assert(F.valid(s));
  }

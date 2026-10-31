@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "level": 5,
+  "coins": 3811,
+  "plots": [
+    {
+      "crop": "carrot",
+      "due": 40000
+    },
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "animals": [
+    {
+      "species": "sheep",
+      "growth": 3,
+      "cycles": 9,
+      "due": 50000,
+      "ready": false,
+      "gift": "clover",
+      "bonus": false
+    },
+    {
+      "species": "pig",
+      "growth": 3,
+      "cycles": 10,
+      "due": 0,
+      "ready": false,
+      "gift": "pumpkin",
+      "bonus": false
+    },
+    {
+      "species": "cow",
+      "growth": 3,
+      "cycles": 11,
+      "due": 0,
+      "ready": false,
+      "gift": "bouquet",
+      "bonus": false
+    },
+    {
+      "species": "alpaca",
+      "growth": 3,
+      "cycles": 12,
+      "due": 0,
+      "ready": false,
+      "gift": "rainbow",
+      "bonus": false
+    },
+    {
+      "species": "llama",
+      "growth": 3,
+      "cycles": 13,
+      "due": 0,
+      "ready": false,
+      "gift": "souvenir",
+      "bonus": false
+    }
+  ],
+  "inventory": {
+    "grass": 36,
+    "carrot": 15,
+    "wool": 8,
+    "milk": 4
+  },
+  "unlocked": [
+    "grass",
+    "carrot",
+    "clover",
+    "corn",
+    "wheat",
+    "cabbage",
+    "pumpkin",
+    "beet",
+    "oats",
+    "sunflower",
+    "strawberry",
+    "lavender"
+  ],
+  "harvests": 100,
+  "harvested": [
+    "grass",
+    "carrot",
+    "clover",
+    "corn",
+    "wheat",
+    "cabbage",
+    "pumpkin",
+    "beet",
+    "oats",
+    "sunflower",
+    "strawberry",
+    "lavender"
+  ],
+  "lastSeen": 1000
+}

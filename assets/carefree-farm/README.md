@@ -10,3 +10,5 @@ Generated specifically for this game with the built-in image generation tool on 
 - `../carefree-farm-preview.png`: resized reference used as a Hub preview.
 
 Original generated files are also preserved under the Codex generated_images folder. No existing game art was replaced.
+
+- Living pasture update: `motion/source.png` preserves the transparent five-species/four-pose generated atlas. `motion/<species>-0..3.webp` are idle, two walking poses, and grazing. Atlas rows are visually bounded at y=0,260,495,745,1040,1402 (1122px wide); columns at x=0,280,560,840,1122. Cells are contained on transparent 280px squares, bottom aligned. The illustrated grass, original reference, and original shop portraits remain unchanged.

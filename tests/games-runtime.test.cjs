@@ -156,7 +156,8 @@ for (const game of GAMES) {
       assert.ok(!existingIds.has('trip-clock'), 'Open-ended garden has no trip clock');
       assert.ok(existingIds.has('garden'), 'Garden canvas exists; actual runtime is covered in verify-hot-spring-garden.cjs');
       return;
-    } else assert.ok(hasBestLevel, `Unified title best level element missing in ${game.path}`);
+    } else if(game.id==='animal-siege')assert.equal(hasBestLevel,false,'Expedition menu has no score or rank records');
+    else assert.ok(hasBestLevel, `Unified title best level element missing in ${game.path}`);
 
     if (game.id === 'animal-siege') {
       for (const file of ['engine.js','campaign.js','opening-story.js','expedition-view.js','combat-feedback.js','siege-scene.js','main.js']) new (require('node:vm').Script)(fs.readFileSync(path.resolve(__dirname,'../games/animal-siege',file),'utf8'));

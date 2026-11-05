@@ -91,13 +91,13 @@ async function run() {
         await page.evaluate(({lang,keys})=>{localStorage.setItem(keys.score,'900');localStorage.setItem(keys.wave,'21');ToenowI18n.setLanguage(lang);},{lang,keys:keys[id]});
         const title = page.locator('[data-toenow-screen="title"]');
         await title.waitFor({state:'visible'});
-        await islandAppearance(title,'.unified-title-card',c.animalSpecies,journey?1:5);
+        await islandAppearance(title,'.unified-title-card',c.animalSpecies,journey||c.showRecords===false?1:5);
         if (process.env.TOENOW_SCREENSHOTS) {
           fs.mkdirSync(process.env.TOENOW_SCREENSHOTS,{recursive:true});
           await page.screenshot({path:path.join(process.env.TOENOW_SCREENSHOTS,`${id}-${width}-${lang}-title.png`)});
         }
         assert.equal(await title.getAttribute('data-toenow-screen-owner'),'ToenowScreens');
-        if (!journey) {
+        if (!journey && c.showRecords!==false) {
         assert.equal(await title.locator('[data-screen-record="score"]').innerText(),'900',id+' saved title score');
         assert.equal(await title.locator('[data-screen-record="level"]').innerText(),lang==='en'?'LVL 5 · MASTER':'第 5 級 · 大師',id+' saved title level');
         const titleShape = await title.locator('.unified-title-card').evaluate(structure);

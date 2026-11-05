@@ -1,0 +1,4 @@
+from pathlib import Path
+import re
+p=Path('tools/verify-animal-strategy-browser.cjs');s=p.read_text(encoding='utf-8');s=re.sub(r"await p\.locator\(('(?:[^']*data-location[^']*)')\)\.click\(\);",r"if(await p.locator('#location-dialog').isVisible())await p.locator('#location-close').click();await p.locator(\1).click();",s);s=s.replace("await p.locator('#location-close').click();await p.locator('#expedition img')", "await p.locator('#expedition img')");p.write_text(s,encoding='utf-8')
+p=Path('tools/verify-animal-expedition-browser.cjs');s=p.read_text(encoding='utf-8');s=s.replace("async function click(p,selector){", "async function click(p,selector){if(selector.includes('data-location')&&await p.locator('#location-dialog').isVisible())await p.locator('#location-close').click();");p.write_text(s,encoding='utf-8')

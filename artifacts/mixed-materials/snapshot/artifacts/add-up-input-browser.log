@@ -1,0 +1,3 @@
+PASS standalone: held touch, release, deliberate deselect, rapid taps, mouse, delayed compatibility event
+PASS Hub iframe: held touch, release, deliberate deselect, rapid taps, mouse, delayed compatibility event
+PASS legacy mouse fallback

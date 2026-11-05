@@ -1,0 +1,8 @@
+CHECK number-pop standalone
+CHECK number-pop embedded
+{"id":"number-pop","embedded":true,"errors":[],"events":[["event","game_open",{"game_id":"number-pop","game_name":"Number Pop","send_to":"G-PWQER2ZXV5"}]],"state":"title"}
+page.waitForFunction: Timeout 10000ms exceeded.
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-analytics-browser.cjs:90:22 {
+  log: [],
+  name: 'TimeoutError'
+}

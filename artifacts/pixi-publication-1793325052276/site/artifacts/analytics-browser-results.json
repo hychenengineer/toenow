@@ -1,0 +1,40 @@
+{
+  "standalone": [
+    "number-pop",
+    "ball-track",
+    "block-match",
+    "add-up",
+    "space-scale",
+    "tap-match",
+    "spot-quick",
+    "shadow-match",
+    "flash-brain",
+    "animal-rescue-train"
+  ],
+  "embedded": [
+    "number-pop",
+    "ball-track",
+    "block-match",
+    "add-up",
+    "space-scale",
+    "tap-match",
+    "spot-quick",
+    "shadow-match",
+    "flash-brain",
+    "animal-rescue-train"
+  ],
+  "practice": [
+    "number-pop",
+    "ball-track",
+    "block-match",
+    "add-up",
+    "space-scale",
+    "tap-match",
+    "spot-quick",
+    "shadow-match",
+    "flash-brain",
+    "animal-rescue-train"
+  ],
+  "blocked": true,
+  "localDisabled": true
+}

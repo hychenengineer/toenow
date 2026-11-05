@@ -1,0 +1,10 @@
+PASS number-pop: live portrait/landscape resize and original viewport restored
+PASS ball-track: live portrait/landscape resize and original viewport restored
+PASS block-match: live portrait/landscape resize and original viewport restored
+PASS add-up: live portrait/landscape resize and original viewport restored
+PASS space-scale: live portrait/landscape resize and original viewport restored
+PASS tap-match: live portrait/landscape resize and original viewport restored
+PASS spot-quick: live portrait/landscape resize and original viewport restored
+PASS shadow-match: live portrait/landscape resize and original viewport restored
+PASS flash-brain: live portrait/landscape resize and original viewport restored
+PASS animal-rescue-train: live portrait/landscape resize and original viewport restored

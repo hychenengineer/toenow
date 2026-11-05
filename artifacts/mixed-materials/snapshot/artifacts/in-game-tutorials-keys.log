@@ -1,0 +1,3 @@
+PASS keyboard, language switching and protected restart shortcut
+PASS train real queue/carriage buttons with Enter/Space
+{"realGameLessons":0,"skipScenarios":0,"iframeScenarios":0,"keyboard":1}

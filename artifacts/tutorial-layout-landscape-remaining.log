@@ -1,0 +1,9 @@
+PASS spot-quick 844 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS spot-quick 844 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS shadow-match 844 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS shadow-match 844 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain 844 en: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain 844 zh-Hant: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS animal-rescue-train 844 en: 6 real game taps, score0, records protected, normal start, replay/cancel
+PASS animal-rescue-train 844 zh-Hant: 6 real game taps, score0, records protected, normal start, replay/cancel
+{"realGameLessons":8,"height":390}

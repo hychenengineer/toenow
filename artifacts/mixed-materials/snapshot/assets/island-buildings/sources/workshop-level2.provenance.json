@@ -1,0 +1,10 @@
+{
+  "kind": "workshop",
+  "level": 2,
+  "method": "built-in image_gen",
+  "source": "C:\\Users\\HsinYuChen\\.codex\\generated_images\\01a16a47-2f32-7341-83dd-edc8be80d6f0\\exec-f1f8fbee-852e-4855-b9b4-cc35d2b1de3d.png",
+  "references": [
+    "C:\\Users\\HsinYuChen\\.codex\\generated_images\\01a16a47-2f32-7341-83dd-edc8be80d6f0\\exec-08e9c960-7e5e-464d-8ce0-4c924bd76090.png"
+  ],
+  "prompt": "SINGLE production game landmark sprite, premium richly detailed hand-painted isometric 2.5D storybook architecture matching the approved reference, tactile stone/wood/roof tiles, soft ambient occlusion, afternoon light from upper-left. Fixed 35-degree overhead isometric camera, entrance facing lower-left, ground centered horizontally near 80% image height, square sprite canvas with roughly 10% clear transparent margin. Genuinely TRANSPARENT background and soft alpha contact shadow. Entire subject including roofs and tiny ground patch visible, no cropping. No typography, labels, level numerals, icons, UI, characters, opaque paper, sky, sea, broad terrain, giant plinth or floating land cube. Keep architecture readable at map size; restrained local grass, steps and planting only. EDIT TARGET: the supplied mature Mosaic Workshop sprite. Produce its growth LEVEL 2. REFINED CORE. Keep the same main building, finish its roof/window/door framing, and add finished arched studio windows and a small geometric ceramic tile emblem. Remove the later expansion (attached tile-making workroom with a short chimney and neat outdoor tile bench), elaborate landscaping, garden walls, courtyard mosaic, roof finials and extra lamps. One simple short paved path, two small grass tufts only. CRITICAL INVARIANTS: keep this SAME building's core roof/body identity, exact isometric viewing direction, materials, lighting, canvas dimensions, main-core anchor and main-core scale. Simplify by removing additions, not by rescaling, changing viewpoint, making it a different building or applying a color filter. Preserve genuinely transparent surrounding alpha; no opaque backdrop or labels. Return ONE isolated building sprite, not a comparison sheet."
+}

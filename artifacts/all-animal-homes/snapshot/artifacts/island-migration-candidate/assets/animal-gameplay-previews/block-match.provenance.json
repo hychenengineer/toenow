@@ -1,0 +1,43 @@
+{
+  "id": "block-match",
+  "status": "PASS",
+  "url": "http://127.0.0.1:8765/games/block-match/",
+  "startedAt": "2026-10-25T16:48:06.264Z",
+  "viewport": {
+    "width": 768,
+    "height": 576
+  },
+  "actions": [
+    {
+      "action": "Clicked production Start control",
+      "atMs": 1792946886612,
+      "atSeconds": 0.348
+    },
+    {
+      "action": "Removed an extra timber tile",
+      "atMs": 1792946887133,
+      "atSeconds": 0.869
+    },
+    {
+      "action": "Removed an extra timber tile",
+      "atMs": 1792946887349,
+      "atSeconds": 1.085
+    }
+  ],
+  "trimStartSeconds": 0.348,
+  "videoBytes": 233697,
+  "posterBytes": 56762,
+  "videoSha256": "cae224f6296ee66abaec8b34098596f122921a201f90670a02b912282d1005e8",
+  "posterSha256": "b02e47dbadae3d5d61755a42a4b563baaf182e20e9d006128e61d0649a7d2166",
+  "originalRecording": "recordings/block-match.webm",
+  "originalRecordingSha256": "77a7f6ab5def41fd4fabfe72c6b0bbb5c3f3bcd8614cb7b1477a4fd6c6d14d51",
+  "media": {
+    "duration": 7,
+    "width": 768,
+    "height": 576,
+    "decodedTime": 0.201223,
+    "readyState": 4
+  },
+  "errors": [],
+  "storageIsolation": "new nonpersistent browser context; no production browser profile"
+}

@@ -1,0 +1,15 @@
+{
+  "generator": "Built-in image_gen",
+  "generatedOn": "2026-11-04",
+  "reference": "acorn-battle-v1.webp (approved woodland style)",
+  "source": "sources/camp-interior-v1.png",
+  "runtime": "camp-interior-v1.webp",
+  "prompt": "Production square environment illustration for an enterable Forest Camp in a woodland animal strategy game. Use the supplied artwork as STYLE reference: rich painterly emerald forest, honey sunlight, warm carved timber, turquoise details, strong attractive contrast and premium storybook game finish. NEW CAMP INTERIOR, not a world map or battle board. Full-bleed SQUARE, slightly elevated three-quarter overhead view. No UI, words, labels, letters, creatures, people or floating icons.\nShow exactly THREE major usable buildings around a welcoming open village clearing, connected by clear packed-earth paths: (1) at x22%,y53% a chunky BEAVER WORKSHOP with honey timber roof, sturdy stone base, carpentry workbench and neatly stacked logs; (2) at x50%,y34% a compact FOX BARRACKS with russet-red roof, warm timber dormitory and a small orderly training yard; (3) at x80%,y52% a taller SQUIRREL LOOKOUT with a pointed amber-green roof, timber platform and ladder built beside a mature tree, an unobstructed identifiable doorway at its base. Make all three buildings visually distinct, large enough to select on a phone, and leave visible space immediately below each for a future game-rendered nameplate. Keep the buildings near these centers; do not add competing houses. Distant dense trees frame the top and sides, a small glimpse of water at extreme bottom-left is fine. Sunlit central plaza in foreground and warm leaf-shadow patches; believable little tools and plants, carefully restrained. Charming inhabited camp with no inhabitants painted in. This illustration will sit behind real HTML building hotspots. Do not paint markers, signs, menu frames, fences crossing entrances, or a grid. Crisp detail in the buildings, quieter connecting paths.",
+  "notes": "Three building hotspots are rendered by the game; no building level gates in this slice.",
+  "runtimeDimensions": {
+    "width": 1254,
+    "height": 1254
+  },
+  "sourceSha256": "367f6de1239e7fd7d4a828c070ad31418a1c289a47fe594622e8333f1440293a",
+  "runtimeSha256": "34dcdc480828adb0e25263deb35a699a74507c713d9229c6f155a35223e46cb9"
+}

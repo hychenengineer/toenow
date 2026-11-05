@@ -1,0 +1,59 @@
+PASS 1280 zh-Hant: legal 15 vs 19 victory, touch/click, restart, pause, practice, title
+PASS 390 zh-Hant: legal 15 vs 19 victory, touch/click, restart, pause, practice, title
+PASS 390 en: legal 15 vs 19 victory, touch/click, restart, pause, practice, title
+locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('#open-animal-siege')
+    - locator resolved to <button type="button" id="open-animal-siege">Open battle prototype</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <dialog open="" id="islandWelcome" data-i18n-ignore="" class="island-welcome" aria-labelledby="welcomeHeading">…</dialog> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <dialog open="" id="islandWelcome" data-i18n-ignore="" class="island-welcome" aria-labelledby="welcomeHeading">…</dialog> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    57 × waiting for element to be visible, enabled and stable
+       - element is visible, enabled and stable
+       - scrolling into view if needed
+       - done scrolling
+       - <dialog open="" id="islandWelcome" data-i18n-ignore="" class="island-welcome" aria-labelledby="welcomeHeading">…</dialog> intercepts pointer events
+     - retrying click action
+       - waiting 500ms
+
+    at run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-animal-siege-browser.cjs:60:43) {
+  log: [
+    "  - waiting for locator('#open-animal-siege')",
+    '    - locator resolved to <button type="button" id="open-animal-siege">Open battle prototype</button>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <dialog open="" id="islandWelcome" data-i18n-ignore="" class="island-welcome" aria-labelledby="welcomeHeading">…</dialog> intercepts pointer events',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <dialog open="" id="islandWelcome" data-i18n-ignore="" class="island-welcome" aria-labelledby="welcomeHeading">…</dialog> intercepts pointer events',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    57 × waiting for element to be visible, enabled and stable',
+    '       - element is visible, enabled and stable',
+    '       - scrolling into view if needed',
+    '       - done scrolling',
+    '       - <dialog open="" id="islandWelcome" data-i18n-ignore="" class="island-welcome" aria-labelledby="welcomeHeading">…</dialog> intercepts pointer events',
+    '     - retrying click action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}

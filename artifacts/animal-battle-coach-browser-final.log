@@ -1,0 +1,4 @@
+PASS 1280 zh-Hant battle: first battle, skip/reload, replay without reset, move cancellation, range-aware hints, handbook/pause, real attack and turn completion
+PASS 390 en battle: first battle, skip/reload, replay without reset, move cancellation, range-aware hints, handbook/pause, real attack and turn completion
+PASS 320 zh-Hant expedition: first battle, skip/reload, replay without reset, move cancellation, range-aware hints, handbook/pause, real attack and turn completion
+PASS iframe practice: first-battle tips and skip work without creating a best score

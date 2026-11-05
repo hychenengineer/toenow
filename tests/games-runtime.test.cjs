@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const GAMES = [
+  { id: 'animal-siege', path: 'games/animal-siege/index.html', startBtn: 'btn-start' },
   { id: 'carefree-farm', path: 'games/carefree-farm/index.html', startBtn: 'btn-start' },
   { id: 'capybara-drift', path: 'games/capybara-drift/index.html', startBtn: 'btn-start' },
   { id: 'animal-rescue-train', path: 'games/animal-rescue-train/index.html', startBtn: 'btn-start-game', external: true },
@@ -156,6 +157,12 @@ for (const game of GAMES) {
       assert.ok(existingIds.has('garden'), 'Garden canvas exists; actual runtime is covered in verify-hot-spring-garden.cjs');
       return;
     } else assert.ok(hasBestLevel, `Unified title best level element missing in ${game.path}`);
+
+    if (game.id === 'animal-siege') {
+      for (const file of ['engine.js','campaign.js','expedition-view.js','combat-feedback.js','siege-scene.js','main.js']) new (require('node:vm').Script)(fs.readFileSync(path.resolve(__dirname,'../games/animal-siege',file),'utf8'));
+      assert.ok(existingIds.has('board'));
+      return; // Actual controls, AI, storage and DOM run in verify-animal-siege-browser.cjs.
+    }
 
     // Setup sandboxed execution environment
     const stored = new Map();

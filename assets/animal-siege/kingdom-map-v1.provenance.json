@@ -1,0 +1,49 @@
+{
+  "generator": "Built-in image_gen",
+  "generatedOn": "2026-11-03",
+  "reference": "Approved C woodland kingdom concept: exec-572ba3ff-5093-41e1-9af1-f316534e946c.png",
+  "source": "sources/kingdom-map-v1.png",
+  "runtime": "kingdom-map-v1.webp",
+  "prompt": "Create a production game environment asset for an interactive HTML strategy map, based on the attached approved woodland kingdom concept. Reference role: style and art direction only. Output ONE landscape 4:3 illustration, full bleed map scenery only. REMOVE ALL interface: no title, no panels, no cards, no labels, no text, no numerals, no UI controls, no question marks or floating icons. This will sit underneath real clickable HTML controls.\nMatch the concept's rich painterly fantasy strategy aesthetic: deep emerald forest shadows, vivid turquoise flowing river, warm golden afternoon light, amber/orange roofs, honey gold highlights, lush foliage and wisps of pale mist at the edges. High detail, inviting and readable, adorable animal woodland world, no people. Camera high isometric/overhead so the entire small region is visible.\nCRITICAL COMPOSITION for exactly seven interaction areas, coordinates are percent of canvas width and height:\n1. WEST CAMP centered (12%,49%): charming small woodland tent/camp and a beaver by timber crates, occupies about 15% width and 16% height.\n2. NORTH FOX FORT centered (49%,27%): timber/palisade fortress with orange roof and amber banner, about 18% width and 21% height.\n3. SOUTH RIVER KEEP centered (51%,72%): timber fortified watermill beside a turquoise river, orange roof and forest-green banner, about 18% width and 21% height.\n4. NORTHEAST SQUIRREL CITADEL centered (80%,38%): fortified treehouse citadel on a rocky knoll with red/amber banner, about 18% width and 22% height.\n5. Secret trail clearing centered (29%,18%): small ruined arch in mist, clear round foreground patch.\n6. Secret trail clearing centered (29%,78%): small mossy ruin in mist, clear round foreground patch.\n7. Secret trail clearing centered (75%,79%): small stone circle in mist, clear round foreground patch.\nClear warm stepping-stone paths connect west camp to both outer forts and the two nearby trail clearings, and outer forts to northeast citadel and southeast trail. A winding turquoise creek flows from the distant north down through the south watermill, with small arched wooden bridges on crossings. Keep paths visually navigable, not a maze. Leave open grass near (30%,49%) for real animal party sprites to overlay; do NOT paint a travelling party into the asset. Keep all seven areas unobscured by foreground foliage. No extra castles, no extra camps, no monsters, no giant animal faces. Make this a beautiful continuous playable forest valley environment rather than a physical tabletop or an oval schematic map. Preserve contrast between warm settlements and cool deep green forest.",
+  "hotspotPercent": {
+    "home": [
+      12.5,
+      49
+    ],
+    "acorn": [
+      51,
+      26.5
+    ],
+    "river": [
+      52,
+      69
+    ],
+    "tower": [
+      83,
+      37
+    ],
+    "cache": [
+      26,
+      20
+    ],
+    "timber": [
+      22,
+      75
+    ],
+    "friends": [
+      77,
+      77
+    ]
+  },
+  "notes": "Painted setting sits beneath real HTML controls. Labels, statuses, army, resources and recruitment are live DOM; no UI is baked into this asset.",
+  "sourceSha256": "edfcd85d3a9570d3d1ccae44706ff18d945ff257249c254001ed7e45fa19b2a3",
+  "runtimeSha256": "b60fb67ce8a16182a3b9b39ed25cb719767f2512409edd4f91324783cae1a2fd",
+  "runtimeDimensions": {
+    "width": 1448,
+    "height": 1086
+  },
+  "runtimeEncoding": {
+    "format": "webp",
+    "quality": 90
+  }
+}

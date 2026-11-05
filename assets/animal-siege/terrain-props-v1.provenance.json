@@ -1,0 +1,67 @@
+{
+  "generator": "Built-in image_gen",
+  "generatedOn": "2026-11-04",
+  "reference": "acorn-battle-v1.webp (approved woodland painting style)",
+  "source": "sources/terrain-props-v1.png",
+  "prompt": "Use case: stylized-concept. Asset type: a production TRANSPARENT sprite atlas of four small tactical terrain props for a woodland animal siege strategy game. The supplied image is a STYLE REFERENCE ONLY. Match its richly painted storybook woodland fantasy game art, crisp small-scale legibility, honey sunlight from upper-left, deep emerald shadows, subtly high three-quarter overhead view. No text, labels, grid lines, characters, scenery or ground tiles. Real alpha-transparent background, no checkerboard.\nOUTPUT: ONE SQUARE canvas, arranged precisely in a 2 by 2 atlas of FOUR separate single isolated props. Each prop is centered wholly within its own quarter, with generous transparent margins at the middle seams and around the canvas edges, no overlap across quadrants. Each prop has a tiny soft contact shadow, not a painted patch of ground. Consistent scale and viewpoint, full prop including foot/base visible.\nTOP LEFT quarter: ONE compact lush riverside willow sapling, beautiful detailed natural clusters of sage and emerald leaves, short slightly curved bark trunk and small branching exposed roots. A rounded irregular leafy silhouette, not a geometric ball. Entire tree fits within this quadrant.\nTOP RIGHT quarter: ONE short beaver-built river palisade obstacle: three stout weathered cedar logs, softly pointed carved tops, horizontal wood brace bound with teal rope, visible bark grain, small moss details at the base, warm grey-brown wood. Front faces readable at small scale. It is one compact single-cell barricade, no long fence, no attached scenery.\nBOTTOM LEFT quarter: ONE compact ancient-canopy grove tree, a gnarled golden-brown short trunk with dense scalloped emerald leaves and a few restrained plum-colored leaves around its outer crown, distinct from the willow, exquisite painterly botanical detail, no giant treehouse or extra trees.\nBOTTOM RIGHT quarter: ONE ornate treetop-kingdom palisade obstacle: three stout golden cedar posts with slightly varied carved pointed tops, honey-gold horizontal brace and restrained green ivy winding around the posts near the base. A compact single-cell defensive barricade, not a gate, no animals or symbols.\nAll four objects should occupy about 75% of each quarter's available width and height. Painterly sprite art matching the provided kingdom painting, NOT flat vector icons, NOT a 3D render, NOT a collage on a colored surface. Preserve clean true transparency around each complete silhouette.",
+  "notes": "Four transparent terrain sprites, extracted by atlas quadrants, alpha-trimmed and encoded as 256x256 WebP. Visual art only; actual wall/tree collision tiles remain unchanged.",
+  "sourceSha256": "f25cbce47c7e230d14a2f95d7602a32ff4b42f817cb918891c63d7ad547fbaf8",
+  "sprites": [
+    {
+      "runtime": "river-tree-v1.webp",
+      "crop": {
+        "left": 0,
+        "top": 0,
+        "width": 627,
+        "height": 627
+      },
+      "runtimeDimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "runtimeSha256": "5448b7bb5cf57c8e3cb9e0aa8fede66b1cfb39cae132f1c30509d8dfa882eb47"
+    },
+    {
+      "runtime": "river-wall-v1.webp",
+      "crop": {
+        "left": 627,
+        "top": 0,
+        "width": 627,
+        "height": 627
+      },
+      "runtimeDimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "runtimeSha256": "42137f6fc61c0704664b5a3ced0870f7ba8fb172173b92b8bc9234e30c468390"
+    },
+    {
+      "runtime": "tower-tree-v1.webp",
+      "crop": {
+        "left": 0,
+        "top": 627,
+        "width": 627,
+        "height": 627
+      },
+      "runtimeDimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "runtimeSha256": "d860c228f995182aada722a928284de3121cd0a34b63a79a7611156a3fb0950b"
+    },
+    {
+      "runtime": "tower-wall-v1.webp",
+      "crop": {
+        "left": 627,
+        "top": 627,
+        "width": 627,
+        "height": 627
+      },
+      "runtimeDimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "runtimeSha256": "44c432722854a45e564ea44907bf644bc9c89408999c829505423a9cc771cd49"
+    }
+  ]
+}

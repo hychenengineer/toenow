@@ -1,0 +1,56 @@
+TAP version 13
+# Subtest: source inspection follows local scripts and styles in page order without expanding shared dependencies
+not ok 1 - source inspection follows local scripts and styles in page order without expanding shared dependencies
+  ---
+  duration_ms: 1.8195
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\game-modules.test.cjs:7:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Cannot find module '../tools/lib/game-source.cjs'
+    Require stack:
+    - C:\Users\HsinYuChen\source\repos\toenow\tests\game-modules.test.cjs
+  code: 'MODULE_NOT_FOUND'
+  stack: |-
+    Module._resolveFilename (node:internal/modules/cjs/loader:1225:15)
+    Module._load (node:internal/modules/cjs/loader:1051:27)
+    Module.require (node:internal/modules/cjs/loader:1311:19)
+    require (node:internal/modules/helpers:179:18)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\game-modules.test.cjs:8:28)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    node:internal/test_runner/harness:252:12
+    node:internal/process/task_queues:140:7
+  ...
+# Subtest: Spot Quick rules produce four distinct choices including the target across all five tiers
+not ok 2 - Spot Quick rules produce four distinct choices including the target across all five tiers
+  ---
+  duration_ms: 0.3379
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\game-modules.test.cjs:29:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Cannot find module '../games/spot-quick/rules.js'
+    Require stack:
+    - C:\Users\HsinYuChen\source\repos\toenow\tests\game-modules.test.cjs
+  code: 'MODULE_NOT_FOUND'
+  stack: |-
+    Module._resolveFilename (node:internal/modules/cjs/loader:1225:15)
+    Module._load (node:internal/modules/cjs/loader:1051:27)
+    Module.require (node:internal/modules/cjs/loader:1311:19)
+    require (node:internal/modules/helpers:179:18)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\game-modules.test.cjs:30:17)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 65.8572

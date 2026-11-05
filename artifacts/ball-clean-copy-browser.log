@@ -1,0 +1,11 @@
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+null !== 'bottom'
+
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-ball-memory-browser.cjs:16:14 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: null,
+  expected: 'bottom',
+  operator: 'strictEqual'
+}

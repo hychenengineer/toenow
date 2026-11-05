@@ -1,0 +1,314 @@
+PASS: automatic browser language: zh-TW
+PASS: automatic browser language: zh-CN
+PASS: automatic browser language: en-US
+PASS: automatic browser language: ja-JP
+PASS: Hub manual switch
+PASS: hub: no untranslated interface text ()
+PASS: preference survives Hub reload
+PASS: game iframe inherits Chinese
+PASS: iframe switch synchronizes parent
+PASS: parent switch synchronizes iframe
+PASS: animal-rescue-train: shared preference
+PASS: animal-rescue-train-title: no untranslated interface text ()
+PASS: animal-rescue-train: English switch
+PASS: animal-rescue-train: switching preserves game DOM
+PASS: animal-rescue-train: records unaffected
+PASS: animal-rescue-train: keyboard Enter switches language without starting game
+PASS: animal-rescue-train: keyboard Space switches language without starting game
+PASS: animal-rescue-train-practice: no untranslated interface text ()
+PASS: animal-rescue-train: practice translated
+PASS: animal-rescue-train-play: no untranslated interface text ()
+PASS: animal-rescue-train: live language change preserves state
+PASS: animal-rescue-train: score, wave, timer and puzzle snapshot survive a language round trip
+PASS: number-pop: shared preference
+PASS: number-pop-title: no untranslated interface text ()
+PASS: number-pop: English switch
+PASS: number-pop: switching preserves game DOM
+PASS: number-pop: records unaffected
+PASS: number-pop: keyboard Enter switches language without starting game
+PASS: number-pop: keyboard Space switches language without starting game
+PASS: number-pop-practice: no untranslated interface text ()
+PASS: number-pop: practice translated
+PASS: number-pop-play: no untranslated interface text ()
+PASS: number-pop: live language change preserves state
+PASS: number-pop: score, wave, timer and puzzle snapshot survive a language round trip
+PASS: ball-track: shared preference
+PASS: ball-track-title: no untranslated interface text ()
+PASS: ball-track: English switch
+PASS: ball-track: switching preserves game DOM
+PASS: ball-track: records unaffected
+PASS: ball-track: keyboard Enter switches language without starting game
+PASS: ball-track: keyboard Space switches language without starting game
+PASS: ball-track-practice: no untranslated interface text ()
+PASS: ball-track: practice translated
+PASS: ball-track-play: no untranslated interface text ()
+PASS: ball-track: live language change preserves state
+PASS: ball-track: score, wave, timer and puzzle snapshot survive a language round trip
+PASS: spot-quick: shared preference
+PASS: spot-quick-title: no untranslated interface text ()
+PASS: spot-quick: English switch
+PASS: spot-quick: switching preserves game DOM
+PASS: spot-quick: records unaffected
+PASS: spot-quick: keyboard Enter switches language without starting game
+PASS: spot-quick: keyboard Space switches language without starting game
+PASS: spot-quick-practice: no untranslated interface text ()
+PASS: spot-quick: practice translated
+PASS: spot-quick-play: no untranslated interface text ()
+PASS: spot-quick: live language change preserves state
+PASS: spot-quick: score, wave, timer and puzzle snapshot survive a language round trip
+PASS: tap-match: shared preference
+PASS: tap-match-title: no untranslated interface text ()
+PASS: tap-match: English switch
+PASS: tap-match: switching preserves game DOM
+PASS: tap-match: records unaffected
+PASS: tap-match: keyboard Enter switches language without starting game
+PASS: tap-match: keyboard Space switches language without starting game
+PASS: tap-match-practice: no untranslated interface text ()
+PASS: tap-match: practice translated
+PASS: tap-match-play: no untranslated interface text ()
+PASS: tap-match: live language change preserves state
+PASS: tap-match: score, wave, timer and puzzle snapshot survive a language round trip
+PASS: add-up: shared preference
+PASS: add-up-title: no untranslated interface text ()
+PASS: add-up: English switch
+PASS: add-up: switching preserves game DOM
+PASS: add-up: records unaffected
+PASS: add-up: keyboard Enter switches language without starting game
+PASS: add-up: keyboard Space switches language without starting game
+PASS: add-up-practice: no untranslated interface text ()
+PASS: add-up: practice translated
+PASS: add-up-play: no untranslated interface text ()
+PASS: add-up: live language change preserves state
+PASS: add-up: score, wave, timer and puzzle snapshot survive a language round trip
+PASS: block-match: shared preference
+PASS: block-match-title: no untranslated interface text ()
+PASS: block-match: English switch
+PASS: block-match: switching preserves game DOM
+PASS: block-match: records unaffected
+PASS: block-match: keyboard Enter switches language without starting game
+PASS: block-match: keyboard Space switches language without starting game
+PASS: block-match-practice: no untranslated interface text ()
+PASS: block-match: practice translated
+PASS: block-match-play: no untranslated interface text ()
+PASS: block-match: live language change preserves state
+PASS: block-match: score, wave, timer and puzzle snapshot survive a language round trip
+PASS: space-scale: shared preference
+PASS: space-scale-title: no untranslated interface text ()
+PASS: space-scale: English switch
+PASS: space-scale: switching preserves game DOM
+PASS: space-scale: records unaffected
+PASS: space-scale: keyboard Enter switches language without starting game
+PASS: space-scale: keyboard Space switches language without starting game
+PASS: space-scale-practice: no untranslated interface text ()
+PASS: space-scale: practice translated
+PASS: space-scale-play: no untranslated interface text ()
+PASS: space-scale: live language change preserves state
+PASS: space-scale: score, wave, timer and puzzle snapshot survive a language round trip
+PASS: shadow-match: shared preference
+PASS: shadow-match-title: no untranslated interface text ()
+PASS: shadow-match: English switch
+PASS: shadow-match: switching preserves game DOM
+PASS: shadow-match: records unaffected
+PASS: shadow-match: keyboard Enter switches language without starting game
+PASS: shadow-match: keyboard Space switches language without starting game
+PASS: shadow-match-practice: no untranslated interface text ()
+PASS: shadow-match: practice translated
+PASS: shadow-match-play: no untranslated interface text ()
+PASS: shadow-match: live language change preserves state
+PASS: shadow-match: score, wave, timer and puzzle snapshot survive a language round trip
+PASS: flash-brain: shared preference
+PASS: flash-brain-title: no untranslated interface text ()
+PASS: flash-brain: English switch
+PASS: flash-brain: switching preserves game DOM
+PASS: flash-brain: records unaffected
+PASS: flash-brain: keyboard Enter switches language without starting game
+PASS: flash-brain: keyboard Space switches language without starting game
+PASS: flash-brain-practice: no untranslated interface text ()
+PASS: flash-brain: practice translated
+PASS: flash-brain-play: no untranslated interface text ()
+PASS: flash-brain: live language change preserves state
+PASS: flash-brain: score, wave, timer and puzzle snapshot survive a language round trip
+PASS: Level 5 rule translated
+PASS: modal switch restores English rule
+PASS: live rescue move survives switching
+PASS: mobile touch language switch
+PASS: mobile modal switch accessible
+PASS: no browser runtime errors:
+{
+  "passed": 136,
+  "checks": [
+    "automatic browser language: zh-TW",
+    "automatic browser language: zh-CN",
+    "automatic browser language: en-US",
+    "automatic browser language: ja-JP",
+    "Hub manual switch",
+    "hub: no untranslated interface text ()",
+    "preference survives Hub reload",
+    "game iframe inherits Chinese",
+    "iframe switch synchronizes parent",
+    "parent switch synchronizes iframe",
+    "animal-rescue-train: shared preference",
+    "animal-rescue-train-title: no untranslated interface text ()",
+    "animal-rescue-train: English switch",
+    "animal-rescue-train: switching preserves game DOM",
+    "animal-rescue-train: records unaffected",
+    "animal-rescue-train: keyboard Enter switches language without starting game",
+    "animal-rescue-train: keyboard Space switches language without starting game",
+    "animal-rescue-train-practice: no untranslated interface text ()",
+    "animal-rescue-train: practice translated",
+    "animal-rescue-train-play: no untranslated interface text ()",
+    "animal-rescue-train: live language change preserves state",
+    "animal-rescue-train: score, wave, timer and puzzle snapshot survive a language round trip",
+    "number-pop: shared preference",
+    "number-pop-title: no untranslated interface text ()",
+    "number-pop: English switch",
+    "number-pop: switching preserves game DOM",
+    "number-pop: records unaffected",
+    "number-pop: keyboard Enter switches language without starting game",
+    "number-pop: keyboard Space switches language without starting game",
+    "number-pop-practice: no untranslated interface text ()",
+    "number-pop: practice translated",
+    "number-pop-play: no untranslated interface text ()",
+    "number-pop: live language change preserves state",
+    "number-pop: score, wave, timer and puzzle snapshot survive a language round trip",
+    "ball-track: shared preference",
+    "ball-track-title: no untranslated interface text ()",
+    "ball-track: English switch",
+    "ball-track: switching preserves game DOM",
+    "ball-track: records unaffected",
+    "ball-track: keyboard Enter switches language without starting game",
+    "ball-track: keyboard Space switches language without starting game",
+    "ball-track-practice: no untranslated interface text ()",
+    "ball-track: practice translated",
+    "ball-track-play: no untranslated interface text ()",
+    "ball-track: live language change preserves state",
+    "ball-track: score, wave, timer and puzzle snapshot survive a language round trip",
+    "spot-quick: shared preference",
+    "spot-quick-title: no untranslated interface text ()",
+    "spot-quick: English switch",
+    "spot-quick: switching preserves game DOM",
+    "spot-quick: records unaffected",
+    "spot-quick: keyboard Enter switches language without starting game",
+    "spot-quick: keyboard Space switches language without starting game",
+    "spot-quick-practice: no untranslated interface text ()",
+    "spot-quick: practice translated",
+    "spot-quick-play: no untranslated interface text ()",
+    "spot-quick: live language change preserves state",
+    "spot-quick: score, wave, timer and puzzle snapshot survive a language round trip",
+    "tap-match: shared preference",
+    "tap-match-title: no untranslated interface text ()",
+    "tap-match: English switch",
+    "tap-match: switching preserves game DOM",
+    "tap-match: records unaffected",
+    "tap-match: keyboard Enter switches language without starting game",
+    "tap-match: keyboard Space switches language without starting game",
+    "tap-match-practice: no untranslated interface text ()",
+    "tap-match: practice translated",
+    "tap-match-play: no untranslated interface text ()",
+    "tap-match: live language change preserves state",
+    "tap-match: score, wave, timer and puzzle snapshot survive a language round trip",
+    "add-up: shared preference",
+    "add-up-title: no untranslated interface text ()",
+    "add-up: English switch",
+    "add-up: switching preserves game DOM",
+    "add-up: records unaffected",
+    "add-up: keyboard Enter switches language without starting game",
+    "add-up: keyboard Space switches language without starting game",
+    "add-up-practice: no untranslated interface text ()",
+    "add-up: practice translated",
+    "add-up-play: no untranslated interface text ()",
+    "add-up: live language change preserves state",
+    "add-up: score, wave, timer and puzzle snapshot survive a language round trip",
+    "block-match: shared preference",
+    "block-match-title: no untranslated interface text ()",
+    "block-match: English switch",
+    "block-match: switching preserves game DOM",
+    "block-match: records unaffected",
+    "block-match: keyboard Enter switches language without starting game",
+    "block-match: keyboard Space switches language without starting game",
+    "block-match-practice: no untranslated interface text ()",
+    "block-match: practice translated",
+    "block-match-play: no untranslated interface text ()",
+    "block-match: live language change preserves state",
+    "block-match: score, wave, timer and puzzle snapshot survive a language round trip",
+    "space-scale: shared preference",
+    "space-scale-title: no untranslated interface text ()",
+    "space-scale: English switch",
+    "space-scale: switching preserves game DOM",
+    "space-scale: records unaffected",
+    "space-scale: keyboard Enter switches language without starting game",
+    "space-scale: keyboard Space switches language without starting game",
+    "space-scale-practice: no untranslated interface text ()",
+    "space-scale: practice translated",
+    "space-scale-play: no untranslated interface text ()",
+    "space-scale: live language change preserves state",
+    "space-scale: score, wave, timer and puzzle snapshot survive a language round trip",
+    "shadow-match: shared preference",
+    "shadow-match-title: no untranslated interface text ()",
+    "shadow-match: English switch",
+    "shadow-match: switching preserves game DOM",
+    "shadow-match: records unaffected",
+    "shadow-match: keyboard Enter switches language without starting game",
+    "shadow-match: keyboard Space switches language without starting game",
+    "shadow-match-practice: no untranslated interface text ()",
+    "shadow-match: practice translated",
+    "shadow-match-play: no untranslated interface text ()",
+    "shadow-match: live language change preserves state",
+    "shadow-match: score, wave, timer and puzzle snapshot survive a language round trip",
+    "flash-brain: shared preference",
+    "flash-brain-title: no untranslated interface text ()",
+    "flash-brain: English switch",
+    "flash-brain: switching preserves game DOM",
+    "flash-brain: records unaffected",
+    "flash-brain: keyboard Enter switches language without starting game",
+    "flash-brain: keyboard Space switches language without starting game",
+    "flash-brain-practice: no untranslated interface text ()",
+    "flash-brain: practice translated",
+    "flash-brain-play: no untranslated interface text ()",
+    "flash-brain: live language change preserves state",
+    "flash-brain: score, wave, timer and puzzle snapshot survive a language round trip",
+    "Level 5 rule translated",
+    "modal switch restores English rule",
+    "live rescue move survives switching",
+    "mobile touch language switch",
+    "mobile modal switch accessible",
+    "no browser runtime errors: "
+  ],
+  "missing": {
+    "hub": [
+      "TOENOW",
+      "toenow.com",
+      "about:blank"
+    ],
+    "animal-rescue-train-title": [],
+    "animal-rescue-train-practice": [],
+    "animal-rescue-train-play": [],
+    "number-pop-title": [],
+    "number-pop-practice": [],
+    "number-pop-play": [],
+    "ball-track-title": [],
+    "ball-track-practice": [],
+    "ball-track-play": [],
+    "spot-quick-title": [],
+    "spot-quick-practice": [],
+    "spot-quick-play": [],
+    "tap-match-title": [],
+    "tap-match-practice": [],
+    "tap-match-play": [],
+    "add-up-title": [],
+    "add-up-practice": [],
+    "add-up-play": [],
+    "block-match-title": [],
+    "block-match-practice": [],
+    "block-match-play": [],
+    "space-scale-title": [],
+    "space-scale-practice": [],
+    "space-scale-play": [],
+    "shadow-match-title": [],
+    "shadow-match-practice": [],
+    "shadow-match-play": [],
+    "flash-brain-title": [],
+    "flash-brain-practice": [],
+    "flash-brain-play": []
+  }
+}

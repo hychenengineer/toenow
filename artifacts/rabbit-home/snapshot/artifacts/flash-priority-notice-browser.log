@@ -1,0 +1,5 @@
+PASS 390 en: priority notice lifecycle, translation, layout, restart, pause, ordinary wave
+PASS 390 zh-Hant: priority notice lifecycle, translation, layout, restart, pause, ordinary wave
+PASS 1100 en: priority notice lifecycle, translation, layout, restart, pause, ordinary wave
+PASS 1100 zh-Hant: priority notice lifecycle, translation, layout, restart, pause, ordinary wave
+PASS Hub iframe: priority notice and live EN/ZH switching

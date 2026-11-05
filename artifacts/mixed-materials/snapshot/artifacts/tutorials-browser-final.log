@@ -1,0 +1,63 @@
+PASS number-pop 390 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS number-pop 390 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS number-pop 1100 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS number-pop 1100 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS ball-track 390 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS ball-track 390 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS ball-track 1100 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS ball-track 1100 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS block-match 390 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS block-match 390 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS block-match 1100 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS block-match 1100 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS add-up 390 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS add-up 390 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS add-up 1100 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS add-up 1100 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS space-scale 390 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS space-scale 390 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS space-scale 1100 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS space-scale 1100 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS tap-match 390 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS tap-match 390 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS tap-match 1100 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS tap-match 1100 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS spot-quick 390 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS spot-quick 390 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS spot-quick 1100 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS spot-quick 1100 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS shadow-match 390 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS shadow-match 390 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS shadow-match 1100 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS shadow-match 1100 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS flash-brain 390 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS flash-brain 390 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS flash-brain 1100 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS flash-brain 1100 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS animal-rescue-train 390 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS animal-rescue-train 390 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS animal-rescue-train 1100 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS animal-rescue-train 1100 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS number-pop: cancel remains new, explicit skip persists and starts
+PASS ball-track: cancel remains new, explicit skip persists and starts
+PASS block-match: cancel remains new, explicit skip persists and starts
+PASS add-up: cancel remains new, explicit skip persists and starts
+PASS space-scale: cancel remains new, explicit skip persists and starts
+PASS tap-match: cancel remains new, explicit skip persists and starts
+PASS spot-quick: cancel remains new, explicit skip persists and starts
+PASS shadow-match: cancel remains new, explicit skip persists and starts
+PASS flash-brain: cancel remains new, explicit skip persists and starts
+PASS animal-rescue-train: cancel remains new, explicit skip persists and starts
+PASS number-pop: iframe first play and skip
+PASS ball-track: iframe first play and skip
+PASS block-match: iframe first play and skip
+PASS add-up: iframe first play and skip
+PASS space-scale: iframe first play and skip
+PASS tap-match: iframe first play and skip
+PASS spot-quick: iframe first play and skip
+PASS shadow-match: iframe first play and skip
+PASS flash-brain: iframe first play and skip
+PASS animal-rescue-train: iframe first play and skip
+PASS keyboard, mid-lesson language switch and shared switch restoration
+PASS blocked storage: completion stays in memory and play is available
+{"lessonScenarios":40,"skipScenarios":10,"iframeScenarios":10,"edgeCases":2}

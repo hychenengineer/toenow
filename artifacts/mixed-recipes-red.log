@@ -1,0 +1,114 @@
+TAP version 13
+# Subtest: all ten homes progress from one to three to four material recipes with balanced collaboration
+not ok 1 - all ten homes progress from one to three to four material recipes with balanced collaboration
+  ---
+  duration_ms: 0.9703
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-materials.test.cjs:9:1'
+  failureType: 'testCodeFailure'
+  error: 'materials.upgradeRecipe is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-materials.test.cjs:12:78)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    node:internal/test_runner/harness:252:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+  ...
+# Subtest: a missing collaboration material prevents all spending; success deducts every ingredient once
+not ok 2 - a missing collaboration material prevents all spending; success deducts every ingredient once
+  ---
+  duration_ms: 7.2283
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-materials.test.cjs:20:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert(f.api.upgrade('number-pop').ok)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-materials.test.cjs:24:2)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: existing built stages and owned decorations survive the recipe change without retroactive costs
+ok 3 - existing built stages and owned decorations survive the recipe change without retroactive costs
+  ---
+  duration_ms: 0.9908
+  ...
+# Subtest: exactly ten explorer games own distinct materials; carefree is excluded
+ok 4 - exactly ten explorer games own distinct materials; carefree is excluded
+  ---
+  duration_ms: 0.1775
+  ...
+# Subtest: normal play credits only its own item, survives reload, and cannot repeat a receipt
+ok 5 - normal play credits only its own item, survives reload, and cannot repeat a receipt
+  ---
+  duration_ms: 0.2111
+  ...
+# Subtest: practice, preview, zero work, unknown and implausible attempts do not award
+ok 6 - practice, preview, zero work, unknown and implausible attempts do not award
+  ---
+  duration_ms: 0.1664
+  ...
+# Subtest: own material upgrades are affordable, atomic and separate from challenge records
+ok 7 - own material upgrades are affordable, atomic and separate from challenge records
+  ---
+  duration_ms: 0.3532
+  ...
+# Subtest: starter and collaboration decorations spend exact recipes once and can be toggled
+ok 8 - starter and collaboration decorations spend exact recipes once and can be toggled
+  ---
+  duration_ms: 0.3589
+  ...
+# Subtest: legacy challenge stage is preserved once and later high scores do not build houses
+ok 9 - legacy challenge stage is preserved once and later high scores do not build houses
+  ---
+  duration_ms: 0.2375
+  ...
+# Subtest: latest balance is read for sequential clients and storage errors never report success
+ok 10 - latest balance is read for sequential clients and storage errors never report success
+  ---
+  duration_ms: 0.4599
+  ...
+# Subtest: malformed balances cannot create spendable resources
+ok 11 - malformed balances cannot create spendable resources
+  ---
+  duration_ms: 0.2826
+  ...
+# Subtest: SDK lifecycle awards once, clears on replay and never awards a practice result
+ok 12 - SDK lifecycle awards once, clears on replay and never awards a practice result
+  ---
+  duration_ms: 160.2342
+  ...
+# Subtest: Number Pop accepts an immediate first start and deduplicates its compatibility click
+ok 13 - Number Pop accepts an immediate first start and deduplicates its compatibility click
+  ---
+  duration_ms: 87.9454
+  ...
+# Subtest: interrupted runs lose their reward token
+ok 14 - interrupted runs lose their reward token
+  ---
+  duration_ms: 0.2287
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 12
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 540.7484

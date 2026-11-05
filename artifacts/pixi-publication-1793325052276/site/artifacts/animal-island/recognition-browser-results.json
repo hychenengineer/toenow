@@ -1,0 +1,80 @@
+[
+  {
+    "id": "animal-rescue-train",
+    "size": "desktop",
+    "boarding": true,
+    "illegalBoardingBlocked": true,
+    "disabledCarriages": 2,
+    "errors": [],
+    "supplied": []
+  },
+  {
+    "id": "tap-match",
+    "size": "desktop",
+    "collection": true,
+    "wrongInput": true,
+    "errors": [],
+    "supplied": []
+  },
+  {
+    "id": "spot-quick",
+    "size": "desktop",
+    "archived": true,
+    "wrongInput": true,
+    "specimens": 170,
+    "categories": 50,
+    "errors": [],
+    "supplied": []
+  },
+  {
+    "id": "flash-brain",
+    "size": "desktop",
+    "correctInput": true,
+    "hazardInput": true,
+    "privacy": {
+      "leaks": 0,
+      "revealed": 696
+    },
+    "errors": [],
+    "supplied": []
+  },
+  {
+    "id": "animal-rescue-train",
+    "size": "mobile",
+    "boarding": true,
+    "illegalBoardingBlocked": true,
+    "disabledCarriages": 2,
+    "errors": [],
+    "supplied": []
+  },
+  {
+    "id": "tap-match",
+    "size": "mobile",
+    "collection": true,
+    "wrongInput": true,
+    "errors": [],
+    "supplied": []
+  },
+  {
+    "id": "spot-quick",
+    "size": "mobile",
+    "archived": true,
+    "wrongInput": true,
+    "specimens": 170,
+    "categories": 50,
+    "errors": [],
+    "supplied": []
+  },
+  {
+    "id": "flash-brain",
+    "size": "mobile",
+    "correctInput": true,
+    "hazardInput": true,
+    "privacy": {
+      "leaks": 0,
+      "revealed": 595
+    },
+    "errors": [],
+    "supplied": []
+  }
+]

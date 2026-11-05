@@ -1,0 +1,2 @@
+Playing live Number Pop with actual click; waiting for natural timer.
+PASS {"commit":"d100546c1830645bd3630bbacfc48d2483859980","checked":["index.html","games/number-pop/index.html","games/number-pop/main.js","shared/toenow-sdk.js","shared/toenow-materials.js","games/flash-brain/index.html"],"score":144,"receipt":"🥕 +4 紅蘿蔔\n下一階段: 🥕 4 / 16\n回小島建造","elapsedMs":65074,"actualClicks":true,"naturalTimeout":true,"clockOrScoreMutation":false,"craftAndReload":"PASS","errors":[]}

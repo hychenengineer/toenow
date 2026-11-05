@@ -1,0 +1,163 @@
+TAP version 13
+# Subtest: five real successes earn one item for every material game, with no base reward or per-run ceiling
+not ok 1 - five real successes earn one item for every material game, with no base reward or per-run ceiling
+  ---
+  duration_ms: 3.1781
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-materials.test.cjs:9:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-materials.test.cjs:12:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    node:internal/test_runner/harness:252:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+  ...
+# Subtest: wrong-answer score penalties never remove successful work; retries cannot repeat keyed successes
+not ok 2 - wrong-answer score penalties never remove successful work; retries cannot repeat keyed successes
+  ---
+  duration_ms: 0.382
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-materials.test.cjs:28:1'
+  failureType: 'testCodeFailure'
+  error: 'f.api.recordSuccess is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-materials.test.cjs:30:30)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: old saves keep balances and homes and start remainder progress at zero
+not ok 3 - old saves keep balances and homes and start remainder progress at zero
+  ---
+  duration_ms: 0.2251
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-materials.test.cjs:35:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'space-scale')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-materials.test.cjs:37:40)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: all ten homes progress from one to three to four material recipes with balanced collaboration
+ok 4 - all ten homes progress from one to three to four material recipes with balanced collaboration
+  ---
+  duration_ms: 1.1667
+  ...
+# Subtest: a missing collaboration material prevents all spending; success deducts every ingredient once
+ok 5 - a missing collaboration material prevents all spending; success deducts every ingredient once
+  ---
+  duration_ms: 1.007
+  ...
+# Subtest: existing built stages and owned decorations survive the recipe change without retroactive costs
+ok 6 - existing built stages and owned decorations survive the recipe change without retroactive costs
+  ---
+  duration_ms: 0.1977
+  ...
+# Subtest: exactly ten explorer games own distinct materials; carefree is excluded
+ok 7 - exactly ten explorer games own distinct materials; carefree is excluded
+  ---
+  duration_ms: 0.0967
+  ...
+# Subtest: normal play credits only its own item, survives reload, and cannot repeat a receipt
+ok 8 - normal play credits only its own item, survives reload, and cannot repeat a receipt
+  ---
+  duration_ms: 0.1871
+  ...
+# Subtest: practice, preview, zero work, unknown and implausible attempts do not award
+ok 9 - practice, preview, zero work, unknown and implausible attempts do not award
+  ---
+  duration_ms: 0.672
+  ...
+# Subtest: own material upgrades are affordable, atomic and separate from challenge records
+ok 10 - own material upgrades are affordable, atomic and separate from challenge records
+  ---
+  duration_ms: 0.4229
+  ...
+# Subtest: starter and collaboration decorations spend exact recipes once and can be toggled
+ok 11 - starter and collaboration decorations spend exact recipes once and can be toggled
+  ---
+  duration_ms: 0.3903
+  ...
+# Subtest: legacy challenge stage is preserved once and later high scores do not build houses
+ok 12 - legacy challenge stage is preserved once and later high scores do not build houses
+  ---
+  duration_ms: 0.3343
+  ...
+# Subtest: latest balance is read for sequential clients and storage errors never report success
+ok 13 - latest balance is read for sequential clients and storage errors never report success
+  ---
+  duration_ms: 0.2876
+  ...
+# Subtest: malformed balances cannot create spendable resources
+ok 14 - malformed balances cannot create spendable resources
+  ---
+  duration_ms: 0.2496
+  ...
+# Subtest: SDK lifecycle awards once, clears on replay and never awards a practice result
+ok 15 - SDK lifecycle awards once, clears on replay and never awards a practice result
+  ---
+  duration_ms: 1.8308
+  ...
+# Subtest: Number Pop accepts an immediate first start and deduplicates its compatibility click
+ok 16 - Number Pop accepts an immediate first start and deduplicates its compatibility click
+  ---
+  duration_ms: 0.9128
+  ...
+# Subtest: interrupted runs lose their reward token
+ok 17 - interrupted runs lose their reward token
+  ---
+  duration_ms: 0.1602
+  ...
+# Subtest: fox wave-20 result earns ribbons even when wrong answers end the run early
+ok 18 - fox wave-20 result earns ribbons even when wrong answers end the run early
+  ---
+  duration_ms: 0.2333
+  ...
+# Subtest: a legitimate six figure rabbit result is credited once rather than silently rejected
+ok 19 - a legitimate six figure rabbit result is credited once rather than silently rejected
+  ---
+  duration_ms: 0.1775
+  ...
+# Subtest: a finished run with no reward explains why to the result UI
+ok 20 - a finished run with no reward explains why to the result UI
+  ---
+  duration_ms: 0.151
+  ...
+# Subtest: a short legitimate scored run earns materials without a ten second cutoff
+ok 21 - a short legitimate scored run earns materials without a ten second cutoff
+  ---
+  duration_ms: 0.7126
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 18
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 91.7126

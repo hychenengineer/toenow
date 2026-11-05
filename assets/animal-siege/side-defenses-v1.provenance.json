@@ -1,0 +1,110 @@
+{
+  "generator": "Built-in image_gen",
+  "generatedOn": "2026-11-04",
+  "reference": [
+    "artifacts/animal-fort-terrain/river-1280-zh-Hant.png (battle axis and fence column)",
+    "sources/terrain-props-v1.png (painted timber style)"
+  ],
+  "source": "sources/side-defenses-v1.png",
+  "prompt": "Use case: stylized-concept. Make a NEW transparent game sprite atlas that CORRECTS the 3D ORIENTATION of fence walls and gateways. Reference image 1 is the ACTUAL battle map: attackers are on screen LEFT, defenders on screen RIGHT; the wall occupies one column running vertically DOWN THE SCREEN. Reference image 2 is painterly style and materials only, NOT an orientation reference.\nONE SQUARE alpha-transparent canvas, 3 columns by 2 rows of SIX isolated sprites, clean generous margins at every seam, no text or grid. Columns: 1 honey cedar Acorn Fort; 2 weathered cedar with teal rope River Keep; 3 ornate golden cedar with restrained ivy Treetop Citadel. TOP ROW = one solid palisade section per column. BOTTOM ROW = one open double gateway per column. No background, shadow haze, colored floor patch or scenery. All non-object pixels fully transparent.\nMANDATORY WORLD ORIENTATION FOR ALL SIX: high overhead orthographic view looking almost straight down (about 75 degrees above the ground), with slight view of east-facing timber faces. The wall's GROUND FOOTPRINT runs NORTH-SOUTH, meaning a VERTICAL strip from TOP to BOTTOM within each cell. Fence posts are lined up ONE BEHIND ANOTHER vertically on the screen, not in a left-to-right row. Their bases form a vertical line around screen x50%, with three visible carved post tops at y25%, y50%, y75%. The connecting beam follows the same NORTH-SOUTH ground axis. The barricade should look TALL AND NARROW in the sprite, not like a horizontal front-facing fence. The broad wall faces point LEFT and RIGHT toward the armies, never toward the viewer. Physically rotate the objects about their vertical world axis relative to the old front-facing art; do NOT rotate a flat upright drawing in the image plane, and do NOT turn them into fallen or horizontal logs.\nBOTTOM ROW OPEN GATES: the NORTH gatepost base is near x50%,y20% and the SOUTH gatepost base near x50%,y80%, NOT a left post and a right post. The gate frame lies on this north-south wall plane. Render from the same high overhead view. TWO door leaves are hinged at the north and south posts and swung wide open toward the EAST / screen RIGHT, so the top leaf and bottom leaf lie along the northern and southern edges of the opening. They do NOT meet across the center. The grass-visible TRANSPARENT PASSAGE crosses the center HORIZONTALLY from the left edge to right edge, like a sideways doorway through a vertical fence line. A thin elevated lintel may run between north and south posts, shown from above, but do not fill the central walk-through opening with a door panel or shadow. Keep the passage visually unmistakable for creatures walking LEFT TO RIGHT. Open doors have visible planks, hinges and side-facing detail. Gates are NOT frontal arches with left/right pillars, and the opening must NOT lead toward the bottom of the image.\nKeep perspective identical across all 6 sprites. Painterly fantasy strategy asset style matching the references: carved cedar grain, honey upper-left sunlight, emerald shadows, crisp small-scale readability. No animals, letters, signs, flags, buildings, extra props or diagram arrows. Each entire structure fits within its own cell with transparent clearance. Orientation accuracy matters more than ornate decoration.",
+  "notes": "North-south defense plane; left-right passage. Three columns (acorn, river, tower), two rows (wall, gate). Entire equal-size atlas cells are kept to preserve matching wall/gate hinge alignment; no flat image rotation and no changes to tile collision.",
+  "sourceSha256": "bef871258451504feed597d6905613c7776d4e69ccb6c1840f87b4940b1479a2",
+  "sprites": [
+    {
+      "runtime": "acorn-wall-side-v1.webp",
+      "crop": {
+        "left": 0,
+        "top": 0,
+        "width": 418,
+        "height": 627
+      },
+      "encoding": {
+        "format": "webp",
+        "width": 256,
+        "height": 256,
+        "quality": 92
+      },
+      "runtimeSha256": "dd6ba1be924f7ecce647d96434f87daff4b04d535f4c5a247eb2651f9f197309"
+    },
+    {
+      "runtime": "acorn-gate-side-v1.webp",
+      "crop": {
+        "left": 0,
+        "top": 627,
+        "width": 418,
+        "height": 627
+      },
+      "encoding": {
+        "format": "webp",
+        "width": 256,
+        "height": 256,
+        "quality": 92
+      },
+      "runtimeSha256": "c43ed746f4baa4eb1c2439e402d3a69c7879673e952a493cee1d73f134bde531"
+    },
+    {
+      "runtime": "river-wall-side-v1.webp",
+      "crop": {
+        "left": 418,
+        "top": 0,
+        "width": 418,
+        "height": 627
+      },
+      "encoding": {
+        "format": "webp",
+        "width": 256,
+        "height": 256,
+        "quality": 92
+      },
+      "runtimeSha256": "24910d1e7cfd1f888696ed30825e2ddac0e2f77602bede92b0900ea996559f1f"
+    },
+    {
+      "runtime": "river-gate-side-v1.webp",
+      "crop": {
+        "left": 418,
+        "top": 627,
+        "width": 418,
+        "height": 627
+      },
+      "encoding": {
+        "format": "webp",
+        "width": 256,
+        "height": 256,
+        "quality": 92
+      },
+      "runtimeSha256": "086e85325050edf11f93de47bfc7d5d2d5cfb802bfff4427b0b208f5cc9d6c6a"
+    },
+    {
+      "runtime": "tower-wall-side-v1.webp",
+      "crop": {
+        "left": 836,
+        "top": 0,
+        "width": 418,
+        "height": 627
+      },
+      "encoding": {
+        "format": "webp",
+        "width": 256,
+        "height": 256,
+        "quality": 92
+      },
+      "runtimeSha256": "9a923ef002340ea4bcf3cea85de12c5e1813e98e2a18a64ea4f7b2b809f2766d"
+    },
+    {
+      "runtime": "tower-gate-side-v1.webp",
+      "crop": {
+        "left": 836,
+        "top": 627,
+        "width": 418,
+        "height": 627
+      },
+      "encoding": {
+        "format": "webp",
+        "width": 256,
+        "height": 256,
+        "quality": 92
+      },
+      "runtimeSha256": "111410ca52ee93003a4eb64ad05c54f856e29b4e57de4a82a36264867aa033ae"
+    }
+  ]
+}

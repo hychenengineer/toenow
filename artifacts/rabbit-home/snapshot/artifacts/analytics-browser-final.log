@@ -1,0 +1,7 @@
+CHECK number-pop standalone
+CHECK number-pop embedded
+page.waitForFunction: Timeout 10000ms exceeded.
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-analytics-browser.cjs:88:20 {
+  log: [],
+  name: 'TimeoutError'
+}

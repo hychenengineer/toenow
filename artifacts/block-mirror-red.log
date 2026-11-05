@@ -1,0 +1,10 @@
+locator.waitFor: Timeout 3000ms exceeded.
+Call log:
+  - waiting for locator('[data-tutorial-advance]') to be visible
+
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-block-mirror-lessons-browser.cjs:40:55 {
+  log: [
+    "  - waiting for locator('[data-tutorial-advance]') to be visible"
+  ],
+  name: 'TimeoutError'
+}

@@ -1,0 +1,96 @@
+/* The queue front is always nearest the train. Keep every passenger in order. */
+:root { color-scheme: light; --bg:#f6f2e4; --panel:#fff9ec; --text:#294d3b; --muted:#657361; --mint:#427d65; --amber:#91612b; --line:#c9cbb0; --cyan:#3e7f82; }
+body { background:radial-gradient(ellipse at 0 48%,#cbd7b17a,transparent 42%),radial-gradient(ellipse at 100% 55%,#c1d2b780,transparent 42%),#faf6e8; }
+body[data-screen=play] { background:#faf6e8 url('../../assets/animal-rescue-train/station.webp') center bottom / cover fixed no-repeat; }
+.shell { max-width:850px; padding:16px 20px 76px; }
+.primary { background:#427d65; color:#fffaf0; }
+.primary:hover { background:#355f4d; }
+.secondary:hover { background:#e0e9cc; color:#294d3b; }
+.sr-only { position:absolute!important; width:1px!important; height:1px!important; padding:0!important; margin:-1px!important; overflow:hidden!important; clip:rect(0,0,0,0)!important; white-space:nowrap!important; border:0!important; }
+.play-toolbar { gap:12px; margin-bottom:12px; }
+.play-title { text-align:center; font-size:clamp(15px,3.6vw,23px); line-height:1.3; color:#264c38; }
+.play-toolbar button { flex:none; min-height:44px; color:#355c45; background:#edf0db; border:1px solid #c9d1b5; border-radius:24px; }
+#play-screen .station.panel { padding:16px 22px; border:0; border-radius:24px; box-shadow:none; background:linear-gradient(#fffaf099,#f5f0de55); }
+.station-header { display:flex; justify-content:center; align-items:center; gap:10px; margin:0 0 16px; padding:0; }
+#level-number { margin:0; padding:7px 24px; background:#dfe7c9; border-radius:24px; color:#355b42; font-size:14px; letter-spacing:1px; }
+#tier-label:empty { display:none; }
+.last-rule { margin:0 0 12px; text-align:center; }
+.required-last-goal { display:inline-flex; gap:8px; align-items:center; background:#f5e8c6; border:1px solid #d3bd80; padding:3px 14px; border-radius:20px; color:#6a542c; font-size:13px; font-weight:700; }
+.required-last-goal svg { width:32px; height:32px; }
+#play-screen .queues { display:grid; grid-template-columns:repeat(var(--queue-count),minmax(0,1fr)); gap:clamp(6px,2vw,20px); max-width:620px; margin:0 auto; }
+#play-screen .queue { display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 5px 8px; background:linear-gradient(#f0efd8c9,#e5e9cbb3); border:1px solid #d3ceab; border-radius:50px 50px 24px 24px; min-width:0; }
+#play-screen .previews { display:flex; flex-direction:column; align-items:center; gap:5px; width:100%; }
+#play-screen .preview { width:38px; height:38px; min-height:0; border:0; background:transparent; border-radius:0; }
+#play-screen .preview svg { width:36px; height:36px; }
+#play-screen .preview.empty { visibility:hidden; }
+.queue-arrow { color:#9bad7c; font-size:23px; line-height:24px; }
+#play-screen .head { flex:none; width:76px; height:76px; min-height:0; max-width:100%; padding:7px; background:#fff9e8; border:2px solid transparent; border-radius:50%; }
+#play-screen .head svg { width:100%; height:100%; }
+#play-screen .head:not(:disabled):hover { border-color:#79a06a; background:#f9f5db; }
+#play-screen .head[aria-pressed=true] { border:3px solid #4d9358; background:#f9f8de; box-shadow:0 0 0 3px #fff9ea,0 0 0 5px #a8c890; }
+#play-screen .head[aria-pressed=true]::after { width:18px; height:18px; right:-1px; bottom:0; color:white; background:#477f48; }
+#play-screen .head:disabled { background:transparent; opacity:.6; }
+.empty-head { font-size:26px; color:#5a8050; }
+#play-screen .stationmaster { width:fit-content; max-width:100%; min-height:44px; margin:10px auto 14px; padding:3px 12px 3px 3px; gap:8px; background:#e9edda; border:1px solid #c0cdae; border-radius:24px; box-shadow:none; color:#375b42; font-size:14px; line-height:1.4; }
+#play-screen .stationmaster svg { width:38px; height:38px; }
+#play-screen #instruction { margin:0; padding:0; background:transparent; border:0; min-height:0; text-align:left; }
+#play-screen .rail-yard { padding:0 0 17px; }
+#play-screen .rail { left:-12px; right:-12px; bottom:0; height:16px; border-color:#a99778; background:repeating-linear-gradient(90deg,transparent 0 16px,#bfad8b 16px 23px,transparent 23px 35px); }
+#play-screen .cars { grid-template-columns:repeat(var(--car-count),minmax(0,1fr)); gap:14px; row-gap:24px; }
+#play-screen .car { min-height:105px; padding:17px 9px 19px; border:3px solid #7c9b67; border-top:9px solid #4f7850; border-radius:22px 22px 12px 12px; background:linear-gradient(#f7edc9 70%,#709168 70%); box-shadow:inset 0 -6px #50784e,0 3px 0 #b9af83; opacity:1; }
+#play-screen .car:disabled { opacity:1; }
+#play-screen .car.boardable { background:linear-gradient(#fcf1cf 70%,#628f57 70%); border-color:#5a924d; box-shadow:0 0 0 3px #faf9e5,0 0 0 5px #a4c575,inset 0 -6px #416a3f; }
+#play-screen .car.boardable:hover { filter:brightness(1.04); }
+#play-screen .car::before,#play-screen .car::after { width:23px; height:23px; bottom:-12px; border:5px solid #5c5c4d; background:#b2ac8e; }
+#play-screen .car::before { left:12px; }
+#play-screen .car::after { right:12px; }
+#play-screen .seats { gap:5px; }
+#play-screen .seat { min-height:38px; aspect-ratio:1; max-height:78px; border:1px solid #ccbd91; background:#fff9e6; border-radius:10px; }
+#play-screen .seat svg { max-width:64px; width:92%; height:92%; }
+#play-screen .seat.free { border:1px dashed #c7ba8e; color:#aa9f7e; background:#faf1d5; font-size:25px; }
+.seat-ghost { display:grid; place-items:center; width:100%; height:100%; opacity:.2; filter:sepia(1); }
+#play-screen .controls { display:flex; justify-content:flex-start; gap:10px; border:0; margin-top:14px; padding:8px 96px 0 0; }
+#play-screen .controls button { min-width:44px; border-radius:24px; border:1px solid #c5c8aa; padding:10px 12px; background:#f9f3df; color:#375942; }
+#play-screen .controls button:disabled { opacity:.45; }
+#play-screen .departure-ghost { color:#fff9e8; background:#527d48; font-size:27px; }
+.boarding-example { display:flex; align-items:center; justify-content:center; gap:5px; margin:6px auto 12px; }
+.boarding-example svg { width:42px; height:42px; }
+.boarding-example>span { font-size:28px; white-space:nowrap; }
+.rescue-title-card { padding:24px; }
+.rescue-title-card .start-rules { width:100%; border:0; padding:0; text-align:left; }
+.start-rules summary { text-align:center; min-height:44px; padding:9px; color:#48684e; }
+.start-rules[open] .rules { margin-top:10px; }
+.rescue-title-card .unified-records-strip { padding:9px; gap:24px; margin:0; }
+.rescue-title-card .record-level { margin:4px 0; }
+body[data-screen=play] .toenow-language-switch[data-placement=floating] { bottom:max(10px,env(safe-area-inset-bottom)); right:12px; padding:8px 14px; min-height:44px; background:#e8eddb; color:#355c45; border:1px solid #b9c9a9; box-shadow:none; }
+@media(max-width:650px) {
+  .shell { padding:10px 10px 70px; }
+  #play-screen .station.panel { padding:12px 10px; }
+  #play-screen .station-header { margin-bottom:12px; }
+  #play-screen .queues { gap:8px; }
+  #play-screen .queue { padding:8px 3px; }
+  #play-screen .preview { width:30px; height:30px; }
+  #play-screen .preview svg { width:30px; height:30px; }
+  #play-screen .head { width:62px; height:62px; padding:4px; }
+  body[data-tier='1'] #play-screen .head { width:76px; height:76px; }
+  #play-screen .cars { gap:12px; row-gap:24px; }
+  #play-screen .car { min-height:88px; padding:12px 5px 16px; }
+  #play-screen .seat { min-height:26px; border-radius:7px; }
+  #play-screen .seat.free { font-size:20px; }
+  #play-screen .stationmaster { font-size:13px; }
+  body[data-tier='5'] #play-screen .cars { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .play-toolbar button { font-size:11px; padding:7px 10px; }
+}
+@media(max-width:360px) {
+  .shell { padding-left:6px; padding-right:6px; }
+  #play-screen .station.panel { padding-left:7px; padding-right:7px; }
+  #play-screen .queues { gap:5px; }
+  #play-screen .head { width:46px; height:46px; }
+  #play-screen .preview,#play-screen .preview svg { width:27px; height:27px; }
+  .play-title { font-size:14px; }
+  .play-toolbar { gap:6px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  #play-screen .departing,#play-screen .departure-ghost { animation:none; }
+  #play-screen .departure-ghost { display:none; }
+}

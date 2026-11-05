@@ -1,0 +1,56 @@
+TAP version 13
+# Subtest: Animal island provides one distinct partner and habitat for each existing game
+ok 1 - Animal island provides one distinct partner and habitat for each existing game
+  ---
+  duration_ms: 1.0912
+  ...
+# Subtest: Animal building stages are bounded and follow the shared five-tier wave mapping
+ok 2 - Animal building stages are bounded and follow the shared five-tier wave mapping
+  ---
+  duration_ms: 0.3529
+  ...
+# Subtest: Theme helpers work without DOM and never alter scores or practice records
+ok 3 - Theme helpers work without DOM and never alter scores or practice records
+  ---
+  duration_ms: 0.4199
+  ...
+# Subtest: Watercolor characters have one reusable asset per species
+ok 4 - Watercolor characters have one reusable asset per species
+  ---
+  duration_ms: 0.1769
+  ...
+# Subtest: The title guide reads normal-play records, never practice stage or malformed values
+not ok 5 - The title guide reads normal-play records, never practice stage or malformed values
+  ---
+  duration_ms: 1.1761
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-animals.test.cjs:41:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-animals.test.cjs:42:9)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 4
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 80.5506

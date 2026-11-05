@@ -1,0 +1,12 @@
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('#gameViewer').contentFrame().locator('#pause-screen.visible') to be hidden
+    61 × locator resolved to visible <section id="pause-screen" aria-label="Pause Menu" class="screen-overlay unified-pause-screen visible">…</section>
+
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-number-pop-title-controls.cjs:45:52 {
+  log: [
+    "  - waiting for locator('#gameViewer').contentFrame().locator('#pause-screen.visible') to be hidden",
+    '    61 × locator resolved to visible <section id="pause-screen" aria-label="Pause Menu" class="screen-overlay unified-pause-screen visible">…</section>'
+  ],
+  name: 'TimeoutError'
+}

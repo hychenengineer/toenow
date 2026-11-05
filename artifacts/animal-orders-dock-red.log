@@ -1,0 +1,9 @@
+PASS orders 1280 zh-Hant battle: combined attack, cancel, mobile visibility, move only, move/end turn, replay restoration
+AssertionError [ERR_ASSERTION]: mobile dock cannot cover the shared result screen
+    at run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-animal-orders-browser.cjs:62:16) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: true,
+  expected: false,
+  operator: 'strictEqual'
+}

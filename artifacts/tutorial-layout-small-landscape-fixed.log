@@ -1,0 +1,7 @@
+PASS block-match 667 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS block-match 667 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS add-up 667 en: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS add-up 667 zh-Hant: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS animal-rescue-train 667 en: 6 real game taps, score0, records protected, normal start, replay/cancel
+PASS animal-rescue-train 667 zh-Hant: 6 real game taps, score0, records protected, normal start, replay/cancel
+{"realGameLessons":6,"height":375}

@@ -1,0 +1,48 @@
+{
+  "base": "c391704481b47f49e040d57948828a9a2d5f1fa7",
+  "tree": "a92f3866b8aa3de2251587e057f9ab2ef00451b3",
+  "temp": "C:\\Users\\HSINYU~1\\AppData\\Local\\Temp\\toenow-challenges-publish-cINRtu",
+  "snapshot": "C:\\Users\\HSINYU~1\\AppData\\Local\\Temp\\toenow-challenges-publish-cINRtu\\snapshot",
+  "files": [
+    "assets/toenow-tutorials.css",
+    "games/ball-track/index.html",
+    "games/flash-brain/assets/index-cr-6j3L1.js",
+    "games/flash-brain/index.html",
+    "games/flash-brain/tutorial.js",
+    "games/flash-brain/wave-clear.css",
+    "games/flash-brain/wave-clear.js",
+    "index.html",
+    "package.json",
+    "shared/toenow-i18n-animals.js",
+    "shared/toenow-i18n-core.js",
+    "shared/toenow-i18n-games-a.js",
+    "shared/toenow-island.js",
+    "shared/toenow-tutorial-config.js",
+    "shared/toenow-tutorials.js",
+    "tests/animal-spatial.test.cjs",
+    "tests/flash-brain.test.cjs",
+    "tests/flash-progressive-tutorial.test.cjs",
+    "tools/verify-ball-memory-browser.cjs",
+    "tools/verify-flash-priority-notice-browser.cjs",
+    "tools/verify-flash-progressive-browser.cjs",
+    "tools/verify-flash-wave-clear-browser.cjs",
+    "tools/verify-game-launch-browser.cjs",
+    "tools/verify-shared-screens-browser.cjs",
+    "tools/verify-tutorials-browser.cjs"
+  ],
+  "originalHead": "c391704481b47f49e040d57948828a9a2d5f1fa7",
+  "originalBranch": "codex/island-explorer",
+  "originalIndex": "4312986791a2985b54c48e82eb8a21a1ad5be2b6",
+  "commit": "239b9acff86fec4dec86fb651773743af0ef22b5",
+  "published": true,
+  "checks": {
+    "node": 167,
+    "launch": 20,
+    "shared": {
+      "standalone": 36,
+      "iframe": 9,
+      "practice": 9
+    },
+    "focusedLanguageSizeMatrices": 12
+  }
+}

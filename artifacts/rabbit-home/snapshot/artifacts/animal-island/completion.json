@@ -1,0 +1,34 @@
+{
+  "completed": true,
+  "gameCount": 10,
+  "buildingStagesPerGame": 5,
+  "landmarkImages": 50,
+  "characterImages": 10,
+  "landmarkRuntimeBytes": 4924984,
+  "landmarkSourceBytes": 129552819,
+  "previewClips": 10,
+  "automatedTests": {
+    "passed": 127,
+    "failed": 0
+  },
+  "sharedScreens": {
+    "standalone": 36,
+    "iframe": 9,
+    "practice": 9
+  },
+  "islandResponsiveChecks": 30,
+  "integrationGames": 10,
+  "spotQuick": {
+    "specimens": 170,
+    "categories": 50,
+    "preserved": true
+  },
+  "physicalIPadSafari": "NOT VERIFIED",
+  "deployment": "not requested; workspace changes only",
+  "artGallery": "tools/animal-island-gallery.html",
+  "evidence": "artifacts/animal-island",
+  "previewBrowserChecks": 169,
+  "galleryImagesLoaded": 50,
+  "sharedScreenEvidence": "artifacts/animal-island/shared-screens-final.log",
+  "previewEvidence": "artifacts/animal-island/previews/browser-results.json"
+}

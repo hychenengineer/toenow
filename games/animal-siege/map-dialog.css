@@ -1,0 +1,28 @@
+/* Let the painted island use the full row; location details open only on demand. */
+#expedition{width:100%;max-width:1500px;min-width:0}
+#expedition .expedition-heading{flex-wrap:wrap;min-width:0}
+#expedition .expedition-heading>div{min-width:0;max-width:100%}
+#expedition .exp-resources{min-width:0;flex-wrap:wrap}
+#expedition .expedition-layout{display:block;min-width:0}
+#expedition .expedition-main{min-width:0;width:100%}
+#expedition .exp-map-card{width:100%;max-width:100%;margin:0}
+#expedition .exp-map{aspect-ratio:4/3;background-size:100% 100%}
+#location-dialog{padding:0;border:0;border-radius:20px;background:transparent;color:#3c2c1b;width:min(480px,calc(100% - 32px));max-width:calc(100% - 32px);max-height:calc(100dvh - 32px);margin:auto;overflow:auto;box-shadow:0 20px 80px #00160fcc;overscroll-behavior:contain}
+#location-dialog::backdrop{background:#071e18c4;backdrop-filter:blur(4px)}
+#location-dialog .expedition-detail{width:100%;margin:0;overflow:visible;padding-top:24px;box-shadow:inset 0 0 24px #af82432e}
+#location-dialog .expedition-detail:before{content:none}
+#location-dialog h2{padding-right:30px}
+#location-close{position:absolute;right:10px;top:8px;display:grid;place-items:center;width:36px;height:36px;border:1px solid #9f8048;border-radius:50%;background:#f7eac6;color:#65451e;font-size:25px;line-height:1;z-index:1}
+#location-close:hover{background:#e5ca8b}
+body:has(#location-dialog[open]){overflow:hidden}
+@media(max-width:520px){#location-dialog{width:calc(100% - 24px);max-width:calc(100% - 24px);max-height:calc(100dvh - 24px)}#expedition .expedition-heading h1{overflow-wrap:anywhere}#location-dialog .expedition-detail{padding:22px 16px 18px}}
+
+/* Feedback lives on each nameplate, never on the transparent building hit area. */
+.camp-scene .camp-building,.camp-scene .camp-building:hover,.camp-scene .camp-building:focus,.camp-scene .camp-building:focus-visible,.camp-scene .camp-building.chosen{outline:none;border:0;background:transparent;box-shadow:none}
+.camp-building span{transition:background .15s,color .15s,transform .15s;padding-left:21px}
+.camp-building span:before{content:"";position:absolute;left:8px;top:50%;transform:translateY(-50%)}
+.camp-building:hover span{background:#365a3a;color:#fff8d7}
+.camp-building.chosen span{background:linear-gradient(#f9d77b,#d8a447);color:#3d2d14;border-color:#fff1ba;box-shadow:0 3px 9px #172d24aa}
+.camp-building.chosen span:before{content:"◆";font-size:9px}
+.camp-building:focus-visible span{outline:2px dashed #fff1ba;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.camp-building span{transition:none}}

@@ -1,0 +1,73 @@
+.nojekyll                                          |   0
+ assets/animal-island/capybara-character.webp       | Bin 0 -> 5596 bytes
+ assets/animal-island/capybara-level1.webp          | Bin 0 -> 8126 bytes
+ assets/animal-island/capybara-level2.webp          | Bin 0 -> 8624 bytes
+ assets/animal-island/capybara-level3.webp          | Bin 0 -> 8808 bytes
+ assets/animal-island/capybara-level4.webp          | Bin 0 -> 9322 bytes
+ assets/animal-island/capybara-level5.webp          | Bin 0 -> 9360 bytes
+ .../sources/capybara/capybara-character.svg        |   1 +
+ .../sources/capybara/capybara-level1.svg           |   1 +
+ .../sources/capybara/capybara-level2.svg           |   1 +
+ .../sources/capybara/capybara-level3.svg           |   1 +
+ .../sources/capybara/capybara-level4.svg           |   1 +
+ .../sources/capybara/capybara-level5.svg           |   1 +
+ assets/animal-island/sources/capybara/preview.svg  |   1 +
+ .../animal-island/sources/capybara/provenance.json |   5 +
+ assets/capybara-drift-preview.png                  | Bin 0 -> 37476 bytes
+ assets/capybara-entry.css                          |   1 +
+ assets/toenow-island.css                           |  13 +-
+ assets/toenow-materials.css                        |  28 +
+ assets/unified-title-menu.css                      | 828 +++++++++++----------
+ docs/ANIMAL_MATERIALS_RUN_REPORT.md                |  32 +
+ docs/CAPYBARA_DRIFT_RUN_REPORT.md                  |  29 +
+ .../plans/2026-10-26-animal-materials.md           |  17 +
+ .../superpowers/plans/2026-10-26-capybara-drift.md |  22 +
+ games/add-up/index.html                            |   2 +
+ games/animal-rescue-train/index.html               |   4 +-
+ games/ball-track/index.html                        |   2 +
+ games/block-match/index.html                       |   2 +
+ games/capybara-drift/engine.js                     |  52 ++
+ games/capybara-drift/index.html                    |  20 +
+ games/capybara-drift/main.js                       | 151 ++++
+ games/capybara-drift/style.css                     |   6 +
+ games/flash-brain/assets/index-cr-6j3L1.js         |   2 +-
+ games/flash-brain/garden.js                        |   9 +-
+ games/flash-brain/index.html                       |   2 +
+ games/number-pop/index.html                        |   2 +
+ games/number-pop/main.js                           |   2 +-
+ games/shadow-match/index.html                      |   2 +
+ games/space-scale/index.html                       |   2 +
+ games/spot-quick/index.html                        |   2 +
+ games/tap-match/index.html                         |   2 +
+ index.html                                         |  89 ++-
+ package.json                                       |   2 +-
+ shared/toenow-analytics.js                         |   1 +
+ shared/toenow-animals.js                           |   1 +
+ shared/toenow-exploration.js                       |   9 +-
+ shared/toenow-i18n-core.js                         |  15 +
+ shared/toenow-i18n-games-b.js                      |  12 +
+ shared/toenow-island.js                            |  61 +-
+ shared/toenow-levels.js                            |   1 +
+ shared/toenow-materials-ui.js                      |  26 +
+ shared/toenow-materials.js                         |  81 ++
+ shared/toenow-screen-config.js                     |   8 +
+ shared/toenow-sdk.js                               |  32 +-
+ shared/toenow-security.js                          |   1 +
+ tests/capybara-drift.test.cjs                      |  50 ++
+ tests/games-runtime.test.cjs                       |   2 +
+ tests/hub-runtime.test.cjs                         |   2 +-
+ tests/practice-mode.test.cjs                       |   1 +
+ tests/toenow-animals.test.cjs                      |   4 +-
+ tests/toenow-exploration.test.cjs                  |  26 +-
+ tests/toenow-i18n.test.cjs                         |   2 +-
+ tests/toenow-island.test.cjs                       |   5 +-
+ tests/toenow-materials.test.cjs                    |  18 +
+ tests/toenow-screens.test.cjs                      |   2 +-
+ tools/prepare-capybara-art.cjs                     |  14 +
+ tools/verify-capybara-browser.cjs                  |  47 ++
+ tools/verify-hub-discovery-layout-browser.cjs      | 108 +++
+ tools/verify-island-browser.cjs                    |  49 +-
+ tools/verify-materials-browser.cjs                 |  31 +
+ tools/verify-materials-lifecycle-browser.cjs       |  48 ++
+ tools/verify-shared-screens-browser.cjs            |   1 +
+ 72 files changed, 1517 insertions(+), 478 deletions(-)

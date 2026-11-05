@@ -1,0 +1,4 @@
+PASS ball-track 320 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS add-up 320 zh-Hant: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS animal-rescue-train 320 zh-Hant: 6 real game taps, score0, records protected, normal start, replay/cancel
+{"realGameLessons":3,"height":640}

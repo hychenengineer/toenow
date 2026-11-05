@@ -1,0 +1,21 @@
+CHECK number-pop standalone
+CHECK number-pop embedded
+CHECK ball-track standalone
+CHECK ball-track embedded
+CHECK block-match standalone
+CHECK block-match embedded
+CHECK add-up standalone
+CHECK add-up embedded
+CHECK space-scale standalone
+CHECK space-scale embedded
+CHECK tap-match standalone
+CHECK tap-match embedded
+CHECK spot-quick standalone
+CHECK spot-quick embedded
+CHECK shadow-match standalone
+CHECK shadow-match embedded
+CHECK flash-brain standalone
+CHECK flash-brain embedded
+CHECK animal-rescue-train standalone
+CHECK animal-rescue-train embedded
+{"standalone":["number-pop","ball-track","block-match","add-up","space-scale","tap-match","spot-quick","shadow-match","flash-brain","animal-rescue-train"],"embedded":["number-pop","ball-track","block-match","add-up","space-scale","tap-match","spot-quick","shadow-match","flash-brain","animal-rescue-train"],"practice":["number-pop","ball-track","block-match","add-up","space-scale","tap-match","spot-quick","shadow-match","flash-brain","animal-rescue-train"],"blocked":true,"localDisabled":true}

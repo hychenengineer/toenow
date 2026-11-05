@@ -1,0 +1,175 @@
+TAP version 13
+# Subtest: Spot Quick preserves all 170 specimens, 50 categories and candidate difficulty
+ok 1 - Spot Quick preserves all 170 specimens, 50 categories and candidate difficulty
+  ---
+  duration_ms: 4.8993
+  ...
+# Subtest: Memory garden never reveals animals in hidden or paused cells
+ok 2 - Memory garden never reveals animals in hidden or paused cells
+  ---
+  duration_ms: 1.9721
+  ...
+# Subtest: Themed interaction hooks are wired to actual correct and wrong actions
+ok 3 - Themed interaction hooks are wired to actual correct and wrong actions
+  ---
+  duration_ms: 8.0472
+  ...
+# Subtest: Garden draw operations are identical for all hidden bed types
+ok 4 - Garden draw operations are identical for all hidden bed types
+  ---
+  duration_ms: 0.9801
+  ...
+# Subtest: Flash Brain still enforces priority order, hazards, combo and clear bonuses
+ok 5 - Flash Brain still enforces priority order, hazards, combo and clear bonuses
+  ---
+  duration_ms: 1.8508
+  ...
+# Subtest: Train stationmaster switches language immediately without resetting its puzzle or mascot
+ok 6 - Train stationmaster switches language immediately without resetting its puzzle or mascot
+  ---
+  duration_ms: 0.9989
+  ...
+# Subtest: source inspection follows local scripts and styles in page order without expanding shared dependencies
+ok 7 - source inspection follows local scripts and styles in page order without expanding shared dependencies
+  ---
+  duration_ms: 15.9071
+  ...
+# Subtest: Spot Quick rules produce four distinct choices including the target across all five tiers
+ok 8 - Spot Quick rules produce four distinct choices including the target across all five tiers
+  ---
+  duration_ms: 32.0653
+  ...
+# Subtest: Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+ok 9 - Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 31.1739
+  ...
+# Subtest: Game [number-pop] initializes cleanly and binds START GAME without runtime error
+ok 10 - Game [number-pop] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 22.1585
+  ...
+# Subtest: Game [ball-track] initializes cleanly and binds START GAME without runtime error
+ok 11 - Game [ball-track] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 5.103
+  ...
+# Subtest: Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+ok 12 - Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 7.3703
+  ...
+# Subtest: Game [tap-match] initializes cleanly and binds START GAME without runtime error
+ok 13 - Game [tap-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 2.4786
+  ...
+# Subtest: Game [add-up] initializes cleanly and binds START GAME without runtime error
+ok 14 - Game [add-up] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 3.9085
+  ...
+# Subtest: Game [block-match] initializes cleanly and binds START GAME without runtime error
+ok 15 - Game [block-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 3.5401
+  ...
+# Subtest: Game [space-scale] initializes cleanly and binds START GAME without runtime error
+ok 16 - Game [space-scale] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 3.5079
+  ...
+# Subtest: Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+ok 17 - Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 4.8968
+  ...
+# Subtest: Practice Mode contract verified for game [animal-rescue-train]
+ok 18 - Practice Mode contract verified for game [animal-rescue-train]
+  ---
+  duration_ms: 6.8117
+  ...
+# Subtest: Practice Mode contract verified for game [number-pop]
+ok 19 - Practice Mode contract verified for game [number-pop]
+  ---
+  duration_ms: 2.1936
+  ...
+# Subtest: Practice Mode contract verified for game [ball-track]
+ok 20 - Practice Mode contract verified for game [ball-track]
+  ---
+  duration_ms: 2.2703
+  ...
+# Subtest: Practice Mode contract verified for game [spot-quick]
+ok 21 - Practice Mode contract verified for game [spot-quick]
+  ---
+  duration_ms: 4.4685
+  ...
+# Subtest: Practice Mode contract verified for game [tap-match]
+ok 22 - Practice Mode contract verified for game [tap-match]
+  ---
+  duration_ms: 0.9787
+  ...
+# Subtest: Practice Mode contract verified for game [add-up]
+ok 23 - Practice Mode contract verified for game [add-up]
+  ---
+  duration_ms: 1.2517
+  ...
+# Subtest: Practice Mode contract verified for game [block-match]
+ok 24 - Practice Mode contract verified for game [block-match]
+  ---
+  duration_ms: 0.8623
+  ...
+# Subtest: Practice Mode contract verified for game [space-scale]
+ok 25 - Practice Mode contract verified for game [space-scale]
+  ---
+  duration_ms: 0.9133
+  ...
+# Subtest: Practice Mode contract verified for game [shadow-match]
+ok 26 - Practice Mode contract verified for game [shadow-match]
+  ---
+  duration_ms: 1.0474
+  ...
+# Subtest: Practice Mode contract verified for game [flash-brain]
+ok 27 - Practice Mode contract verified for game [flash-brain]
+  ---
+  duration_ms: 1.6786
+  ...
+# Subtest: nine games use one screen library without copied title or result templates
+ok 28 - nine games use one screen library without copied title or result templates
+  ---
+  duration_ms: 22.0178
+  ...
+# Subtest: shared renderer owns event callbacks, current share payload, and instance disposal
+ok 29 - shared renderer owns event callbacks, current share payload, and instance disposal
+  ---
+  duration_ms: 21.0346
+  ...
+# Subtest: shared screen copy is escaped and missing/non-finite results are safe
+ok 30 - shared screen copy is escaped and missing/non-finite results are safe
+  ---
+  duration_ms: 0.6265
+  ...
+# Subtest: shared screen templates provide identical result fields and three actions for all games
+ok 31 - shared screen templates provide identical result fields and three actions for all games
+  ---
+  duration_ms: 0.3552
+  ...
+# Subtest: screen result normalization uses the shared five-level mapping
+ok 32 - screen result normalization uses the shared five-level mapping
+  ---
+  duration_ms: 0.3924
+  ...
+# Subtest: membership invitation follows replay and preserves the three game actions
+ok 33 - membership invitation follows replay and preserves the three game actions
+  ---
+  duration_ms: 0.2247
+  ...
+1..33
+# tests 33
+# suites 0
+# pass 33
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 178.4138

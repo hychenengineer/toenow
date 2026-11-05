@@ -1,0 +1,69 @@
+html:has(#battle:not([hidden])){background:#102b24}
+body:has(#battle:not([hidden])){height:auto;min-height:100vh;background:radial-gradient(ellipse at 35% 10%,#2b4b36,#17382b 50%,#102820);background-attachment:fixed}
+body:has(#battle:not([hidden])) .topbar{background:linear-gradient(#503820,#2c241a);border-bottom:2px solid #b78f4d;color:#f8e2b2;box-shadow:0 3px 14px #0005}
+body:has(#battle:not([hidden])) .topbar span{color:#c9ba89}
+#battle{max-width:1380px;padding:27px 28px 35px;color:#f8e7ba}
+@media(min-width:1000px){#battle{max-width:clamp(950px,calc(100vh + 48px),1380px)}}
+#battle h1{color:#fff0c9;letter-spacing:.4px;text-shadow:0 2px 3px #092519}
+#battle .eyebrow,#battle .panel-label{color:#c6c18a}
+#battle .battle-heading p{color:#bdd0b4}
+#battle .round{background:linear-gradient(#62482b,#35271a);border:2px solid #b18d4e;color:#ffebba;box-shadow:inset 0 0 0 2px #ebca8730}
+.battlefield{border:3px solid #af8b4e;border-radius:18px;background:#35291c;box-shadow:0 0 0 2px #2c251b,0 12px 28px #051b1366}
+.field-legend{background:linear-gradient(#57402a,#34291d);border-bottom:1px solid #be9b57;color:#f4e1b0;padding:14px 17px}
+.field-legend .ally{color:#d9e8b2}.field-legend .enemy{color:#f1bd79}#phase-label{color:#cfccaa}
+.board-surround{padding:16px;padding-top:calc(25% + 8px);background:radial-gradient(ellipse at 10% 20%,#507247,#294c36);position:relative}
+#battle[data-fort="acorn"] .board-surround{background:#426740 url('../../assets/animal-siege/acorn-battle-v1.webp') center/100% 100% no-repeat}
+#battle[data-fort="river"] .board-surround{background:#59794e url('../../assets/animal-siege/river-battle-v1.webp') center/100% 100% no-repeat}
+#battle[data-fort="tower"] .board-surround{background:#5b7841 url('../../assets/animal-siege/tower-battle-v1.webp') center/100% 100% no-repeat}
+.castle-silhouette{display:none}
+.siege-skyline{position:absolute;top:15px;left:17px;right:17px;min-height:76px;pointer-events:none}
+#siege-label{display:inline-block;max-width:60%;background:linear-gradient(#483621ee,#2e281ce8);border:1px solid #ccaa65;border-radius:9px;padding:8px 12px;color:#fff0c4;font:600 12px Georgia,"Microsoft JhengHei",serif;box-shadow:0 3px 7px #10271e88}
+.siege-flag{position:absolute;right:18%;top:17px;width:45px;height:84px;z-index:3;pointer-events:none}
+.flag-pole{position:absolute;left:2px;top:0;bottom:0;width:5px;background:linear-gradient(90deg,#6c4c26,#d6b36a,#795827);border-radius:3px;box-shadow:1px 1px 3px #10271e66}
+.flag-pole::before{content:"";position:absolute;left:-2px;top:-5px;width:9px;height:9px;background:#e7c475;border:1px solid #84602c;border-radius:50%}
+.flag-cloth{position:absolute;top:5px;left:7px;width:37px;height:31px;display:grid;place-items:center;background:linear-gradient(100deg,#a15b26,#da973c,#aa6329);color:#fff0b6;clip-path:polygon(0 0,100% 7%,86% 53%,100% 97%,0 88%);font-size:17px;text-shadow:0 1px #65431d;transform-origin:left center;filter:drop-shadow(0 2px 2px #152d1e88)}
+.siege-flag[data-owner="player"] .flag-cloth{background:linear-gradient(100deg,#254b36,#59804b,#2d5135);color:#fff4c4}
+.siege-flag.flag-raised .flag-cloth{animation:siege-flag-rise .65s ease-out both,siege-flag-wave 2.4s .65s ease-in-out infinite}
+#board{background:linear-gradient(90deg,#b7c88ad9,#b2c08cd6 56%,#cab88ddc 73%,#d8c396e3);border:1px solid #60714590;border-radius:10px;padding:5px;box-shadow:inset 0 0 20px #263f291f,0 4px 7px #233d2a33;gap:4px}
+.board-surround .tile{border:1px solid #7e936167;background:#f6e9c92b;border-radius:8px}
+.board-surround .tile.reachable{background:#e6f3bb8c;border:1px dashed #456a3c}
+.board-surround .tile.attack-range{background:#ecc1698f;border-color:#a27536}
+.board-surround .tile.has-unit{background:#fff4d5c7;border:2px solid #69845a;box-shadow:0 3px 0 #3653334d}
+.board-surround .tile.enemy-unit{background:#ffe2b9b8;border-color:#a46b40;box-shadow:0 3px 0 #714d334d}
+.board-surround .tile.target{border-color:#c44f2f;box-shadow:0 0 0 2px #c35335;background:#ffdfa5}
+.board-surround .tile.selected{box-shadow:0 0 0 2px #fff0ac,0 0 0 4px #42683d;z-index:2}
+.board-surround .tile.move-destination{border:2px dashed #97692a;background:#fff0aa9c}
+.board-surround .tile.wall{background:#8b855c26;border:1px solid #7767416b;box-shadow:none;font-size:0}
+.wood-wall{position:absolute;inset:4% 6% 8%;display:flex;align-items:flex-end;gap:5%;filter:drop-shadow(0 4px 2px #34432e66);pointer-events:none}
+.wood-wall i{display:block;width:30%;height:94%;background:linear-gradient(90deg,#694a2a,#c19a5c 35%,#9d733f 65%,#5d4127);clip-path:polygon(50% 0,100% 15%,100% 100%,0 100%,0 15%)}
+.wood-wall i:nth-child(2){height:100%}
+.wood-wall::after{content:"";position:absolute;left:-3%;right:-3%;top:59%;height:15%;border:1px solid #5a3c23;background:linear-gradient(#aa7944,#624329);box-shadow:0 2px 1px #33281e55}
+.board-surround .tile.gate{background:repeating-linear-gradient(0deg,#98724555 0 8px,#d9be8055 8px 10px);border:1px solid #b49a5c}
+.gate-lane{position:absolute;inset:2% 3%;pointer-events:none;z-index:0}
+.gate-lane::before,.gate-lane::after{content:"";position:absolute;top:0;bottom:0;width:9%;background:linear-gradient(90deg,#634324,#b48a4f,#6d4929);border:1px solid #79542c;border-radius:3px;box-shadow:1px 2px 2px #3e3b2855}
+.gate-lane::before{left:0}.gate-lane::after{right:0}
+.board-surround .tile img{position:relative;z-index:2}.board-surround .unit-count{z-index:4}
+.board-surround .tile.tree{background:#436e3b33;font-size:0}
+.battle-tree{display:block;position:relative;width:67%;height:78%;pointer-events:none;font-size:0;background:linear-gradient(90deg,transparent 43%,#6e4b2c 43% 59%,transparent 59%);filter:drop-shadow(0 4px 2px #1d3e2755)}
+.battle-tree::before{content:"";position:absolute;left:0;right:0;top:2%;height:77%;border-radius:48% 44% 40% 42%;background:radial-gradient(ellipse at 30% 25%,#91a956,#507b3d 50%,#254a30);box-shadow:inset -4px -4px 6px #1b422e66,0 2px 1px #14332166}
+.field-bottom{background:linear-gradient(#4c3925,#32281c);color:#dacb9d;border-top:1px solid #9f8049;padding:13px 15px;font-size:10px;line-height:1.7}
+.command-panel{border:5px solid #6b4b2a;border-radius:18px;outline:2px solid #b49151;outline-offset:-3px;background:radial-gradient(ellipse at 60% 5%,#fff4d5,#ead8aa);padding:19px;color:#493a22;box-shadow:0 0 0 2px #2b241b,0 12px 25px #041f1666}
+#battle .command-panel .panel-label{color:#86672f}
+.roster-unit{background:#eddfb7;border-color:#bba369;color:#493c25;padding:8px}.roster-unit.active{background:#f9edc6;border-color:#63804a;box-shadow:inset 0 0 0 1px #8ca163}
+.roster-unit img{border:1px solid #b39253;border-radius:50%;background:radial-gradient(#bdc58d,#809465);padding:2px}.roster-unit small{color:#7a6c43}
+.selection{color:#52432a}.preview{background:#dfd4a8;color:#5b4d2d;border:1px solid #c5b478}
+.orders button{background:linear-gradient(#f2e6bf,#d6c18c);border-color:#b29355;color:#564326;box-shadow:0 2px 0 #8c713a33}
+.orders #end-turn,.move-confirmation #confirm-move{background:linear-gradient(#65814d,#36583b);border-color:#c7ad68;color:#fff1c9}
+.move-confirmation{background:#f6e5ac;border-color:#bd9350}.move-confirmation button{background:#fff4d4;border-color:#b89b60;color:#645027}
+.text-button{color:#7e6537}.counter-pair{color:#d9cfa5}#battle .journal .panel-label{color:#c6bd87}.journal{border-color:#bfa36855}#journal{color:#c6cdae}.prototype-note{color:#aab99a}
+#siege-victory{position:absolute;left:50%;top:39%;transform:translate(-50%,-50%);width:min(82%,360px);z-index:15;padding:19px 22px 17px;text-align:center;border:3px solid #d7b466;border-radius:15px;background:linear-gradient(#426344f5,#223e2cf5);color:#fff0be;box-shadow:0 0 0 3px #44351edb,0 10px 28px #0b251bb3;pointer-events:none}
+#siege-capture-title{font:600 24px Georgia,"Microsoft JhengHei",serif;display:block;text-shadow:0 2px #1c3323}
+.siege-loot{display:flex;justify-content:center;gap:13px;margin-top:14px}.loot-token{display:grid;grid-template-columns:auto auto;align-items:center;gap:0 6px;background:#fff0c5;border:1px solid #ad8b4a;border-radius:10px;padding:8px 12px;color:#64491f;min-width:108px}
+.loot-token i{grid-row:1/3;font-size:25px;font-style:normal;color:#bb8a2a}.loot-token b{font:700 24px Georgia,serif}.loot-token small{font-size:11px}
+#siege-victory:not([hidden]) .loot-token{animation:siege-loot-in .9s ease-out both}#siege-victory:not([hidden]) .loot-token+ .loot-token{animation-delay:.1s}
+@keyframes siege-flag-rise{from{transform:translateY(32px);opacity:.3}to{transform:translateY(0);opacity:1}}
+@keyframes siege-flag-wave{0%,100%{transform:skewY(-3deg) scaleX(.97)}50%{transform:skewY(3deg) scaleX(1)}}
+@keyframes siege-loot-in{from{transform:translateY(18px) scale(.8);opacity:0}45%{transform:translateY(-3px) scale(1.05);opacity:1}to{transform:translateY(0) scale(1);opacity:1}}
+@media(max-width:780px){#battle{padding:22px 13px 30px}.board-surround{padding:10px;padding-top:calc(25% + 6px)}.siege-skyline{top:11px;left:12px;min-height:53px}#siege-label{font-size:11px;padding:7px 9px}.siege-flag{top:10px;height:59px;width:36px;right:15%}.flag-cloth{width:30px;height:25px;font-size:14px}.command-panel{padding:15px;border-width:4px}.field-legend{font-size:10px;padding:11px 12px}.field-bottom{font-size:9px;padding:11px 9px}.siege-loot{gap:9px}#siege-capture-title{font-size:21px}}
+@media(max-width:430px){#battle{padding:20px 10px 28px}.battlefield{border-width:2px;border-radius:14px}#board{gap:3px;padding:3px;border-radius:7px}.board-surround .tile{border-radius:6px}.board-surround .tile.has-unit{border-width:1px}.board-surround .tile.selected{box-shadow:0 0 0 2px #ffec9e,0 0 0 3px #3b6339}.board-surround{padding:8px;padding-top:calc(25% + 6px)}.siege-skyline{left:10px;top:10px}.siege-flag{height:53px;top:10px;right:12%}.flag-cloth{width:25px;height:22px;font-size:13px}.flag-pole{width:4px}.field-legend{font-size:9px;padding:10px 8px}#siege-label{max-width:66%;font-size:10px;padding:6px 8px}.command-panel{padding:13px;gap:0 9px}.roster-unit{padding:6px;gap:6px}.roster-unit img{width:30px;height:35px}.roster-unit strong{font-size:10px}.roster-unit small{font-size:9px}#siege-victory{padding:15px 12px;border-width:2px}.loot-token{padding:7px 10px;min-width:91px}.loot-token b{font-size:22px}.loot-token i{font-size:20px}#siege-capture-title{font-size:19px}}
+@media(prefers-reduced-motion:reduce){.siege-flag.flag-raised .flag-cloth,#siege-victory:not([hidden]) .loot-token{animation:none!important}}

@@ -1,0 +1,29 @@
+{
+  "generator": "OpenAI imagegen (built-in)",
+  "assets": [
+    {
+      "kind": "background",
+      "source": "sources/background.png",
+      "runtime": "background.webp",
+      "sourceImage": "exec-ca318696-1907-45bf-b1ba-0bf1a38c18e8.png",
+      "width": 1448,
+      "height": 1086,
+      "hasAlpha": false,
+      "transparentFraction": 0,
+      "sha256": "7f8cfa60e3db0fd924f8b3c586159d1a344c3b9952db2ef52bb397d2244b84b6",
+      "prompt": "Game environment background, 4:3 landscape. Warm hand-painted cozy children's storybook illustration matching a pastoral animal village game. Scene: a peaceful woodland observation garden in soft late-afternoon light, tiny round tree-trunk observation cottage at upper left, a single open nature notebook on a low stump at x35% y45%; spacious grassy right yard and foreground, tall trees and distant hills. Eye-level slightly elevated view, perspective and scale suitable for adding a standing animal at left foreground (x20% y68%) and four independent building sprites on right half later. Only the modest starter home is present, clustered in leftmost 35% at top/middle; the right 60% is deliberately empty walkable buildable terrain with no structures. Full coherent environment filling canvas, soft natural lighting, painterly detailed edges, clear simple ground. No animals or people, no text, no signs with letters, no UI, no borders, no purchased future buildings. Keep foreground at x20% y68% uncluttered for character overlay."
+    },
+    {
+      "kind": "buildings",
+      "source": "sources/buildings.png",
+      "runtime": "buildings.webp",
+      "sourceImage": "exec-7f626814-4139-4f6d-8a39-a6f96f87b1e0.png",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "transparentFraction": 0.5441436767578125,
+      "sha256": "f0ab8a1477dd14c82d23e0e201d1ae8baecb55b551f095d20a643ea43a9fc638",
+      "prompt": "Transparent sprite atlas for a cozy hand-painted storybook animal village game. Exactly SIX isolated objects, 3 columns x 2 rows, equal square cells, overall landscape 3:2. Top row left to right: a small naturalist journal desk; a short wooden lookout tower; a little raised stargazing platform with telescope. Bottom row left to right: an open woodland gazebo with leafy roof; a small wooden journal display stand with an open blank book; a little branch observation perch. Each object centered in its own equal cell with at least 8% transparent padding, completely contained, no overlap or crossing cells. All same warm painted woodland style, three-quarter slightly elevated perspective. Fully transparent alpha around and between objects and through open spaces. NO backdrop, no colored gradient, no ground plates, no cast shadows outside object, no scenery, no characters, no text, no UI, no grid lines. Only the six specified objects; retain transparent alpha."
+    }
+  ]
+}

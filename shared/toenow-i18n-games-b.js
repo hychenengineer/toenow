@@ -1,6 +1,31 @@
 (function (root) {
   'use strict';
   const entries = {
+    'Siege gate':'攻城入口',
+    'Open gate':'可通行城門',
+    'Captured':'已攻下',
+    'Green dots: move · Amber: attack range · Red: target':'綠點：移動・琥珀框：攻擊範圍・紅框：可攻擊敵人',
+    'Green dots: move · Amber: attack from preview':'綠點：移動・琥珀框：預覽位置的攻擊範圍',
+    'Attack in progress…':'攻擊中…',
+    'COUNTER!':'克制！',
+    'In attack range':'在攻擊範圍內',
+    'Confirm move':'確定移動',
+    'Starting position · tap to cancel move':'原本位置・點選取消移動',
+    'Preview only. Choose another tile or cancel. Confirm the move before attacking.':'目前只是預覽，可改選別格或取消。按「確定移動」後才能攻擊。',
+    'Choose a squad and a dotted tile, then confirm the move. Tap an enemy to preview an attack.':'先選動物與點點格，再按確定移動；點敵人可預覽傷害。',
+    "Open expedition":"開始遠征",
+    "Explore the mist. Build your animal army. Capture three forts.":"探索迷霧、整備動物軍隊，攻下三座城堡。",
+    "Explore trails, scout forts, and spend gold to recruit your counter army.":"探索小徑、偵察敵堡，再花金幣招募剋制守軍的動物部隊。",
+    "Losses persist after retreat or defeat. Train squads with wood. Capture both outer forts to unlock the citadel.":"撤退或戰敗後戰損會保留。用木材升級部隊，攻下兩座外堡後開啟主堡。",
+
+    "Menu":"選單", "EXPEDITION ISLAND":"遠征島", "Open battle prototype":"試玩攻城戰",
+    "ANIMAL SIEGE":"動物攻城戰",
+    "Animal Siege":"動物攻城戰",
+    "A small army. A clever plan. Capture the Acorn Fort.":"小小部隊，巧妙戰術，攻下橡果堡！",
+    "Choose a squad, move on dotted tiles, then tap an enemy twice to attack.":"選擇部隊，點點點格移動，再點敵人兩次確認攻擊。",
+    "Beaver beats Fox. Fox beats Squirrel. Squirrel beats Beaver. Defend to reduce damage.":"海狸剋狐狸，狐狸剋松鼠，松鼠剋海狸。防守能減少傷害。",
+    "TOENOW · EXPEDITION":"偷納・遠征試玩",
+
     '← Back to Hub':'← 回到大廳',
     'Capybara Hot Spring Garden':'水豚溫泉花園','CAPYBARA HOT SPRING GARDEN':'水豚溫泉花園',
     'Loading garden…':'正在載入花園…','Try again':'再試一次',

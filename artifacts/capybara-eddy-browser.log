@@ -1,0 +1,8 @@
+PASS 390x844 en: touch entry/orbit/clock/flow, splash/tap, pause, restore, swipe and button exit
+PASS 390x844 zh-Hant: touch entry/orbit/clock/flow, splash/tap, pause, restore, swipe and button exit
+PASS 320x568 en: touch entry/orbit/clock/flow, splash/tap, pause, restore, swipe and button exit
+PASS 320x568 zh-Hant: touch entry/orbit/clock/flow, splash/tap, pause, restore, swipe and button exit
+PASS 844x390 en: touch entry/orbit/clock/flow, splash/tap, pause, restore, swipe and button exit
+PASS 844x390 zh-Hant: touch entry/orbit/clock/flow, splash/tap, pause, restore, swipe and button exit
+PASS 1100x850 en: touch entry/orbit/clock/flow, splash/tap, pause, restore, swipe and button exit
+PASS 1100x850 zh-Hant: touch entry/orbit/clock/flow, splash/tap, pause, restore, swipe and button exit

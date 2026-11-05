@@ -1,0 +1,8 @@
+{
+  "kind": "garden",
+  "level": 1,
+  "method": "built-in image_gen",
+  "source": "C:\\Users\\HsinYuChen\\.codex\\generated_images\\01a16a47-2f32-7341-83dd-edc8be80d6f0\\exec-b7c2a472-f9a7-4a4e-a7f1-39e360a0a811.png",
+  "reference": "C:/Users/HsinYuChen/source/repos/toenow/assets/island-buildings/sources/garden-level2.png",
+  "prompt": "Edit target: the supplied garden Level 2 transparent game sprite. Create its simpler Level 1 predecessor. Preserve the exact isometric camera, same building identity, warm painterly high-detail hand-painted game style, same cream stone, teal roof and gold materials, canvas, transparent background and ground anchoring. Retain only the single central core structure: absolutely no cottage, annex, greenhouse side wing or extra building. Keep the round cream-stone greenhouse and glass dome. Remove ornate gold finial and elaborate entrance canopy, simplify to modest glass dome with plain teal ribs and a simple arched doorway, fewer interior plants and no entrance planters. Small simple grass/stone base, soft contact shadow, entire object within canvas, no text/UI/labels. This must look like the same central core before the Level 2 decorative completion; do not shrink/recolor the supplied sprite as a substitute for drawing the earlier stage. True alpha background."
+}

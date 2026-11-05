@@ -1,0 +1,137 @@
+Screenshots: artifacts/light-hud/run-1792991977899
+CHECK number-pop 390 en
+number-pop audio clicked
+number-pop pause clicked
+number-pop resume clicked
+PASS number-pop 390 en: clear light HUD, labels, controls and bounds
+CHECK ball-track 390 en
+ball-track audio clicked
+ball-track pause clicked
+ball-track resume clicked
+PASS ball-track 390 en: clear light HUD, labels, controls and bounds
+CHECK block-match 390 en
+block-match audio clicked
+block-match pause clicked
+block-match resume clicked
+PASS block-match 390 en: clear light HUD, labels, controls and bounds
+CHECK add-up 390 en
+add-up audio clicked
+add-up pause clicked
+add-up resume clicked
+PASS add-up 390 en: clear light HUD, labels, controls and bounds
+CHECK space-scale 390 en
+space-scale audio clicked
+space-scale pause clicked
+space-scale resume clicked
+PASS space-scale 390 en: clear light HUD, labels, controls and bounds
+CHECK tap-match 390 en
+tap-match audio clicked
+tap-match pause clicked
+tap-match resume clicked
+PASS tap-match 390 en: clear light HUD, labels, controls and bounds
+CHECK spot-quick 390 en
+spot-quick audio clicked
+spot-quick pause clicked
+spot-quick resume clicked
+PASS spot-quick 390 en: clear light HUD, labels, controls and bounds
+CHECK shadow-match 390 en
+shadow-match audio clicked
+shadow-match pause clicked
+shadow-match resume clicked
+PASS shadow-match 390 en: clear light HUD, labels, controls and bounds
+CHECK flash-brain 390 en
+flash-brain audio clicked
+flash-brain pause clicked
+flash-brain resume clicked
+PASS flash-brain 390 en: clear light HUD, labels, controls and bounds
+CHECK number-pop 390 zh-Hant
+PASS number-pop 390 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK ball-track 390 zh-Hant
+PASS ball-track 390 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK block-match 390 zh-Hant
+PASS block-match 390 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK add-up 390 zh-Hant
+PASS add-up 390 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK space-scale 390 zh-Hant
+PASS space-scale 390 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK tap-match 390 zh-Hant
+PASS tap-match 390 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK spot-quick 390 zh-Hant
+PASS spot-quick 390 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK shadow-match 390 zh-Hant
+PASS shadow-match 390 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK flash-brain 390 zh-Hant
+PASS flash-brain 390 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK number-pop 1100 en
+PASS number-pop 1100 en: clear light HUD, labels, controls and bounds
+CHECK ball-track 1100 en
+PASS ball-track 1100 en: clear light HUD, labels, controls and bounds
+CHECK block-match 1100 en
+PASS block-match 1100 en: clear light HUD, labels, controls and bounds
+CHECK add-up 1100 en
+PASS add-up 1100 en: clear light HUD, labels, controls and bounds
+CHECK space-scale 1100 en
+PASS space-scale 1100 en: clear light HUD, labels, controls and bounds
+CHECK tap-match 1100 en
+PASS tap-match 1100 en: clear light HUD, labels, controls and bounds
+CHECK spot-quick 1100 en
+PASS spot-quick 1100 en: clear light HUD, labels, controls and bounds
+CHECK shadow-match 1100 en
+PASS shadow-match 1100 en: clear light HUD, labels, controls and bounds
+CHECK flash-brain 1100 en
+PASS flash-brain 1100 en: clear light HUD, labels, controls and bounds
+CHECK number-pop 1100 zh-Hant
+PASS number-pop 1100 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK ball-track 1100 zh-Hant
+PASS ball-track 1100 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK block-match 1100 zh-Hant
+PASS block-match 1100 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK add-up 1100 zh-Hant
+PASS add-up 1100 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK space-scale 1100 zh-Hant
+PASS space-scale 1100 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK tap-match 1100 zh-Hant
+PASS tap-match 1100 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK spot-quick 1100 zh-Hant
+PASS spot-quick 1100 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK shadow-match 1100 zh-Hant
+PASS shadow-match 1100 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK flash-brain 1100 zh-Hant
+PASS flash-brain 1100 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK number-pop 320 en
+PASS number-pop 320 en: clear light HUD, labels, controls and bounds
+CHECK ball-track 320 en
+PASS ball-track 320 en: clear light HUD, labels, controls and bounds
+CHECK block-match 320 en
+PASS block-match 320 en: clear light HUD, labels, controls and bounds
+CHECK add-up 320 en
+PASS add-up 320 en: clear light HUD, labels, controls and bounds
+CHECK space-scale 320 en
+PASS space-scale 320 en: clear light HUD, labels, controls and bounds
+CHECK tap-match 320 en
+PASS tap-match 320 en: clear light HUD, labels, controls and bounds
+CHECK spot-quick 320 en
+PASS spot-quick 320 en: clear light HUD, labels, controls and bounds
+CHECK shadow-match 320 en
+PASS shadow-match 320 en: clear light HUD, labels, controls and bounds
+CHECK flash-brain 320 en
+PASS flash-brain 320 en: clear light HUD, labels, controls and bounds
+CHECK number-pop 320 zh-Hant
+PASS number-pop 320 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK ball-track 320 zh-Hant
+PASS ball-track 320 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK block-match 320 zh-Hant
+PASS block-match 320 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK add-up 320 zh-Hant
+PASS add-up 320 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK space-scale 320 zh-Hant
+PASS space-scale 320 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK tap-match 320 zh-Hant
+PASS tap-match 320 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK spot-quick 320 zh-Hant
+PASS spot-quick 320 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK shadow-match 320 zh-Hant
+PASS shadow-match 320 zh-Hant: clear light HUD, labels, controls and bounds
+CHECK flash-brain 320 zh-Hant
+PASS flash-brain 320 zh-Hant: clear light HUD, labels, controls and bounds
+{"checks":54,"errors":0}

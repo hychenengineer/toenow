@@ -1,0 +1,45 @@
+diff --git a/index.html b/index.html
+index 887e84e..c3f752d 100644
+--- a/index.html
++++ b/index.html
+@@ -1536,9 +1526,9 @@
+   <script src="shared/toenow-game-previews.js"></script>
+   <link rel="stylesheet" href="assets/toenow-hub-themes.css">
+   <script src="shared/toenow-hub-themes.js"></script>
+-  <link rel="stylesheet" href="assets/toenow-island.css">
+-  <script src="shared/toenow-island.js"></script>
+-  <script src="shared/toenow-exploration.js"></script>
++  <link rel="stylesheet" href="assets/toenow-island.css?v=island-20261026-3">
++  <script src="shared/toenow-island.js?v=island-20261026-3"></script>
++  <script src="shared/toenow-exploration.js?v=island-20261026-3"></script>
+ <link rel="stylesheet" href="assets/toenow-animals.css">
+ </head>
+ <body>
+@@ -2318,6 +2307,10 @@
+       renderBentoGrid();
+     }
+     function renderBentoGrid() {
++      if (exploration) {
++        const journey = exploration.snapshot();
++        document.body.dataset.exploration = journey.unlocked.length === journey.order.length ? 'complete' : 'explore';
++      }
+       gamePreviewController?.destroy();
+       gamePreviewController = null;
+       const grid = document.getElementById('gamesBentoGrid');
+@@ -3337,16 +3327,6 @@
+           const cloudScoresMap = {};
+ 
+           if (!error && data && data.length > 0) {
+-            const journey = exploration?.snapshot();
+-            // Cloud scores predate a fresh browser's local journey: keep returning
+-            // account holders' existing access even though cloud rows lack waves.
+-            if (journey?.mode === 'explore' && data.some(item =>
+-              GAMES_CONFIG.some(game => game.id === item.game_id) &&
+-              Number.isFinite(Number(item.score)) && Number(item.score) >= 0 &&
+-              Date.parse(item.created_at) < journey.createdAt)) {
+-              exploration.adoptLegacy();
+-              document.body.dataset.exploration = 'legacy';
+-            }
+             data.forEach(item => {
+               const gameId = item.game_id;
+               const numericScore = Math.round(Number(item.score) || 0);

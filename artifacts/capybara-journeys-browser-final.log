@@ -1,0 +1,11 @@
+PASS 1100x850 en: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+PASS 1100x850 zh-Hant: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+PASS 390x844 en: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+PASS 390x844 zh-Hant: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+PASS 320x568 en: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+PASS 320x568 zh-Hant: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+PASS 844x390 en: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+PASS 844x390 zh-Hant: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+Hub: opening
+Hub: ready
+PASS 8 journey combinations and Hub launch/restart/exit

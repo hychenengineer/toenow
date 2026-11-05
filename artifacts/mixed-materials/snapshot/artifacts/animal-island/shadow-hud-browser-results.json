@@ -1,0 +1,34 @@
+[
+  {
+    "game": "shadow-match",
+    "width": 1100,
+    "height": 850,
+    "lang": "en",
+    "status": "PASS",
+    "pageErrors": []
+  },
+  {
+    "game": "shadow-match",
+    "width": 1100,
+    "height": 850,
+    "lang": "zh-Hant",
+    "status": "PASS",
+    "pageErrors": []
+  },
+  {
+    "game": "shadow-match",
+    "width": 390,
+    "height": 844,
+    "lang": "en",
+    "status": "PASS",
+    "pageErrors": []
+  },
+  {
+    "game": "shadow-match",
+    "width": 390,
+    "height": 844,
+    "lang": "zh-Hant",
+    "status": "PASS",
+    "pageErrors": []
+  }
+]

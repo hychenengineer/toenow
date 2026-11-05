@@ -1,0 +1,15 @@
+number-pop: missing source blocks spending, resource click stays in place, exact three-item deduction and four-item next recipe PASS
+ball-track: missing source blocks spending, resource click stays in place, exact three-item deduction and four-item next recipe PASS
+block-match: missing source blocks spending, resource click stays in place, exact three-item deduction and four-item next recipe PASS
+add-up: missing source blocks spending, resource click stays in place, exact three-item deduction and four-item next recipe PASS
+space-scale: missing source blocks spending, resource click stays in place, exact three-item deduction and four-item next recipe PASS
+tap-match: missing source blocks spending, resource click stays in place, exact three-item deduction and four-item next recipe PASS
+spot-quick: missing source blocks spending, resource click stays in place, exact three-item deduction and four-item next recipe PASS
+shadow-match: missing source blocks spending, resource click stays in place, exact three-item deduction and four-item next recipe PASS
+flash-brain: missing source blocks spending, resource click stays in place, exact three-item deduction and four-item next recipe PASS
+animal-rescue-train: missing source blocks spending, resource click stays in place, exact three-item deduction and four-item next recipe PASS
+Actual result renderer shows all four next-stage ingredients PASS
+four-material result 390 en PASS
+four-material result 390 zh-Hant PASS
+four-material result 320 en PASS
+four-material result 320 zh-Hant PASS

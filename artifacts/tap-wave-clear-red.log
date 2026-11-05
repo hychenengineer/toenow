@@ -1,0 +1,5 @@
+page.waitForFunction: Timeout 3000ms exceeded.
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tap-wave-clear-browser.cjs:47:20 {
+  log: [],
+  name: 'TimeoutError'
+}

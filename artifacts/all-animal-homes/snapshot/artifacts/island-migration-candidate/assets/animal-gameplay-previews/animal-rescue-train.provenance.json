@@ -1,0 +1,39 @@
+{
+  "id": "animal-rescue-train",
+  "status": "PASS",
+  "url": "http://127.0.0.1:8765/games/animal-rescue-train/",
+  "startedAt": "2026-10-25T16:50:52.370Z",
+  "viewport": {
+    "width": 768,
+    "height": 576
+  },
+  "presentationZoom": 0.6,
+  "actions": [
+    {
+      "action": "Clicked production Start control",
+      "atMs": 1792947052867,
+      "atSeconds": 0.497
+    },
+    {
+      "action": "Selected queue head and boarded a legal carriage",
+      "atMs": 1792947053463,
+      "atSeconds": 1.093
+    }
+  ],
+  "trimStartSeconds": 0.497,
+  "videoBytes": 178937,
+  "posterBytes": 136285,
+  "videoSha256": "d02988561dfb981cd50e024aa5282915eb095c3c2d7ca820631ac85bbc85e727",
+  "posterSha256": "3a3c3748632ce79e1f863a24dfa3ab59638279c4d2f33b3e29373c154f323227",
+  "originalRecording": "recordings/animal-rescue-train.webm",
+  "originalRecordingSha256": "4beb48163ed4e312ee2a792ee67b17a20d8fc4011f98a49c6fc8f0b57425a8c2",
+  "media": {
+    "duration": 7,
+    "width": 768,
+    "height": 576,
+    "decodedTime": 0.247422,
+    "readyState": 4
+  },
+  "errors": [],
+  "storageIsolation": "new nonpersistent browser context; no production browser profile"
+}

@@ -1,0 +1,195 @@
+TAP version 13
+# Subtest: farm expansion requires farming and animal milestones, not only coins
+ok 1 - farm expansion requires farming and animal milestones, not only coins
+  ---
+  duration_ms: 1.9176
+  ...
+# Subtest: farm starts with one baby sheep and a recoverable free crop
+ok 2 - farm starts with one baby sheep and a recoverable free crop
+  ---
+  duration_ms: 0.2499
+  ...
+# Subtest: fed baby grows offline once; gifts persist and cannot be claimed twice
+ok 3 - fed baby grows offline once; gifts persist and cannot be claimed twice
+  ---
+  duration_ms: 0.2161
+  ...
+# Subtest: all species have compatible crops, stable production and distinct surprises
+ok 4 - all species have compatible crops, stable production and distinct surprises
+  ---
+  duration_ms: 0.359
+  ...
+# Subtest: invalid and unaffordable transactions leave economy untouched
+ok 5 - invalid and unaffordable transactions leave economy untouched
+  ---
+  duration_ms: 0.1995
+  ...
+# Subtest: versioned saves roundtrip and preview/storage failures do not overwrite
+ok 6 - versioned saves roundtrip and preview/storage failures do not overwrite
+  ---
+  duration_ms: 1.3455
+  ...
+# Subtest: Game [carefree-farm] initializes cleanly and binds START GAME without runtime error
+ok 7 - Game [carefree-farm] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 11.0908
+  ...
+# Subtest: Game [capybara-drift] initializes cleanly and binds START GAME without runtime error
+ok 8 - Game [capybara-drift] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 1.5699
+  ...
+# Subtest: Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+ok 9 - Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 29.2409
+  ...
+# Subtest: Game [number-pop] initializes cleanly and binds START GAME without runtime error
+ok 10 - Game [number-pop] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 22.1391
+  ...
+# Subtest: Game [ball-track] initializes cleanly and binds START GAME without runtime error
+ok 11 - Game [ball-track] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 8.3047
+  ...
+# Subtest: Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+ok 12 - Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 8.9757
+  ...
+# Subtest: Game [tap-match] initializes cleanly and binds START GAME without runtime error
+ok 13 - Game [tap-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 6.863
+  ...
+# Subtest: Game [add-up] initializes cleanly and binds START GAME without runtime error
+ok 14 - Game [add-up] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 9.3297
+  ...
+# Subtest: Game [block-match] initializes cleanly and binds START GAME without runtime error
+ok 15 - Game [block-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 5.7299
+  ...
+# Subtest: Game [space-scale] initializes cleanly and binds START GAME without runtime error
+ok 16 - Game [space-scale] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 6.7584
+  ...
+# Subtest: Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+ok 17 - Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 6.9122
+  ...
+# Subtest: Practice Mode contract verified for game [carefree-farm]
+ok 18 - Practice Mode contract verified for game [carefree-farm]
+  ---
+  duration_ms: 4.6228
+  ...
+# Subtest: Practice Mode contract verified for game [capybara-drift]
+ok 19 - Practice Mode contract verified for game [capybara-drift]
+  ---
+  duration_ms: 4.3233
+  ...
+# Subtest: Practice Mode contract verified for game [animal-rescue-train]
+ok 20 - Practice Mode contract verified for game [animal-rescue-train]
+  ---
+  duration_ms: 6.3922
+  ...
+# Subtest: Practice Mode contract verified for game [number-pop]
+ok 21 - Practice Mode contract verified for game [number-pop]
+  ---
+  duration_ms: 4.1571
+  ...
+# Subtest: Practice Mode contract verified for game [ball-track]
+ok 22 - Practice Mode contract verified for game [ball-track]
+  ---
+  duration_ms: 3.458
+  ...
+# Subtest: Practice Mode contract verified for game [spot-quick]
+ok 23 - Practice Mode contract verified for game [spot-quick]
+  ---
+  duration_ms: 4.5361
+  ...
+# Subtest: Practice Mode contract verified for game [tap-match]
+ok 24 - Practice Mode contract verified for game [tap-match]
+  ---
+  duration_ms: 5.1207
+  ...
+# Subtest: Practice Mode contract verified for game [add-up]
+ok 25 - Practice Mode contract verified for game [add-up]
+  ---
+  duration_ms: 3.4259
+  ...
+# Subtest: Practice Mode contract verified for game [block-match]
+ok 26 - Practice Mode contract verified for game [block-match]
+  ---
+  duration_ms: 3.4283
+  ...
+# Subtest: Practice Mode contract verified for game [space-scale]
+ok 27 - Practice Mode contract verified for game [space-scale]
+  ---
+  duration_ms: 4.3985
+  ...
+# Subtest: Practice Mode contract verified for game [shadow-match]
+ok 28 - Practice Mode contract verified for game [shadow-match]
+  ---
+  duration_ms: 3.8436
+  ...
+# Subtest: Practice Mode contract verified for game [flash-brain]
+ok 29 - Practice Mode contract verified for game [flash-brain]
+  ---
+  duration_ms: 1.1648
+  ...
+# Subtest: nine games use one screen library without copied title or result templates
+ok 30 - nine games use one screen library without copied title or result templates
+  ---
+  duration_ms: 45.2521
+  ...
+# Subtest: shared renderer owns event callbacks, current share payload, and instance disposal
+ok 31 - shared renderer owns event callbacks, current share payload, and instance disposal
+  ---
+  duration_ms: 18.6444
+  ...
+# Subtest: shared screen copy is escaped and missing/non-finite results are safe
+ok 32 - shared screen copy is escaped and missing/non-finite results are safe
+  ---
+  duration_ms: 0.6702
+  ...
+# Subtest: shared screen templates provide identical result fields and three actions for all games
+ok 33 - shared screen templates provide identical result fields and three actions for all games
+  ---
+  duration_ms: 0.6468
+  ...
+# Subtest: screen result normalization uses the shared five-level mapping
+ok 34 - screen result normalization uses the shared five-level mapping
+  ---
+  duration_ms: 0.3937
+  ...
+# Subtest: membership invitation follows replay and preserves the three game actions
+ok 35 - membership invitation follows replay and preserves the three game actions
+  ---
+  duration_ms: 0.3193
+  ...
+# Subtest: journeys show discoveries without competitive records
+ok 36 - journeys show discoveries without competitive records
+  ---
+  duration_ms: 0.2388
+  ...
+# Subtest: journey summary uses actual finds and safe text
+ok 37 - journey summary uses actual finds and safe text
+  ---
+  duration_ms: 0.5598
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 220.7382

@@ -1,0 +1,27 @@
+PASS number-pop 667 en: 3 real game taps, score0, records protected, normal start, replay/cancel
+PASS number-pop 667 zh-Hant: 3 real game taps, score0, records protected, normal start, replay/cancel
+PASS ball-track 667 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS ball-track 667 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS block-match 667 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS block-match 667 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS add-up 667 en: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS add-up 667 zh-Hant: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS space-scale 667 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS space-scale 667 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS tap-match 667 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS tap-match 667 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS spot-quick 667 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS spot-quick 667 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS shadow-match 667 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS shadow-match 667 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain 667 en: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain 667 zh-Hant: 2 real game taps, score0, records protected, normal start, replay/cancel
+AssertionError [ERR_ASSERTION]: animal-rescue-train real target outside viewport
+    at complete (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:94:12)
+    at async C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:117:18 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '=='
+}

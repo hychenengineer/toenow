@@ -1,0 +1,65 @@
+TAP version 13
+# Subtest: Harvest baskets keep numeric labels without the colored fraction rim
+ok 1 - Harvest baskets keep numeric labels without the colored fraction rim
+  ---
+  duration_ms: 5.3001
+  ...
+# Subtest: Supply bags leave exact-sum, two-item minimum and overshoot logic intact
+ok 2 - Supply bags leave exact-sum, two-item minimum and overshoot logic intact
+  ---
+  duration_ms: 2.8874
+  ...
+# Subtest: Parcel render never uses hidden mass and keeps symbols distinct
+ok 3 - Parcel render never uses hidden mass and keeps symbols distinct
+  ---
+  duration_ms: 5.5285
+  ...
+# Subtest: Supply orders retain two, three and four bag solutions in every tier
+ok 4 - Supply orders retain two, three and four bag solutions in every tier
+  ---
+  duration_ms: 10.8248
+  ...
+# Subtest: Mystery parcel directive is decided by hidden mass across the unchanged tiers
+ok 5 - Mystery parcel directive is decided by hidden mass across the unchanged tiers
+  ---
+  duration_ms: 4.4743
+  ...
+# Subtest: Every scale has equal arms and its visible comparisons uniquely determine the answer
+not ok 6 - Every scale has equal arms and its visible comparisons uniquely determine the answer
+  ---
+  duration_ms: 2.4205
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-numeric-theme.test.cjs:60:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    2 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-numeric-theme.test.cjs:67:14)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: Supply bag labels render after spark particles in dark ink
+ok 7 - Supply bag labels render after spark particles in dark ink
+  ---
+  duration_ms: 2.3048
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 6
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 106.6124

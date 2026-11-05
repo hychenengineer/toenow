@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Animal Siege · Toenow</title>
+  <link rel="preload" as="image" href="../../assets/animal-siege/acorn-battle-v1.webp">
+  <link rel="preload" as="image" href="../../assets/animal-siege/acorn-gate-side-v1.webp">
+  <link rel="stylesheet" href="../../assets/unified-title-menu.css">
+  <script src="../../shared/toenow-levels.js"></script>
+  <script src="../../shared/toenow-security.js"></script>
+  <script src="../../shared/toenow-platform.js"></script>
+  <script src="../../shared/toenow-analytics.js"></script>
+  <script src="../../shared/toenow-sdk.js"></script>
+  <script src="../../shared/toenow-i18n-core.js"></script>
+  <script src="../../shared/toenow-i18n-games-a.js"></script>
+  <script src="../../shared/toenow-i18n-games-b.js"></script>
+  <script src="../../shared/toenow-i18n.js"></script>
+  <script src="../../shared/toenow-screen-config.js"></script>
+  <script src="../../shared/toenow-screens.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="kingdom.css">
+  <link rel="stylesheet" href="combat.css">
+  <link rel="stylesheet" href="siege-scene.css">
+  <link rel="stylesheet" href="grounded-field.css">
+  <link rel="stylesheet" href="strategy.css">
+  <link rel="stylesheet" href="unit-guide.css">
+  <link rel="stylesheet" href="battle-coach.css">
+  <link rel="stylesheet" href="battle-orders.css">
+  <link rel="stylesheet" href="camp-trail.css">
+  <link rel="stylesheet" href="map-dialog.css">
+  <link rel="stylesheet" href="journey-dialog.css">
+  <link rel="stylesheet" href="field-orders.css">
+</head>
+<body data-state="title">
+  <header class="topbar"><button id="back" type="button">← Back to Hub</button><span>TOENOW · EXPEDITION</span><div class="topbar-actions"><button id="unit-guide-open" type="button" hidden aria-haspopup="dialog" aria-controls="unit-guide"></button></div></header>
+  <main id="expedition" hidden data-i18n-ignore></main>
+  <main id="camp" hidden data-i18n-ignore></main>
+  <main id="trail" hidden data-i18n-ignore></main>
+  <main id="battle" hidden data-i18n-ignore>
+    <div class="battle-heading"><div><span class="eyebrow" id="edition"></span><h1 id="battle-name"></h1><p id="objective"></p></div><div class="round"><span id="round-label"></span><strong id="round-number">1</strong></div></div>
+    <section id="battle-coach" hidden aria-label="Battle tips">
+      <div class="battle-coach-heading"><strong id="battle-coach-label"></strong><button id="battle-coach-skip" type="button"></button></div>
+      <p id="battle-coach-prompt" role="status" aria-live="polite"></p>
+    </section>
+    <div id="lesson-shade" hidden aria-hidden="true"></div>
+    <div class="battle-layout">
+      <section class="battlefield" aria-label="Battlefield">
+        <div class="field-legend"><span class="ally" id="ally-label"></span><span id="phase-label" role="status"></span><span class="enemy" id="enemy-label"></span></div>
+        <div class="board-surround"><div class="castle-silhouette" aria-hidden="true">♜</div><div class="siege-skyline"><span id="siege-label"></span></div><div class="siege-flag" data-owner="defenders" aria-hidden="true"><span class="flag-pole"></span><span class="flag-cloth">◆</span></div><div id="board" role="group" aria-label="Battlefield"></div><div id="combat-effects" aria-hidden="true"></div><div id="unit-orders" class="battle-actions" hidden data-i18n-ignore><div id="selection" class="selection"></div><div id="move-confirmation" class="move-confirmation" hidden><button id="cancel-move" type="button"></button><button id="confirm-move" type="button"></button></div><button id="defend" type="button"></button></div><div id="siege-victory" hidden role="status" aria-live="polite" data-i18n-ignore><span id="siege-capture-title"></span><div class="siege-loot"><span class="loot-token"><i aria-hidden="true">◈</i><b id="siege-gold"></b><small id="siege-gold-label"></small></span><span class="loot-token"><i aria-hidden="true">♣</i><b id="siege-wood"></b><small id="siege-wood-label"></small></span></div></div></div>
+        <div id="combat-announcement" class="visually-hidden" role="status" aria-live="polite" data-i18n-ignore></div>
+        <div class="field-bottom"><span id="tile-help"></span><span id="reward-preview"></span></div>
+      </section>
+
+    </div>
+    <div class="field-turn-controls"><button id="restart" type="button" class="text-button"></button><span id="remaining-orders" role="status" aria-live="polite"></span><button id="end-turn" type="button"></button></div>
+    <p id="action-hint" role="status" aria-live="polite"></p>
+    <dialog id="battle-order" class="battle-confirm" aria-labelledby="order-title" data-i18n-ignore><div class="battle-confirm-card"><h2 id="order-title"></h2><div id="order-actors" aria-hidden="true"></div><p id="preview" class="preview"></p><div class="order-confirm-buttons"><button id="order-cancel" type="button"></button><button id="confirm-attack" type="button" hidden></button><button id="order-accept" type="button" hidden></button></div></div></dialog>
+    <section class="counter-strip" id="counter-strip" aria-label="Unit counters"></section>
+    <section class="journal"><span class="panel-label" id="journal-label"></span><div id="journal" role="log" aria-live="polite"></div></section>
+    <p class="prototype-note" id="prototype-note"></p>
+  </main>
+  <section id="title-screen" data-toenow-screen="title" class="screen active"></section>
+  <section id="gameover-screen" data-toenow-screen="gameover" class="screen hidden" hidden></section>
+  <div id="outcome" class="outcome" hidden data-i18n-ignore role="status"></div>
+  <div id="pause-layer" hidden data-i18n-ignore><div><h2 id="pause-label"></h2><button id="resume" type="button"></button><button id="battle-coach-replay" type="button"></button><button id="title-button" type="button"></button></div></div>
+  <dialog id="unit-guide" aria-labelledby="unit-guide-title" aria-describedby="unit-guide-intro" data-i18n-ignore>
+    <header class="unit-guide-header"><div><h2 id="unit-guide-title"></h2><p id="unit-guide-intro"></p></div><button id="unit-guide-close" type="button"></button></header>
+    <div id="unit-guide-content"></div>
+  </dialog>
+  <script src="engine.js"></script>
+  <script src="campaign.js"></script>
+  <script src="army-view.js"></script>
+  <script src="expedition-view.js"></script>
+  <script src="camp-view.js"></script>
+  <script src="trail-view.js"></script>
+  <script src="combat-feedback.js"></script>
+  <script src="siege-scene.js"></script>
+  <script src="unit-guide.js"></script>
+  <script src="battle-coach.js"></script>
+  <script src="battle-view.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

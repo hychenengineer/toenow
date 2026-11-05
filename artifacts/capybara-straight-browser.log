@@ -1,0 +1,9 @@
+PASS 390x844 en: straight banks, hit feedback/no loss, fixed pause on title/play/result, menu and frozen clocks
+PASS 390x844 zh-Hant: straight banks, hit feedback/no loss, fixed pause on title/play/result, menu and frozen clocks
+PASS 320x568 en: straight banks, hit feedback/no loss, fixed pause on title/play/result, menu and frozen clocks
+PASS 320x568 zh-Hant: straight banks, hit feedback/no loss, fixed pause on title/play/result, menu and frozen clocks
+PASS 844x390 en: straight banks, hit feedback/no loss, fixed pause on title/play/result, menu and frozen clocks
+PASS 844x390 zh-Hant: straight banks, hit feedback/no loss, fixed pause on title/play/result, menu and frozen clocks
+PASS 1100x850 en: straight banks, hit feedback/no loss, fixed pause on title/play/result, menu and frozen clocks
+PASS 1100x850 zh-Hant: straight banks, hit feedback/no loss, fixed pause on title/play/result, menu and frozen clocks
+PASS Hub fixed in-game pause: title/play/result

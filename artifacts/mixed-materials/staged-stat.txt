@@ -1,0 +1,24 @@
+assets/toenow-rabbit-home.css                      |  6 ++++
+ docs/MIXED_MATERIAL_RECIPES.md                     | 20 ++++++++++++
+ .../plans/2026-10-27-mixed-material-recipes.md     |  9 ++++++
+ games/add-up/index.html                            |  6 ++--
+ games/animal-rescue-train/index.html               |  6 ++--
+ games/ball-track/index.html                        |  6 ++--
+ games/block-match/index.html                       |  6 ++--
+ games/flash-brain/index.html                       |  6 ++--
+ games/number-pop/index.html                        |  6 ++--
+ games/shadow-match/index.html                      |  6 ++--
+ games/space-scale/index.html                       |  6 ++--
+ games/spot-quick/index.html                        |  6 ++--
+ games/tap-match/index.html                         |  6 ++--
+ index.html                                         | 12 ++++----
+ shared/toenow-i18n-core.js                         |  1 +
+ shared/toenow-island.js                            |  4 +--
+ shared/toenow-materials-ui.js                      |  2 +-
+ shared/toenow-materials.js                         | 13 +++++---
+ shared/toenow-rabbit-home.js                       | 10 +++---
+ tests/toenow-materials.test.cjs                    | 27 +++++++++++++++-
+ tests/toenow-rabbit-home.test.cjs                  |  6 ++--
+ tools/verify-mixed-materials-browser.cjs           | 36 ++++++++++++++++++++++
+ tools/verify-rabbit-home-browser.cjs               |  2 +-
+ 23 files changed, 156 insertions(+), 52 deletions(-)

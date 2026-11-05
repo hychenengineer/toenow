@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const levels = require('../shared/toenow-levels.js');
 const { create, STORAGE_KEY } = require('../shared/toenow-exploration.js');
-const gameIds = Object.keys(levels.GAME_STORAGE_KEYS).filter(id => levels.GAME_STORAGE_KEYS[id].island !== 'carefree');
+const gameIds = Object.keys(levels.GAME_STORAGE_KEYS).filter(id => (!levels.GAME_STORAGE_KEYS[id].island || levels.GAME_STORAGE_KEYS[id].island === 'explorers'));
 function store(initial = {}) {
   const values = { ...initial };
   return { getItem: key => values[key] ?? null, setItem: (key, value) => { values[key] = String(value); }, values };

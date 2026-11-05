@@ -1,0 +1,205 @@
+TAP version 13
+# Subtest: endless drift keeps speed fixed, positions safe and entity memory bounded
+ok 1 - endless drift keeps speed fixed, positions safe and entity memory bounded
+  ---
+  duration_ms: 12.8779
+  ...
+# Subtest: collection is once only, misses and rocks never subtract points
+ok 2 - collection is once only, misses and rocks never subtract points
+  ---
+  duration_ms: 0.2325
+  ...
+# Subtest: pause freezes simulation and friends stay bounded during an endless run
+ok 3 - pause freezes simulation and friends stay bounded during an endless run
+  ---
+  duration_ms: 0.5994
+  ...
+# Subtest: checkpoint credits only new normal-play points, reload does not duplicate wallet
+ok 4 - checkpoint credits only new normal-play points, reload does not duplicate wallet
+  ---
+  duration_ms: 0.5731
+  ...
+# Subtest: practice cannot overwrite checkpoint, points, purchases or best records
+ok 5 - practice cannot overwrite checkpoint, points, purchases or best records
+  ---
+  duration_ms: 0.22
+  ...
+# Subtest: cosmetics charge exactly once and cannot be equipped before purchase
+ok 6 - cosmetics charge exactly once and cannot be equipped before purchase
+  ---
+  duration_ms: 0.2802
+  ...
+# Subtest: corrupt saves and inaccessible storage fail safely
+ok 7 - corrupt saves and inaccessible storage fail safely
+  ---
+  duration_ms: 0.3334
+  ...
+# Subtest: Game [capybara-drift] initializes cleanly and binds START GAME without runtime error
+ok 8 - Game [capybara-drift] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 61.78
+  ...
+# Subtest: Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+ok 9 - Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 17.0212
+  ...
+# Subtest: Game [number-pop] initializes cleanly and binds START GAME without runtime error
+ok 10 - Game [number-pop] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 18.2598
+  ...
+# Subtest: Game [ball-track] initializes cleanly and binds START GAME without runtime error
+ok 11 - Game [ball-track] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 58.8661
+  ...
+# Subtest: Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+ok 12 - Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 218.0517
+  ...
+# Subtest: Game [tap-match] initializes cleanly and binds START GAME without runtime error
+ok 13 - Game [tap-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 268.1506
+  ...
+# Subtest: Game [add-up] initializes cleanly and binds START GAME without runtime error
+ok 14 - Game [add-up] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 4.6227
+  ...
+# Subtest: Game [block-match] initializes cleanly and binds START GAME without runtime error
+ok 15 - Game [block-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 4.1031
+  ...
+# Subtest: Game [space-scale] initializes cleanly and binds START GAME without runtime error
+ok 16 - Game [space-scale] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 181.7341
+  ...
+# Subtest: Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+ok 17 - Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 257.2248
+  ...
+# Subtest: Practice Mode contract verified for game [capybara-drift]
+ok 18 - Practice Mode contract verified for game [capybara-drift]
+  ---
+  duration_ms: 2.5865
+  ...
+# Subtest: Practice Mode contract verified for game [animal-rescue-train]
+ok 19 - Practice Mode contract verified for game [animal-rescue-train]
+  ---
+  duration_ms: 3.9409
+  ...
+# Subtest: Practice Mode contract verified for game [number-pop]
+ok 20 - Practice Mode contract verified for game [number-pop]
+  ---
+  duration_ms: 1.8661
+  ...
+# Subtest: Practice Mode contract verified for game [ball-track]
+ok 21 - Practice Mode contract verified for game [ball-track]
+  ---
+  duration_ms: 133.9021
+  ...
+# Subtest: Practice Mode contract verified for game [spot-quick]
+ok 22 - Practice Mode contract verified for game [spot-quick]
+  ---
+  duration_ms: 218.5142
+  ...
+# Subtest: Practice Mode contract verified for game [tap-match]
+ok 23 - Practice Mode contract verified for game [tap-match]
+  ---
+  duration_ms: 269.9856
+  ...
+# Subtest: Practice Mode contract verified for game [add-up]
+ok 24 - Practice Mode contract verified for game [add-up]
+  ---
+  duration_ms: 1.8768
+  ...
+# Subtest: Practice Mode contract verified for game [block-match]
+ok 25 - Practice Mode contract verified for game [block-match]
+  ---
+  duration_ms: 1.6201
+  ...
+# Subtest: Practice Mode contract verified for game [space-scale]
+ok 26 - Practice Mode contract verified for game [space-scale]
+  ---
+  duration_ms: 184.8852
+  ...
+# Subtest: Practice Mode contract verified for game [shadow-match]
+ok 27 - Practice Mode contract verified for game [shadow-match]
+  ---
+  duration_ms: 258.2475
+  ...
+# Subtest: Practice Mode contract verified for game [flash-brain]
+ok 28 - Practice Mode contract verified for game [flash-brain]
+  ---
+  duration_ms: 1.0417
+  ...
+# Subtest: Animal island provides one distinct partner and habitat for each existing game
+ok 29 - Animal island provides one distinct partner and habitat for each existing game
+  ---
+  duration_ms: 0.909
+  ...
+# Subtest: Animal building stages are bounded and follow the shared five-tier wave mapping
+ok 30 - Animal building stages are bounded and follow the shared five-tier wave mapping
+  ---
+  duration_ms: 0.3316
+  ...
+# Subtest: Theme helpers work without DOM and never alter scores or practice records
+ok 31 - Theme helpers work without DOM and never alter scores or practice records
+  ---
+  duration_ms: 0.3346
+  ...
+# Subtest: Watercolor characters have one reusable asset per species
+ok 32 - Watercolor characters have one reusable asset per species
+  ---
+  duration_ms: 0.129
+  ...
+# Subtest: The title guide reads normal-play records, never practice stage or malformed values
+ok 33 - The title guide reads normal-play records, never practice stage or malformed values
+  ---
+  duration_ms: 0.3482
+  ...
+# Subtest: nine games use one screen library without copied title or result templates
+ok 34 - nine games use one screen library without copied title or result templates
+  ---
+  duration_ms: 1059.2107
+  ...
+# Subtest: shared renderer owns event callbacks, current share payload, and instance disposal
+ok 35 - shared renderer owns event callbacks, current share payload, and instance disposal
+  ---
+  duration_ms: 18.8808
+  ...
+# Subtest: shared screen copy is escaped and missing/non-finite results are safe
+ok 36 - shared screen copy is escaped and missing/non-finite results are safe
+  ---
+  duration_ms: 0.6248
+  ...
+# Subtest: shared screen templates provide identical result fields and three actions for all games
+ok 37 - shared screen templates provide identical result fields and three actions for all games
+  ---
+  duration_ms: 0.4601
+  ...
+# Subtest: screen result normalization uses the shared five-level mapping
+ok 38 - screen result normalization uses the shared five-level mapping
+  ---
+  duration_ms: 0.4162
+  ...
+# Subtest: membership invitation follows replay and preserves the three game actions
+ok 39 - membership invitation follows replay and preserves the three game actions
+  ---
+  duration_ms: 0.3113
+  ...
+1..39
+# tests 39
+# suites 0
+# pass 39
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1191.488

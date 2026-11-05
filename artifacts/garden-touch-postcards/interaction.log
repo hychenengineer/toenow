@@ -1,0 +1,5 @@
+PASS 1024 768 en pinch, cancel, pan, tap, reopen, restore, backup, quota rollback, preview
+PASS 390 844 zh-Hant pinch, cancel, pan, tap, reopen, restore, backup, quota rollback, preview
+PASS 320 568 en pinch, cancel, pan, tap, reopen, restore, backup, quota rollback, preview
+PASS 844 390 en pinch, cancel, pan, tap, reopen, restore, backup, quota rollback, preview
+PASS Hub iframe postcard restore and exit

@@ -1,0 +1,91 @@
+TAP version 13
+# Subtest: battle coach follows reversible real actions and completes only after an attack and end turn
+ok 1 - battle coach follows reversible real actions and completes only after an attack and end turn
+  ---
+  duration_ms: 1.0136
+  ...
+# Subtest: skip persists and manual replay works without clearing completion or changing a battle
+ok 2 - skip persists and manual replay works without clearing completion or changing a battle
+  ---
+  duration_ms: 0.1948
+  ...
+# Subtest: pause, feedback and end screens hide the coach; enemy turns provide an observation hint
+ok 3 - pause, feedback and end screens hide the coach; enemy turns provide an observation hint
+  ---
+  duration_ms: 0.1537
+  ...
+# Subtest: unavailable storage cannot interrupt gameplay and session completion is remembered in memory
+ok 4 - unavailable storage cannot interrupt gameplay and session completion is remembered in memory
+  ---
+  duration_ms: 0.2128
+  ...
+# Subtest: hands-on lesson gates each real action and waits for the enemy observation before completion
+not ok 5 - hands-on lesson gates each real action and waits for the enemy observation before completion
+  ---
+  duration_ms: 0.9913
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-siege-coach.test.cjs:33:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + undefined
+    - true
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-siege-coach.test.cjs:35:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: lesson fixture supports a legal move and combined attack, then a safe enemy response
+not ok 6 - lesson fixture supports a legal move and combined attack, then a safe enemy response
+  ---
+  duration_ms: 0.9168
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-siege-coach.test.cjs:47:1'
+  failureType: 'testCodeFailure'
+  error: 'Coach.createLessonBattle is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-siege-coach.test.cjs:48:62)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: skipping the hands-on lesson remembers the choice and replay permits every step again
+not ok 7 - skipping the hands-on lesson remembers the choice and replay permits every step again
+  ---
+  duration_ms: 0.1088
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-siege-coach.test.cjs:56:1'
+  failureType: 'testCodeFailure'
+  error: 'c.beginLesson is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-siege-coach.test.cjs:57:28)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 4
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 76.4922

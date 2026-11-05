@@ -1,0 +1,12 @@
+PASS 1100 850 en build/undo/redo/touch/postcard/pause/replay/preview/legacy
+PASS 1100 850 zh-Hant build/undo/redo/touch/postcard/pause/replay/preview/legacy
+PASS 390 844 en build/undo/redo/touch/postcard/pause/replay/preview/legacy
+PASS 390 844 zh-Hant build/undo/redo/touch/postcard/pause/replay/preview/legacy
+PASS 320 568 en build/undo/redo/touch/postcard/pause/replay/preview/legacy
+PASS 320 568 zh-Hant build/undo/redo/touch/postcard/pause/replay/preview/legacy
+PASS 1024 768 en build/undo/redo/touch/postcard/pause/replay/preview/legacy
+PASS 1024 768 zh-Hant build/undo/redo/touch/postcard/pause/replay/preview/legacy
+PASS 844 390 en build/undo/redo/touch/postcard/pause/replay/preview/legacy
+PASS 844 390 zh-Hant build/undo/redo/touch/postcard/pause/replay/preview/legacy
+PASS real Hub iframe launch, pause, postcard, finish, replay, exit
+PASS 10 responsive bilingual cases + Hub

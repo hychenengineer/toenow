@@ -91,3 +91,5 @@
  function environment(s){return Object.fromEntries(Object.entries({scene:'scenes',time:'times',weather:'weather',friend:'friends',collectible:'collectibles',event:'events'}).map(([k,p])=>[k,POOLS[p].find(x=>x.id===s.trip[k])]));}
  return {SESSION,DURATION,SHOP,POINTS,POOLS,create,begin,steer,step,eddyInfo,position,leaveEddy,play,checkpoint,restore,finish,readProfile,buy,name,environment};
 });
+
+

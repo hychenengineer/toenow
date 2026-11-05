@@ -1,0 +1,3 @@
+PASS 1280 zh-Hant reduced=false: illustrated fort, legal wood walls/gates, live capture flag, reward cue, one-time settlement and restart
+PASS 390 en reduced=false: illustrated fort, legal wood walls/gates, live capture flag, reward cue, one-time settlement and restart
+PASS 320 zh-Hant reduced=true: illustrated fort, legal wood walls/gates, live capture flag, reward cue, one-time settlement and restart

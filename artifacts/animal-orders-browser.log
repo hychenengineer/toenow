@@ -1,0 +1,9 @@
+PASS orders 1280 zh-Hant battle: combined attack, cancel, mobile visibility, move only, move/end turn, replay restoration
+PASS orders 390 en battle: combined attack, cancel, mobile visibility, move only, move/end turn, replay restoration
+PASS orders 320 zh-Hant expedition: combined attack, cancel, mobile visibility, move only, move/end turn, replay restoration
+PASS orders 844 en battle: combined attack, cancel, mobile visibility, move only, move/end turn, replay restoration
+PASS lesson 1280 en battle: gated five steps, real actions, safe enemy turn, restore without records or losses
+PASS lesson 390 zh-Hant expedition: gated five steps, real actions, safe enemy turn, restore without records or losses
+PASS lesson 320 en battle: gated five steps, real actions, safe enemy turn, restore without records or losses
+PASS animation: duplicate click, pause/resume and restart cannot leak a queued attack
+PASS iframe practice: first lesson skip/replay, handbook, language switch and no score writes

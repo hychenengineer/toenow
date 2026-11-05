@@ -270,3 +270,4 @@ Report:
 
 Do not claim completion until the new game has been played through and visually inspected in both standalone and Hub iframe modes after all relevant automated tests pass.
 ```
+

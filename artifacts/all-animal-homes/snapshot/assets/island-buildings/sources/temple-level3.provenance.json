@@ -1,0 +1,10 @@
+{
+  "kind": "temple",
+  "level": 3,
+  "method": "built-in image_gen",
+  "source": "C:\\Users\\HsinYuChen\\.codex\\generated_images\\01a16a47-2f32-7341-83dd-edc8be80d6f0\\exec-fc587072-e198-4d80-9398-7003bccfd9ac.png",
+  "references": [
+    "C:\\Users\\HsinYuChen\\.codex\\generated_images\\01a16a47-2f32-7341-83dd-edc8be80d6f0\\exec-56f33101-c452-431a-8af8-268e7e07e4fe.png"
+  ],
+  "prompt": "SINGLE production game landmark sprite, premium richly detailed hand-painted isometric 2.5D storybook architecture matching the approved reference, tactile stone/wood/roof tiles, soft ambient occlusion, afternoon light from upper-left. Fixed 35-degree overhead isometric camera, entrance facing lower-left, ground centered horizontally near 80% image height, square sprite canvas with roughly 10% clear transparent margin. Genuinely TRANSPARENT background and soft alpha contact shadow. Entire subject including roofs and tiny ground patch visible, no cropping. No typography, labels, level numerals, icons, UI, characters, opaque paper, sky, sea, broad terrain, giant plinth or floating land cube. Keep architecture readable at map size; restrained local grass, steps and planting only. EDIT TARGET: the supplied mature Silhouette Ruins sprite. Produce its growth LEVEL 3. FUNCTIONAL EXPANSION. Preserve the refined main building and restored column capitals, refined doorway frame and subtle geometric stone relief. Add a compact attached side cloister and short formal stair. Keep the forecourt plain with sparse shrubs. Remove final elaborate flower beds, ornate courtyard paving, outer ornamental balustrades, golden finials and decorative lantern collections. CRITICAL INVARIANTS: keep this SAME building's core roof/body identity, exact isometric viewing direction, materials, lighting, canvas dimensions, main-core anchor and main-core scale. Simplify by removing additions, not by rescaling, changing viewpoint, making it a different building or applying a color filter. Preserve genuinely transparent surrounding alpha; no opaque backdrop or labels. Return ONE isolated building sprite, not a comparison sheet."
+}

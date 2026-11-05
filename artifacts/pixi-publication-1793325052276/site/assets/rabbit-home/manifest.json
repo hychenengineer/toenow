@@ -1,0 +1,40 @@
+{
+  "createdAt": "2026-10-27T03:51:58.364Z",
+  "generator": "OpenAI imagegen",
+  "reference": "Approved starter-home concept from this conversation",
+  "assets": [
+    {
+      "name": "background",
+      "source": "sources/background.png",
+      "runtime": "background.webp",
+      "sourceImage": "exec-f1a442b0-1538-441f-bd1e-9bc907e0c91d.png",
+      "width": 1448,
+      "height": 1086,
+      "hasAlpha": false,
+      "transparentFraction": 0,
+      "sha256": "48dfabe2fa07d06020c922961a914164b3fe07e5191ad0027f9f97080f90bfb1"
+    },
+    {
+      "name": "rabbit",
+      "source": "sources/rabbit.png",
+      "runtime": "rabbit.webp",
+      "sourceImage": "exec-7baacf2b-9db5-4810-bbfc-f861cfcbb233.png",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "transparentFraction": 0.698163961447769,
+      "sha256": "3c86ff60a6b614e46cd31b095d07f02553a31666d8ab1f8d75220476ff126348"
+    },
+    {
+      "name": "buildings",
+      "source": "sources/buildings.png",
+      "runtime": "buildings.webp",
+      "sourceImage": "exec-0934d6fa-c725-4a47-a25e-c2578ed7f3ed.png",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "transparentFraction": 0.47851816813151044,
+      "sha256": "9e2e078205e4dbb28fe30093e248dd425c03202a36fea3bfd46957dba3d8aa2b"
+    }
+  ]
+}

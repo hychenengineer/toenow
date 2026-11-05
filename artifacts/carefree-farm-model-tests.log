@@ -1,0 +1,90 @@
+TAP version 13
+# Subtest: v1 migration preserves a mature farm and pending rewards without writing on read
+ok 1 - v1 migration preserves a mature farm and pending rewards without writing on read
+  ---
+  duration_ms: 1.8065
+  ...
+# Subtest: quantity sales are exact, bounded integers and revalidate current stock
+ok 2 - quantity sales are exact, bounded integers and revalidate current stock
+  ---
+  duration_ms: 0.541
+  ...
+# Subtest: favorite meals and pet cooldown build permanent friendship exactly once
+ok 3 - favorite meals and pet cooldown build permanent friendship exactly once
+  ---
+  duration_ms: 0.1959
+  ...
+# Subtest: gifts keep their old rewards and add unique tier-gated keepsakes
+ok 4 - gifts keep their old rewards and add unique tier-gated keepsakes
+  ---
+  duration_ms: 0.7273
+  ...
+# Subtest: orders persist, consume exactly their requirements and cannot pay twice
+ok 5 - orders persist, consume exactly their requirements and cannot pay twice
+  ---
+  duration_ms: 0.4302
+  ...
+# Subtest: recurring orders only ask for accessible ingredients at every stage
+ok 6 - recurring orders only ask for accessible ingredients at every stage
+  ---
+  duration_ms: 1.5619
+  ...
+# Subtest: decorations have meaningful milestones, costs and persistent ownership
+ok 7 - decorations have meaningful milestones, costs and persistent ownership
+  ---
+  duration_ms: 0.1917
+  ...
+# Subtest: grass remains free recovery food; every other crop earns more per plot-minute
+ok 8 - grass remains free recovery food; every other crop earns more per plot-minute
+  ---
+  duration_ms: 0.1226
+  ...
+# Subtest: every crop, animal and product has Chinese catalog copy and real art
+ok 9 - every crop, animal and product has Chinese catalog copy and real art
+  ---
+  duration_ms: 3.395
+  ...
+# Subtest: all five stages are reachable through legal actions starting from a fresh farm
+ok 10 - all five stages are reachable through legal actions starting from a fresh farm
+  ---
+  duration_ms: 6.5846
+  ...
+# Subtest: farm expansion requires farming and animal milestones, not only coins
+ok 11 - farm expansion requires farming and animal milestones, not only coins
+  ---
+  duration_ms: 0.4004
+  ...
+# Subtest: farm starts with one baby sheep and a recoverable free crop
+ok 12 - farm starts with one baby sheep and a recoverable free crop
+  ---
+  duration_ms: 0.1239
+  ...
+# Subtest: fed baby grows offline once; gifts persist and cannot be claimed twice
+ok 13 - fed baby grows offline once; gifts persist and cannot be claimed twice
+  ---
+  duration_ms: 0.2547
+  ...
+# Subtest: all species have compatible crops, stable production and distinct surprises
+ok 14 - all species have compatible crops, stable production and distinct surprises
+  ---
+  duration_ms: 0.3085
+  ...
+# Subtest: invalid and unaffordable transactions leave economy untouched
+ok 15 - invalid and unaffordable transactions leave economy untouched
+  ---
+  duration_ms: 0.222
+  ...
+# Subtest: versioned saves roundtrip and preview/storage failures do not overwrite
+ok 16 - versioned saves roundtrip and preview/storage failures do not overwrite
+  ---
+  duration_ms: 0.7559
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 78.593

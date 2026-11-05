@@ -1,0 +1,10 @@
+PASS integration animal-rescue-train
+PASS integration number-pop
+PASS integration ball-track
+PASS integration block-match
+PASS integration add-up
+PASS integration space-scale
+PASS integration tap-match
+PASS integration spot-quick
+PASS integration shadow-match
+PASS integration flash-brain

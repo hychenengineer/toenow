@@ -1,0 +1,38 @@
+{
+  "id": "space-scale",
+  "status": "PASS",
+  "url": "http://127.0.0.1:8765/games/space-scale/",
+  "startedAt": "2026-10-25T16:48:27.361Z",
+  "viewport": {
+    "width": 768,
+    "height": 576
+  },
+  "actions": [
+    {
+      "action": "Clicked production Start control",
+      "atMs": 1792946907678,
+      "atSeconds": 0.317
+    },
+    {
+      "action": "Selected correct parcel by scale clues",
+      "atMs": 1792946908193,
+      "atSeconds": 0.832
+    }
+  ],
+  "trimStartSeconds": 0.317,
+  "videoBytes": 276754,
+  "posterBytes": 79713,
+  "videoSha256": "ab237740189b4238cca0f184250a06b6b07d87060f04abdd3ba2a892a9e6f6a1",
+  "posterSha256": "1991ba836a0dfd7cd67203f533b7adfbc2d1b3c9679a436b61022f6f4eb8a3c0",
+  "originalRecording": "recordings/space-scale.webm",
+  "originalRecordingSha256": "e0a2147d2150bf501d857e31425a95e240256b685375e1ec8eb6b6ad2b4de5b6",
+  "media": {
+    "duration": 7,
+    "width": 768,
+    "height": 576,
+    "decodedTime": 0.210538,
+    "readyState": 4
+  },
+  "errors": [],
+  "storageIsolation": "new nonpersistent browser context; no production browser profile"
+}

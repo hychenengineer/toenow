@@ -1,0 +1,16 @@
+CHECK shared number-pop 1100 en
+CHECK shared number-pop 1100 zh-Hant
+CHECK shared number-pop 390 en
+CHECK shared number-pop 390 zh-Hant
+PASS number-pop: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK shared ball-track 1100 en
+CHECK shared ball-track 1100 zh-Hant
+CHECK shared ball-track 390 en
+CHECK shared ball-track 390 zh-Hant
+PASS ball-track: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+CHECK shared block-match 1100 en
+CHECK shared block-match 1100 zh-Hant
+CHECK shared block-match 390 en
+CHECK shared block-match 390 zh-Hant
+PASS block-match: shared title/end DOM, EN/ZH desktop/mobile, actions, practice, iframe
+{"standalone":12,"iframe":3,"practice":3}

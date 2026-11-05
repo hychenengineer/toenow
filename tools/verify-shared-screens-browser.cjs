@@ -10,6 +10,7 @@ const keys = require('../shared/toenow-levels.js').GAME_STORAGE_KEYS;
 const root = path.resolve(__dirname, '..');
 const base = process.env.TOENOW_TEST_URL || 'http://127.0.0.1:8766';
 const hooks = {
+  'animal-siege': `run.wave=11;Object.values(run.forts).forEach(f=>f.captured=true);run.result='victory';const oldScore=C.score;try{C.score=()=>321;endExpedition();}finally{C.score=oldScore;}`,
   'capybara-drift': `state.inventory={[E.POOLS.collectibles[0].id]:2};state.newFinds=[E.POOLS.collectibles[0].id];state.friends=1;state.elapsed=E.DURATION;state.completed=true;finishDrift();window.__journeyExpected=journeySummary();`,
   'number-pop': `game.score=321;game.wave=13;triggerGameOver();`,
   'ball-track': `state.score=321;state.wave=13;saveRecords(state.score,state.wave);state.frozenSnapshot={score:321,wave:13,best:bestScore};showGameOverModal();`,
@@ -24,6 +25,7 @@ async function instrument(page, id) {
   // This suite exercises title/result lifecycles for returning players.
   // First-play interception and lesson actions have their own browser matrix.
   await page.addInitScript(id=>localStorage.setItem('toenow_tutorial_'+id+'_v2','completed'),id);
+  if(id==='animal-siege')await page.addInitScript(()=>localStorage.setItem('animal_siege_hands_on_v2','completed'));
   if(id==='flash-brain')await page.addInitScript(()=>{for(const rule of ['thorns','priority'])localStorage.setItem('toenow_flash_lesson_'+rule+'_v1','completed');});
   if (id === 'flash-brain') {
     let js = readSource(path.join(root,'games',id,'assets/index-cr-6j3L1.js'),'utf8');

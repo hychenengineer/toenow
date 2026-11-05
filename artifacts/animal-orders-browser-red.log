@@ -1,0 +1,8 @@
+AssertionError [ERR_ASSERTION]: preview must mark enemies attackable from the destination
+    at run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-animal-orders-browser.cjs:28:14) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual'
+}

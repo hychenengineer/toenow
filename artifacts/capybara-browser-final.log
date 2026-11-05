@@ -1,0 +1,26 @@
+PASS 1100x850 en: steering, collection, friends, pause, cosmetics, resume, practice
+PASS 1100x850 zh-Hant: steering, collection, friends, pause, cosmetics, resume, practice
+PASS 390x844 en: steering, collection, friends, pause, cosmetics, resume, practice
+PASS 390x844 zh-Hant: steering, collection, friends, pause, cosmetics, resume, practice
+PASS 320x568 en: steering, collection, friends, pause, cosmetics, resume, practice
+PASS 320x568 zh-Hant: steering, collection, friends, pause, cosmetics, resume, practice
+PASS 844x390 en: steering, collection, friends, pause, cosmetics, resume, practice
+PASS 844x390 zh-Hant: steering, collection, friends, pause, cosmetics, resume, practice
+Hub: load fresh player
+Hub: guest welcomed
+Hub: Capybara opened
+Hub: game resting
+locator.waitFor: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator('#theaterModal') to be hidden
+    - locator resolved to visible <section role="dialog" id="theaterModal" aria-hidden="false" class="theater-modal open" aria-label="Game Viewport">…</section>
+    22 × locator resolved to visible <section role="dialog" id="theaterModal" aria-hidden="true" class="theater-modal" aria-label="Game Viewport">…</section>
+
+    at run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-capybara-browser.cjs:40:149) {
+  log: [
+    "  - waiting for locator('#theaterModal') to be hidden",
+    '    - locator resolved to visible <section role="dialog" id="theaterModal" aria-hidden="false" class="theater-modal open" aria-label="Game Viewport">…</section>',
+    '    22 × locator resolved to visible <section role="dialog" id="theaterModal" aria-hidden="true" class="theater-modal" aria-label="Game Viewport">…</section>'
+  ],
+  name: 'TimeoutError'
+}

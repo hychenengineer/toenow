@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: cancelling the attack confirmation returns a guided rehearsal to choosing a target
+not ok 1 - cancelling the attack confirmation returns a guided rehearsal to choosing a target
+  ---
+  duration_ms: 1.0495
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-siege-coach-cancel.test.cjs:2:1'
+  failureType: 'testCodeFailure'
+  error: 'coach.cancelTarget is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-siege-coach-cancel.test.cjs:4:9)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    node:internal/test_runner/harness:252:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 64.148

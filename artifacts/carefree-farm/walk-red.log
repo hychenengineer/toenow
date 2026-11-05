@@ -1,0 +1,8 @@
+AssertionError [ERR_ASSERTION]: sheep must alternate both corrected walk poses
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-carefree-farm-walk.cjs:10:58 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 2,
+  operator: 'strictEqual'
+}

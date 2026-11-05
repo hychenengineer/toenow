@@ -1,0 +1,9 @@
+{
+  "renderer": "pixi-webgl",
+  "movingLegMeshes": 20,
+  "maxStride": 7.2,
+  "maxLift": 2.2,
+  "pauseAndReducedMotion": true,
+  "resizeAndSelection": true,
+  "errors": []
+}

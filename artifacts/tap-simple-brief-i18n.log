@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: OS/browser language selects Chinese only for Chinese preferences
+ok 1 - OS/browser language selects Chinese only for Chinese preferences
+  ---
+  duration_ms: 1.1257
+  ...
+# Subtest: manual preference persists separately from scores and survives recreation
+ok 2 - manual preference persists separately from scores and survives recreation
+  ---
+  duration_ms: 0.3605
+  ...
+# Subtest: blocked storage does not prevent live switching or translation
+ok 3 - blocked storage does not prevent live switching or translation
+  ---
+  duration_ms: 0.4203
+  ...
+# Subtest: every game and Hub load the same catalogs before the runtime
+ok 4 - every game and Hub load the same catalogs before the runtime
+  ---
+  duration_ms: 11.1819
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 82.4263

@@ -1,0 +1,13 @@
+{"run":{"state":"gameover","wave":20,"score":12098,"busy":false,"correct":5,"wrong":1},"receipt":"No materials collected this time.\nThis result could not be verified. Please start a new game.","status":"unverified","balance":0,"wallSeconds":20.452,"answers":31,"errors":[]}
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'unverified'
+- 'collected'
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-fox-materials-real-browser.cjs:28:43 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'unverified',
+  expected: 'collected',
+  operator: 'strictEqual'
+}

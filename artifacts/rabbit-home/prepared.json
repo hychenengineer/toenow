@@ -1,0 +1,29 @@
+{
+  "base": "d100546c1830645bd3630bbacfc48d2483859980",
+  "index": "C:\\Users\\HsinYuChen\\source\\repos\\toenow\\.git\\codex-rabbit-home.index",
+  "tree": "38e2cfeb4532811e73d238007d4cffbe15f27190",
+  "paths": [
+    "index.html",
+    "package.json",
+    "shared/toenow-island.js",
+    "shared/toenow-i18n-core.js",
+    "shared/toenow-rabbit-home.js",
+    "assets/toenow-rabbit-home.css",
+    "tests/toenow-rabbit-home.test.cjs",
+    "tools/verify-rabbit-home-browser.cjs",
+    "tools/verify-materials-browser.cjs",
+    "tools/verify-materials-lifecycle-browser.cjs",
+    "tools/verify-island-browser.cjs",
+    "docs/RABBIT_HOME_RUN_REPORT.md",
+    "docs/superpowers/plans/2026-10-27-rabbit-home.md",
+    "assets/rabbit-home/background.webp",
+    "assets/rabbit-home/buildings.webp",
+    "assets/rabbit-home/manifest.json",
+    "assets/rabbit-home/rabbit.webp",
+    "assets/rabbit-home/sources/approved-concept.png",
+    "assets/rabbit-home/sources/background.png",
+    "assets/rabbit-home/sources/buildings.png",
+    "assets/rabbit-home/sources/rabbit.png"
+  ],
+  "realIndex": "347ac6841462d7923194e315c5fd00b9674663086ac2766dcd4a502a60bbeeef"
+}

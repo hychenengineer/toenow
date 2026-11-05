@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Number Pop</title>
+    <meta name="description" content="Cyberpunk magnitude-ordering arcade game with Sandwich wave pacing, intuitive fraction gauges, Stroop size inversion, roguelite perks, and procedural Web Audio synthesis." />
+    <meta property="og:title" content="Number Pop" />
+    <meta property="og:description" content="Cyberpunk magnitude-ordering arcade game with Sandwich wave pacing, intuitive fraction gauges, Stroop size inversion, roguelite perks, and procedural Web Audio synthesis." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../assets/unified-title-menu.css?v=materials-20261027-2" />
+    <script src="../../shared/toenow-levels.js"></script>
+    <script src="../../shared/toenow-security.js"></script>
+    <script src="../../shared/toenow-platform.js"></script>
+    <script src="../../shared/toenow-analytics.js"></script>
+    <script src="../../shared/toenow-materials.js?v=materials-20261027-2"></script>
+    <script src="../../shared/toenow-materials-ui.js?v=materials-20261027-2"></script>
+    <script src="../../shared/toenow-sdk.js?v=materials-20261027-2"></script>
+    <script src="../../shared/toenow-i18n-core.js?v=materials-20261027-2"></script>
+    <script src="../../shared/toenow-i18n-games-a.js"></script>
+    <script src="../../shared/toenow-i18n-games-b.js"></script>
+    <script src="../../shared/toenow-i18n-animals.js"></script>
+<script src="../../shared/toenow-i18n.js"></script>
+    <link rel="stylesheet" href="../../assets/toenow-tutorials.css">
+    <script src="../../shared/toenow-tutorial-config.js"></script>
+    <script src="../../shared/toenow-tutorials.js"></script>
+<script src="../../shared/toenow-animals.js"></script>
+    <script src="../../shared/toenow-screen-config.js"></script>
+    <script src="../../shared/toenow-screens.js"></script>
+    <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="../../assets/toenow-animals.css">
+<link rel="stylesheet" href="../../assets/toenow-game-hud.css">
+</head>
+  <body data-state="title" data-wave="1" data-score="0" data-combo="0" data-fever="false">
+    <!-- Interactive Canvas Arena -->
+    <canvas id="game-canvas" data-testid="quantum-canvas" aria-label="Number Pop Game Arena"></canvas>
+
+    <!-- Live Playing HUD -->
+    <div id="hud-layer">
+      <div id="hud-top-container" class="hud-top-container"><div class="island-live-hud" data-metrics="3"><div class="island-hud-metric"><span class="island-hud-label">TIME</span><span id="hud-timer" class="timer-readout island-hud-value">60.0s</span></div><div class="island-hud-metric"><span class="island-hud-label">SCORE</span><span id="hud-score" class="hud-hero-num island-hud-value">0</span></div><div class="island-hud-metric"><span class="island-hud-label">COMBO</span><span id="hud-combo" class="hud-hero-num island-hud-value">0x</span></div><div class="island-hud-controls"><button
+              type="button"
+              id="btn-mute"
+              class="icon-btn"
+              aria-label="Toggle Audio Mute"
+              title="Mute / Unmute Audio (M)"
+              tabindex="-1"
+            >
+              <svg id="svg-unmuted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+              </svg>
+              <svg id="svg-muted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+              </svg>
+            </button><button
+              type="button"
+              id="btn-pause"
+              class="icon-btn"
+              aria-label="Pause Game"
+              title="Pause Game (P / Esc)"
+              tabindex="-1"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+                <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+              </svg>
+            </button><button
+              type="button"
+              id="btn-restart-hud"
+              class="icon-btn"
+              aria-label="Restart Run"
+              title="Instant Restart (R)"
+              tabindex="-1"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+            </button></div></div><div class="island-hud-legacy" aria-hidden="true">
+        <div class="hud-top-bar">
+          <!-- Tier 1 Left: Score & Combo -->
+          <div class="hud-cluster hud-left">
+            <div class="hud-stat-block">
+              <span class="hud-kicker">SCORE</span>
+
+            </div>
+            <div class="hud-divider"></div>
+            <div class="hud-stat-block">
+              <span id="hud-combo-label" class="hud-kicker">COMBO · 1X</span>
+              <div class="combo-value-row">
+
+                <div class="combo-pips-row" id="hud-combo-pips" aria-hidden="true">
+                  <span class="combo-pip"></span>
+                  <span class="combo-pip"></span>
+                  <span class="combo-pip"></span>
+                  <span class="combo-pip"></span>
+                  <span class="combo-pip"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tier 1 Right: Utility Controls -->
+          <div class="hud-right">
+
+
+
+          </div>
+
+          <!-- Tier 2 Full-Width: Wave & Countdown Timer -->
+          <div id="hud-center-cluster" class="hud-cluster hud-center">
+            <div class="hud-center-top">
+              <div class="wave-title-group">
+                <span id="hud-wave" class="wave-num-label">WAVE 1</span>
+                <span aria-hidden="true" style="color: #475569;">·</span>
+                <span id="hud-wave-tier" class="wave-tier-label">SINGLE-DIGIT INTEGERS</span>
+              </div>
+
+            </div>
+            <div class="timer-bar-track">
+              <div id="hud-timer-bar" class="timer-bar-fill"></div>
+            </div>
+            <div class="hud-sub-status">
+              <span id="hud-stage-label" class="hud-sub-status-tag">STAGE 1 · 1.0x DECAY</span>
+              <span id="hud-survival-timer" style="color: #cbd5e1; font-weight: 600; text-align: center;">RUN: 00m 00s</span>
+              <span id="hud-cap-label" style="color: var(--amber-glow); font-weight: 700; text-align: right;">CAP: 60s</span>
+            </div>
+            <div class="order-directive">
+              <span>ORDER: <strong style="color: var(--primary-glow); font-family: var(--font-mono);">LOWEST TO HIGHEST</strong></span>
+              <span id="hud-remaining">4 BASKETS LEFT</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Critical Overload Singularity Warning Banner -->
+        <div id="singularity-warning-banner">WARNING: QUANTUM SINGULARITY DETECTED · CRITICAL 2.8X TIME DRAIN</div>
+      </div></div>
+    </div>
+
+    <!-- TITLE SCREEN OVERLAY (Unified Universal Design) -->
+    <section id="title-screen" class="screen-overlay unified-title-screen visible" aria-label="Title Screen" data-toenow-screen="title"></section>
+
+    <!-- PAUSE MODAL OVERLAY (Anti-cheat blackout) -->
+    <section id="pause-screen" class="screen-overlay unified-pause-screen" aria-label="Pause Menu">
+      <div class="unified-pause-card">
+        <div class="unified-pause-kicker">GAME PAUSED</div>
+        <h2 class="unified-pause-title">PAUSED</h2>
+        <p class="unified-pause-notice">Numbers and screen are hidden while paused.</p>
+
+        <div class="unified-pause-stats-grid">
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">SCORE</span>
+            <span id="pause-score" class="unified-pause-stat-val">0</span>
+          </div>
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">WAVE</span>
+            <span id="pause-wave" class="unified-pause-stat-val">1</span>
+          </div>
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">TIME LEFT</span>
+            <span id="pause-time" class="unified-pause-stat-val">60.0s</span>
+          </div>
+        </div>
+
+        <div class="unified-pause-btn-row">
+          <button type="button" id="btn-resume" class="unified-pause-resume-btn">
+            RESUME (ESC)
+          </button>
+          <button type="button" id="btn-pause-restart" class="unified-pause-action-btn">
+            RESTART (R)
+          </button>
+          <button type="button" id="btn-pause-title" class="unified-pause-action-btn">
+            TITLE
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAME OVER MODAL OVERLAY -->
+    <section id="gameover-screen" class="screen-overlay unified-gameover-screen" aria-label="Game Over Screen" data-toenow-screen="gameover"></section>
+
+
+    <script src="./audio.js"></script>
+    <script src="./rules.js"></script>
+    <script src="./renderer.js"></script>
+    <script src="./main.js?v=materials-20261027-2"></script>
+  </body>
+</html>

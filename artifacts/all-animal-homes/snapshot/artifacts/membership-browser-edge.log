@@ -1,0 +1,7 @@
+locator.evaluate: TypeError: window.__finishMembershipTest is not a function
+    at eval (eval at evaluate (:311:30), <anonymous>:1:12)
+    at UtilityScript.evaluate (<anonymous>:313:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-membership-browser.cjs:16:31 {
+  log: []
+}

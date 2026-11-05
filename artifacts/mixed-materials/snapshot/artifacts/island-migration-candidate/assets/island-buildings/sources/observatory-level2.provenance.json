@@ -1,0 +1,10 @@
+{
+  "kind": "observatory",
+  "level": 2,
+  "method": "built-in image_gen",
+  "source": "C:\\Users\\HsinYuChen\\.codex\\generated_images\\01a16a47-2f32-7341-83dd-edc8be80d6f0\\exec-e0671854-4ecc-428a-9c62-29e88b2d3a57.png",
+  "references": [
+    "C:\\Users\\HsinYuChen\\.codex\\generated_images\\01a16a47-2f32-7341-83dd-edc8be80d6f0\\exec-4957052d-3829-4335-b1e7-42a4457785d5.png"
+  ],
+  "prompt": "SINGLE production game landmark sprite, premium richly detailed hand-painted isometric 2.5D storybook architecture matching the approved reference, tactile stone/wood/roof tiles, soft ambient occlusion, afternoon light from upper-left. Fixed 35-degree overhead isometric camera, entrance facing lower-left, ground centered horizontally near 80% image height, square sprite canvas with roughly 10% clear transparent margin. Genuinely TRANSPARENT background and soft alpha contact shadow. Entire subject including roofs and tiny ground patch visible, no cropping. No typography, labels, level numerals, icons, UI, characters, opaque paper, sky, sea, broad terrain, giant plinth or floating land cube. Keep architecture readable at map size; restrained local grass, steps and planting only. EDIT TARGET: the supplied mature Star Observatory sprite. Produce its LEVEL 2 growth variant. REFINED MAIN BUILDING. Keep the main circular cream-stone observatory at exactly the reference main dome position and scale. Add finished teal dome brass ribs, modest small brass telescope in a narrow opening, three neatly framed arched windows and a simple covered entry with short stairs. Remove the whole right library wing, star finial, large compass courtyard, railings, garden lamps and flower beds. Only a short stone path and a couple of grass tufts. Keep the square/portrait canvas dimensions, camera, lighting direction, main structure anchor and main building scale consistent with the source. Actual new illustration with fewer elements, not a color filter or scaled-down copy. Isolated alpha background remains truly transparent."
+}

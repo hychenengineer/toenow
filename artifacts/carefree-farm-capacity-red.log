@@ -1,0 +1,57 @@
+TAP version 13
+# Subtest: farm expansion requires farming and animal milestones, not only coins
+not ok 1 - farm expansion requires farming and animal milestones, not only coins
+  ---
+  duration_ms: 1.964
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\carefree-farm.test.cjs:4:1'
+  failureType: 'testCodeFailure'
+  error: 'reserve early capacity for different species so progression cannot deadlock'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\carefree-farm.test.cjs:9:2)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    node:internal/test_runner/harness:252:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+  ...
+# Subtest: farm starts with one baby sheep and a recoverable free crop
+ok 2 - farm starts with one baby sheep and a recoverable free crop
+  ---
+  duration_ms: 0.2241
+  ...
+# Subtest: fed baby grows offline once; gifts persist and cannot be claimed twice
+ok 3 - fed baby grows offline once; gifts persist and cannot be claimed twice
+  ---
+  duration_ms: 0.2184
+  ...
+# Subtest: all species have compatible crops, stable production and distinct surprises
+ok 4 - all species have compatible crops, stable production and distinct surprises
+  ---
+  duration_ms: 0.52
+  ...
+# Subtest: invalid and unaffordable transactions leave economy untouched
+ok 5 - invalid and unaffordable transactions leave economy untouched
+  ---
+  duration_ms: 0.2239
+  ...
+# Subtest: versioned saves roundtrip and preview/storage failures do not overwrite
+ok 6 - versioned saves roundtrip and preview/storage failures do not overwrite
+  ---
+  duration_ms: 0.8579
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 5
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 82.5148

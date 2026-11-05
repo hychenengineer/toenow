@@ -1,0 +1,2 @@
+PASS Pixi WebGL, building, pause, album context reuse, responsive resize
+PASS failed texture load exposes retry and preserves storage

@@ -1,0 +1,8 @@
+AssertionError [ERR_ASSERTION]: battle has no side column
+    at run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-animal-field-orders-browser.cjs:9:9) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 1,
+  expected: 0,
+  operator: 'strictEqual'
+}

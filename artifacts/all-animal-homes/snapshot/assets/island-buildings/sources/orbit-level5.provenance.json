@@ -1,0 +1,10 @@
+{
+  "kind": "orbit",
+  "level": 5,
+  "method": "built-in image_gen",
+  "source": "C:\\Users\\HsinYuChen\\.codex\\generated_images\\01a16a47-2f32-7341-83dd-edc8be80d6f0\\exec-4edba713-8fcb-4f3c-a943-619edbcf2911.png",
+  "references": [
+    "C:/Users/HsinYuChen/.codex/generated_images/01a16a47-2f32-7341-83dd-edc8be80d6f0/exec-5a6b4c80-311f-444c-a764-08cbdf502a60.png"
+  ],
+  "prompt": "SINGLE production game landmark sprite, premium richly detailed hand-painted isometric 2.5D storybook architecture matching the approved reference, tactile stone/wood/roof tiles, soft ambient occlusion, afternoon light from upper-left. Fixed 35-degree overhead isometric camera, entrance facing lower-left, ground centered horizontally near 80% image height, square sprite canvas with roughly 10% clear transparent margin. Genuinely TRANSPARENT background and soft alpha contact shadow. Entire subject including roofs and tiny ground patch visible, no cropping. No typography, labels, level numerals, icons, UI, characters, opaque paper, sky, sea, broad terrain, giant plinth or floating land cube. Keep architecture readable at map size; restrained local grass, steps and planting only. Create the complete LEVEL 5 version of Orbit Terrace. A distinctive small astronomical tracking terrace: elegant round cream-stone platform supporting a beautiful brass armillary sphere with muted blue-green rings and small matte blue/gold planet orbs. A compact cream-stone instrument hut with a curved dusty-blue copper roof stands behind, short staircase, attached narrow instrument alcove and low stone balustrade, a subtle circular compass mosaic, a few ornamental grasses and warm lamps. No printed numbers, UI or labels. This is ONE isolated finished landmark, not a sheet or scene. Use the reference solely for coherent architecture/rendering style; do not copy unrelated buildings or compose several landmarks together. Five-stage growth derivatives will preserve this same central core and camera. The complete final landmark has full elegant armillary sphere, low balustrade, compass mosaic, ornamental grasses and soft lamps."
+}

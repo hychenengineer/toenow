@@ -1,0 +1,91 @@
+TAP version 13
+# Subtest: collect receipt reports the exact awarded product and bonus quantity once
+not ok 1 - collect receipt reports the exact awarded product and bonus quantity once
+  ---
+  duration_ms: 2.69
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\carefree-farm-living.test.cjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + undefined
+    - 'wool'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'wool'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\carefree-farm-living.test.cjs:7:64)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    node:internal/test_runner/harness:252:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+  ...
+# Subtest: old pig saves become grass-fed horses without losing progress, goods or orders
+ok 2 - old pig saves become grass-fed horses without losing progress, goods or orders
+  ---
+  duration_ms: 1.4382
+  ...
+# Subtest: malformed progression data never overwrites the stored farm
+ok 3 - malformed progression data never overwrites the stored farm
+  ---
+  duration_ms: 1.4544
+  ...
+# Subtest: new animal progression content has Chinese translations and all body and limb assets
+ok 4 - new animal progression content has Chinese translations and all body and limb assets
+  ---
+  duration_ms: 3.0164
+  ...
+# Subtest: v1 migration preserves a mature farm and pending rewards without writing on read
+ok 5 - v1 migration preserves a mature farm and pending rewards without writing on read
+  ---
+  duration_ms: 0.5624
+  ...
+# Subtest: quantity sales are exact, bounded integers and revalidate current stock
+ok 6 - quantity sales are exact, bounded integers and revalidate current stock
+  ---
+  duration_ms: 0.3875
+  ...
+# Subtest: favorite meals and pet cooldown build permanent friendship exactly once
+ok 7 - favorite meals and pet cooldown build permanent friendship exactly once
+  ---
+  duration_ms: 0.1797
+  ...
+# Subtest: gifts keep their old rewards and add unique tier-gated keepsakes
+ok 8 - gifts keep their old rewards and add unique tier-gated keepsakes
+  ---
+  duration_ms: 0.2955
+  ...
+# Subtest: orders persist, consume exactly their requirements and cannot pay twice
+ok 9 - orders persist, consume exactly their requirements and cannot pay twice
+  ---
+  duration_ms: 0.5051
+  ...
+# Subtest: recurring orders only ask for accessible ingredients at every stage
+ok 10 - recurring orders only ask for accessible ingredients at every stage
+  ---
+  duration_ms: 2.3265
+  ...
+# Subtest: decorations have meaningful milestones, costs and persistent ownership
+ok 11 - decorations have meaningful milestones, costs and persistent ownership
+  ---
+  duration_ms: 0.2419
+  ...
+# Subtest: grass remains free recovery food; every other crop earns more per plot-minute
+ok 12 - grass remains free recovery food; every other crop earns more per plot-minute
+  ---
+  duration_ms: 0.1651
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 11
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 95.3751

@@ -1,0 +1,15 @@
+{
+  "generator": "Built-in image_gen",
+  "generatedOn": "2026-11-04",
+  "reference": "acorn-battle-v1.webp (approved woodland style)",
+  "source": "sources/forest-trail-v1.png",
+  "runtime": "forest-trail-v1.webp",
+  "prompt": "Production SQUARE painted environment for an explorable guarded forest trail and small tactical battle in a woodland animal strategy game. Supplied image is STYLE AND PLAYABLE-FRAMING reference only. Match richly painted storybook woodland fantasy, emerald foliage, warm golden shafts of sunlight, strong inviting contrast and subtle elevated overhead view. NEW FOREST GLADE, no fortress or village. No creatures, people, UI, text, labels, symbols, flags, grid or tiles.\nComposition: TOP 24% is a beautiful deep forest threshold with a partly hidden old supply cache of just a few timber chests tucked under an ancient tree at upper-right, distant fern-covered rocks and a narrow path vanishing between trees at upper-left. Everything solid and decorative remains within this top scenic strip and the extreme image edges. The real game will put guard animals and collision trees on top of this image.\nLOWER 76% MUST be a broad flat completely unobstructed playable forest clearing, muted light sage/moss grass transitioning to pale warm dry earth on the right. Gentle low-detail leafy shadows and faint walking tracks only. No painted roots, boulders, tree trunks, fallen logs, water, bridges, fences, chests or other obstacles inside this lower playable field. Let animal sprites, orange attack range and blue movement overlays remain readable. A few tiny leaves or flowers at the very outermost borders only. No buildings, skyline towers, raised tabletop platform or board-game edge. Make the glade feel like a discovery among the woods, distinct from the established three fort backgrounds, with clean grass in the tactical area.",
+  "notes": "Guard encounter background; collision trees and animal squads are rendered by the combat engine.",
+  "runtimeDimensions": {
+    "width": 1254,
+    "height": 1254
+  },
+  "sourceSha256": "ce2598bf20a2198fc02b38f0410c82dd3d6172760b6a7a05eb1fa5573e413427",
+  "runtimeSha256": "acd4332d9dc1df51764e567e12d364fa63190e08af77f1812888fd5d8daed5b8"
+}

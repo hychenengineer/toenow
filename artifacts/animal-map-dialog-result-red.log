@@ -1,0 +1,8 @@
+AssertionError [ERR_ASSERTION]: location modal must not cover results
+    at run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-animal-map-dialog-browser.cjs:23:263) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: true,
+  expected: false,
+  operator: 'strictEqual'
+}

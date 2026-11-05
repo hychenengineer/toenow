@@ -1,0 +1,3481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TOENOW — Cognitive Training Sandbox | toenow.com</title>
+  <meta name="description" content="Toenow (toenow.com) — High-performance modular Brain Training & Puzzle Game Hub." />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <!-- Supabase JS Client (v2 CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Toenow Shared Levels Module -->
+  <script src="shared/toenow-levels.js"></script>
+  <script src="shared/toenow-security.js"></script>
+  <script src="shared/toenow-platform.js"></script>
+  <script src="shared/toenow-analytics.js"></script>
+  <script src="shared/toenow-sdk.js"></script>
+  <script src="shared/toenow-i18n-core.js"></script>
+  <script src="shared/toenow-i18n-games-a.js"></script>
+  <script src="shared/toenow-i18n-games-b.js"></script>
+  <script src="shared/toenow-i18n-animals.js"></script>
+<script src="shared/toenow-i18n.js"></script>
+<script src="shared/toenow-animals.js"></script>
+  <style>
+    :root {
+      --bg-primary: #0b0f19;
+      --bg-elevated: rgba(17, 24, 39, 0.72);
+      --bg-card: rgba(20, 29, 47, 0.65);
+      --bg-card-hover: rgba(28, 40, 66, 0.82);
+      --border-glass: rgba(148, 163, 184, 0.14);
+      --border-glow: rgba(56, 189, 248, 0.45);
+      --accent-cyan: #22d3ee;
+      --accent-sky: #38bdf8;
+      --accent-violet: #8b5cf6;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --radius-card: 18px;
+      --radius-pill: 9999px;
+      --shadow-glow: 0 12px 40px -10px rgba(34, 211, 238, 0.22), 0 0 25px -5px rgba(139, 92, 246, 0.18);
+      --transition-fast: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-smooth: 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100%;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Ambient futuristic background mesh */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 12% 15%, rgba(34, 211, 238, 0.09) 0%, transparent 40%),
+        radial-gradient(circle at 88% 20%, rgba(139, 92, 246, 0.10) 0%, transparent 42%),
+        radial-gradient(circle at 50% 85%, rgba(56, 189, 248, 0.06) 0%, transparent 50%),
+        linear-gradient(180deg, #0b0f19 0%, #070a12 100%);
+      pointer-events: none;
+    }
+
+    /* Subtle grid overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(to right, rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
+      pointer-events: none;
+    }
+
+    /* ==========================================
+       STICKY HEADER & NAVIGATION
+       ========================================== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(11, 15, 25, 0.82);
+      border-bottom: 1px solid var(--border-glass);
+      transition: var(--transition-fast);
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0.9rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(139, 92, 246, 0.3));
+      border: 1px solid rgba(34, 211, 238, 0.45);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 20px rgba(34, 211, 238, 0.25);
+      position: relative;
+    }
+
+    .brand-mark svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--accent-cyan);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      background: linear-gradient(90deg, #ffffff 0%, #38bdf8 55%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-domain {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.12rem 0.45rem;
+      border-radius: var(--radius-pill);
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      color: var(--accent-cyan);
+      letter-spacing: 0.04em;
+    }
+
+    .brand-subtitle {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.03em;
+      margin-top: 1px;
+    }
+
+    /* Category Filter Tabs */
+    .category-tabs {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(15, 23, 42, 0.75);
+      padding: 0.32rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-glass);
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    .tab-btn {
+      appearance: none;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.48rem 0.95rem;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active {
+      color: var(--text-primary);
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.18), rgba(139, 92, 246, 0.22));
+      border-color: rgba(34, 211, 238, 0.45);
+      box-shadow: 0 0 16px rgba(34, 211, 238, 0.18);
+    }
+
+    /* Action Bar (Right) */
+    .action-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-action {
+      appearance: none;
+      background: rgba(30, 41, 59, 0.65);
+      border: 1px solid var(--border-glass);
+      color: var(--text-primary);
+      font-size: 0.84rem;
+      font-weight: 600;
+      padding: 0.52rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-fast);
+    }
+
+    .btn-action:hover {
+      border-color: var(--border-glow);
+      background: rgba(30, 41, 59, 0.95);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px -6px rgba(34, 211, 238, 0.28);
+    }
+
+    .profile-trigger {
+      appearance: none;
+      background: linear-gradient(135deg, rgba(20, 29, 47, 0.85), rgba(30, 41, 59, 0.75));
+      border: 1px solid var(--border-glass);
+      color: var(--text-primary);
+      padding: 0.35rem 0.85rem 0.35rem 0.4rem;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      transition: var(--transition-fast);
+    }
+
+    .profile-trigger:hover {
+      border-color: rgba(139, 92, 246, 0.55);
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.22);
+      transform: translateY(-1px);
+    }
+
+    .guest-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+      display: grid;
+      place-items: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #0b0f19;
+      box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.4);
+    }
+
+    .profile-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.15;
+    }
+
+    .profile-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .profile-status {
+      font-size: 0.68rem;
+      color: var(--accent-cyan);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 8px var(--accent-emerald);
+    }
+
+    /* ==========================================
+       MAIN CONTAINER & HERO TELEMETRY STRIP
+       ========================================== */
+    .main-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1.75rem 4rem;
+    }
+
+    .hub-intro {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+    }
+
+    .hub-intro-left h1 {
+      font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+
+    .hub-intro-left p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      max-width: 620px;
+    }
+
+    .hub-stats-strip {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: 14px;
+      padding: 0.55rem 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      backdrop-filter: blur(12px);
+    }
+
+    .stat-pill-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+    }
+
+    .stat-pill-value {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+    }
+
+    /* ==========================================
+       BENTO GRID & GAME CARDS (ELEGANT SPACIOUS SCALE)
+       ========================================== */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      justify-content: flex-start;
+    }
+
+    .game-card {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-card);
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: transform var(--transition-smooth), border-color var(--transition-smooth), box-shadow var(--transition-smooth), background var(--transition-smooth);
+      cursor: pointer;
+      overflow: hidden;
+      min-height: 350px;
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet));
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+      z-index: 4;
+    }
+
+    .game-card:hover {
+      transform: translateY(-4px);
+      background: var(--bg-card-hover);
+      border-color: var(--border-glow);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .game-card:hover::before {
+      opacity: 1;
+    }
+
+    /* Game In-Game Visual Preview Banner */
+    .card-preview-banner {
+      position: relative;
+      width: 100%;
+      height: 160px;
+      overflow: hidden;
+      background: #080b14;
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 25%;
+      display: block;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+      filter: brightness(0.92) contrast(1.05);
+    }
+
+    .game-card:hover .card-preview-img {
+      transform: scale(1.05);
+      filter: brightness(1.05) contrast(1.08);
+    }
+
+    .preview-badge-overlay {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .preview-category-pill {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 0.22rem 0.65rem;
+      border-radius: var(--radius-pill);
+      background: rgba(11, 15, 25, 0.92);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      color: var(--accent-cyan);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .preview-category-pill[data-cat="spatial"] {
+      border-color: rgba(139, 92, 246, 0.45);
+      color: #c4b5fd;
+    }
+
+    .preview-category-pill[data-cat="logic"] {
+      border-color: rgba(16, 185, 129, 0.45);
+      color: #6ee7b7;
+    }
+
+    .preview-category-pill[data-cat="puzzle"] {
+      border-color: rgba(245, 158, 11, 0.45);
+      color: #fcd34d;
+    }
+
+    .preview-category-pill[data-cat="memory"] {
+      border-color: rgba(236, 72, 153, 0.45);
+      color: #f472b6;
+    }
+
+    .preview-cat-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 6px var(--accent-cyan);
+    }
+
+    .preview-category-pill[data-cat="spatial"] .preview-cat-dot {
+      background: #a855f7;
+      box-shadow: 0 0 6px #a855f7;
+    }
+
+    .preview-category-pill[data-cat="logic"] .preview-cat-dot {
+      background: #10b981;
+      box-shadow: 0 0 6px #10b981;
+    }
+
+    .preview-category-pill[data-cat="puzzle"] .preview-cat-dot {
+      background: #f59e0b;
+      box-shadow: 0 0 6px #f59e0b;
+    }
+
+    .preview-category-pill[data-cat="memory"] .preview-cat-dot {
+      background: #ec4899;
+      box-shadow: 0 0 6px #ec4899;
+    }
+
+    .card-content-wrap {
+      padding: 1.1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+      gap: 0.85rem;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .game-icon-wrap {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      display: grid;
+      place-items: center;
+      font-size: 1.25rem;
+      box-shadow: inset 0 0 10px rgba(34, 211, 238, 0.08);
+      flex-shrink: 0;
+    }
+
+    .card-badges {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .category-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-pill);
+      background: rgba(34, 211, 238, 0.12);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(34, 211, 238, 0.28);
+    }
+
+    .category-badge[data-cat="spatial"] {
+      background: rgba(139, 92, 246, 0.15);
+      color: #c4b5fd;
+      border-color: rgba(139, 92, 246, 0.35);
+    }
+
+    .category-badge[data-cat="logic"] {
+      background: rgba(16, 185, 129, 0.14);
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+
+    .category-badge[data-cat="puzzle"] {
+      background: rgba(245, 158, 11, 0.14);
+      color: #fcd34d;
+      border-color: rgba(245, 158, 11, 0.35);
+    }
+
+    .category-badge[data-cat="memory"] {
+      background: rgba(236, 72, 153, 0.14);
+      color: #f472b6;
+      border-color: rgba(236, 72, 153, 0.35);
+    }
+
+    .difficulty-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+    }
+
+    .diff-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(148, 163, 184, 0.25);
+    }
+
+    .diff-dot.filled {
+      background: var(--accent-cyan);
+      box-shadow: 0 0 5px rgba(34, 211, 238, 0.6);
+    }
+
+    .card-body h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.3rem;
+      letter-spacing: -0.01em;
+    }
+
+    .card-desc {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.12);
+    }
+
+    .card-score-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      width: 100%;
+      font-size: 0.78rem;
+    }
+
+    .card-score-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .card-score-left strong {
+      color: #f8fafc;
+      font-weight: 800;
+      font-size: 0.86rem;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+    }
+
+    .card-level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(34, 211, 238, 0.1);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .launch-pill {
+      width: 100%;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(8, 145, 178, 0.8) 0%, rgba(6, 182, 212, 0.9) 100%);
+      border: 1px solid rgba(34, 211, 238, 0.4);
+      white-space: nowrap;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+      transition: var(--transition-fast);
+    }
+
+    .game-card:hover .launch-pill {
+      background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
+      color: #0b0f19;
+      border-color: #67e8f9;
+      box-shadow: 0 0 16px rgba(34, 211, 238, 0.5);
+    }
+
+    .empty-grid-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3.5rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px dashed var(--border-glass);
+      border-radius: var(--radius-card);
+      color: var(--text-secondary);
+    }
+
+    /* ==========================================
+       THEATER VIEWPORT MODAL
+       ========================================== */
+    .theater-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(5, 8, 15, 0.92);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition-smooth);
+    }
+
+    .theater-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .theater-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: rgba(11, 15, 25, 0.95);
+      border-bottom: 1px solid var(--border-glass);
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .theater-game-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .theater-game-icon {
+      font-size: 1.35rem;
+    }
+
+    .theater-game-title {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .theater-game-url {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: monospace;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-glass);
+    }
+
+    .theater-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .theater-btn {
+      appearance: none;
+      background: rgba(30, 41, 59, 0.75);
+      border: 1px solid var(--border-glass);
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.48rem 0.95rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .theater-btn:hover {
+      border-color: var(--border-glow);
+      background: rgba(51, 65, 85, 0.85);
+    }
+
+    .theater-btn.btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .theater-btn.btn-danger:hover {
+      background: rgba(239, 68, 68, 0.3);
+      color: #ffffff;
+    }
+
+    .theater-stage {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #050811;
+      overflow: hidden;
+    }
+
+    #gameViewer {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #050811;
+    }
+
+    /* ==========================================
+       USER PROFILE DRAWER (RIGHT SLIDE-OUT)
+       ========================================== */
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      background: rgba(5, 8, 15, 0.65);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition-smooth);
+    }
+
+    .drawer-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .profile-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(440px, 94vw);
+      z-index: 85;
+      background: rgba(13, 19, 33, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-left: 1px solid var(--border-glass);
+      box-shadow: -20px 0 60px rgba(0, 0, 0, 0.65);
+      transform: translateX(100%);
+      transition: transform var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .profile-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 1.35rem 1.5rem;
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: rgba(13, 19, 33, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 2;
+    }
+
+    .drawer-title-group h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      background: linear-gradient(90deg, #fff, var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .drawer-title-group p {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .icon-close-btn {
+      appearance: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid var(--border-glass);
+      background: rgba(30, 41, 59, 0.6);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+      transition: var(--transition-fast);
+    }
+
+    .icon-close-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--border-glow);
+    }
+
+    .drawer-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .radar-card {
+      background: rgba(17, 25, 42, 0.78);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-card);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .radar-canvas-container {
+      position: relative;
+      width: 100%;
+      max-width: 340px;
+      aspect-ratio: 1 / 1;
+      display: grid;
+      place-items: center;
+    }
+
+    #brainRadarCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .dimension-readouts {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+    }
+
+    .readout-item {
+      background: rgba(11, 15, 25, 0.65);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      border-radius: 12px;
+      padding: 0.6rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .readout-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+    }
+
+    .readout-label {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .readout-val {
+      color: var(--accent-cyan);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .readout-bar {
+      width: 100%;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.15);
+      overflow: hidden;
+    }
+
+    .readout-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet));
+      transition: width var(--transition-smooth);
+    }
+
+    /* Account Tier Placeholder Card */
+    .account-tier-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.55), rgba(15, 23, 42, 0.85));
+      border: 1px solid rgba(139, 92, 246, 0.32);
+      border-radius: var(--radius-card);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .tier-status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .tier-badge {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #fcd34d;
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-pill);
+    }
+
+    .tier-desc {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    .btn-primary-gradient {
+      appearance: none;
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(34, 211, 238, 0.45);
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.22), rgba(139, 92, 246, 0.28));
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 0.86rem;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .btn-primary-gradient:hover {
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.35), rgba(139, 92, 246, 0.42));
+      box-shadow: 0 0 20px rgba(34, 211, 238, 0.25);
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================
+       GLOBAL LEADERBOARDS MODAL
+       ========================================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      background: rgba(5, 8, 15, 0.78);
+      backdrop-filter: blur(12px);
+      display: grid;
+      place-items: center;
+      padding: 1.25rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition-smooth);
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .leaderboard-dialog {
+      width: min(760px, 100%);
+      max-height: 88vh;
+      background: rgba(15, 22, 38, 0.96);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-card);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.75), 0 0 40px rgba(34, 211, 238, 0.12);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .lb-header {
+      padding: 1.35rem 1.6rem;
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .lb-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .lb-trophy {
+      font-size: 1.6rem;
+    }
+
+    .lb-title-wrap h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .lb-title-wrap p {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    .lb-controls {
+      padding: 1rem 1.6rem;
+      background: rgba(11, 15, 25, 0.65);
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .lb-select-group {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .lb-select-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .lb-select {
+      flex: 1;
+      background: rgba(20, 29, 47, 0.9);
+      color: var(--text-primary);
+      border: 1px solid var(--border-glass);
+      border-radius: 10px;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .lb-select:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .lb-table-wrap {
+      overflow-y: auto;
+      padding: 0.5rem 1.6rem 1.5rem;
+    }
+
+    .lb-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.86rem;
+    }
+
+    .lb-table th {
+      padding: 0.85rem 0.75rem;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-glass);
+    }
+
+    .lb-table td {
+      padding: 0.8rem 0.75rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.07);
+      vertical-align: middle;
+    }
+
+    .lb-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 30px;
+      height: 26px;
+      padding: 0 0.45rem;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.76rem;
+      background: rgba(30, 41, 59, 0.7);
+      color: var(--text-secondary);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+    }
+
+    .rank-badge.gold {
+      background: linear-gradient(135deg, rgba(250, 204, 21, 0.25), rgba(217, 119, 6, 0.25));
+      color: #fde047;
+      border-color: rgba(250, 204, 21, 0.55);
+      box-shadow: 0 0 12px rgba(250, 204, 21, 0.22);
+    }
+
+    .rank-badge.silver {
+      background: linear-gradient(135deg, rgba(226, 232, 240, 0.22), rgba(148, 163, 184, 0.22));
+      color: #f1f5f9;
+      border-color: rgba(203, 213, 225, 0.5);
+    }
+
+    .rank-badge.bronze {
+      background: linear-gradient(135deg, rgba(251, 146, 60, 0.22), rgba(180, 83, 9, 0.25));
+      color: #fdba74;
+      border-color: rgba(251, 146, 60, 0.45);
+    }
+
+    .player-tag {
+      font-weight: 700;
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .player-you-pill {
+      font-size: 0.65rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 6px;
+      background: rgba(34, 211, 238, 0.18);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+    }
+
+    .brain-score-cell {
+      font-weight: 800;
+      color: var(--accent-cyan);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .date-cell {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ==========================================
+       TOAST NOTIFICATION
+       ========================================== */
+    #authModal { z-index: 140; }
+    .toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 120;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      max-width: 400px;
+      pointer-events: none;
+    }
+
+    .toast-msg {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border-glow);
+      border-left: 4px solid var(--accent-cyan);
+      color: var(--text-primary);
+      padding: 0.9rem 1.15rem;
+      border-radius: 12px;
+      font-size: 0.84rem;
+      line-height: 1.4;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+      pointer-events: auto;
+      animation: toastSlideIn 260ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes toastSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* ==========================================
+       AUTH MODAL STYLES
+       ========================================== */
+    .auth-dialog {
+      background: rgba(15, 23, 42, 0.94);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 440px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 35px rgba(34, 211, 238, 0.18);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      transform: scale(0.96) translateY(12px);
+      transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), opacity 220ms ease;
+    }
+
+    .modal-overlay.open .auth-dialog {
+      transform: scale(1) translateY(0);
+    }
+
+    .auth-header {
+      padding: 1.5rem 1.6rem 1rem;
+      border-bottom: 1px solid var(--border-glass);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .auth-title-group h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      background: linear-gradient(90deg, #ffffff, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.25rem;
+    }
+
+    .auth-title-group p {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    .auth-body {
+      padding: 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .btn-oauth-google {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      background: #ffffff;
+      color: #1e293b;
+      font-size: 0.88rem;
+      font-weight: 700;
+      border: 1px solid #cbd5e1;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-oauth-google:hover {
+      background: #f8fafc;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(255, 255, 255, 0.15);
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border-glass);
+    }
+
+    .auth-divider span {
+      padding: 0 0.8rem;
+    }
+
+    .auth-email-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .auth-input-wrap label {
+      display: block;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 0.35rem;
+    }
+
+    .auth-input {
+      width: 100%;
+      background: rgba(20, 29, 47, 0.8);
+      border: 1px solid var(--border-glass);
+      border-radius: 10px;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.86rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: var(--transition-fast);
+    }
+
+    .auth-input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 12px rgba(34, 211, 238, 0.25);
+    }
+
+    .auth-status-msg {
+      font-size: 0.78rem;
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      display: none;
+    }
+
+    .auth-status-msg.error {
+      display: block;
+      background: rgba(244, 63, 94, 0.12);
+      border: 1px solid rgba(244, 63, 94, 0.35);
+      color: #fda4af;
+    }
+
+    .auth-status-msg.success {
+      display: block;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #6ee7b7;
+    }
+
+    .user-avatar-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid var(--accent-cyan);
+    }
+
+    .btn-signout {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.35);
+      color: #fda4af;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      margin-top: 0.5rem;
+    }
+
+    .btn-signout:hover {
+      background: rgba(244, 63, 94, 0.25);
+    }
+
+    @media (max-width: 768px) {
+      .header-inner {
+        padding: 0.8rem 1rem;
+      }
+      .main-container {
+        padding: 1.25rem 1rem 3rem;
+      }
+      .category-tabs {
+        order: 3;
+        width: 100%;
+      }
+    }
+
+    .card-action-btns {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-share-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      background: rgba(14, 165, 233, 0.12);
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .card-share-btn:hover {
+      background: rgba(14, 165, 233, 0.28);
+      border-color: #38bdf8;
+      color: #f0f9ff;
+      transform: translateY(-1px);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+    }
+
+    .card-share-btn:active {
+      transform: translateY(0);
+    }
+  </style>
+  <link rel="stylesheet" href="assets/toenow-game-previews.css">
+  <script src="shared/toenow-game-previews.js"></script>
+  <link rel="stylesheet" href="assets/toenow-hub-themes.css">
+  <script src="shared/toenow-hub-themes.js"></script>
+  <link rel="stylesheet" href="assets/toenow-island.css?v=island-20261026-3">
+  <script src="shared/toenow-island.js?v=island-20261026-3"></script>
+  <script src="shared/toenow-exploration.js?v=island-20261026-3"></script>
+<link rel="stylesheet" href="assets/toenow-animals.css">
+</head>
+<body>
+
+  <!-- ==========================================
+       STICKY HEADER
+       ========================================== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand-group" id="brandHomeTrigger" title="Toenow Cognitive Hub">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 21 7 21 17 12 22 3 17 3 7 12 2"></polygon>
+            <circle cx="12" cy="12" r="3"></circle>
+            <line x1="12" y1="2" x2="12" y2="9"></line>
+            <line x1="21" y1="17" x2="14.6" y2="13.5"></line>
+            <line x1="3" y1="17" x2="9.4" y2="13.5"></line>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="brand-title-row">
+            <span class="brand-title">TOENOW</span>
+            <span class="brand-domain">toenow.com</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <nav class="category-tabs" aria-label="Cognitive Discipline Filters" id="categoryTabs">
+        <button type="button" class="tab-btn active" data-category="all">All</button>
+        <button type="button" class="tab-btn" data-category="puzzle">Pattern</button>
+        <button type="button" class="tab-btn" data-category="spatial">Space</button>
+        <button type="button" class="tab-btn" data-category="math">Numbers</button>
+        <button type="button" class="tab-btn" data-category="logic">Logic</button>
+        <button type="button" class="tab-btn" data-category="memory">Memory</button>
+      </nav>
+
+      <!-- Action Bar -->
+      <div class="action-bar">
+        <label class="hub-theme-control" data-i18n-ignore>
+          <span id="hubThemeLabel">Theme</span>
+          <select id="hubThemeSelect" aria-label="Homepage theme">
+            <option value="bright" data-source="Bright Challenge Hall">Bright Challenge Hall</option>
+            <option value="arena" data-source="Dark Challenge Arena">Dark Challenge Arena</option>
+            <option value="calm" data-source="Calm Practice Room">Calm Practice Room</option>
+          </select>
+        </label>
+        <button type="button" class="btn-action" id="openLeaderboardBtn">
+          <span>🏆</span>
+          <span>Leaderboard</span>
+        </button>
+
+        <button type="button" class="profile-trigger" id="openProfileBtn" aria-label="Open Your Game Stats">
+          <div class="guest-avatar" aria-hidden="true">👤</div>
+          <div class="profile-meta">
+            <span class="profile-name">Sign In / Register</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       MAIN BENTO HUB
+       ========================================== -->
+  <main class="main-container">
+    <section id="islandExplorer" aria-label="Island explorer"></section>
+    <div id="hubListView" class="hub-list-view">
+    <section class="hub-challenge-hero" id="hubChallengeHero" aria-labelledby="hubChallengeTitle" data-i18n-ignore>
+      <div>
+        <p class="hub-eyebrow" data-hub-copy="eyebrow">A LITTLE CHALLENGE. A NEW BEST.</p>
+        <h1 id="hubChallengeTitle" data-hub-copy="heading">Your next breakthrough starts with a challenge.</h1>
+        <p class="hub-challenge-description" data-hub-copy="description">Memory, numbers, observation and logic. Pick a challenge and see how far you can go.</p>
+        <button type="button" class="hub-challenge-start" id="hubChallengeStart" data-hub-copy="action">Try a memory challenge</button>
+        <span class="hub-challenge-note" data-hub-source="Level 1–5 · Practice mode available">Level 1–5 · Practice mode available</span>
+      </div>
+      <div class="hub-feature">
+        <div class="hub-feature-top"><span data-hub-copy="feature">Start with a little curiosity</span><span data-hub-source="Memory">Memory</span></div>
+        <div class="hub-memory-board" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <h2 data-hub-source="Which squares lit up?">Which squares lit up?</h2>
+        <p data-hub-source="Look, remember, then try the next level.">Look, remember, then try the next level.</p>
+      </div>
+    </section>
+    <div class="hub-challenges-heading" data-i18n-ignore>
+      <h2 data-hub-copy="section">What will you challenge today?</h2>
+      <p data-hub-source="Five difficulty levels · Your own best to beat">Five difficulty levels · Your own best to beat</p>
+    </div>
+    <section class="bento-grid" id="gamesBentoGrid" aria-live="polite"></section>
+    <p class="hub-theme-footer" data-i18n-ignore data-hub-source="Game-based challenges for your own exploration, not a standardized ability assessment.">Game-based challenges for your own exploration, not a standardized ability assessment.</p>
+    </div>
+  </main>
+
+  <!-- ==========================================
+       THEATER VIEWPORT MODAL
+       ========================================== -->
+  <section class="theater-modal" id="theaterModal" aria-hidden="true" role="dialog" aria-label="Game Viewport">
+    <div class="theater-toolbar">
+      <div class="theater-game-info">
+        <span class="theater-game-icon" id="theaterIcon">🎮</span>
+        <span class="theater-game-title" id="theaterTitle">Module Title</span>
+        <span class="theater-game-url" id="theaterUrl">about:blank</span>
+      </div>
+      <div class="theater-controls">
+        <button type="button" class="theater-btn" id="restartGameBtn">
+          ↺ Restart
+        </button>
+        <button type="button" class="theater-btn" id="fullscreenGameBtn">
+          ⛶ Fullscreen
+        </button>
+        <button type="button" class="theater-btn btn-danger" id="closeTheaterBtn">
+          ✕ Close Hub
+        </button>
+      </div>
+    </div>
+    <div class="theater-stage" id="theaterStage">
+      <iframe id="gameViewer" src="about:blank" title="Toenow Game Sandbox" allow="fullscreen; autoplay"></iframe>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       USER PROFILE DRAWER & BRAIN HEXAGON RADAR
+       ========================================== -->
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="profile-drawer" id="profileDrawer" aria-hidden="true" aria-label="Your Game Stats">
+    <div class="drawer-header">
+      <div class="drawer-title-group">
+        <h2>Your Game Stats</h2>
+        <p>Based on your game scores. Updates as you play.</p>
+      </div>
+      <button type="button" class="icon-close-btn" id="closeProfileBtn" aria-label="Close Profile Drawer">✕</button>
+    </div>
+
+    <div class="drawer-content">
+      <div class="radar-card">
+        <div class="radar-canvas-container">
+          <canvas id="brainRadarCanvas" width="340" height="340"></canvas>
+        </div>
+        <div class="dimension-readouts" id="dimensionReadouts"></div>
+      </div>
+
+      <div class="account-tier-card">
+        <button type="button" class="btn-primary-gradient" id="signInRegisterBtn">
+          Sign In / Register
+        </button>
+        <button type="button" class="btn-signout" id="signOutBtn" style="display: none;">
+          Sign Out of Toenow
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       GLOBAL LEADERBOARDS MODAL
+       ========================================== -->
+  <div class="modal-overlay" id="leaderboardModal" aria-hidden="true" role="dialog" aria-label="Toenow Global Arena">
+    <div class="leaderboard-dialog">
+      <div class="lb-header">
+        <div class="lb-title-wrap">
+          <span class="lb-trophy">🏆</span>
+          <div>
+            <h2>Toenow Global Arena</h2>
+            <p>Verified Top 10 Operator Rankings across toenow.com</p>
+          </div>
+        </div>
+        <button type="button" class="icon-close-btn" id="closeLeaderboardBtn" aria-label="Close Leaderboard">✕</button>
+      </div>
+
+      <div class="lb-controls">
+        <div class="lb-select-group">
+          <label for="leaderboardGameSelect">Training Module:</label>
+          <select id="leaderboardGameSelect" class="lb-select"></select>
+        </div>
+      </div>
+
+      <div class="lb-table-wrap">
+        <table class="lb-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Player Tag</th>
+              <th>Brain Score</th>
+              <th>Date Completed</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- ==========================================
+       AUTHENTICATION MODAL
+       ========================================== -->
+  <div class="modal-overlay" id="authModal" aria-hidden="true" role="dialog" aria-label="Sign In or Register">
+    <div class="auth-dialog">
+      <div class="auth-header">
+        <div class="auth-title-group">
+          <h2 id="authHeading">Sign In / Register</h2>
+          <p>Save your scores and continue your island adventure.</p>
+        </div>
+        <button type="button" class="icon-close-btn" id="closeAuthBtn" aria-label="Close Auth Modal">✕</button>
+      </div>
+
+      <div class="auth-body">
+        <!-- 1-Click Google OAuth -->
+        <button type="button" class="btn-oauth-google" id="googleLoginBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.35 24 12 24z"/>
+            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+          </svg>
+          Continue with Google
+        </button>
+
+        <div class="auth-divider">
+          <span>or sign in with email</span>
+        </div>
+
+        <!-- Pure Email OTP / Magic Link Form -->
+        <form class="auth-email-form" id="emailAuthForm">
+          <div class="auth-input-wrap">
+            <label for="authEmailInput">Your Email Address</label>
+            <input type="email" id="authEmailInput" class="auth-input" placeholder="e.g. operator@toenow.com" required />
+          </div>
+
+          <div id="authStatusMsg" class="auth-status-msg"></div>
+
+          <button type="submit" class="btn-primary-gradient" id="emailSubmitBtn" style="padding: 0.75rem 1rem;">
+            Send Magic Login Link
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <dialog id="islandWelcome" class="island-welcome" aria-labelledby="welcomeHeading" data-i18n-ignore>
+    <img src="assets/animal-island/rabbit-character.webp" alt="" class="welcome-character">
+    <p class="welcome-eyebrow">TOENOW</p>
+    <h1 id="welcomeHeading"></h1>
+    <p id="welcomeDescription"></p>
+    <div class="welcome-actions">
+      <button type="button" id="welcomeSigninBtn"></button>
+      <button type="button" id="welcomeRegisterBtn"></button>
+      <button type="button" id="welcomeGuestBtn"></button>
+    </div>
+    <p id="welcomeGuestNote" class="welcome-note"></p>
+  </dialog>
+
+  <!-- ==========================================
+       APPLICATION LOGIC
+       ========================================== -->
+  <script>
+    /* ============================================================================
+       0. SUPABASE CLIENT & CLOUD AUTH SUBSYSTEM
+       ============================================================================ */
+    const SUPABASE_CONFIG = {
+      url: 'https://kmlmikysqyflvwnkfxdh.supabase.co',
+      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImttbG1pa3lzcXlmbHZ3bmtmeGRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MjA1MDQsImV4cCI6MjEwODA5NjUwNH0.m5l0JDhc7o8fur0FNVF1DXs89VtnVD0NRG4tLTfHtp4'
+    };
+
+    let supabaseClient = null;
+    let currentAuthUser = null;
+    let currentCloudProfile = null;
+    window.ToenowAccount = { get signedIn() { return !!currentAuthUser; } };
+
+    if (window.supabase) {
+      supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+    }
+
+    /* ============================================================================
+       1. UNIVERSAL GAME MOUNTING & RESOLUTION
+       ============================================================================ */
+    const GAMES_CONFIG = [
+      {
+        id: 'animal-rescue-train',
+        title: 'Animal Rescue Train',
+        category: 'logic',
+        icon: '🚂',
+        url: 'games/animal-rescue-train/index.html',
+        difficulty: 5,
+        difficultyMin: 1,
+        leaderboard: false,
+        description: "Help the panda stationmaster board every animal safely.",
+        scoreKey: 'animal_rescue_train_best_score',
+        waveKey: 'animal_rescue_train_best_wave'
+      },
+      {
+        id: 'number-pop',
+        title: 'Number Pop',
+        category: 'math',
+        icon: '🔢',
+        url: 'games/number-pop/index.html',
+        difficulty: 4,
+        description: "Collect numbered harvest baskets from lowest to highest with Rabbit."
+      },
+      {
+        id: 'ball-track',
+        title: 'Ball Track',
+        category: 'spatial',
+        icon: '🔮',
+        url: 'games/ball-track/index.html',
+        difficulty: 4,
+        description: "Remember the otters, follow their floating leaves, then find their hiding places."
+      },
+      {
+        id: 'block-match',
+        title: 'Block Match',
+        category: 'puzzle',
+        icon: '🖲️',
+        url: 'games/block-match/index.html',
+        difficulty: 3,
+        description: "Remove extra timber tiles to match Beaver's blueprint."
+      },
+      {
+        id: 'add-up',
+        title: 'Add Up',
+        category: 'math',
+        icon: '⚡',
+        url: 'games/add-up/index.html',
+        difficulty: 3,
+        description: "Choose nut bags that add up to Squirrel's supply order."
+      },
+      {
+        id: 'space-scale',
+        title: 'Space Scale',
+        category: 'logic',
+        icon: '⚖️',
+        url: 'games/space-scale/index.html',
+        difficulty: 4,
+        description: "Read the scales and help Fox sort mysterious parcels by weight."
+      },
+      {
+        id: 'tap-match',
+        title: 'Tap Match',
+        category: 'spatial',
+        icon: '🎯',
+        url: 'games/tap-match/index.html',
+        difficulty: 3,
+        description: "Find matching picture cards and help Penguin collect them."
+      },
+      {
+        id: 'spot-quick',
+        title: 'Spot Quick',
+        category: 'puzzle',
+        icon: '🔬',
+        url: 'games/spot-quick/index.html',
+        difficulty: 4,
+        description: "Identify blurry photos from every category for Owl's observation journal."
+      },
+      {
+        id: 'shadow-match',
+        title: 'Shadow Match',
+        category: 'puzzle',
+        icon: '👤',
+        url: 'games/shadow-match/index.html',
+        difficulty: 3,
+        description: "Watch Raccoon's moving paper shapes and find the matching card."
+      },
+      {
+        id: 'flash-brain',
+        title: 'Flash Brain',
+        category: 'memory',
+        icon: '🧠',
+        url: 'games/flash-brain/index.html',
+        difficulty: 4,
+        description: "Remember the animal flowerbeds with Elephant. Recall their positions and avoid thorns."
+      }
+    ];
+
+    const CATEGORY_META = {
+      puzzle: {
+        label: 'Pattern',
+        description: 'Pattern recognition, non-verbal geometric synthesis, and visual lattice solving.'
+      },
+      spatial: {
+        label: 'Space',
+        description: 'Mental spatial tracking, rotation, and volumetric perspective reconstruction.'
+      },
+      math: {
+        label: 'Numbers',
+        description: 'High-velocity quantitative processing, arithmetic synthesis, and numerical fluency.'
+      },
+      logic: {
+        label: 'Logic',
+        description: 'Multi-variable constraint balancing, relational inference, and symbolic deduction.'
+      },
+      memory: {
+        label: 'Memory',
+        description: 'Working memory buffer, sequential recall, and working memory load retention.'
+      }
+    };
+
+    const STORAGE_KEYS = {
+      USER_PROFILE: 'toenow_user_profile',
+      GAME_SCORES: 'toenow_game_scores'
+    };
+
+    const COGNITIVE_AXES = [
+      { key: 'math', shortLabel: 'Math', fullLabel: 'Quantitative Processing (Math)' },
+      { key: 'spatial', shortLabel: 'Spatial', fullLabel: 'Spatial Perception (3D)' },
+      { key: 'logic', shortLabel: 'Logic', fullLabel: 'Logical Deduction (Logic)' },
+      { key: 'puzzle', shortLabel: 'Puzzle', fullLabel: 'Pattern Recognition (Puzzle)' },
+      { key: 'memory', shortLabel: 'Memory', fullLabel: 'Working Memory (Memory)' },
+      { key: 'reaction', shortLabel: 'Reaction', fullLabel: 'Processing Speed (Reaction)' }
+    ];
+
+    let activeCategory = 'all';
+    let currentMountedGame = null;
+
+    /**
+     * Dynamically scans project root and subdirectories (e.g., games/sub/index.html)
+     * when served over HTTP/HTTPS or via an optional games/manifest.json index.
+     */
+    async function discoverAdditionalGames() {
+      if (window.location.protocol === 'file:') {
+        return;
+      }
+
+      const knownUrls = new Set(GAMES_CONFIG.map(g => g.url.replace(/^\.?\//, '')));
+
+      const registerDiscoveredFile = (rawPath) => {
+        const cleanUrl = rawPath.replace(/^\.?\//, '');
+        if (!cleanUrl.endsWith('.html')) return;
+        if (cleanUrl.toLowerCase() === 'index.html') return;
+        if (knownUrls.has(cleanUrl)) return;
+
+        knownUrls.add(cleanUrl);
+        const slug = cleanUrl
+          .replace(/\/index\.html$/i, '')
+          .replace(/\.html$/i, '')
+          .split('/')
+          .filter(Boolean)
+          .pop() || 'custom-module';
+
+        const inferredCategory =
+          /math|num|calc|factor/i.test(cleanUrl) ? 'math' :
+          /spatial|cube|3d|rotat/i.test(cleanUrl) ? 'spatial' :
+          /logic|scale|deduct/i.test(cleanUrl) ? 'logic' : 'puzzle';
+
+        const formattedTitle = slug
+          .split(/[-_]/)
+          .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' ');
+
+        GAMES_CONFIG.push({
+          id: `auto-${slug.toLowerCase()}`,
+          title: formattedTitle,
+          category: inferredCategory,
+          icon: '🧠',
+          url: cleanUrl,
+          difficulty: 3
+        });
+      };
+
+      try {
+        // Check optional manifest or directory listing on local/dev server
+        const dirsToScan = ['./', './games/'];
+        for (const dir of dirsToScan) {
+          const res = await fetch(dir, { method: 'GET' });
+          if (!res.ok) continue;
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('text/html')) {
+            const html = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const links = Array.from(doc.querySelectorAll('a[href]')).map(a => a.getAttribute('href'));
+            for (const href of links) {
+              if (!href || href.startsWith('?') || href.startsWith('#') || href.startsWith('..')) continue;
+              if (href.endsWith('.html')) {
+                registerDiscoveredFile(dir === './' ? href : `games/${href.replace(/^\.?\//, '')}`);
+              } else if (dir === './games/' && href.endsWith('/')) {
+                const subIndex = `games/${href.replace(/^\.?\//, '')}index.html`;
+                try {
+                  const headCheck = await fetch(subIndex, { method: 'HEAD' });
+                  if (headCheck.ok) registerDiscoveredFile(subIndex);
+                } catch (_) {}
+              }
+            }
+          }
+        }
+      } catch (_) {
+        // Silent fallback when static host disables directory listing
+      }
+
+      renderBentoGrid();
+      populateLeaderboardDropdown();
+    }
+
+    /* ============================================================================
+       2. COGNITIVE BENCHMARKS & DYNAMIC NORM MATRIX (Cold Start & Rolling Percentile)
+       ============================================================================ */
+    /**
+     * Cache for dynamic cloud benchmarks fetched from Supabase / Leaderboards
+     */
+    let DYNAMIC_LEADERBOARD_CACHE = {};
+
+    /**
+     * Resolves the Elite (Leaderboard #1) and Baseline (Average / Normal player)
+     * completely dynamically without hardcoded constants.
+     *
+     * Rules:
+     * 1. Elite (95 Index): The highest score in the active Leaderboard (Cloud or local pilot user).
+     * 2. Baseline (60 Index):
+     *    - If there are enough players (>= MIN_PLAYERS_FOR_DYNAMIC_AVG), calculate true statistical average.
+     *    - During cold-start, dynamically anchor baseline at 38% of the #1 score.
+     */
+    function getDynamicGameBenchmark(gameId) {
+      const MIN_PLAYERS_FOR_DYNAMIC_AVG = 5;
+
+      // 1. Check dynamic cloud leaderboard cache
+      let topScore = 0;
+      let scoresList = [];
+
+      if (DYNAMIC_LEADERBOARD_CACHE[gameId] && DYNAMIC_LEADERBOARD_CACHE[gameId].length > 0) {
+        scoresList = DYNAMIC_LEADERBOARD_CACHE[gameId].map(r => Number(r.score) || 0).filter(s => s > 0);
+      }
+
+      // 2. Also check player's local personal best record
+      const localScores = getGameScores();
+      const localBest = Number(localScores[gameId]?.bestScore) || 0;
+      if (localBest > 0) {
+        scoresList.push(localBest);
+      }
+
+      // 3. Fallback to baseline leaderboard data if no dynamic entries exist yet
+      if (scoresList.length === 0 && BASELINE_LEADERBOARD_DATA[gameId]) {
+        scoresList = BASELINE_LEADERBOARD_DATA[gameId].map(r => r.score);
+      }
+
+      // Sort descending
+      scoresList.sort((a, b) => b - a);
+      topScore = scoresList[0] || 15000;
+
+      let baselineScore = 0;
+      if (scoresList.length >= MIN_PLAYERS_FOR_DYNAMIC_AVG) {
+        // Dynamic Average of real players (determines the 60 Index normal threshold)
+        const sum = scoresList.reduce((acc, s) => acc + s, 0);
+        baselineScore = Math.round(sum / scoresList.length);
+      } else {
+        // Cold start gap: normal person threshold is dynamically set to ~38% of top leaderboard score
+        baselineScore = Math.round(topScore * 0.38);
+      }
+
+      // Ensure a reasonable non-zero span
+      baselineScore = Math.max(100, Math.min(baselineScore, Math.round(topScore * 0.85)));
+
+      return {
+        elite: topScore,
+        baseline: baselineScore,
+        sampleCount: scoresList.length
+      };
+    }
+
+    /**
+     * Maps an in-game raw score to an objective cognitive performance target (0 - 100)
+     * based entirely on the dynamic gap between the #1 Leaderboard record and player average.
+     */
+    function calculatePerformanceIndex(gameId, rawScore) {
+      const { elite, baseline } = getDynamicGameBenchmark(gameId);
+      const score = Math.max(0, Number(rawScore) || 0);
+
+      if (score === 0) return 0;
+
+      // Below average: 0 -> 60 Index based on distance to baseline
+      if (score <= baseline) {
+        return Math.round((score / baseline) * 60);
+      }
+
+      // Between Average (60) and Leaderboard #1 (95)
+      if (score <= elite) {
+        const gap = elite - baseline;
+        const progress = (score - baseline) / Math.max(1, gap);
+        return Math.round(60 + progress * 35);
+      }
+
+      // Surpassed Current Leaderboard #1 (New World Record): 96 -> 100 Index
+      const bonus = Math.min(5, Math.round(((score - elite) / elite) * 20));
+      return Math.min(100, 95 + bonus);
+    }
+
+    /**
+     * Applies inactivity decay: If a cognitive discipline has not been trained
+     * for > 3 days, it slowly decays 1 point/day down to uncalibrated (0).
+     */
+    function applyCognitiveInactivityDecay(profile) {
+      if (!profile || typeof profile !== 'object') return profile;
+      const lastTrained = profile._lastTrained || {};
+      const now = Date.now();
+      let changed = false;
+
+      COGNITIVE_AXES.forEach(axis => {
+        const val = profile[axis.key];
+        if (typeof val === 'number' && val > 0) {
+          const timestamp = lastTrained[axis.key];
+          if (timestamp) {
+            const daysInactive = Math.floor((now - timestamp) / (1000 * 60 * 60 * 24));
+            if (daysInactive >= 3) {
+              const decayPoints = Math.min(val, daysInactive - 2);
+              if (decayPoints > 0) {
+                profile[axis.key] = Math.max(0, val - decayPoints);
+                changed = true;
+              }
+            }
+          }
+        }
+      });
+
+      return { profile, changed };
+    }
+
+    function getUserProfile() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.USER_PROFILE);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          const profile = { _lastTrained: parsed._lastTrained || {} };
+          COGNITIVE_AXES.forEach(axis => {
+            const val = parsed[axis.key];
+            // Uncalibrated dimensions default to 0
+            profile[axis.key] = (typeof val === 'number' && Number.isFinite(val))
+              ? Math.max(0, Math.min(100, Math.round(val)))
+              : 0;
+          });
+
+          // Check for daily decay
+          const { profile: decayedProfile, changed } = applyCognitiveInactivityDecay(profile);
+          if (changed) {
+            localStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(decayedProfile));
+          }
+          return decayedProfile;
+        }
+      } catch (_) {}
+
+      // Fresh operator: all uncalibrated (0)
+      const freshProfile = {
+        math: 0,
+        spatial: 0,
+        logic: 0,
+        puzzle: 0,
+        memory: 0,
+        reaction: 0,
+        _lastTrained: {}
+      };
+      localStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(freshProfile));
+      return freshProfile;
+    }
+
+    function saveUserProfile(profile) {
+      localStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(profile));
+      updateCompositeStat(profile);
+    }
+
+        // Helper: calculate 5-level name and level number from wave
+    function getLevelInfoFromWave(wave) {
+      if (typeof ToenowLevels !== 'undefined' && typeof ToenowLevels.getLevelInfo === 'function') {
+        return ToenowLevels.getLevelInfo(wave);
+      }
+      const w = Math.max(1, parseInt(wave, 10) || 1);
+      if (w <= 5) return { level: 1, name: 'Beginner' };
+      if (w <= 10) return { level: 2, name: 'Intermediate' };
+      if (w <= 15) return { level: 3, name: 'Advanced' };
+      if (w <= 20) return { level: 4, name: 'Expert' };
+      return { level: 5, name: 'Master' };
+    }
+
+    function getGameScores() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.GAME_SCORES);
+        if (raw) {
+          return JSON.parse(raw) || {};
+        }
+      } catch (_) {}
+      return {};
+    }
+
+    function saveGameScore(gameId, category, score, wave) {
+      const scores = getGameScores();
+      const prev = scores[gameId] || { bestScore: 0, maxWave: 1, maxLevel: 1, levelName: 'Beginner' };
+      const prevBest = prev.bestScore || 0;
+      const numericScore = Math.max(0, Math.round(Number(score) || 0));
+      const numericWave = Math.max(1, Number(wave) || prev.maxWave || 1);
+      const lvlInfo = getLevelInfoFromWave(numericWave);
+      const isNewBest = numericScore >= prevBest;
+
+      scores[gameId] = {
+        bestScore: Math.max(prevBest, numericScore),
+        maxWave: Math.max(prev.maxWave || 1, numericWave),
+        maxLevel: Math.max(prev.maxLevel || 1, lvlInfo.level),
+        levelName: getLevelInfoFromWave(Math.max(prev.maxWave || 1, numericWave)).name,
+        lastScore: numericScore,
+        category: category || 'puzzle',
+        updatedAt: new Date().toISOString().slice(0, 10)
+      };
+
+      localStorage.setItem(STORAGE_KEYS.GAME_SCORES, JSON.stringify(scores));
+      return { isNewBest, bestScore: scores[gameId].bestScore, maxLevel: scores[gameId].maxLevel, levelName: scores[gameId].levelName, numericScore };
+    }
+
+    function updateCompositeStat(profile) {
+      // Only average active calibrated dimensions (> 0)
+      const activeValues = COGNITIVE_AXES
+        .map(a => profile[a.key] || 0)
+        .filter(v => v > 0);
+
+      const avg = activeValues.length > 0
+        ? Math.round(activeValues.reduce((acc, v) => acc + v, 0) / activeValues.length)
+        : 0;
+
+      const el = document.getElementById('statCompositeIndex');
+      if (el) el.textContent = avg;
+    }
+
+    /**
+     * Recalibrates the 6-axis Toenow Brain Matrix using true 2-way EMA (Rise on High, Fall on Low)
+     * and dynamic cold-start benchmark anchoring.
+     */
+    function recalibrateCognitiveProfile(gameId, category, rawScore) {
+      const profile = getUserProfile();
+      profile._lastTrained = profile._lastTrained || {};
+      const now = Date.now();
+
+      const gameConfig = GAMES_CONFIG.find(g => g.id === gameId);
+      const primaryAxis = ['math', 'spatial', 'logic', 'puzzle', 'memory', 'reaction'].includes(category)
+        ? category
+        : (gameConfig?.category || 'puzzle');
+
+      // 1. Calculate objective performance against pilot benchmark (0-100)
+      const performance = calculatePerformanceIndex(gameId, rawScore);
+      const currentPrimary = profile[primaryAxis] || 0;
+
+      // 2. Cold-start placement vs Smooth EMA Update
+      if (currentPrimary === 0) {
+        // Placement drill: First time playing this axis initializes directly
+        profile[primaryAxis] = performance;
+      } else {
+        // True EMA: 75% historical rolling average + 25% current performance
+        // High score pulls up; low score penalizes and pulls down
+        const updated = Math.round(currentPrimary * 0.72 + performance * 0.28);
+        profile[primaryAxis] = Math.max(1, Math.min(100, updated));
+      }
+      profile._lastTrained[primaryAxis] = now;
+
+      // 3. Associated Secondary Axes (Memory & Reaction) co-adapt based on actual session performance
+      const updateSecondaryAxis = (axisKey, weightRatio) => {
+        const currentVal = profile[axisKey] || 0;
+        const secondaryTarget = Math.round(performance * weightRatio);
+        if (currentVal === 0) {
+          profile[axisKey] = secondaryTarget;
+        } else {
+          // Subtle coupling step (85% previous + 15% session impact)
+          profile[axisKey] = Math.max(1, Math.min(100, Math.round(currentVal * 0.85 + secondaryTarget * 0.15)));
+        }
+        profile._lastTrained[axisKey] = now;
+      };
+
+      updateSecondaryAxis('memory', 0.88);
+      updateSecondaryAxis('reaction', 0.92);
+
+      saveUserProfile(profile);
+      renderHexagonRadar();
+      return profile;
+    }
+
+    /* ============================================================================
+       3. BENTO GRID RENDERING
+       ============================================================================ */
+    let gamePreviewController = null;
+    let islandExplorer = null;
+    let exploration = null;
+    let currentExplorationRun = null;
+    function refreshExploration() {
+      exploration?.reconcile();
+      renderBentoGrid();
+    }
+    function renderBentoGrid() {
+      if (exploration) {
+        const journey = exploration.snapshot();
+        document.body.dataset.exploration = journey.unlocked.length === journey.order.length ? 'complete' : 'explore';
+      }
+      gamePreviewController?.destroy();
+      gamePreviewController = null;
+      const grid = document.getElementById('gamesBentoGrid');
+      const moduleCountEl = document.getElementById('statModuleCount');
+      if (moduleCountEl) moduleCountEl.textContent = GAMES_CONFIG.length;
+
+      const scores = getGameScores();
+      const filtered = activeCategory === 'all'
+        ? GAMES_CONFIG
+        : GAMES_CONFIG.filter(g => g.category === activeCategory);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-grid-state">
+            No cognitive training modules registered under this discipline yet.
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(game => {
+        const locked = exploration && !exploration.isUnlocked(game.id);
+        const known = ['animal-rescue-train','number-pop','ball-track','block-match','add-up','space-scale','tap-match','spot-quick','shadow-match','flash-brain'].includes(game.id);
+        const poster = known ? 'assets/animal-gameplay-previews/' + game.id + '-poster.png' : (game.preview || 'assets/number-pop-preview.png');
+        const video = known ? '<video muted playsinline loop preload="none" data-src="assets/animal-gameplay-previews/' + game.id + '.webm" aria-hidden="true"></video>' : '';
+        return `
+          <article class="game-card ${locked ? 'is-locked' : ''}" data-game-id="${game.id}" data-challenge-category="${game.category}" aria-label="${game.title}">
+            <button type="button" class="game-launch" aria-label="Play ${game.title}">
+              <img src="${poster}" alt="${game.title}" loading="lazy" decoding="async">
+              ${video}
+            </button>
+            <div class="game-tile-caption">
+              <h2>${locked ? '🔒 ' : ''}${game.title}</h2>
+              ${known ? '<button type="button" class="game-preview-button">Preview</button>' : ''}
+              <button type="button" class="card-share-btn" data-share-game="${game.id}" title="Share challenge" aria-label="Share ${game.title}">↗</button>
+            </div>
+            <div class="hub-card-detail">
+              <span class="hub-card-category">${CATEGORY_META[game.category]?.label || 'Challenge'}</span>
+              <p class="hub-card-description">${game.description || ''}</p>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      grid.querySelectorAll('.game-card').forEach(card => {
+        const triggerLaunch = () => {
+          const gameId = card.getAttribute('data-game-id');
+          const game = GAMES_CONFIG.find(g => g.id === gameId);
+          if (game) openTheaterModal(game);
+        };
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.card-share-btn, .game-preview-button')) return;
+          triggerLaunch();
+        });
+
+
+        const shareBtn = card.querySelector('.card-share-btn');
+        if (shareBtn) {
+          shareBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const gameId = shareBtn.getAttribute('data-share-game');
+            const game = GAMES_CONFIG.find(g => g.id === gameId);
+            const entry = scores[gameId];
+            const bestScore = entry?.bestScore || 0;
+            const maxWave = entry?.maxWave || 1;
+            if (typeof ToenowLevels !== 'undefined' && ToenowLevels.shareScore) {
+              ToenowLevels.shareScore({
+                gameId: gameId,
+                gameTitle: game ? game.title : gameId,
+                score: bestScore,
+                wave: maxWave
+              });
+            }
+          });
+        }
+      });
+      gamePreviewController = window.ToenowGamePreviews?.mount(grid) || null;
+      islandExplorer?.refresh({ games: GAMES_CONFIG, category: activeCategory });
+    }
+
+    /* ============================================================================
+       4. THEATER VIEWPORT MODAL & IFRAME LIFECYCLE
+       ============================================================================ */
+    const theaterModal = document.getElementById('theaterModal');
+    const gameViewer = document.getElementById('gameViewer');
+    const theaterIcon = document.getElementById('theaterIcon');
+    const theaterTitle = document.getElementById('theaterTitle');
+    const theaterUrl = document.getElementById('theaterUrl');
+    const theaterStage = document.getElementById('theaterStage');
+
+    function openTheaterModal(game) {
+      if (exploration && !exploration.isUnlocked(game.id)) {
+        islandExplorer?.showLocation(game.id);
+        return;
+      }
+      gamePreviewController?.stop();
+      currentMountedGame = game;
+      currentExplorationRun = exploration?.beginRun(game.id) || null;
+      theaterIcon.textContent = game.icon;
+      theaterTitle.textContent = game.title;
+      theaterUrl.textContent = game.url;
+
+      // Before loading iframe, sync Hub's verified bestScore into the game's internal localStorage
+      // so the title menu records strip immediately displays the user's synced best record!
+      // Also sync bidirectionally: if game localStorage has a higher score/wave, update Hub scores!
+      try {
+        const scores = getGameScores();
+        const record = scores[game.id] || { bestScore: 0, maxWave: 1 };
+        const keyMap = (typeof ToenowLevels !== 'undefined' && ToenowLevels.GAME_STORAGE_KEYS) || {
+          'number-pop': { score: 'qcc_high_score_v1', wave: 'qcc_best_wave_v1' },
+          'ball-track': { score: 'quantum_shell_best_score_v5', wave: 'quantum_shell_best_wave_v5' },
+          'block-match': { score: 'chip_defrag_high_score_v5', wave: 'block_match_best_wave' },
+          'add-up': { score: 'overclock_reactor_best_v2', wave: 'add_up_best_wave' },
+          'space-scale': { score: 'grav_anomaly_best_score_v2', wave: 'space_scale_best_wave' },
+          'tap-match': { score: 'whack_match_high_score_v1', wave: 'whack_match_best_wave_v1' },
+          'spot-quick': { score: 'fast_focus_high_score_v1', wave: 'fast_focus_best_wave_v1' },
+          'shadow-match': { score: 'shadow_match_best_score_v1', wave: 'shadow_match_best_wave_v1' },
+          'flash-brain': { score: 'flash_brain_best_score_v1', wave: 'flash_brain_best_wave_v1' }
+        };
+        const keys = keyMap[game.id];
+        if (keys) {
+          const gameScoreInStorage = parseInt(localStorage.getItem(keys.score) || '0', 10) || 0;
+          const gameWaveInStorage = parseInt(localStorage.getItem(keys.wave) || '1', 10) || 1;
+
+          // Bidirectional sync: take maximum of Hub vs Game storage
+          const highestScore = Math.max(record.bestScore || 0, gameScoreInStorage);
+          const highestWave = Math.max(record.maxWave || 1, gameWaveInStorage);
+
+          if (highestScore > 0) {
+            localStorage.setItem(keys.score, String(highestScore));
+            if (keys.wave) {
+              localStorage.setItem(keys.wave, String(highestWave));
+            }
+          }
+
+          if (highestScore > (record.bestScore || 0) || highestWave > (record.maxWave || 1)) {
+            saveGameScore(game.id, game.category, highestScore, highestWave);
+            renderBentoGrid();
+          }
+        }
+      } catch (_) {}
+
+      gameViewer.src = game.url;
+      theaterModal.classList.add('open');
+      theaterModal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeTheaterModal() {
+      theaterModal.classList.remove('open');
+      theaterModal.setAttribute('aria-hidden', 'true');
+      // Immediately terminate animation loops and audio threads
+      const endedExplorationRun = currentExplorationRun;
+      currentExplorationRun = null;
+      gameViewer.addEventListener('load', () => {
+        exploration?.endRun(endedExplorationRun);
+        refreshExploration();
+      }, { once: true });
+      gameViewer.src = 'about:blank';
+      theaterUrl.textContent = 'about:blank';
+      currentMountedGame = null;
+      refreshExploration();
+      if (exploration?.snapshot().mode === 'explore') islandExplorer?.focusNext();
+
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    function restartCurrentGame() {
+      if (!currentMountedGame) return;
+      if (currentMountedGame.id === 'animal-rescue-train') {
+        gameViewer.contentWindow.postMessage({ type: 'GAME_RESTART' }, window.location.origin);
+        return;
+      }
+      const targetUrl = currentMountedGame.url;
+      gameViewer.src = 'about:blank';
+      setTimeout(() => {
+        if (currentMountedGame) {
+          gameViewer.src = targetUrl;
+        }
+      }, 40);
+      showToast(`Restarted ${currentMountedGame.title} environment.`);
+    }
+
+    function toggleTheaterFullscreen() {
+      const target = theaterStage || theaterModal;
+      if (!document.fullscreenElement) {
+        if (target.requestFullscreen) {
+          target.requestFullscreen().catch(() => {});
+        }
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    /* ============================================================================
+       5. NATIVE HTML5 CANVAS BRAIN HEXAGON RADAR
+       ============================================================================ */
+    function renderHexagonRadar() {
+      const canvas = document.getElementById('brainRadarCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const profile = getUserProfile();
+
+      const dpr = window.devicePixelRatio || 1;
+      const logicalSize = 340;
+      canvas.width = logicalSize * dpr;
+      canvas.height = logicalSize * dpr;
+      ctx.save();
+      ctx.scale(dpr, dpr);
+
+      const cx = logicalSize / 2;
+      const cy = logicalSize / 2;
+      const maxRadius = 112;
+      const levels = [0.25, 0.5, 0.75, 1.0];
+      const count = COGNITIVE_AXES.length; // 6
+
+      ctx.clearRect(0, 0, logicalSize, logicalSize);
+
+      const getVertex = (index, normalizedRadius) => {
+        const angle = (Math.PI * 2 * index) / count - Math.PI / 2;
+        return {
+          x: cx + Math.cos(angle) * (maxRadius * normalizedRadius),
+          y: cy + Math.sin(angle) * (maxRadius * normalizedRadius)
+        };
+      };
+
+      // Draw concentric hexagonal grid rings
+      levels.forEach((lvl, idx) => {
+        ctx.beginPath();
+        for (let i = 0; i < count; i++) {
+          const pt = getVertex(i, lvl);
+          if (i === 0) ctx.moveTo(pt.x, pt.y);
+          else ctx.lineTo(pt.x, pt.y);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = idx === levels.length - 1
+          ? 'rgba(56, 189, 248, 0.35)'
+          : 'rgba(148, 163, 184, 0.16)';
+        ctx.lineWidth = idx === levels.length - 1 ? 1.5 : 1;
+        ctx.stroke();
+      });
+
+      // Draw radial spokes
+      for (let i = 0; i < count; i++) {
+        const outer = getVertex(i, 1.0);
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(outer.x, outer.y);
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      // Draw user's cognitive polygon
+      const activeAxesCount = COGNITIVE_AXES.filter(a => (profile[a.key] || 0) > 0).length;
+
+      const dataPoints = COGNITIVE_AXES.map((axis, i) => {
+        const val = Math.max(0, Math.min(100, profile[axis.key] || 0));
+        // If uncalibrated (0), collapse vertex to center (radius 0.04 for clean origin mark)
+        const radiusRatio = val > 0 ? (val / 100) : 0.04;
+        return getVertex(i, radiusRatio);
+      });
+
+      if (activeAxesCount >= 2) {
+        ctx.beginPath();
+        dataPoints.forEach((pt, i) => {
+          if (i === 0) ctx.moveTo(pt.x, pt.y);
+          else ctx.lineTo(pt.x, pt.y);
+        });
+        ctx.closePath();
+
+        const polyGrad = ctx.createLinearGradient(cx - maxRadius, cy - maxRadius, cx + maxRadius, cy + maxRadius);
+        polyGrad.addColorStop(0, 'rgba(34, 211, 238, 0.42)');
+        polyGrad.addColorStop(1, 'rgba(139, 92, 246, 0.45)');
+
+        ctx.fillStyle = polyGrad;
+        ctx.shadowColor = 'rgba(34, 211, 238, 0.55)';
+        ctx.shadowBlur = 16;
+        ctx.fill();
+
+        ctx.lineWidth = 2.4;
+        ctx.strokeStyle = '#22d3ee';
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+
+      // Draw glowing nodes & outer axis labels
+      COGNITIVE_AXES.forEach((axis, i) => {
+        const pt = dataPoints[i];
+        const val = profile[axis.key] || 0;
+        const isCalibrated = val > 0;
+
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, isCalibrated ? 4.2 : 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = isCalibrated ? '#f8fafc' : 'rgba(148, 163, 184, 0.4)';
+        ctx.fill();
+        ctx.lineWidth = isCalibrated ? 2 : 1;
+        ctx.strokeStyle = isCalibrated ? '#22d3ee' : 'rgba(148, 163, 184, 0.3)';
+        ctx.stroke();
+
+        // Axis label + Index value
+        const labelPos = getVertex(i, 1.24);
+        ctx.font = '700 11px Inter, system-ui, sans-serif';
+        ctx.fillStyle = isCalibrated ? '#e2e8f0' : 'rgba(148, 163, 184, 0.5)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const labelText = isCalibrated ? `${axis.shortLabel}: ${val}` : `${axis.shortLabel}: 0`;
+        ctx.fillText(labelText, labelPos.x, labelPos.y);
+      });
+
+      ctx.restore();
+
+      // Update numerical index readouts below canvas (e.g. "Spatial: 78 Index")
+      const readoutsEl = document.getElementById('dimensionReadouts');
+      if (readoutsEl) {
+        readoutsEl.innerHTML = COGNITIVE_AXES.map(axis => {
+          const val = profile[axis.key] || 0;
+          const isCalibrated = val > 0;
+          return `
+            <div class="readout-item">
+              <div class="readout-header">
+                <span class="readout-label" title="${axis.fullLabel}">${axis.shortLabel}: ${val} Index</span>
+                <span class="readout-val" style="color: ${isCalibrated ? 'var(--accent-cyan)' : 'var(--text-muted)'}">${isCalibrated ? `${val}%` : 'Uncalibrated'}</span>
+              </div>
+              <div class="readout-bar">
+                <div class="readout-bar-fill" style="width: ${val}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    /* ============================================================================
+       6. GLOBAL LEADERBOARDS MODAL (TOENOW Global Arena)
+       ============================================================================ */
+    /* --- TODO: Connect Supabase / Firebase leaderboard endpoint for toenow.com --- */
+    const BASELINE_LEADERBOARD_DATA = {
+      'ball-track': [
+        { player: 'OrbitalTracker', score: 34200, date: '2026-10-18' },
+        { player: 'VoxelDroneX', score: 29800, date: '2026-10-18' },
+        { player: 'ShuffleMaster', score: 26500, date: '2026-10-17' },
+        { player: 'SpatialLock_99', score: 23100, date: '2026-10-16' },
+        { player: 'QuantumOptic', score: 20400, date: '2026-10-15' },
+        { player: 'CapsuleZero', score: 18200, date: '2026-10-15' },
+        { player: 'ShellWhisperer', score: 15600, date: '2026-10-14' },
+        { player: 'ApexTracker', score: 13900, date: '2026-10-13' },
+        { player: 'KineticDrift', score: 11800, date: '2026-10-12' },
+        { player: 'VectorGaze', score: 9500, date: '2026-10-11' }
+      ],
+      'number-pop': [
+        { player: 'SingularityArch', score: 28450, date: '2026-10-18' },
+        { player: 'ChronoSiphon_X', score: 24900, date: '2026-10-17' },
+        { player: 'QuantumPulse9', score: 21600, date: '2026-10-17' },
+        { player: 'FractionApex', score: 19250, date: '2026-10-16' },
+        { player: 'StroopZero', score: 17800, date: '2026-10-15' },
+        { player: 'FeverOverdrive', score: 15400, date: '2026-10-15' },
+        { player: 'CyanCore_01', score: 13950, date: '2026-10-14' },
+        { player: 'VectorCollapse', score: 12100, date: '2026-10-13' },
+        { player: 'SubZero_Math', score: 10850, date: '2026-10-12' },
+        { player: 'CadetOperator', score: 9400, date: '2026-10-11' }
+      ],
+      'block-match': [
+        { player: 'SiliconShredder', score: 26800, date: '2026-10-18' },
+        { player: 'DefragMaster_9', score: 23400, date: '2026-10-18' },
+        { player: 'WaferCarver', score: 20100, date: '2026-10-17' },
+        { player: 'LogicDie_X', score: 18500, date: '2026-10-16' },
+        { player: 'ChronoVent', score: 16200, date: '2026-10-15' },
+        { player: 'OverclockedDie', score: 14700, date: '2026-10-14' },
+        { player: 'NanoEtcher', score: 12900, date: '2026-10-14' },
+        { player: 'BinaryShatter', score: 11200, date: '2026-10-13' },
+        { player: 'CircuitBreaker', score: 9800, date: '2026-10-12' },
+        { player: 'SemiconZero', score: 8400, date: '2026-10-11' }
+      ],
+      'add-up': [
+        { player: 'PlasmaSurge', score: 31200, date: '2026-10-19' },
+        { player: 'FluxCascade_9', score: 27800, date: '2026-10-18' },
+        { player: 'CoreStabilizer', score: 24500, date: '2026-10-18' },
+        { player: 'ZeroKelvin', score: 21900, date: '2026-10-17' },
+        { player: 'VoltagEater', score: 19400, date: '2026-10-16' },
+        { player: 'CryoEngineer', score: 17200, date: '2026-10-15' },
+        { player: 'HyperConductor', score: 15600, date: '2026-10-14' },
+        { player: 'QuantumFission', score: 13800, date: '2026-10-14' },
+        { player: 'ArcDischarge', score: 11900, date: '2026-10-13' },
+        { player: 'OverclockCadet', score: 9600, date: '2026-10-12' }
+      ],
+      'space-scale': [
+        { player: 'SingularityMaster', score: 29500, date: '2026-10-19' },
+        { player: 'CosmicArchitect_X', score: 26200, date: '2026-10-19' },
+        { player: 'AstrometricPro', score: 23100, date: '2026-10-18' },
+        { player: 'TorqueDeductor', score: 20400, date: '2026-10-18' },
+        { player: 'LeverArmSpecialist', score: 17800, date: '2026-10-17' },
+        { player: 'StellarCartographer', score: 15300, date: '2026-10-16' },
+        { player: 'GravimetricScout', score: 13200, date: '2026-10-15' },
+        { player: 'NeutronCore_7', score: 11400, date: '2026-10-14' },
+        { player: 'EquilibriumSeeker', score: 9800, date: '2026-10-13' },
+        { player: 'CadetAnalyst', score: 8100, date: '2026-10-12' }
+      ],
+      'tap-match': [
+        { player: 'CyberReflex_99', score: 34200, date: '2026-10-19' },
+        { player: 'GlyphStriker', score: 30800, date: '2026-10-19' },
+        { player: 'PulseMatrix', score: 27500, date: '2026-10-18' },
+        { player: 'SynapseVanguard', score: 24100, date: '2026-10-18' },
+        { player: 'NodeHunter', score: 21600, date: '2026-10-17' },
+        { player: 'ApexTapMaster', score: 18900, date: '2026-10-16' },
+        { player: 'OpticVelocity', score: 16400, date: '2026-10-15' },
+        { player: 'ChronoTrigger_X', score: 14200, date: '2026-10-14' },
+        { player: 'GridAssault', score: 12100, date: '2026-10-13' },
+        { player: 'SpatialCadet', score: 9900, date: '2026-10-12' }
+      ],
+      'spot-quick': [
+        { player: 'TaxonArchon', score: 32600, date: '2026-10-19' },
+        { player: 'ApertureFocus', score: 29100, date: '2026-10-19' },
+        { player: 'BioDeconvolver', score: 25800, date: '2026-10-18' },
+        { player: 'Silhouetter', score: 22400, date: '2026-10-18' },
+        { player: 'ClaritySeeker', score: 19700, date: '2026-10-17' },
+        { player: 'SpecimenZero', score: 17300, date: '2026-10-16' },
+        { player: 'VectorZoologist', score: 15100, date: '2026-10-15' },
+        { player: 'OpticLens_88', score: 13000, date: '2026-10-14' },
+        { player: 'FloraFaunaMaster', score: 11200, date: '2026-10-13' },
+        { player: 'SpotlightCadet', score: 9400, date: '2026-10-12' }
+      ],
+      'shadow-match': [
+        { player: 'EclipseSavant', score: 35800, date: '2026-10-21' },
+        { player: 'SilhouetteKing', score: 31200, date: '2026-10-20' },
+        { player: 'ChamberMaster', score: 28400, date: '2026-10-20' },
+        { player: 'PhantomHunter', score: 25100, date: '2026-10-19' },
+        { player: 'OpticDrifter', score: 22300, date: '2026-10-19' },
+        { player: 'ShadowLock_9', score: 19800, date: '2026-10-18' },
+        { player: 'ShapeSynth', score: 17400, date: '2026-10-17' },
+        { player: 'CompositePro', score: 15200, date: '2026-10-16' },
+        { player: 'ShutterCadet', score: 12900, date: '2026-10-15' },
+        { player: 'UmbraSeeker', score: 10400, date: '2026-10-14' }
+      ],
+      'flash-brain': [
+        { player: 'SynapseOverlord', score: 38900, date: '2026-10-21' },
+        { player: 'MatrixRecall_X', score: 34500, date: '2026-10-20' },
+        { player: 'NeuroStrobe', score: 30800, date: '2026-10-20' },
+        { player: 'FlashPhantom', score: 27200, date: '2026-10-19' },
+        { player: 'GridMnemonist', score: 24100, date: '2026-10-19' },
+        { player: 'MemoryArchon', score: 21300, date: '2026-10-18' },
+        { player: 'ChronoStasis', score: 18600, date: '2026-10-17' },
+        { player: 'RecallPulse', score: 16200, date: '2026-10-16' },
+        { player: 'DecoyDodger', score: 13700, date: '2026-10-15' },
+        { player: 'NeuralCadet', score: 11100, date: '2026-10-14' }
+      ]
+    };
+
+    function populateLeaderboardDropdown() {
+      const select = document.getElementById('leaderboardGameSelect');
+      if (!select) return;
+      const currentVal = select.value;
+      select.innerHTML = GAMES_CONFIG.filter(g => g.leaderboard !== false).map(g =>
+        `<option value="${g.id}">${g.icon} ${g.title}</option>`
+      ).join('');
+      if (currentVal && GAMES_CONFIG.some(g => g.id === currentVal)) {
+        select.value = currentVal;
+      }
+      renderLeaderboardTable(select.value || GAMES_CONFIG[0]?.id);
+    }
+
+    async function renderLeaderboardTable(gameId) {
+      const tbody = document.getElementById('leaderboardTableBody');
+      if (!tbody) return;
+
+      if (GAMES_CONFIG.find(game => game.id === gameId)?.leaderboard === false) {
+        tbody.innerHTML = '<tr><td colspan="4">Local prototype — no leaderboard.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+            Querying Toenow Global Matrix...
+          </td>
+        </tr>
+      `;
+
+      let cloudRows = [];
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient
+            .from('leaderboard_view')
+            .select('player_name, score, created_at, user_id')
+            .eq('game_id', gameId)
+            .order('score', { ascending: false })
+            .limit(10);
+
+          if (!error && data && data.length > 0) {
+            cloudRows = data.map(d => ({
+              player: d.player_name || 'Operator',
+              score: d.score,
+              date: (d.created_at || '').slice(0, 10),
+              isUser: currentAuthUser && d.user_id === currentAuthUser.id
+            }));
+          }
+        } catch (_) {}
+      }
+
+      // If cloud has scores, display verified cloud scores; otherwise merge with baseline mock
+      let rowsToDisplay = [];
+      const userScores = getGameScores();
+      const userEntry = userScores[gameId];
+
+      if (cloudRows.length > 0) {
+        // If the user has a higher local verified score not yet synced or newer than cloud, include it
+        if (userEntry && userEntry.bestScore > 0) {
+          const playerName = currentCloudProfile?.display_name || currentAuthUser?.user_metadata?.full_name || 'Guest Operator';
+          const existingUserRow = cloudRows.find(r => r.isUser);
+          if (!existingUserRow) {
+            cloudRows.push({
+              player: playerName,
+              score: userEntry.bestScore,
+              date: userEntry.updatedAt || new Date().toISOString().slice(0, 10),
+              isUser: true
+            });
+          } else if (userEntry.bestScore > existingUserRow.score) {
+            existingUserRow.score = userEntry.bestScore;
+            existingUserRow.date = userEntry.updatedAt || existingUserRow.date;
+          }
+        }
+        rowsToDisplay = cloudRows.sort((a, b) => b.score - a.score).slice(0, 10);
+        // Keep dynamic leaderboard cache updated so Brain Matrix calculation uses true live data
+        DYNAMIC_LEADERBOARD_CACHE[gameId] = rowsToDisplay;
+      } else {
+        const baseRows = (BASELINE_LEADERBOARD_DATA[gameId] || BASELINE_LEADERBOARD_DATA['math-balloon']).map(r => ({ ...r, isUser: false }));
+
+        if (userEntry && userEntry.bestScore > 0) {
+          const playerName = currentCloudProfile?.display_name || currentAuthUser?.user_metadata?.full_name || 'Guest Operator';
+          baseRows.push({
+            player: playerName,
+            score: userEntry.bestScore,
+            date: userEntry.updatedAt || new Date().toISOString().slice(0, 10),
+            isUser: true
+          });
+        }
+        rowsToDisplay = baseRows.sort((a, b) => b.score - a.score).slice(0, 10);
+        DYNAMIC_LEADERBOARD_CACHE[gameId] = rowsToDisplay;
+      }
+
+      tbody.innerHTML = rowsToDisplay.map((row, idx) => {
+        const rank = idx + 1;
+        const badgeClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+        const medalPrefix = rank === 1 ? '🥇 ' : rank === 2 ? '🥈 ' : rank === 3 ? '🥉 ' : '#';
+
+        return `
+          <tr>
+            <td><span class="rank-badge ${badgeClass}">${medalPrefix}${rank}</span></td>
+            <td>
+              <span class="player-tag">
+                <span data-i18n-ignore>${row.player}</span>
+                ${row.isUser ? '<span class="player-you-pill">YOU</span>' : ''}
+              </span>
+            </td>
+            <td class="brain-score-cell">${row.score.toLocaleString()}</td>
+            <td class="date-cell">${row.date}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    /* ============================================================================
+       7. CROSS-ORIGIN RUNTIME CONTRACT (postMessage Listener & Cloud Score Sync)
+       ============================================================================ */
+    window.addEventListener('message', async (event) => {
+      const payload = event.data;
+      if (!payload || typeof payload !== 'object') return;
+
+      if (payload.type === 'CLOSE_GAME') {
+        if (event.source === gameViewer.contentWindow && event.origin === window.location.origin) closeTheaterModal();
+        return;
+      }
+
+      if (payload.type === 'GAME_PROGRESS') {
+        if (event.source !== gameViewer.contentWindow || event.origin !== window.location.origin || payload.gameId !== currentMountedGame?.id || payload.isPractice !== false) return;
+        const { gameId, wave, completedLevel } = payload;
+        if (!Number.isSafeInteger(wave) || wave < 1 || !Number.isSafeInteger(completedLevel) || completedLevel < 1 || completedLevel > 5) return;
+        const reached = ToenowLevels.getLevelInfo(wave).level;
+        if (completedLevel !== (gameId === 'animal-rescue-train' ? reached : reached - 1)) return;
+        exploration?.complete({ gameId, wave, completedLevel, isPractice: false });
+        renderBentoGrid();
+        return;
+      }
+
+      if (payload.type === 'GAME_OVER') {
+        if (event.source !== gameViewer.contentWindow || event.origin !== window.location.origin || payload.gameId !== currentMountedGame?.id) return;
+        const { gameId, category, score, isPractice } = payload;
+        if (!gameId || typeof score !== 'number') return;
+        if (isPractice) {
+          showToast(`Practice Completed: ${score} pts (Practice mode not recorded)`);
+          return;
+        }
+        const gameConfig = GAMES_CONFIG.find(game => game.id === gameId);
+        if (!gameConfig) return;
+
+        const wave = payload.wave || (typeof payload.level === 'number' ? (payload.level - 1) * 5 + 1 : 1);
+        const durationSec = Math.max(0.5, (Number(payload.duration) ? Number(payload.duration) / 1000 : Number(payload.runDuration) || 10));
+
+        // Anti-Cheat Plausibility Verification (Dynamic Physics Guard - No Hard Ceiling!)
+        if (typeof ToenowSecurity !== 'undefined') {
+          const plausibility = ToenowSecurity.verifyScorePlausibility({
+            gameId: gameId,
+            score: score,
+            wave: wave,
+            durationSec: durationSec
+          });
+          if (!plausibility.isValid) {
+            exploration?.reject({ gameId, wave, runId: currentExplorationRun });
+            console.warn(`[Security Alert] Implausible game telemetry flagged for ${gameId}:`, plausibility);
+            showToast(`Telemetry Warning: Score verification anomaly detected (${plausibility.reason})`);
+            return;
+          }
+        }
+
+        const { isNewBest, bestScore, numericScore } = saveGameScore(gameId, category, score, wave);
+        exploration?.complete({ gameId, wave, isPractice, runId: currentExplorationRun });
+
+        // Also ensure game's internal localStorage reflects the highest score and wave
+        try {
+          const keyMap = (typeof ToenowLevels !== 'undefined' && ToenowLevels.GAME_STORAGE_KEYS) || {
+            'number-pop': { score: 'qcc_high_score_v1', wave: 'qcc_best_wave_v1' },
+            'ball-track': { score: 'quantum_shell_best_score_v5', wave: 'quantum_shell_best_wave_v5' },
+            'block-match': { score: 'chip_defrag_high_score_v5', wave: 'block_match_best_wave' },
+            'add-up': { score: 'overclock_reactor_best_v2', wave: 'add_up_best_wave' },
+            'space-scale': { score: 'grav_anomaly_best_score_v2', wave: 'space_scale_best_wave' },
+            'tap-match': { score: 'whack_match_high_score_v1', wave: 'whack_match_best_wave_v1' },
+            'spot-quick': { score: 'fast_focus_high_score_v1', wave: 'fast_focus_best_wave_v1' },
+            'shadow-match': { score: 'shadow_match_best_score_v1', wave: 'shadow_match_best_wave_v1' },
+            'flash-brain': { score: 'flash_brain_best_score_v1', wave: 'flash_brain_best_wave_v1' }
+          };
+          const keys = keyMap[gameId];
+          if (keys) {
+            const curScore = parseInt(localStorage.getItem(keys.score) || '0', 10) || 0;
+            if (numericScore > curScore) {
+              localStorage.setItem(keys.score, String(numericScore));
+            }
+            if (keys.wave) {
+              const curWave = parseInt(localStorage.getItem(keys.wave) || '1', 10) || 1;
+              if (wave > curWave) {
+                localStorage.setItem(keys.wave, String(wave));
+              }
+            }
+          }
+        } catch (_) {}
+
+        const updatedProfile = recalibrateCognitiveProfile(gameId, category, numericScore);
+
+        renderBentoGrid();
+        const lbSelect = document.getElementById('leaderboardGameSelect');
+        if (lbSelect && lbSelect.value === gameId) {
+          renderLeaderboardTable(gameId);
+        }
+
+        const axisKey = category && updatedProfile[category] !== undefined ? category : 'puzzle';
+        showToast(
+          `Telemetry Synced: ${numericScore.toLocaleString()} pts (${isNewBest ? 'New Personal Best!' : `Best: ${bestScore.toLocaleString()}`}) — ${axisKey.toUpperCase()} Index calibrated to ${updatedProfile[axisKey]}.`
+        );
+
+        // If authenticated with Supabase, sync score to cloud
+        if (gameConfig.leaderboard !== false && supabaseClient && currentAuthUser) {
+          try {
+            // Create a session nonce
+            const { data: sessionData, error: sessionErr } = await supabaseClient
+              .from('game_sessions')
+              .insert({
+                user_id: currentAuthUser.id,
+                game_id: gameId
+              })
+              .select()
+              .single();
+
+            if (!sessionErr && sessionData) {
+              const { data: scoreData, error: scoreErr } = await supabaseClient.rpc('submit_verified_score', {
+                p_session_id: sessionData.id,
+                p_game_id: gameId,
+                p_score: numericScore,
+                p_duration_ms: Math.max(5000, payload.duration || payload.runDuration * 1000 || 15000)
+              });
+
+              if (scoreErr) {
+                console.error('[Toenow Matrix] Error persisting score to cloud:', scoreErr);
+                showToast(`Cloud Sync Notice: ${scoreErr.message || 'Score rejected by server'}`);
+              } else {
+                console.log('[Toenow Matrix] Verified score persisted to cloud:', scoreData);
+              }
+            } else if (sessionErr) {
+              console.error('[Toenow Matrix] Could not create game session:', sessionErr);
+              showToast(`Session Error: ${sessionErr.message}`);
+            }
+          } catch (cloudErr) {
+            console.warn('[Toenow Matrix] Cloud sync notice:', cloudErr);
+          }
+        }
+      }
+    });
+
+    /* ============================================================================
+       8. UI EVENT BINDINGS & TOAST HELPER
+       ============================================================================ */
+    function showToast(message) {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast-msg';
+      toast.textContent = message;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        toast.style.transition = '220ms ease';
+        setTimeout(() => toast.remove(), 230);
+      }, 4200);
+    }
+
+    function initHubInteractions() {
+      // Category Filter Tabs
+      const tabsContainer = document.getElementById('categoryTabs');
+      tabsContainer.addEventListener('click', (e) => {
+        const btn = e.target.closest('.tab-btn');
+        if (!btn) return;
+        tabsContainer.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategory = btn.getAttribute('data-category') || 'all';
+        renderBentoGrid();
+      });
+
+      // Brand click resets filter to All Disciplines
+      document.getElementById('brandHomeTrigger').addEventListener('click', () => {
+        activeCategory = 'all';
+        tabsContainer.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-category') === 'all');
+        });
+        renderBentoGrid();
+      });
+
+      // Profile Drawer Open/Close
+      const profileDrawer = document.getElementById('profileDrawer');
+      const drawerBackdrop = document.getElementById('drawerBackdrop');
+
+      const openProfileDrawer = () => {
+        renderHexagonRadar();
+        profileDrawer.classList.add('open');
+        drawerBackdrop.classList.add('open');
+        profileDrawer.setAttribute('aria-hidden', 'false');
+      };
+
+      const closeProfileDrawer = () => {
+        profileDrawer.classList.remove('open');
+        drawerBackdrop.classList.remove('open');
+        profileDrawer.setAttribute('aria-hidden', 'true');
+      };
+
+      document.getElementById('openProfileBtn').addEventListener('click', openProfileDrawer);
+      document.getElementById('closeProfileBtn').addEventListener('click', closeProfileDrawer);
+      drawerBackdrop.addEventListener('click', closeProfileDrawer);
+
+      // Account Tier Sign In / Register / Sign Out Bindings
+      const authModal = document.getElementById('authModal');
+      const closeAuthBtn = document.getElementById('closeAuthBtn');
+      const googleLoginBtn = document.getElementById('googleLoginBtn');
+      const emailAuthForm = document.getElementById('emailAuthForm');
+      const authStatusMsg = document.getElementById('authStatusMsg');
+      const signOutBtn = document.getElementById('signOutBtn');
+
+      const welcome = document.getElementById('islandWelcome');
+      let authMode = 'register', returnToWelcome = false;
+      const t = source => window.ToenowI18n?.t(source) || source;
+      function updateWelcomeCopy() {
+        const copy = { welcomeHeading: 'Welcome to TOENOW', welcomeDescription: 'Your adventure starts here.',
+          welcomeSigninBtn: 'Sign In', welcomeRegisterBtn: 'Create account', welcomeGuestBtn: 'Continue as a guest',
+          welcomeGuestNote: 'Guest progress is saved in this browser.' };
+        for (const [id, text] of Object.entries(copy)) document.getElementById(id).textContent = t(text);
+      }
+      window.showIslandWelcome = () => {
+        updateWelcomeCopy();
+        if (exploration && !exploration.snapshot().welcomed && !currentAuthUser && !authModal.classList.contains('open') && !welcome.open) welcome.showModal();
+      };
+      const openAuthModal = (mode = 'register') => {
+        authMode = mode === 'signin' ? 'signin' : 'register';
+        const heading = document.getElementById('authHeading');
+        heading.setAttribute('data-i18n-ignore', '');
+        heading.textContent = t(authMode === 'signin' ? 'Sign In' : 'Create account');
+        authStatusMsg.className = 'auth-status-msg';
+        authStatusMsg.style.display = 'none';
+        authModal.classList.add('open');
+        authModal.setAttribute('aria-hidden', 'false');
+      };
+
+      const closeAuthModal = () => {
+        authModal.classList.remove('open');
+        authModal.setAttribute('aria-hidden', 'true');
+        if (returnToWelcome) { returnToWelcome = false; window.showIslandWelcome(); }
+      };
+
+      window.ToenowAccount.open = (mode) => {
+        if (profileDrawer.classList.contains('open')) closeProfileDrawer();
+        openAuthModal(mode);
+      };
+      for (const [id, mode] of [['welcomeSigninBtn', 'signin'], ['welcomeRegisterBtn', 'register']]) {
+        document.getElementById(id).addEventListener('click', () => {
+          returnToWelcome = true; welcome.close(); openAuthModal(mode);
+          document.getElementById('authEmailInput').focus();
+        });
+      }
+      const continueGuest = () => {
+        exploration?.chooseGuest(); welcome.close();
+        islandExplorer?.focusNext();
+      };
+      document.getElementById('welcomeGuestBtn').addEventListener('click', continueGuest);
+      welcome.addEventListener('cancel', event => { event.preventDefault(); continueGuest(); });
+      window.addEventListener('toenow:languagechange', () => {
+        updateWelcomeCopy();
+        document.getElementById('authHeading').textContent = t(authMode === 'signin' ? 'Sign In' : 'Create account');
+      });
+      window.addEventListener('toenow-auth-change', () => {
+        if (currentAuthUser) {
+          exploration?.chooseGuest(); welcome.close(); returnToWelcome = false;
+          authModal.classList.remove('open'); authModal.setAttribute('aria-hidden', 'true');
+        }
+      });
+      const authRequest = new URLSearchParams(window.location.search).get('auth');
+      if (authRequest === 'register' || authRequest === 'signin') { returnToWelcome = true; openAuthModal(authRequest); }
+
+      document.getElementById('signInRegisterBtn').addEventListener('click', () => {
+        if (profileDrawer.classList.contains('open')) closeProfileDrawer();
+        openAuthModal();
+      });
+
+      closeAuthBtn.addEventListener('click', closeAuthModal);
+      authModal.addEventListener('click', (e) => {
+        if (e.target === authModal) closeAuthModal();
+      });
+
+      // 1-Click Google Sign In
+      googleLoginBtn.addEventListener('click', async () => {
+        if (!supabaseClient) {
+          showToast('Authentication engine unavailable.');
+          return;
+        }
+        try {
+          const { error } = await supabaseClient.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+              redirectTo: window.location.origin
+            }
+          });
+          if (error) throw error;
+        } catch (err) {
+          authStatusMsg.className = 'auth-status-msg error';
+          authStatusMsg.textContent = err.message || 'Failed to initialize Google login.';
+        }
+      });
+
+      // Pure Email Magic Link / OTP Sign In
+      emailAuthForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('authEmailInput').value.trim();
+        if (!email || !supabaseClient) return;
+
+        const submitBtn = document.getElementById('emailSubmitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Transmitting Link...';
+        authStatusMsg.style.display = 'none';
+
+        try {
+          const { error } = await supabaseClient.auth.signInWithOtp({
+            email: email,
+            options: {
+              emailRedirectTo: window.location.origin,
+              shouldCreateUser: authMode === 'register'
+            }
+          });
+          if (error) throw error;
+
+          authStatusMsg.className = 'auth-status-msg success';
+          authStatusMsg.textContent = `Magic login link dispatched to ${email}! Check your inbox.`;
+          document.getElementById('authEmailInput').value = '';
+        } catch (err) {
+          authStatusMsg.className = 'auth-status-msg error';
+          authStatusMsg.textContent = err.message || 'Failed to dispatch magic link.';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Magic Login Link';
+        }
+      });
+
+      // Sign Out
+      signOutBtn.addEventListener('click', async () => {
+        if (!supabaseClient) return;
+        await supabaseClient.auth.signOut();
+        showToast('Signed out of Toenow Matrix. Operating in Guest mode.');
+        if (profileDrawer.classList.contains('open')) closeProfileDrawer();
+      });
+
+      // Global Leaderboard Modal Open/Close
+      const leaderboardModal = document.getElementById('leaderboardModal');
+      const lbSelect = document.getElementById('leaderboardGameSelect');
+
+      document.getElementById('openLeaderboardBtn').addEventListener('click', () => {
+        populateLeaderboardDropdown();
+        leaderboardModal.classList.add('open');
+        leaderboardModal.setAttribute('aria-hidden', 'false');
+      });
+
+      document.getElementById('closeLeaderboardBtn').addEventListener('click', () => {
+        leaderboardModal.classList.remove('open');
+        leaderboardModal.setAttribute('aria-hidden', 'true');
+      });
+
+      leaderboardModal.addEventListener('click', (e) => {
+        if (e.target === leaderboardModal) {
+          leaderboardModal.classList.remove('open');
+          leaderboardModal.setAttribute('aria-hidden', 'true');
+        }
+      });
+
+      lbSelect.addEventListener('change', () => {
+        renderLeaderboardTable(lbSelect.value);
+      });
+
+      // Theater Viewport Controls
+      document.getElementById('closeTheaterBtn').addEventListener('click', closeTheaterModal);
+      document.getElementById('restartGameBtn').addEventListener('click', restartCurrentGame);
+      document.getElementById('fullscreenGameBtn').addEventListener('click', toggleTheaterFullscreen);
+
+      // Global Escape key handler
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (theaterModal.classList.contains('open')) closeTheaterModal();
+          if (profileDrawer.classList.contains('open')) closeProfileDrawer();
+          if (leaderboardModal.classList.contains('open')) {
+            leaderboardModal.classList.remove('open');
+            leaderboardModal.setAttribute('aria-hidden', 'true');
+          }
+          if (authModal.classList.contains('open')) closeAuthModal();
+        }
+      });
+    }
+
+    /* ============================================================================
+       0.1 SUPABASE AUTH STATE & PROFILE SYNCHRONIZATION
+       ============================================================================ */
+    async function initAuthListener() {
+      if (!supabaseClient) return;
+
+      const updateUIWithUser = (user, profile) => {
+        currentAuthUser = user;
+        currentCloudProfile = profile;
+        window.dispatchEvent(new Event('toenow-auth-change'));
+
+        const openProfileBtn = document.getElementById('openProfileBtn');
+        const signInRegisterBtn = document.getElementById('signInRegisterBtn');
+        const signOutBtn = document.getElementById('signOutBtn');
+
+        if (user) {
+          const displayName = profile?.display_name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Operator';
+          const avatarUrl = profile?.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture;
+
+          if (openProfileBtn) {
+            openProfileBtn.innerHTML = `
+              ${avatarUrl ? `<img src="${avatarUrl}" class="user-avatar-img" alt="${displayName}" />` : `<div class="guest-avatar">${displayName.slice(0, 2).toUpperCase()}</div>`}
+              <div class="profile-meta">
+                <span class="profile-name" data-i18n-ignore>${displayName}</span>
+                <span class="profile-status" style="color: #6ee7b7;"><span class="status-dot" style="background:#10b981;box-shadow:0 0 8px #10b981;"></span> Cloud Synced</span>
+              </div>
+            `;
+          }
+
+          if (signInRegisterBtn) signInRegisterBtn.style.display = 'none';
+          if (signOutBtn) signOutBtn.style.display = 'block';
+        } else {
+          if (openProfileBtn) {
+            openProfileBtn.innerHTML = `
+              <div class="guest-avatar" aria-hidden="true">👤</div>
+              <div class="profile-meta">
+                <span class="profile-name">Sign In / Register</span>
+              </div>
+            `;
+          }
+
+          if (signInRegisterBtn) signInRegisterBtn.style.display = 'block';
+          if (signOutBtn) signOutBtn.style.display = 'none';
+        }
+      };
+
+      const fetchCloudProfile = async (userId) => {
+        try {
+          const { data, error } = await supabaseClient
+            .from('user_profiles')
+            .select('*')
+            .eq('id', userId)
+            .single();
+          if (!error && data) {
+            return data;
+          }
+        } catch (_) {}
+        return null;
+      };
+
+      /**
+       * Pulls all verified user scores from Supabase cloud and updates local
+       * game scores and cognitive profile radar. Also uploads any higher local
+       * scores to the cloud so scores match everywhere.
+       */
+      const syncUserScoresFromCloud = async (userId) => {
+        if (!supabaseClient || !userId) return;
+        try {
+          const { data, error } = await supabaseClient
+            .from('leaderboard_view')
+            .select('game_id, score, created_at')
+            .eq('user_id', userId);
+
+          const localScores = getGameScores();
+          let hasNewCloudData = false;
+          const cloudScoresMap = {};
+
+          if (!error && data && data.length > 0) {
+            data.forEach(item => {
+              const gameId = item.game_id;
+              const numericScore = Math.round(Number(item.score) || 0);
+              cloudScoresMap[gameId] = Math.max(cloudScoresMap[gameId] || 0, numericScore);
+
+              const currentLocalBest = localScores[gameId]?.bestScore || 0;
+              if (numericScore > currentLocalBest) {
+                const gameCfg = GAMES_CONFIG.find(g => g.id === gameId);
+                const category = gameCfg?.category || 'puzzle';
+                localScores[gameId] = {
+                  ...localScores[gameId],
+                  bestScore: numericScore,
+                  lastScore: numericScore,
+                  category: category,
+                  updatedAt: (item.created_at || '').slice(0, 10) || new Date().toISOString().slice(0, 10)
+                };
+                hasNewCloudData = true;
+                recalibrateCognitiveProfile(gameId, category, numericScore);
+              }
+            });
+          }
+
+          // If user has local scores higher than cloud, upload them to Supabase
+          for (const [gameId, entry] of Object.entries(localScores)) {
+            const localBest = entry?.bestScore || 0;
+            const cloudBest = cloudScoresMap[gameId] || 0;
+            if (localBest > cloudBest) {
+              try {
+                const { data: sessionData } = await supabaseClient
+                  .from('game_sessions')
+                  .insert({ user_id: userId, game_id: gameId })
+                  .select()
+                  .single();
+                if (sessionData) {
+                  await supabaseClient.rpc('submit_verified_score', {
+                    p_session_id: sessionData.id,
+                    p_game_id: gameId,
+                    p_score: localBest,
+                    p_duration_ms: 15000
+                  });
+                }
+              } catch (_) {}
+            }
+          }
+
+          if (hasNewCloudData) {
+            localStorage.setItem(STORAGE_KEYS.GAME_SCORES, JSON.stringify(localScores));
+          }
+
+          // Always refresh UI with the unified scores
+          renderBentoGrid();
+          renderHexagonRadar();
+          const activeProfile = getUserProfile();
+          updateCompositeStat(activeProfile);
+        } catch (err) {
+          console.warn('[Toenow Matrix] Could not sync user scores from cloud:', err);
+        }
+      };
+
+      // Check current session
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session?.user) {
+        updateUIWithUser(session.user, null);
+        const profile = await fetchCloudProfile(session.user.id);
+        updateUIWithUser(session.user, profile);
+        await syncUserScoresFromCloud(session.user.id);
+      } else {
+        updateUIWithUser(null, null);
+      }
+
+      // Realtime Auth State Listener
+      supabaseClient.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN' && session?.user) {
+          updateUIWithUser(session.user, null);
+          const profile = await fetchCloudProfile(session.user.id);
+          updateUIWithUser(session.user, profile);
+          await syncUserScoresFromCloud(session.user.id);
+          showToast(`Welcome to Toenow Matrix, ${session.user.email}! Records synced.`);
+        } else if (event === 'SIGNED_OUT') {
+          updateUIWithUser(null, null);
+        }
+      });
+    }
+
+    // Boot Toenow Hub
+    (function bootstrapToenow() {
+      if (window.ToenowExploration) {
+        let storage; try { storage = window.localStorage; } catch (_) {}
+        let ownerId;
+        try {
+          ownerId = sessionStorage.getItem('toenow_exploration_tab_v1');
+          if (!ownerId) { ownerId = `${Date.now()}-${Math.random()}`; sessionStorage.setItem('toenow_exploration_tab_v1', ownerId); }
+        } catch (_) {}
+        exploration = window.ToenowExploration.create({ storage, levels: ToenowLevels, gameIds: GAMES_CONFIG.map(game => game.id), ownerId });
+        exploration.reconcile();
+        document.body.dataset.exploration = exploration.snapshot().mode;
+      }
+      const profile = getUserProfile();
+      updateCompositeStat(profile);
+      renderBentoGrid();
+      renderHexagonRadar();
+      populateLeaderboardDropdown();
+      initHubInteractions();
+      if (window.ToenowIsland) islandExplorer = window.ToenowIsland.mount({
+        host: document.getElementById('islandExplorer'),
+        listHost: document.getElementById('hubListView'),
+        games: GAMES_CONFIG,
+        levels: ToenowLevels,
+        openGame: openTheaterModal,
+        exploration
+      });
+      discoverAdditionalGames();
+      const authReady = initAuthListener().catch(() => {});
+      Promise.race([authReady, new Promise(resolve => setTimeout(resolve, 2000))]).then(() => window.showIslandWelcome?.());
+      window.addEventListener('focus', refreshExploration);
+      window.addEventListener('storage', refreshExploration);
+      window.addEventListener('pagehide', () => exploration?.suspendRun(currentExplorationRun));
+      window.addEventListener('pageshow', event => {
+        if (event.persisted && currentMountedGame) currentExplorationRun = exploration?.beginRun(currentMountedGame.id) || null;
+      });
+
+      // Deep link challenge handler (?play=gameId&challenge=score)
+      const params = new URLSearchParams(window.location.search);
+      const playId = params.get('play');
+      const challengeScore = params.get('challenge');
+      if (playId) {
+        const game = GAMES_CONFIG.find(g => g.id === playId);
+        if (game) {
+          openTheaterModal(game);
+          if (challengeScore) {
+            showToast(`Challenge Accepted: Beat ${Number(challengeScore).toLocaleString()} pts in ${game.title}!`);
+          }
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

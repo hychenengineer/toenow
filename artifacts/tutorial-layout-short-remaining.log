@@ -1,0 +1,6 @@
+PASS tap-match 568 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS spot-quick 568 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS shadow-match 568 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain 568 zh-Hant: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS animal-rescue-train 568 zh-Hant: 6 real game taps, score0, records protected, normal start, replay/cancel
+{"realGameLessons":5,"height":320}

@@ -1,0 +1,4 @@
+PASS 390/en: auth error stays inline; iframe restart works without corner popup or runtime errors
+PASS 390/zh-Hant: auth error stays inline; iframe restart works without corner popup or runtime errors
+PASS 1100/en: auth error stays inline; iframe restart works without corner popup or runtime errors
+PASS 1100/zh-Hant: auth error stays inline; iframe restart works without corner popup or runtime errors

@@ -1,0 +1,135 @@
+TAP version 13
+# Subtest: guarded trail reveals clues before guards and blocks treasure until a real victory
+ok 1 - guarded trail reveals clues before guards and blocks treasure until a real victory
+  ---
+  duration_ms: 2.0746
+  ...
+# Subtest: trail retreats retain both armies and reject stale battles without rerolling guards
+ok 2 - trail retreats retain both armies and reject stale battles without rerolling guards
+  ---
+  duration_ms: 0.2575
+  ...
+# Subtest: inaccessible guarded loot cannot keep a wiped expedition alive
+ok 3 - inaccessible guarded loot cannot keep a wiped expedition alive
+  ---
+  duration_ms: 0.2027
+  ...
+# Subtest: preparation follows surviving defenders and quotes real recruitment and training budgets without spending
+ok 4 - preparation follows surviving defenders and quotes real recruitment and training budgets without spending
+  ---
+  duration_ms: 1.4804
+  ...
+# Subtest: battle report counts deployed troops, exact losses, actual counter damage and paid rewards once
+ok 5 - battle report counts deployed troops, exact losses, actual counter damage and paid rewards once
+  ---
+  duration_ms: 0.7656
+  ...
+# Subtest: whole battle counter totals include attacks older than the eight-entry journal
+ok 6 - whole battle counter totals include attacks older than the eight-entry journal
+  ---
+  duration_ms: 0.4415
+  ...
+# Subtest: attacking a different available fort keeps its preparation after retreat
+ok 7 - attacking a different available fort keeps its preparation after retreat
+  ---
+  duration_ms: 0.2326
+  ...
+# Subtest: expedition starts with exact original army health and three distinct forts
+ok 8 - expedition starts with exact original army health and three distinct forts
+  ---
+  duration_ms: 0.1778
+  ...
+# Subtest: one-time exploration supplies and recruitment spend resources without healing wounded survivors
+ok 9 - one-time exploration supplies and recruitment spend resources without healing wounded survivors
+  ---
+  duration_ms: 0.2988
+  ...
+# Subtest: retreat and defeat keep exact health on both sides and reject stale or duplicate settlement
+ok 10 - retreat and defeat keep exact health on both sides and reject stale or duplicate settlement
+  ---
+  duration_ms: 0.3
+  ...
+# Subtest: capturing both outer forts opens final fort and rewards cannot be farmed
+ok 11 - capturing both outer forts opens final fort and rewards cannot be farmed
+  ---
+  duration_ms: 0.2587
+  ...
+# Subtest: wiped armies can use hidden reinforcements; no army and no recovery ends the run
+ok 12 - wiped armies can use hidden reinforcements; no army and no recovery ends the run
+  ---
+  duration_ms: 0.1688
+  ...
+# Subtest: training changes only the trained species and affects real range, movement and incoming damage
+ok 13 - training changes only the trained species and affects real range, movement and incoming damage
+  ---
+  duration_ms: 0.2361
+  ...
+# Subtest: spending the last discovery on wood ends a wiped run when recovery becomes impossible
+ok 14 - spending the last discovery on wood ends a wiped run when recovery becomes impossible
+  ---
+  duration_ms: 0.2643
+  ...
+# Subtest: ground movement follows a shortest legal path without crossing walls or units
+ok 15 - ground movement follows a shortest legal path without crossing walls or units
+  ---
+  duration_ms: 4.5663
+  ...
+# Subtest: attack range exposes legal tiles, respects walls and trained range without mutating a move preview
+ok 16 - attack range exposes legal tiles, respects walls and trained range without mutating a move preview
+  ---
+  duration_ms: 1.333
+  ...
+# Subtest: attack feedback reports actual lost HP and units even for an overkill
+ok 17 - attack feedback reports actual lost HP and units even for an overkill
+  ---
+  duration_ms: 0.4571
+  ...
+# Subtest: counter chain rewards the same species on either side equally
+ok 18 - counter chain rewards the same species on either side equally
+  ---
+  duration_ms: 0.2669
+  ...
+# Subtest: movement follows paths and cannot cross walls or occupied tiles
+ok 19 - movement follows paths and cannot cross walls or occupied tiles
+  ---
+  duration_ms: 0.3353
+  ...
+# Subtest: ranged attacks require clear sight and never damage allies
+ok 20 - ranged attacks require clear sight and never damage allies
+  ---
+  duration_ms: 0.1186
+  ...
+# Subtest: attack consumes action; defending reduces damage until next own turn
+ok 21 - attack consumes action; defending reduces damage until next own turn
+  ---
+  duration_ms: 0.7799
+  ...
+# Subtest: AI obeys terrain, finishes turns, and terminal battles reject further actions
+ok 22 - AI obeys terrain, finishes turns, and terminal battles reject further actions
+  ---
+  duration_ms: 1.3916
+  ...
+# Subtest: five practice tiers scale defenders while keeping the board valid
+ok 23 - five practice tiers scale defenders while keeping the board valid
+  ---
+  duration_ms: 0.3274
+  ...
+# Subtest: the smaller starting army can capture the fort through legal movement and counters
+ok 24 - the smaller starting army can capture the fort through legal movement and counters
+  ---
+  duration_ms: 6.7252
+  ...
+# Subtest: Expedition battles do not add a locked place to the existing exploration route
+ok 25 - Expedition battles do not add a locked place to the existing exploration route
+  ---
+  duration_ms: 9.9312
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 108.971

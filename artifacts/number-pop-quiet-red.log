@@ -1,0 +1,8 @@
+AssertionError [ERR_ASSERTION]: correct pop has no extra effects
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-number-pop-quiet-browser.cjs:30:16 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Object],
+  expected: [Object],
+  operator: 'deepStrictEqual'
+}

@@ -1,0 +1,56 @@
+{
+  "url": "https://hychenengineer.github.io/toenow/",
+  "commit": "ca7599653550ee3f11a6a9df9874fdf59cd9bb9e",
+  "publishedFiles": [
+    {
+      "file": "index.html",
+      "sha256": "d6aed2bed30e5c2865d1071211bcc105b34441e7d496d269a2b693a7b4a475cf"
+    },
+    {
+      "file": "shared/toenow-materials.js",
+      "sha256": "17ab0872ce9282580b5f4b84a34e1e26cefd2b64110138b47f28be6562b24c31"
+    },
+    {
+      "file": "shared/toenow-materials-ui.js",
+      "sha256": "565aef22516409d9c93a932842f837f4b3190a5eae68df2eb2576641c1ac2327"
+    },
+    {
+      "file": "shared/toenow-sdk.js",
+      "sha256": "5358898c3ab8a796cf4644f3e786175c9d9db1648165010edbe8033b02d340b5"
+    },
+    {
+      "file": "shared/toenow-island.js",
+      "sha256": "26108edbe02bea38401c704a435e73b3a5d4bd4d6b76002b7b87f71983dd4af4"
+    },
+    {
+      "file": "assets/toenow-materials.css",
+      "sha256": "42d3bdf781c11084c40e02fd1be18f0a138e75f07c4c7b5c4650fb9c9df90dfd"
+    },
+    {
+      "file": "games/number-pop/main.js",
+      "sha256": "2cd2dd34cfc3ab657dcc4b3731e80906580a98f12be2d5dbb8050ae3ab11b375"
+    },
+    {
+      "file": "games/flash-brain/assets/index-cr-6j3L1.js",
+      "sha256": "9f971f9cbc5f8342ec8df87fb15f5ab6b09beec53b9c8d2563fadc588a492cb4"
+    },
+    {
+      "file": "games/capybara-drift/index.html",
+      "sha256": "df36e34f782698e0455a62dd0f222656a6e8a0622dbfe03b1fb0076173e81ba8"
+    },
+    {
+      "file": "assets/animal-island/capybara-level1.webp",
+      "sha256": "b30400c989700c025a1ae82caf1e51d9f0890c36a62a139a4cc3e0c52ba1f800"
+    }
+  ],
+  "checks": [
+    "Live Hub load",
+    "Standalone module paths under /toenow/",
+    "Real iframe start and state-driven end",
+    "Material receipt and return to home",
+    "Starter decoration purchase",
+    "Mobile layout",
+    "Save survives reload"
+  ],
+  "errors": []
+}

@@ -1,0 +1,232 @@
+{
+  "attempt": 0,
+  "round": 8,
+  "survivors": [
+    [
+      "p-beaver",
+      2
+    ],
+    [
+      "p-fox",
+      0
+    ],
+    [
+      "p-squirrel",
+      5
+    ]
+  ],
+  "plan": [
+    {
+      "round": 1,
+      "id": "p-beaver",
+      "p": {
+        "x": 1,
+        "y": 1,
+        "cost": 0
+      },
+      "val": -1
+    },
+    {
+      "round": 1,
+      "id": "p-squirrel",
+      "p": {
+        "x": 1,
+        "y": 4,
+        "cost": 0
+      },
+      "val": -2
+    },
+    {
+      "round": 1,
+      "id": "p-fox",
+      "p": {
+        "x": 0,
+        "y": 3,
+        "cost": 0
+      },
+      "val": -3
+    },
+    {
+      "round": 2,
+      "id": "p-beaver",
+      "p": {
+        "x": 1,
+        "y": 1,
+        "cost": 0
+      },
+      "target": "e-fox",
+      "val": 76.1
+    },
+    {
+      "round": 2,
+      "id": "p-fox",
+      "p": {
+        "x": 2,
+        "y": 2,
+        "cost": 3
+      },
+      "target": "e-fox",
+      "val": 41
+    },
+    {
+      "round": 2,
+      "id": "p-squirrel",
+      "p": {
+        "x": 0,
+        "y": 3,
+        "cost": 2
+      },
+      "target": "e-fox",
+      "val": 38.625
+    },
+    {
+      "round": 3,
+      "id": "p-beaver",
+      "p": {
+        "x": 1,
+        "y": 1,
+        "cost": 0
+      },
+      "target": "e-fox",
+      "val": 76.2
+    },
+    {
+      "round": 3,
+      "id": "p-squirrel",
+      "p": {
+        "x": 0,
+        "y": 1,
+        "cost": 2
+      },
+      "target": "e-fox",
+      "val": 33.099999999999994
+    },
+    {
+      "round": 3,
+      "id": "p-fox",
+      "p": {
+        "x": 3,
+        "y": 4,
+        "cost": 3
+      },
+      "target": "e-squirrel",
+      "val": 20.366666666666667
+    },
+    {
+      "round": 4,
+      "id": "p-squirrel",
+      "p": {
+        "x": 0,
+        "y": 2,
+        "cost": 1
+      },
+      "target": "e-squirrel",
+      "val": 46.199999999999996
+    },
+    {
+      "round": 4,
+      "id": "p-fox",
+      "p": {
+        "x": 3,
+        "y": 2,
+        "cost": 4
+      },
+      "target": "e-squirrel",
+      "val": 54
+    },
+    {
+      "round": 4,
+      "id": "p-beaver",
+      "p": {
+        "x": 1,
+        "y": 1,
+        "cost": 0
+      },
+      "val": -5
+    },
+    {
+      "round": 5,
+      "id": "p-fox",
+      "p": {
+        "x": 4,
+        "y": 2,
+        "cost": 1
+      },
+      "target": "e-beaver",
+      "val": 8.133333333333333
+    },
+    {
+      "round": 5,
+      "id": "p-squirrel",
+      "p": {
+        "x": 0,
+        "y": 2,
+        "cost": 0
+      },
+      "val": -1
+    },
+    {
+      "round": 5,
+      "id": "p-beaver",
+      "p": {
+        "x": 1,
+        "y": 1,
+        "cost": 0
+      },
+      "val": -3
+    },
+    {
+      "round": 6,
+      "id": "p-squirrel",
+      "p": {
+        "x": 0,
+        "y": 2,
+        "cost": 0
+      },
+      "val": -1
+    },
+    {
+      "round": 6,
+      "id": "p-beaver",
+      "p": {
+        "x": 1,
+        "y": 1,
+        "cost": 0
+      },
+      "val": -3
+    },
+    {
+      "round": 7,
+      "id": "p-squirrel",
+      "p": {
+        "x": 0,
+        "y": 3,
+        "cost": 1
+      },
+      "target": "e-beaver",
+      "val": 36.06666666666667
+    },
+    {
+      "round": 7,
+      "id": "p-beaver",
+      "p": {
+        "x": 3,
+        "y": 1,
+        "cost": 2
+      },
+      "target": "e-beaver",
+      "val": 14.5
+    },
+    {
+      "round": 8,
+      "id": "p-squirrel",
+      "p": {
+        "x": 0,
+        "y": 3,
+        "cost": 0
+      },
+      "target": "e-beaver",
+      "val": 56
+    }
+  ]
+}

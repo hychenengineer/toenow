@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TOENOW · 遊戲封面預覽</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0b0d14;color:#f4f5fa;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}header,main{max-width:1500px;margin:auto;padding:36px 36px 0}.brand{font-size:21px;font-weight:850;letter-spacing:3px;color:#8fe3db}header p{color:#9b9fad;font-size:14px;margin-top:14px}h1{font-size:27px;margin:0 0 25px;font-weight:650}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.tile{display:block;position:relative;aspect-ratio:16/10;border-radius:17px;background:#080b12;overflow:hidden;border:1px solid #282b39;transition:transform .2s,border-color .2s;isolation:isolate}.tile:hover,.tile:focus-visible{transform:translateY(-4px);border-color:#8fe3db;outline:2px solid #8fe3db;outline-offset:3px}.tile img,.tile video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.tile video{opacity:0;transition:opacity .2s}.tile.playing video{opacity:1}.caption{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 2px}.caption h2{font-size:15px;font-weight:550;margin:0}.preview{border:1px solid #343947;background:#151a26;border-radius:8px;padding:7px 11px;color:#c5cbd6;cursor:pointer;font:inherit;font-size:12px}.preview:focus-visible{outline:2px solid #8fe3db;outline-offset:3px}.note{color:#818797;font-size:13px;line-height:1.8;margin-top:26px}.status{min-height:20px;color:#9edbd5;font-size:13px}a{color:inherit;text-decoration:none}dialog{width:min(1150px,94vw);max-height:94vh;background:#0b0d14;color:white;border:1px solid #363d50;border-radius:16px;padding:15px}dialog::backdrop{background:#000c}dialog video{display:block;width:100%;height:min(72vh,760px);object-fit:contain;background:#080b12}dialog button{float:right;margin-bottom:12px}.dialog-title{padding:8px 0} @media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}header,main{padding:25px 20px 0}}@media(max-width:540px){.grid{grid-template-columns:1fr}h1{font-size:23px}.tile:hover{transform:none}}
+</style>
+</head>
+<body>
+<header><a class="brand" href="../../">TOENOW</a><p>十款封面預覽 · 真實遊戲畫面</p></header>
+<main><h1>選一款，開始玩。</h1><div class="grid" id="games"></div><p class="note">滑鼠停留即可觀看無聲遊玩片段，點擊封面開啟遊戲。<br>手機可點「放大預覽」觀看。十款皆為實際遊玩錄影，封面取自同一段影片。</p><p class="status" role="status" id="status"></p></main>
+<dialog id="viewer"><button class="preview" id="close">關閉 ✕</button><div class="dialog-title" id="viewer-title"></div><video muted playsinline loop controls></video></dialog>
+<script>
+const games=[['animal-rescue-train','動物救援列車'],['number-pop','Number Pop'],['ball-track','Ball Track'],['block-match','Block Match'],['add-up','Add Up'],['space-scale','Space Scale'],['tap-match','Tap Match'],['spot-quick','Spot Quick'],['shadow-match','Shadow Match'],['flash-brain','Flash Brain']];
+const mediaBase='../../assets/gameplay-previews/';
+const grid=document.querySelector('#games'),status=document.querySelector('#status');
+const viewer=document.querySelector('#viewer'),largeVideo=viewer.querySelector('video');
+let active=null,timer=null;
+function stop(){clearTimeout(timer);if(active){active.pause();active.currentTime=0;active.closest('.tile').classList.remove('playing');active=null;}}
+for(const [id,name] of games){
+ const article=document.createElement('article');
+ article.innerHTML=`<a class="tile" href="../../games/${id}/" aria-label="開始遊玩 ${name}"><img src="${mediaBase}${id}-poster.png" alt="${name} 的實際遊戲畫面"><video muted playsinline loop preload="none" data-src="${mediaBase}${id}.webm" aria-hidden="true"></video></a><div class="caption"><h2>${name}</h2><button class="preview" type="button" aria-label="放大預覽 ${name}">放大預覽</button></div>`;
+ const tile=article.querySelector('.tile'),video=article.querySelector('video');
+ const start=()=>{stop();timer=setTimeout(async()=>{active=video;if(!video.src)video.src=video.dataset.src;try{await video.play();if(active===video)tile.classList.add('playing');else video.pause();}catch{if(active===video){status.textContent='預覽暫時無法播放，仍可點擊封面開啟遊戲。';stop();}}},400);};
+ tile.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')start();});
+ tile.addEventListener('pointerleave',stop);tile.addEventListener('focus',start);tile.addEventListener('blur',stop);tile.addEventListener('click',stop);
+ article.querySelector('button').addEventListener('click',()=>{stop();document.querySelector('#viewer-title').textContent=name;largeVideo.src=mediaBase+id+'.webm';viewer.showModal();largeVideo.play().catch(()=>{status.textContent='請使用影片播放按鈕開始預覽。';});});
+ grid.append(article);
+}
+document.querySelector('#close').onclick=()=>viewer.close();
+viewer.addEventListener('close',()=>{largeVideo.pause();largeVideo.removeAttribute('src');largeVideo.load();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){stop();largeVideo.pause();}});
+</script>
+</body></html>

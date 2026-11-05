@@ -1,0 +1,155 @@
+TAP version 13
+# Subtest: each home derives its own four sequential additions and only reveals purchased art
+ok 1 - each home derives its own four sequential additions and only reveals purchased art
+  ---
+  duration_ms: 9.2847
+  ...
+# Subtest: collaboration prices require every ingredient and preview never spends or constructs
+ok 2 - collaboration prices require every ingredient and preview never spends or constructs
+  ---
+  duration_ms: 1.0154
+  ...
+# Subtest: all homes expose their own art and accessible recipe travel, play chat and build actions
+ok 3 - all homes expose their own art and accessible recipe travel, play chat and build actions
+  ---
+  duration_ms: 1.2597
+  ...
+# Subtest: chat cycles through varied ambient lines while preserving missing, ready and completed context
+ok 4 - chat cycles through varied ambient lines while preserving missing, ready and completed context
+  ---
+  duration_ms: 4.522
+  ...
+# Subtest: invalid homes fail gracefully and translated notices are escaped
+ok 5 - invalid homes fail gracefully and translated notices are escaped
+  ---
+  duration_ms: 0.3991
+  ...
+# Subtest: Traditional Chinese config translation fills gaps in the existing Hub translator
+ok 6 - Traditional Chinese config translation fills gaps in the existing Hub translator
+  ---
+  duration_ms: 0.3695
+  ...
+# Subtest: malformed save values do not unlock or afford construction and unowned decorations stay hidden
+ok 7 - malformed save values do not unlock or afford construction and unowned decorations stay hidden
+  ---
+  duration_ms: 0.2337
+  ...
+# Subtest: visitors with built homes are welcomed back even after spending every material
+ok 8 - visitors with built homes are welcomed back even after spending every material
+  ---
+  duration_ms: 0.3574
+  ...
+# Subtest: all ten homes progress from one to three to four material recipes with balanced collaboration
+ok 9 - all ten homes progress from one to three to four material recipes with balanced collaboration
+  ---
+  duration_ms: 2.5093
+  ...
+# Subtest: a missing collaboration material prevents all spending; success deducts every ingredient once
+ok 10 - a missing collaboration material prevents all spending; success deducts every ingredient once
+  ---
+  duration_ms: 1.1479
+  ...
+# Subtest: existing built stages and owned decorations survive the recipe change without retroactive costs
+ok 11 - existing built stages and owned decorations survive the recipe change without retroactive costs
+  ---
+  duration_ms: 0.2075
+  ...
+# Subtest: exactly ten explorer games own distinct materials; carefree is excluded
+ok 12 - exactly ten explorer games own distinct materials; carefree is excluded
+  ---
+  duration_ms: 0.0986
+  ...
+# Subtest: normal play credits only its own item, survives reload, and cannot repeat a receipt
+ok 13 - normal play credits only its own item, survives reload, and cannot repeat a receipt
+  ---
+  duration_ms: 0.2067
+  ...
+# Subtest: practice, preview, zero work, unknown and implausible attempts do not award
+ok 14 - practice, preview, zero work, unknown and implausible attempts do not award
+  ---
+  duration_ms: 0.1808
+  ...
+# Subtest: own material upgrades are affordable, atomic and separate from challenge records
+ok 15 - own material upgrades are affordable, atomic and separate from challenge records
+  ---
+  duration_ms: 0.3304
+  ...
+# Subtest: starter and collaboration decorations spend exact recipes once and can be toggled
+ok 16 - starter and collaboration decorations spend exact recipes once and can be toggled
+  ---
+  duration_ms: 1.0128
+  ...
+# Subtest: legacy challenge stage is preserved once and later high scores do not build houses
+ok 17 - legacy challenge stage is preserved once and later high scores do not build houses
+  ---
+  duration_ms: 0.3919
+  ...
+# Subtest: latest balance is read for sequential clients and storage errors never report success
+ok 18 - latest balance is read for sequential clients and storage errors never report success
+  ---
+  duration_ms: 0.967
+  ...
+# Subtest: malformed balances cannot create spendable resources
+ok 19 - malformed balances cannot create spendable resources
+  ---
+  duration_ms: 0.4054
+  ...
+# Subtest: SDK lifecycle awards once, clears on replay and never awards a practice result
+ok 20 - SDK lifecycle awards once, clears on replay and never awards a practice result
+  ---
+  duration_ms: 2.9563
+  ...
+# Subtest: Number Pop accepts an immediate first start and deduplicates its compatibility click
+ok 21 - Number Pop accepts an immediate first start and deduplicates its compatibility click
+  ---
+  duration_ms: 1.1515
+  ...
+# Subtest: interrupted runs lose their reward token
+ok 22 - interrupted runs lose their reward token
+  ---
+  duration_ms: 0.1833
+  ...
+# Subtest: a short legitimate scored run earns materials without a ten second cutoff
+ok 23 - a short legitimate scored run earns materials without a ten second cutoff
+  ---
+  duration_ms: 0.5304
+  ...
+# Subtest: starter yard contains no purchased buildings and four sequential mixed-material projects
+ok 24 - starter yard contains no purchased buildings and four sequential mixed-material projects
+  ---
+  duration_ms: 1.452
+  ...
+# Subtest: each construction stage reveals a distinct permanent yard object
+ok 25 - each construction stage reveals a distinct permanent yard object
+  ---
+  duration_ms: 0.4434
+  ...
+# Subtest: progress and balances choose short dialogue without mutating saves
+ok 26 - progress and balances choose short dialogue without mutating saves
+  ---
+  duration_ms: 0.2771
+  ...
+# Subtest: scene provides real play/chat/build buttons and only renders owned placed decoration art
+ok 27 - scene provides real play/chat/build buttons and only renders owned placed decoration art
+  ---
+  duration_ms: 0.5973
+  ...
+# Subtest: building preview does not construct or spend, and names the selected project
+ok 28 - building preview does not construct or spend, and names the selected project
+  ---
+  duration_ms: 0.2998
+  ...
+# Subtest: own carrots alone cannot build a collaboration project and all missing sources are shown
+ok 29 - own carrots alone cannot build a collaboration project and all missing sources are shown
+  ---
+  duration_ms: 0.2413
+  ...
+1..29
+# tests 29
+# suites 0
+# pass 29
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 165.0229

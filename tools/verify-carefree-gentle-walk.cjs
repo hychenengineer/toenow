@@ -36,3 +36,5 @@ fs.mkdirSync(out, { recursive: true });
   console.log(JSON.stringify({maxSpeed,errors}));
  } finally {await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
+
+

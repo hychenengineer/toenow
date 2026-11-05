@@ -1,0 +1,119 @@
+{
+  "state": {
+    "state": "gameover",
+    "wave": 23,
+    "waveType": "TRI_SYSTEM_POS",
+    "score": 126786,
+    "combo": 117,
+    "maxCombo": 117,
+    "timeLeft": 0,
+    "runDuration": 112.81069999999629,
+    "decayMultiplier": 1,
+    "maxBank": 60,
+    "shakeTrauma": 0,
+    "hudBottom": 117,
+    "arenaBounds": {
+      "left": 230,
+      "right": 870,
+      "top": 117,
+      "bottom": 835
+    },
+    "touchHitboxExpansion": 20,
+    "cores": [
+      {
+        "id": 1,
+        "value": 0.5,
+        "label": "0.5",
+        "parsedFraction": null,
+        "radius": 46,
+        "hitRadius": 66,
+        "x": 512.356904093089,
+        "y": 304.80682862518694,
+        "popped": false,
+        "freezeTimer": 0
+      },
+      {
+        "id": 2,
+        "value": 0.6,
+        "label": "0.6",
+        "parsedFraction": null,
+        "radius": 52,
+        "hitRadius": 72,
+        "x": 381.9150134538792,
+        "y": 406.4926096443019,
+        "popped": false,
+        "freezeTimer": 0
+      },
+      {
+        "id": 3,
+        "value": 0.75,
+        "label": "3/4",
+        "parsedFraction": {
+          "isSignedNegative": false,
+          "numerator": "3",
+          "denominator": "4"
+        },
+        "fractionGauge": 0.75,
+        "radius": 46,
+        "hitRadius": 66,
+        "x": 367.79834974047463,
+        "y": 558.5456570355337,
+        "popped": false,
+        "freezeTimer": 0
+      },
+      {
+        "id": 4,
+        "value": 0.85,
+        "label": "0.85",
+        "parsedFraction": null,
+        "radius": 52,
+        "hitRadius": 72,
+        "x": 368.5951903086314,
+        "y": 172.05431028911596,
+        "popped": false,
+        "freezeTimer": 0
+      },
+      {
+        "id": 5,
+        "value": 1.2,
+        "label": "1.2",
+        "parsedFraction": null,
+        "radius": 46,
+        "hitRadius": 66,
+        "x": 595.3110124614526,
+        "y": 174.19908682453698,
+        "popped": false,
+        "freezeTimer": 0
+      },
+      {
+        "id": 6,
+        "value": 8,
+        "label": "8",
+        "parsedFraction": null,
+        "radius": 52,
+        "hitRadius": 72,
+        "x": 776.2580436175438,
+        "y": 480.9825117205453,
+        "popped": false,
+        "freezeTimer": 0
+      },
+      {
+        "id": 7,
+        "value": 16,
+        "label": "16",
+        "parsedFraction": null,
+        "radius": 46,
+        "hitRadius": 66,
+        "x": 735.9030147385694,
+        "y": 201.89308557519175,
+        "popped": false,
+        "freezeTimer": 0
+      }
+    ]
+  },
+  "receipt": "🥕 +8 Carrots\nNext home stage: 🥕 8 / 16\nBuild on island",
+  "status": "collected",
+  "balance": 8,
+  "clicks": 117,
+  "wallSeconds": 115.621
+}

@@ -1,0 +1,22 @@
+PASS number-pop 844 en: 3 real game taps, score0, records protected, normal start, replay/cancel
+PASS number-pop 844 zh-Hant: 3 real game taps, score0, records protected, normal start, replay/cancel
+PASS ball-track 844 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS ball-track 844 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS block-match 844 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS block-match 844 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS add-up 844 en: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS add-up 844 zh-Hant: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS space-scale 844 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS space-scale 844 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS tap-match 844 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS tap-match 844 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS spot-quick 844 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+AssertionError [ERR_ASSERTION]: spot-quick real target outside viewport
+    at complete (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:82:12)
+    at async C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:105:18 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '=='
+}

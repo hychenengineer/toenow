@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Space Scale - Fox Parcel Weighhouse</title>
+    <meta
+      name="description"
+      content="A rapid-fire deep-space astrophysics deduction game. Analyze equal-arm scales and weight comparisons to identify target celestial masses before time runs out."
+    />
+    <meta property="og:title" content="Space Scale - Fox Parcel Weighhouse" />
+    <meta
+      property="og:description"
+      content="A rapid-fire deep-space astrophysics deduction game. Analyze equal-arm scales and weight comparisons."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
+    <script src="../../shared/toenow-levels.js"></script>
+    <script src="../../shared/toenow-security.js"></script>
+    <script src="../../shared/toenow-platform.js"></script>
+    <script src="../../shared/toenow-analytics.js"></script>
+    <script src="../../shared/toenow-materials.js"></script>
+    <script src="../../shared/toenow-materials-ui.js"></script>
+    <script src="../../shared/toenow-sdk.js"></script>
+    <script src="../../shared/toenow-time.js"></script>
+    <script src="../../shared/toenow-i18n-core.js"></script>
+    <script src="../../shared/toenow-i18n-games-a.js"></script>
+    <script src="../../shared/toenow-i18n-games-b.js"></script>
+    <script src="../../shared/toenow-i18n-animals.js"></script>
+<script src="../../shared/toenow-i18n.js"></script>
+    <link rel="stylesheet" href="../../assets/toenow-tutorials.css">
+    <script src="../../shared/toenow-tutorial-config.js"></script>
+    <script src="../../shared/toenow-tutorials.js"></script>
+<script src="../../shared/toenow-animals.js"></script>
+    <script src="../../shared/toenow-screen-config.js"></script>
+    <script src="../../shared/toenow-screens.js"></script>
+    <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="../../assets/toenow-animals.css">
+<link rel="stylesheet" href="../../assets/toenow-game-hud.css">
+</head>
+  <body data-state="title" data-wave="1" data-score="0" >
+    <!-- Full-Viewport Astrophysics Simulation Canvas -->
+    <canvas id="game-canvas" data-testid="game-canvas" aria-label="Space Scale kinetic balance simulation"></canvas>
+
+    <!-- Live Playing HUD -->
+    <div id="hud-layer" aria-live="polite"><div class="island-live-hud" data-metrics="3"><div class="island-hud-metric"><span class="island-hud-label">TIME</span><span id="hud-timer" class="hud-value island-hud-value">60.0s</span></div><div class="island-hud-metric"><span class="island-hud-label">SCORE</span><span id="hud-score" class="hud-value island-hud-value">0</span></div><div class="island-hud-metric"><span class="island-hud-label">COMBO</span><span id="hud-combo" class="island-hud-value">0x</span></div><div class="island-hud-controls"><button id="btn-mute" type="button" class="icon-btn" aria-label="Toggle Audio Mute (M)" title="Mute / Unmute [M]" tabindex="-1">
+              <svg id="icon-sound-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+              </svg>
+              <svg id="icon-sound-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+              </svg>
+            </button><button id="btn-pause" type="button" class="icon-btn" aria-label="Pause Game (P)" title="Pause [P / Esc]" tabindex="-1">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+            </button><button id="btn-restart-hud" type="button" class="icon-btn" aria-label="Restart Run (R)" title="Instant Restart [R]" tabindex="-1">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+            </button></div><div class="island-hud-task"><div id="directive-banner" class="directive-banner" data-directive="max">
+            <div class="directive-pill-row">
+              <span id="directive-action-label" class="directive-action-label">▲ FIND THE HEAVIEST</span>
+              <span id="directive-badge-pill" class="directive-badge-pill">MAX MASS</span>
+            </div>
+            <span id="directive-sub" class="directive-sub">TAP THE CELESTIAL BODY WITH GREATEST GRAVITATIONAL WEIGHT</span>
+          </div></div></div><div class="island-hud-legacy" aria-hidden="true">
+      <div class="hud-top-bar">
+        <!-- Left Cluster: Score, Synapse EXP & Rank -->
+        <div class="hud-cluster-left">
+          <div class="hud-score-row">
+            <div class="hud-stat">
+              <span class="hud-kicker">SCORE</span>
+
+            </div>
+            <div class="hud-stat" style="align-items: flex-end">
+              <span class="hud-kicker">BEST</span>
+              <span id="hud-best" class="hud-sub">0</span>
+            </div>
+          </div>
+          <!-- Synapse EXP Bar -->
+          <div class="exp-container">
+            <div class="exp-header">
+              <span id="hud-rank">Rank 1 · Cadet Analyst</span>
+              <span id="hud-exp">0 EXP</span>
+            </div>
+            <div class="exp-track">
+              <div id="hud-exp-fill" class="exp-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Legacy wave metadata -->
+        <div class="hud-cluster-center">
+
+          <div class="wave-meta-row">
+            <span id="hud-wave">WAVE 1</span>
+            <span id="hud-mode">BINARY WARMUP</span>
+          </div>
+        </div>
+
+        <!-- Legacy utility cluster -->
+        <div class="hud-cluster-right">
+
+
+        </div>
+      </div>
+
+      <!-- Bottom Dock Removed: Pure Direct Planet Visual Selection -->
+    </div></div>
+
+    <!-- Title Screen Overlay -->
+    <section id="title-screen" class="overlay-screen unified-title-screen" aria-label="Title Screen" data-toenow-screen="title"></section>
+
+      <div class="control-hint-bar">
+        Tap Directly on Any Planet · P Pause · R Restart
+      </div>
+    </section>
+
+    <!-- Pause Modal Overlay (Anti-cheat blackout) -->
+    <section id="pause-screen" class="overlay-screen unified-pause-screen" aria-label="Pause Menu" role="dialog" aria-modal="true">
+      <div class="unified-pause-card">
+        <div class="unified-pause-kicker">ASTROMETRY SUSPENDED</div>
+        <h2 class="unified-pause-title">PAUSED</h2>
+        <p class="unified-pause-notice">Celestial scales hidden while paused.</p>
+
+        <div class="unified-pause-stats-grid">
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">SCORE</span>
+            <span id="pause-score" class="unified-pause-stat-val">0</span>
+          </div>
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">WAVE</span>
+            <span id="pause-wave" class="unified-pause-stat-val">1</span>
+          </div>
+          <div class="unified-pause-stat-box">
+            <span class="unified-pause-stat-label">TIME</span>
+            <span id="pause-time" class="unified-pause-stat-val">60.0s</span>
+          </div>
+        </div>
+
+        <div class="unified-pause-btn-row">
+          <button id="btn-resume" type="button" class="unified-pause-resume-btn">RESUME</button>
+          <button id="btn-restart-pause" type="button" class="unified-pause-action-btn">RESTART</button>
+          <button id="btn-title-pause" type="button" class="unified-pause-action-btn">TITLE</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Game Over Modal Overlay -->
+    <section id="gameover-screen" class="overlay-screen unified-gameover-screen" aria-label="Game Over Summary" role="dialog" aria-modal="true" data-toenow-screen="gameover"></section>
+
+
+    <script src="./data.js"></script>
+    <script src="./audio.js"></script>
+    <script src="./rules.js"></script>
+    <script src="./renderer.js"></script>
+    <script src="./main.js"></script>
+  </body>
+</html>

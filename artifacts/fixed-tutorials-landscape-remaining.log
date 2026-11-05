@@ -1,0 +1,15 @@
+PASS add-up 844 en: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS space-scale 844 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS tap-match 844 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS spot-quick 844 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS shadow-match 844 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain 844 en: 2 real game taps, score0, records protected, normal start, replay/cancel
+AssertionError [ERR_ASSERTION]: animal-rescue-train real target outside viewport
+    at complete (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:69:12)
+    at async C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:92:18 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '=='
+}

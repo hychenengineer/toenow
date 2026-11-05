@@ -1,0 +1,11 @@
+# Rabbit Harvest Garden
+
+The rabbit location now opens a visitable starter garden. Players can tap Rabbit for short contextual dialogue, start Number Pop from the carrot patch or harvest button, and spend existing materials on fixed-position construction and decorations.
+
+Stage 1 contains the cottage and starter patch. Stages 2–5 add a vegetable patch, greenhouse, harvest stall and pergola, costing the existing 16/32/56/88 carrots. Basket/cart recipes and stored placement states remain unchanged. Browsing a project does not spend materials. The ledger rechecks the chosen next project inside the existing cross-tab Web Lock before spending. Other nine locations retain their current interface.
+
+Validation: `npm test` 202/202; `verify-rabbit-home-browser.cjs` covers starter state, contextual chat, no-spend previews, project-picker focus, four constructions, decoration placement, reload persistence, English/Traditional Chinese at 1440/390/320 and 844x390, keyboard close/focus and iframe launch. Existing materials-browser, materials-lifecycle-browser and island-browser regressions passed, including all ten result receipts, duplicate protection, practice exclusion and returning to the rabbit garden. Controlled ledger clocks and game-end hooks are test fixtures, not physical-device or natural-play evidence. Physical iPad Safari remains NOT VERIFIED.
+
+Illustration assets are in `assets/rabbit-home`; canonical PNGs are retained under `sources`, runtime images are WebP, and source metadata/hashes are in `manifest.json`. Generated with the built-in OpenAI imagegen tool. Production prompt briefs: warm storybook starter garden with tiny cottage at left, one small carrot patch and empty grass for future construction, no character/UI; isolated brown rabbit wearing olive overalls holding a basket on transparent background; six isolated atlas objects in a 3x2 grid (carrot bed, greenhouse, stall, floral pergola, basket, handcart), transparent outside their silhouettes. The actual composited browser screenshots were inspected for alpha edges and scene placement.
+
+Publication target: `preview` only, GitHub Pages. The commit uses `[CF-Pages-Skip]`, with Cloudflare preview deployments disabled. Publication and live verification evidence is recorded separately in `artifacts/rabbit-home`.

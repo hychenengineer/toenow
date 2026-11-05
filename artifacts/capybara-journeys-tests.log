@@ -1,0 +1,1234 @@
+
+> toenow@1.0.0 test
+> node --test tests/toenow-homes-config.test.cjs tests/toenow-homes.test.cjs tests/toenow-rabbit-home.test.cjs tests/toenow-materials.test.cjs tests/capybara-drift.test.cjs tests/flash-progressive-tutorial.test.cjs tests/game-modules.test.cjs tests/toenow-time.test.cjs tests/toenow-exploration.test.cjs tests/toenow-tutorials.test.cjs tests/toenow-island-art.test.cjs tests/toenow-island.test.cjs tests/toenow-analytics.test.cjs tests/toenow-screens.test.cjs tests/toenow-i18n.test.cjs tests/toenow-security.test.cjs tests/toenow-sdk.test.cjs tests/best-score-sync.test.cjs tests/number-pop-math.test.cjs tests/hub-runtime.test.cjs tests/share-feature.test.cjs tests/practice-mode.test.cjs tests/toenow-levels.test.cjs tests/games-runtime.test.cjs tests/flash-brain.test.cjs tests/rescue-session.test.cjs tests/animal-rescue-difficulty.test.cjs tests/animal-rescue-train.test.cjs tests/rescue-bank.test.cjs tests/toenow-animals.test.cjs tests/animal-numeric-theme.test.cjs tests/animal-spatial.test.cjs tests/animal-recognition.test.cjs tests/animal-island-art.test.cjs
+
+TAP version 13
+# Subtest: Animal island has fifty distinct transparent source/runtime images and authentic provenance
+ok 1 - Animal island has fifty distinct transparent source/runtime images and authentic provenance
+  ---
+  duration_ms: 5507.3162
+  ...
+# Subtest: Animal art preparation rejects missing generations without creating a manifest
+ok 2 - Animal art preparation rejects missing generations without creating a manifest
+  ---
+  duration_ms: 5.267
+  ...
+# Subtest: Partial preparation preserves source bytes and refuses reused generation pixels
+ok 3 - Partial preparation preserves source bytes and refuses reused generation pixels
+  ---
+  duration_ms: 78.8557
+  ...
+# Subtest: Harvest baskets keep numeric labels without the colored fraction rim
+ok 4 - Harvest baskets keep numeric labels without the colored fraction rim
+  ---
+  duration_ms: 8.4833
+  ...
+# Subtest: Supply bags leave exact-sum, two-item minimum and overshoot logic intact
+ok 5 - Supply bags leave exact-sum, two-item minimum and overshoot logic intact
+  ---
+  duration_ms: 3.6017
+  ...
+# Subtest: Parcel render never uses hidden mass and keeps symbols distinct
+ok 6 - Parcel render never uses hidden mass and keeps symbols distinct
+  ---
+  duration_ms: 6.2729
+  ...
+# Subtest: Supply orders retain two, three and four bag solutions in every tier
+ok 7 - Supply orders retain two, three and four bag solutions in every tier
+  ---
+  duration_ms: 17.4934
+  ...
+# Subtest: Mystery parcel directive is decided by hidden mass across the unchanged tiers
+ok 8 - Mystery parcel directive is decided by hidden mass across the unchanged tiers
+  ---
+  duration_ms: 5.505
+  ...
+# Subtest: Every scale has equal arms and its visible comparisons uniquely determine the answer
+ok 9 - Every scale has equal arms and its visible comparisons uniquely determine the answer
+  ---
+  duration_ms: 6.528
+  ...
+# Subtest: Supply bag labels render after spark particles in dark ink
+ok 10 - Supply bag labels render after spark particles in dark ink
+  ---
+  duration_ms: 3.3237
+  ...
+# Subtest: Spot Quick preserves all 170 specimens, 50 categories and candidate difficulty
+ok 11 - Spot Quick preserves all 170 specimens, 50 categories and candidate difficulty
+  ---
+  duration_ms: 5.5677
+  ...
+# Subtest: Memory garden never reveals animals in hidden or paused cells
+ok 12 - Memory garden never reveals animals in hidden or paused cells
+  ---
+  duration_ms: 1.6398
+  ...
+# Subtest: Themed interaction hooks are wired to actual correct and wrong actions
+ok 13 - Themed interaction hooks are wired to actual correct and wrong actions
+  ---
+  duration_ms: 14.4131
+  ...
+# Subtest: Garden draw operations are identical for all hidden bed types
+ok 14 - Garden draw operations are identical for all hidden bed types
+  ---
+  duration_ms: 1.5207
+  ...
+# Subtest: Flash Brain still enforces priority order, hazards, combo and clear bonuses
+ok 15 - Flash Brain still enforces priority order, hazards, combo and clear bonuses
+  ---
+  duration_ms: 2.0039
+  ...
+# Subtest: Train stationmaster switches language immediately without resetting its puzzle or mascot
+ok 16 - Train stationmaster switches language immediately without resetting its puzzle or mascot
+  ---
+  duration_ms: 1.6185
+  ...
+# Subtest: difficulty analysis measures queue decisions rather than interchangeable car positions
+ok 17 - difficulty analysis measures queue decisions rather than interchangeable car positions
+  ---
+  duration_ms: 6.5826
+  ...
+# Subtest: TOENOW tiers 1–5 have progressively narrower winning queue choices
+ok 18 - TOENOW tiers 1–5 have progressively narrower winning queue choices
+  ---
+  duration_ms: 101.5901
+  ...
+# Subtest: analysis identifies an impossible four-species queue dependency
+ok 19 - analysis identifies an impossible four-species queue dependency
+  ---
+  duration_ms: 2.6676
+  ...
+# Subtest: rescue train engine is available
+ok 20 - rescue train engine is available
+  ---
+  duration_ms: 1.5614
+  ...
+# Subtest: a third matching animal departs before a full-station failure check
+ok 21 - a third matching animal departs before a full-station failure check
+  ---
+  duration_ms: 1.1655
+  ...
+# Subtest: different species cannot board an occupied carriage or consume undo
+ok 22 - different species cannot board an occupied carriage or consume undo
+  ---
+  duration_ms: 0.6328
+  ...
+# Subtest: station loses with empty seats when no queue head matches any carriage
+ok 23 - station loses with empty seats when no queue head matches any carriage
+  ---
+  duration_ms: 0.3714
+  ...
+# Subtest: invalid moves do not consume an animal or replace undo; undo is one step only
+ok 24 - invalid moves do not consume an animal or replace undo; undo is one step only
+  ---
+  duration_ms: 0.4256
+  ...
+# Subtest: undo restores departure and victory, restart resets counters and undo
+ok 25 - undo restores departure and victory, restart resets counters and undo
+  ---
+  duration_ms: 0.4946
+  ...
+# Subtest: queue exhaustion loses only if targets are unmet; victory needs every species
+ok 26 - queue exhaustion loses only if targets are unmet; victory needs every species
+  ---
+  duration_ms: 0.9578
+  ...
+# Subtest: departure frees a usable car even if other cars are blocked and goals remain
+ok 27 - departure frees a usable car even if other cars are blocked and goals remain
+  ---
+  duration_ms: 0.3367
+  ...
+# Subtest: all five fixed levels have independently replayed winning paths
+ok 28 - all five fixed levels have independently replayed winning paths
+  ---
+  duration_ms: 110.9703
+  ...
+# Subtest: DFS solver skips incompatible cars and supports growing station sizes
+ok 29 - DFS solver skips incompatible cars and supports growing station sizes
+  ---
+  duration_ms: 4.5685
+  ...
+# Subtest: solver rejects solutions that send the required last animal too early
+ok 30 - solver rejects solutions that send the required last animal too early
+  ---
+  duration_ms: 0.5299
+  ...
+# Subtest: otter leaves conceal target identity throughout shuffle and selection, even with residual opening
+ok 31 - otter leaves conceal target identity throughout shuffle and selection, even with residual opening
+  ---
+  duration_ms: 9.6126
+  ...
+# Subtest: otter stays visible while awaiting memory confirmation and hides during movement
+ok 32 - otter stays visible while awaiting memory confirmation and hides during movement
+  ---
+  duration_ms: 8.1377
+  ...
+# Subtest: otter target panel uses the pond paper palette
+ok 33 - otter target panel uses the pond paper palette
+  ---
+  duration_ms: 5.2615
+  ...
+# Subtest: timber carving removes only excess cells and preserves required cells with original penalty
+ok 34 - timber carving removes only excess cells and preserves required cells with original penalty
+  ---
+  duration_ms: 8.3434
+  ...
+# Subtest: raccoon theater keeps correct-card award and wrong-card time penalty
+ok 35 - raccoon theater keeps correct-card award and wrong-card time penalty
+  ---
+  duration_ms: 14.2544
+  ...
+# Subtest: timber blueprints invert their axes without changing required/excess cell identity
+ok 36 - timber blueprints invert their axes without changing required/excess cell identity
+  ---
+  duration_ms: 2.5775
+  ...
+# Subtest: raccoon puppeteer stays above the stage instruction band
+ok 37 - raccoon puppeteer stays above the stage instruction band
+  ---
+  duration_ms: 63.7884
+  ...
+# Subtest: beaver portrait fits between stacked boards without blueprint clipping
+ok 38 - beaver portrait fits between stacked boards without blueprint clipping
+  ---
+  duration_ms: 18.4586
+  ...
+# Subtest: ToenowLevels exports GAME_STORAGE_KEYS for all 10 games
+ok 39 - ToenowLevels exports GAME_STORAGE_KEYS for all 10 games
+  ---
+  duration_ms: 2.5282
+  ...
+# Subtest: Hub index.html bidirectional sync logic correctly populates Game storage from Hub and vice-versa
+ok 40 - Hub index.html bidirectional sync logic correctly populates Game storage from Hub and vice-versa
+  ---
+  duration_ms: 35.0562
+  ...
+# Subtest: All 9 games have code guards preventing Practice Mode from overwriting Personal Best / High Score
+ok 41 - All 9 games have code guards preventing Practice Mode from overwriting Personal Best / High Score
+  ---
+  duration_ms: 49.2284
+  ...
+# Subtest: Hub postMessage GAME_OVER listener ignores practice mode runs and never overwrites best scores
+ok 42 - Hub postMessage GAME_OVER listener ignores practice mode runs and never overwrites best scores
+  ---
+  duration_ms: 14.5228
+  ...
+# Subtest: Hub and games immediately update maxLevel and best wave on game over without delay
+ok 43 - Hub and games immediately update maxLevel and best wave on game over without delay
+  ---
+  duration_ms: 50.9749
+  ...
+# Subtest: a new drift has something to collect immediately instead of an empty river
+ok 44 - a new drift has something to collect immediately instead of an empty river
+  ---
+  duration_ms: 3.076
+  ...
+# Subtest: finite drift keeps speed fixed, positions safe and entity memory bounded
+ok 45 - finite drift keeps speed fixed, positions safe and entity memory bounded
+  ---
+  duration_ms: 18.1699
+  ...
+# Subtest: collection is once only, misses and rocks never subtract points
+ok 46 - collection is once only, misses and rocks never subtract points
+  ---
+  duration_ms: 0.7829
+  ...
+# Subtest: pause freezes simulation and friends stay bounded during an endless run
+ok 47 - pause freezes simulation and friends stay bounded during an endless run
+  ---
+  duration_ms: 1.1398
+  ...
+# Subtest: checkpoint credits only new normal-play points, reload does not duplicate wallet
+ok 48 - checkpoint credits only new normal-play points, reload does not duplicate wallet
+  ---
+  duration_ms: 6.231
+  ...
+# Subtest: practice cannot overwrite checkpoint, points, purchases or best records
+ok 49 - practice cannot overwrite checkpoint, points, purchases or best records
+  ---
+  duration_ms: 0.5384
+  ...
+# Subtest: cosmetics charge exactly once and cannot be equipped before purchase
+ok 50 - cosmetics charge exactly once and cannot be equipped before purchase
+  ---
+  duration_ms: 0.5847
+  ...
+# Subtest: corrupt saves and inaccessible storage fail safely
+ok 51 - corrupt saves and inaccessible storage fail safely
+  ---
+  duration_ms: 0.7819
+  ...
+# Subtest: relaxing scores cannot change cognitive ratings
+ok 52 - relaxing scores cannot change cognitive ratings
+  ---
+  duration_ms: 2.7384
+  ...
+# Subtest: journeys last 90 active seconds with no increasing levels
+ok 53 - journeys last 90 active seconds with no increasing levels
+  ---
+  duration_ms: 16.7827
+  ...
+# Subtest: new trips have diverse named itineraries and resume keeps their exact pickups
+ok 54 - new trips have diverse named itineraries and resume keeps their exact pickups
+  ---
+  duration_ms: 5.2159
+  ...
+# Subtest: featured collection persists once through resume and repeated finish
+ok 55 - featured collection persists once through resume and repeated finish
+  ---
+  duration_ms: 0.869
+  ...
+# Subtest: one collected construction resource has a durable receipt even if checkpoint fails
+ok 56 - one collected construction resource has a durable receipt even if checkpoint fails
+  ---
+  duration_ms: 2.2647
+  ...
+# Subtest: practice trip and collected resource never write any storage
+ok 57 - practice trip and collected resource never write any storage
+  ---
+  duration_ms: 0.3748
+  ...
+# Subtest: old pre-reward session cannot mint a second material after reload
+ok 58 - old pre-reward session cannot mint a second material after reload
+  ---
+  duration_ms: 0.8777
+  ...
+# Subtest: stale trip checkpoints cannot roll back a receipt and duplicate collection or wallet
+ok 59 - stale trip checkpoints cannot roll back a receipt and duplicate collection or wallet
+  ---
+  duration_ms: 0.8544
+  ...
+# Subtest: featured pickups are not granted by early landing and occur at most once
+ok 60 - featured pickups are not granted by early landing and occur at most once
+  ---
+  duration_ms: 18.4126
+  ...
+# Subtest: malformed pending pickups reject a save without losing cosmetics or collection
+ok 61 - malformed pending pickups reject a save without losing cosmetics or collection
+  ---
+  duration_ms: 0.9289
+  ...
+# Subtest: night and rain discoveries have coherent generated itineraries
+ok 62 - night and rain discoveries have coherent generated itineraries
+  ---
+  duration_ms: 5.1202
+  ...
+# Subtest: gift event offers one extra collectible to pick up and cannot respawn after resume
+ok 63 - gift event offers one extra collectible to pick up and cannot respawn after resume
+  ---
+  duration_ms: 2.737
+  ...
+# Subtest: other journey events do not create gift pickups
+ok 64 - other journey events do not create gift pickups
+  ---
+  duration_ms: 0.2354
+  ...
+# Subtest: Flash Brain wave-clear notice only describes completed waves while playing
+ok 65 - Flash Brain wave-clear notice only describes completed waves while playing
+  ---
+  duration_ms: 6.3992
+  ...
+# Subtest: Flash garden progress adapter uses real SDK practice protection and normal milestones
+ok 66 - Flash garden progress adapter uses real SDK practice protection and normal milestones
+  ---
+  duration_ms: 12.1143
+  ...
+# Subtest: Game [flash-brain] bundle contains valid syntax, title records, start button, and game over contract
+ok 67 - Game [flash-brain] bundle contains valid syntax, title records, start button, and game over contract
+  ---
+  duration_ms: 13.9708
+  ...
+# Subtest: basic memory holds until confirmation and never introduces thorns or priority
+ok 68 - basic memory holds until confirmation and never introduces thorns or priority
+  ---
+  duration_ms: 3.2625
+  ...
+# Subtest: formal starts and restarts do not open a ready tutorial or change the run
+ok 69 - formal starts and restarts do not open a ready tutorial or change the run
+  ---
+  duration_ms: 1.8507
+  ...
+# Subtest: new rules use actual configuration, restore the run and remember completion independently
+ok 70 - new rules use actual configuration, restore the run and remember completion independently
+  ---
+  duration_ms: 1.8371
+  ...
+# Subtest: canceling an explicitly opened basic tutorial returns to title
+ok 71 - canceling an explicitly opened basic tutorial returns to title
+  ---
+  duration_ms: 1.1895
+  ...
+# Subtest: blocked storage keeps completed rules remembered in memory
+ok 72 - blocked storage keeps completed rules remembered in memory
+  ---
+  duration_ms: 2.1806
+  ...
+# Subtest: source inspection follows local scripts and styles in page order without expanding shared dependencies
+ok 73 - source inspection follows local scripts and styles in page order without expanding shared dependencies
+  ---
+  duration_ms: 23.4708
+  ...
+# Subtest: extracted rules preserve valid boards, unique numeric choices and matching criteria
+ok 74 - extracted rules preserve valid boards, unique numeric choices and matching criteria
+  ---
+  duration_ms: 37.9874
+  ...
+# Subtest: Spot Quick rules produce four distinct choices including the target across all five tiers
+ok 75 - Spot Quick rules produce four distinct choices including the target across all five tiers
+  ---
+  duration_ms: 46.933
+  ...
+# Subtest: renderers use current scene dependencies instead of capturing stale values
+ok 76 - renderers use current scene dependencies instead of capturing stale values
+  ---
+  duration_ms: 1.6009
+  ...
+# Subtest: Game [capybara-drift] initializes cleanly and binds START GAME without runtime error
+ok 77 - Game [capybara-drift] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 25.649
+  ...
+# Subtest: Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+ok 78 - Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 43.5294
+  ...
+# Subtest: Game [number-pop] initializes cleanly and binds START GAME without runtime error
+ok 79 - Game [number-pop] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 55.5547
+  ...
+# Subtest: Game [ball-track] initializes cleanly and binds START GAME without runtime error
+ok 80 - Game [ball-track] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 28.0346
+  ...
+# Subtest: Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+ok 81 - Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 25.0759
+  ...
+# Subtest: Game [tap-match] initializes cleanly and binds START GAME without runtime error
+ok 82 - Game [tap-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 8.2279
+  ...
+# Subtest: Game [add-up] initializes cleanly and binds START GAME without runtime error
+ok 83 - Game [add-up] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 9.5934
+  ...
+# Subtest: Game [block-match] initializes cleanly and binds START GAME without runtime error
+ok 84 - Game [block-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 7.6493
+  ...
+# Subtest: Game [space-scale] initializes cleanly and binds START GAME without runtime error
+ok 85 - Game [space-scale] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 12.4972
+  ...
+# Subtest: Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+ok 86 - Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 26.6514
+  ...
+# Subtest: Local preview server supports accurate video byte ranges and invalid-range fallback
+ok 87 - Local preview server supports accurate video byte ranges and invalid-range fallback
+  ---
+  duration_ms: 293.3878
+  ...
+# Subtest: Gameplay previews load on demand, play one video, and cancel late playback
+ok 88 - Gameplay previews load on demand, play one video, and cancel late playback
+  ---
+  duration_ms: 3.3462
+  ...
+# Subtest: Gameplay preview failure preserves poster and reports a fallback
+ok 89 - Gameplay preview failure preserves poster and reports a fallback
+  ---
+  duration_ms: 0.6233
+  ...
+# Subtest: Hub index.html scripts have zero syntax errors and render all game cards cleanly
+ok 90 - Hub index.html scripts have zero syntax errors and render all game cards cleanly
+  ---
+  duration_ms: 9.2065
+  ...
+# Subtest: Number Pop keeps drifting bubbles in the middle half on wide screens and leaves room on phones
+ok 91 - Number Pop keeps drifting bubbles in the middle half on wide screens and leaves room on phones
+  ---
+  duration_ms: 63.8429
+  ...
+# Subtest: Number Pop generates valid math fractions for all waves 1-30 with no zero denominators or NaN
+ok 92 - Number Pop generates valid math fractions for all waves 1-30 with no zero denominators or NaN
+  ---
+  duration_ms: 68.7379
+  ...
+# Subtest: Practice Mode contract verified for game [capybara-drift]
+ok 93 - Practice Mode contract verified for game [capybara-drift]
+  ---
+  duration_ms: 22.258
+  ...
+# Subtest: Practice Mode contract verified for game [animal-rescue-train]
+ok 94 - Practice Mode contract verified for game [animal-rescue-train]
+  ---
+  duration_ms: 12.7271
+  ...
+# Subtest: Practice Mode contract verified for game [number-pop]
+ok 95 - Practice Mode contract verified for game [number-pop]
+  ---
+  duration_ms: 7.3922
+  ...
+# Subtest: Practice Mode contract verified for game [ball-track]
+ok 96 - Practice Mode contract verified for game [ball-track]
+  ---
+  duration_ms: 3.9935
+  ...
+# Subtest: Practice Mode contract verified for game [spot-quick]
+ok 97 - Practice Mode contract verified for game [spot-quick]
+  ---
+  duration_ms: 4.3599
+  ...
+# Subtest: Practice Mode contract verified for game [tap-match]
+ok 98 - Practice Mode contract verified for game [tap-match]
+  ---
+  duration_ms: 3.2965
+  ...
+# Subtest: Practice Mode contract verified for game [add-up]
+ok 99 - Practice Mode contract verified for game [add-up]
+  ---
+  duration_ms: 28.3209
+  ...
+# Subtest: Practice Mode contract verified for game [block-match]
+ok 100 - Practice Mode contract verified for game [block-match]
+  ---
+  duration_ms: 34.3794
+  ...
+# Subtest: Practice Mode contract verified for game [space-scale]
+ok 101 - Practice Mode contract verified for game [space-scale]
+  ---
+  duration_ms: 13.5607
+  ...
+# Subtest: Practice Mode contract verified for game [shadow-match]
+ok 102 - Practice Mode contract verified for game [shadow-match]
+  ---
+  duration_ms: 15.134
+  ...
+# Subtest: Practice Mode contract verified for game [flash-brain]
+ok 103 - Practice Mode contract verified for game [flash-brain]
+  ---
+  duration_ms: 1.7283
+  ...
+# Subtest: new puzzles use the whole tier before repeating, including across reloads
+ok 104 - new puzzles use the whole tier before repeating, including across reloads
+  ---
+  duration_ms: 12.5288
+  ...
+# Subtest: picker keeps working with unavailable or malformed storage
+ok 105 - picker keeps working with unavailable or malformed storage
+  ---
+  duration_ms: 0.97
+  ...
+# Subtest: already-open tabs read the latest selection history before starting another puzzle
+ok 106 - already-open tabs read the latest selection history before starting another puzzle
+  ---
+  duration_ms: 0.4443
+  ...
+# Subtest: saved random puzzle restores its exact board and rule without selecting a new one
+ok 107 - saved random puzzle restores its exact board and rule without selecting a new one
+  ---
+  duration_ms: 4.9591
+  ...
+# Subtest: every selectable board and last-animal rule has an independently replayed winning path
+ok 108 - every selectable board and last-animal rule has an independently replayed winning path
+  ---
+  duration_ms: 352.1639
+  ...
+# Subtest: each shared difficulty has five genuinely distinct playable puzzles
+ok 109 - each shared difficulty has five genuinely distinct playable puzzles
+  ---
+  duration_ms: 215.5444
+  ...
+# Subtest: guest progress restores the selected difficulty, board and one-step undo
+ok 110 - guest progress restores the selected difficulty, board and one-step undo
+  ---
+  duration_ms: 7.742
+  ...
+# Subtest: invalid or incompatible guest data is ignored instead of mutating a game
+ok 111 - invalid or incompatible guest data is ignored instead of mutating a game
+  ---
+  duration_ms: 0.4182
+  ...
+# Subtest: resume retains practice status and an already-used undo remains unavailable
+ok 112 - resume retains practice status and an already-used undo remains unavailable
+  ---
+  duration_ms: 0.4118
+  ...
+# Subtest: ToenowLevels exports shareScore API and formats share text with deep link in English
+ok 113 - ToenowLevels exports shareScore API and formats share text with deep link in English
+  ---
+  duration_ms: 38.821
+  ...
+# Subtest: All game over screens provide unified SHARE SCORE button
+ok 114 - All game over screens provide unified SHARE SCORE button
+  ---
+  duration_ms: 66.5871
+  ...
+# Subtest: Hub index.html provides Share button on game cards and deep link challenge support
+ok 115 - Hub index.html provides Share button on game cards and deep link challenge support
+  ---
+  duration_ms: 1.1282
+  ...
+# Subtest: production installs GA once, strips query and fragment, and records actual runs
+ok 116 - production installs GA once, strips query and fragment, and records actual runs
+  ---
+  duration_ms: 7.2571
+  ...
+# Subtest: local development sends nothing; unknown event data cannot leak into GA
+ok 117 - local development sends nothing; unknown event data cannot leak into GA
+  ---
+  duration_ms: 8.5517
+  ...
+# Subtest: the configured Cloudflare production stream and custom domains all collect
+ok 118 - the configured Cloudflare production stream and custom domains all collect
+  ---
+  duration_ms: 3.0301
+  ...
+# Subtest: same-origin game iframe uses parent tag without an extra page view
+ok 119 - same-origin game iframe uses parent tag without an extra page view
+  ---
+  duration_ms: 2.0069
+  ...
+# Subtest: every entry point loads analytics before SDK
+ok 120 - every entry point loads analytics before SDK
+  ---
+  duration_ms: 15.7096
+  ...
+# Subtest: SDK start and settlement call shared analytics, without changing game-over payload
+ok 121 - SDK start and settlement call shared analytics, without changing game-over payload
+  ---
+  duration_ms: 5.9592
+  ...
+# Subtest: Animal island provides one distinct partner and habitat for each existing game
+ok 122 - Animal island provides one distinct partner and habitat for each existing game
+  ---
+  duration_ms: 1.9695
+  ...
+# Subtest: Animal building stages are bounded and follow the shared five-tier wave mapping
+ok 123 - Animal building stages are bounded and follow the shared five-tier wave mapping
+  ---
+  duration_ms: 0.6932
+  ...
+# Subtest: Theme helpers work without DOM and never alter scores or practice records
+ok 124 - Theme helpers work without DOM and never alter scores or practice records
+  ---
+  duration_ms: 0.6144
+  ...
+# Subtest: Watercolor characters have one reusable asset per species
+ok 125 - Watercolor characters have one reusable asset per species
+  ---
+  duration_ms: 0.2264
+  ...
+# Subtest: The title guide reads normal-play records, never practice stage or malformed values
+ok 126 - The title guide reads normal-play records, never practice stage or malformed values
+  ---
+  duration_ms: 0.4905
+  ...
+# Subtest: Leaderboard stays locked until every game clears Level 1, including the last discovered place
+ok 127 - Leaderboard stays locked until every game clears Level 1, including the last discovered place
+  ---
+  duration_ms: 4.1272
+  ...
+# Subtest: Leaderboard unlocks when all saved normal Level 1 milestones reconcile
+ok 128 - Leaderboard unlocks when all saved normal Level 1 milestones reconcile
+  ---
+  duration_ms: 1.9808
+  ...
+# Subtest: Moving map landmarks preserves the existing route and earned discoveries
+ok 129 - Moving map landmarks preserves the existing route and earned discoveries
+  ---
+  duration_ms: 1.639
+  ...
+# Subtest: The established route starts bottom-left with Rabbit and ends top-right with Panda
+ok 130 - The established route starts bottom-left with Rabbit and ends top-right with Panda
+  ---
+  duration_ms: 0.4582
+  ...
+# Subtest: Updating the old random route keeps completion credit and uses the earned fixed route
+ok 131 - Updating the old random route keeps completion credit and uses the earned fixed route
+  ---
+  duration_ms: 0.6834
+  ...
+# Subtest: Saved normal milestones unlock one building even while the iframe remains active
+ok 132 - Saved normal milestones unlock one building even while the iframe remains active
+  ---
+  duration_ms: 0.6572
+  ...
+# Subtest: The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building
+ok 133 - The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building
+  ---
+  duration_ms: 0.6211
+  ...
+# Subtest: Malformed version-2 opened lists never leave a player with zero usable games
+ok 134 - Malformed version-2 opened lists never leave a player with zero usable games
+  ---
+  duration_ms: 0.6536
+  ...
+# Subtest: Fresh and settings-only players start with one persisted rabbit garden
+ok 135 - Fresh and settings-only players start with one persisted rabbit garden
+  ---
+  duration_ms: 0.6505
+  ...
+# Subtest: Existing score-only and zero-score attempts enter exploration without losing records
+ok 136 - Existing score-only and zero-score attempts enter exploration without losing records
+  ---
+  duration_ms: 0.732
+  ...
+# Subtest: Persisted legacy access migrates once to version 3 and cannot be restored by cloud sign-in
+ok 137 - Persisted legacy access migrates once to version 3 and cannot be restored by cloud sign-in
+  ---
+  duration_ms: 1.5227
+  ...
+# Subtest: Returning players open only the contiguous cleared route while keeping later-game credit
+ok 138 - Returning players open only the contiguous cleared route while keeping later-game credit
+  ---
+  duration_ms: 0.4234
+  ...
+# Subtest: An older open tab cannot overwrite the migrated exploration policy
+ok 139 - An older open tab cannot overwrite the migrated exploration policy
+  ---
+  duration_ms: 0.4659
+  ...
+# Subtest: Only an unlocked game reaching Wave 6 in normal play opens one new place once
+ok 140 - Only an unlocked game reaching Wave 6 in normal play opens one new place once
+  ---
+  duration_ms: 0.7317
+  ...
+# Subtest: Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+ok 141 - Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+  ---
+  duration_ms: 0.5951
+  ...
+# Subtest: Every distinct completion opens at most one place and the final place finishes cleanly
+ok 142 - Every distinct completion opens at most one place and the final place finishes cleanly
+  ---
+  duration_ms: 1.0499
+  ...
+# Subtest: Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+ok 143 - Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+  ---
+  duration_ms: 1.3103
+  ...
+# Subtest: A readable but unwritable existing save retains this session progress
+ok 144 - A readable but unwritable existing save retains this session progress
+  ---
+  duration_ms: 0.3869
+  ...
+# Subtest: Rejected run records cannot bypass validation through reconciliation or reload
+ok 145 - Rejected run records cannot bypass validation through reconciliation or reload
+  ---
+  duration_ms: 0.6245
+  ...
+# Subtest: Another tab cannot reconcile an active iframe record before its result is validated
+ok 146 - Another tab cannot reconcile an active iframe record before its result is validated
+  ---
+  duration_ms: 0.7919
+  ...
+# Subtest: Iframe validation guard survives replay and closing removes the marker safely
+ok 147 - Iframe validation guard survives replay and closing removes the marker safely
+  ---
+  duration_ms: 0.6162
+  ...
+# Subtest: Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+ok 148 - Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+  ---
+  duration_ms: 0.4299
+  ...
+# Subtest: Corrupt nested run metadata cannot crash the saved journey
+ok 149 - Corrupt nested run metadata cannot crash the saved journey
+  ---
+  duration_ms: 0.3091
+  ...
+# Subtest: Older tabs still guard raw saves after the policy has migrated
+ok 150 - Older tabs still guard raw saves after the policy has migrated
+  ---
+  duration_ms: 0.4809
+  ...
+# Subtest: Imported iframe guards settle when an older tab closes its run
+ok 151 - Imported iframe guards settle when an older tab closes its run
+  ---
+  duration_ms: 0.5583
+  ...
+# Subtest: A validated older-tab result settles an imported guard and earns the next place
+ok 152 - A validated older-tab result settles an imported guard and earns the next place
+  ---
+  duration_ms: 0.5706
+  ...
+# Subtest: home configuration covers precisely the ten material homes with safe lookup
+ok 153 - home configuration covers precisely the ten material homes with safe lookup
+  ---
+  duration_ms: 2.8184
+  ...
+# Subtest: every home has its actual animal, thematic projects, art paths and translated dialogue
+ok 154 - every home has its actual animal, thematic projects, art paths and translated dialogue
+  ---
+  duration_ms: 2.2237
+  ...
+# Subtest: Rabbit keeps existing project identities and browser exports the same API
+ok 155 - Rabbit keeps existing project identities and browser exports the same API
+  ---
+  duration_ms: 5.0917
+  ...
+# Subtest: each home derives its own four sequential additions and only reveals purchased art
+ok 156 - each home derives its own four sequential additions and only reveals purchased art
+  ---
+  duration_ms: 20.9382
+  ...
+# Subtest: collaboration prices require every ingredient and preview never spends or constructs
+ok 157 - collaboration prices require every ingredient and preview never spends or constructs
+  ---
+  duration_ms: 1.5776
+  ...
+# Subtest: all homes expose their own art and accessible recipe travel, play chat and build actions
+ok 158 - all homes expose their own art and accessible recipe travel, play chat and build actions
+  ---
+  duration_ms: 1.8901
+  ...
+# Subtest: chat cycles through varied ambient lines while preserving missing, ready and completed context
+ok 159 - chat cycles through varied ambient lines while preserving missing, ready and completed context
+  ---
+  duration_ms: 6.697
+  ...
+# Subtest: invalid homes fail gracefully and translated notices are escaped
+ok 160 - invalid homes fail gracefully and translated notices are escaped
+  ---
+  duration_ms: 0.5488
+  ...
+# Subtest: Traditional Chinese config translation fills gaps in the existing Hub translator
+ok 161 - Traditional Chinese config translation fills gaps in the existing Hub translator
+  ---
+  duration_ms: 0.4638
+  ...
+# Subtest: malformed save values do not unlock or afford construction and unowned decorations stay hidden
+ok 162 - malformed save values do not unlock or afford construction and unowned decorations stay hidden
+  ---
+  duration_ms: 0.3689
+  ...
+# Subtest: visitors with built homes are welcomed back even after spending every material
+ok 163 - visitors with built homes are welcomed back even after spending every material
+  ---
+  duration_ms: 0.4802
+  ...
+# Subtest: OS/browser language selects Chinese only for Chinese preferences
+ok 164 - OS/browser language selects Chinese only for Chinese preferences
+  ---
+  duration_ms: 4.3017
+  ...
+# Subtest: manual preference persists separately from scores and survives recreation
+ok 165 - manual preference persists separately from scores and survives recreation
+  ---
+  duration_ms: 0.6089
+  ...
+# Subtest: blocked storage does not prevent live switching or translation
+ok 166 - blocked storage does not prevent live switching or translation
+  ---
+  duration_ms: 0.8082
+  ...
+# Subtest: every game and Hub load the same catalogs before the runtime
+ok 167 - every game and Hub load the same catalogs before the runtime
+  ---
+  duration_ms: 71.3765
+  ...
+# Subtest: Every island location selects five distinct real illustrated growth assets
+ok 168 - Every island location selects five distinct real illustrated growth assets
+  ---
+  duration_ms: 154.7714
+  ...
+# Subtest: Illustrated landmarks use the actual stage texture and preserve a recoverable vector fallback
+ok 169 - Illustrated landmarks use the actual stage texture and preserve a recoverable vector fallback
+  ---
+  duration_ms: 0.3663
+  ...
+# Subtest: Art manifest covers fifty alpha-preserving source/runtime pairs with provenance
+ok 170 - Art manifest covers fifty alpha-preserving source/runtime pairs with provenance
+  ---
+  duration_ms: 47.019
+  ...
+# Subtest: Explorers Island has one distinct location per explorer game; Carefree games stay separate
+ok 171 - Explorers Island has one distinct location per explorer game; Carefree games stay separate
+  ---
+  duration_ms: 2.356
+  ...
+# Subtest: Island stages follow the five shared wave ranges without claiming tier completion
+ok 172 - Island stages follow the five shared wave ranges without claiming tier completion
+  ---
+  duration_ms: 0.7523
+  ...
+# Subtest: Island reconciles canonical and aggregate records, preserving the highest valid normal record
+ok 173 - Island reconciles canonical and aggregate records, preserving the highest valid normal record
+  ---
+  duration_ms: 1.1875
+  ...
+# Subtest: Missing, malformed and unavailable storage safely leaves locations unexplored
+ok 174 - Missing, malformed and unavailable storage safely leaves locations unexplored
+  ---
+  duration_ms: 0.5009
+  ...
+# Subtest: Invalid negative/fractional/object records cannot manufacture a higher island stage
+ok 175 - Invalid negative/fractional/object records cannot manufacture a higher island stage
+  ---
+  duration_ms: 0.4414
+  ...
+# Subtest: A formal zero-score attempt is explored without elevating its stage
+ok 176 - A formal zero-score attempt is explored without elevating its stage
+  ---
+  duration_ms: 0.2268
+  ...
+# Subtest: ToenowLevels exports standard 5 levels with 5 waves each
+ok 177 - ToenowLevels exports standard 5 levels with 5 waves each
+  ---
+  duration_ms: 1.785
+  ...
+# Subtest: ToenowLevels handles edge case inputs gracefully
+ok 178 - ToenowLevels handles edge case inputs gracefully
+  ---
+  duration_ms: 0.2052
+  ...
+# Subtest: ToenowLevels creates standard game-over payload
+ok 179 - ToenowLevels creates standard game-over payload
+  ---
+  duration_ms: 0.2607
+  ...
+# Subtest: ToenowLevels setupPracticeMode renders practice button and opens modal to select level
+ok 180 - ToenowLevels setupPracticeMode renders practice button and opens modal to select level
+  ---
+  duration_ms: 2.0054
+  ...
+# Subtest: five real successes earn one item for every material game, with no base reward or per-run ceiling
+ok 181 - five real successes earn one item for every material game, with no base reward or per-run ceiling
+  ---
+  duration_ms: 14.7945
+  ...
+# Subtest: wrong-answer score penalties never remove successful work; retries cannot repeat keyed successes
+ok 182 - wrong-answer score penalties never remove successful work; retries cannot repeat keyed successes
+  ---
+  duration_ms: 0.3356
+  ...
+# Subtest: old saves keep balances and homes and start remainder progress at zero
+ok 183 - old saves keep balances and homes and start remainder progress at zero
+  ---
+  duration_ms: 0.2994
+  ...
+# Subtest: cancelled, practice and preview attempts cannot add to saved remainders
+ok 184 - cancelled, practice and preview attempts cannot add to saved remainders
+  ---
+  duration_ms: 0.4872
+  ...
+# Subtest: malformed remainders never mint materials and one game cannot spend another game progress
+ok 185 - malformed remainders never mint materials and one game cannot spend another game progress
+  ---
+  duration_ms: 0.5099
+  ...
+# Subtest: all ten homes progress from one to three to four material recipes with balanced collaboration
+ok 186 - all ten homes progress from one to three to four material recipes with balanced collaboration
+  ---
+  duration_ms: 1.4996
+  ...
+# Subtest: a missing collaboration material prevents all spending; success deducts every ingredient once
+ok 187 - a missing collaboration material prevents all spending; success deducts every ingredient once
+  ---
+  duration_ms: 1.2025
+  ...
+# Subtest: existing built stages and owned decorations survive the recipe change without retroactive costs
+ok 188 - existing built stages and owned decorations survive the recipe change without retroactive costs
+  ---
+  duration_ms: 0.4042
+  ...
+# Subtest: exactly ten explorer games own distinct materials; carefree is excluded
+ok 189 - exactly ten explorer games own distinct materials; carefree is excluded
+  ---
+  duration_ms: 0.328
+  ...
+# Subtest: normal play credits only its own item, survives reload, and cannot repeat a receipt
+ok 190 - normal play credits only its own item, survives reload, and cannot repeat a receipt
+  ---
+  duration_ms: 0.563
+  ...
+# Subtest: practice, preview, zero work, unknown and implausible attempts do not award
+ok 191 - practice, preview, zero work, unknown and implausible attempts do not award
+  ---
+  duration_ms: 0.405
+  ...
+# Subtest: own material upgrades are affordable, atomic and separate from challenge records
+ok 192 - own material upgrades are affordable, atomic and separate from challenge records
+  ---
+  duration_ms: 0.5465
+  ...
+# Subtest: starter and collaboration decorations spend exact recipes once and can be toggled
+ok 193 - starter and collaboration decorations spend exact recipes once and can be toggled
+  ---
+  duration_ms: 1.5594
+  ...
+# Subtest: legacy challenge stage is preserved once and later high scores do not build houses
+ok 194 - legacy challenge stage is preserved once and later high scores do not build houses
+  ---
+  duration_ms: 0.4058
+  ...
+# Subtest: latest balance is read for sequential clients and storage errors never report success
+ok 195 - latest balance is read for sequential clients and storage errors never report success
+  ---
+  duration_ms: 0.7532
+  ...
+# Subtest: malformed balances cannot create spendable resources
+ok 196 - malformed balances cannot create spendable resources
+  ---
+  duration_ms: 0.4356
+  ...
+# Subtest: SDK lifecycle awards once, clears on replay and never awards a practice result
+ok 197 - SDK lifecycle awards once, clears on replay and never awards a practice result
+  ---
+  duration_ms: 4.9289
+  ...
+# Subtest: Number Pop accepts an immediate first start and deduplicates its compatibility click
+ok 198 - Number Pop accepts an immediate first start and deduplicates its compatibility click
+  ---
+  duration_ms: 2.3354
+  ...
+# Subtest: interrupted runs lose their reward token
+ok 199 - interrupted runs lose their reward token
+  ---
+  duration_ms: 0.4128
+  ...
+# Subtest: fox wave-20 result earns ribbons even when wrong answers end the run early
+ok 200 - fox wave-20 result earns ribbons even when wrong answers end the run early
+  ---
+  duration_ms: 0.5007
+  ...
+# Subtest: a legitimate six figure rabbit result is credited once rather than silently rejected
+ok 201 - a legitimate six figure rabbit result is credited once rather than silently rejected
+  ---
+  duration_ms: 0.4038
+  ...
+# Subtest: a finished run with no reward explains why to the result UI
+ok 202 - a finished run with no reward explains why to the result UI
+  ---
+  duration_ms: 0.2404
+  ...
+# Subtest: a short legitimate scored run earns materials without a ten second cutoff
+ok 203 - a short legitimate scored run earns materials without a ten second cutoff
+  ---
+  duration_ms: 1.4504
+  ...
+# Subtest: drift receipt caps a trip across resource identity changes and ledger reloads
+ok 204 - drift receipt caps a trip across resource identity changes and ledger reloads
+  ---
+  duration_ms: 6.1258
+  ...
+# Subtest: practice and invalid drift receipts never save and a failed save can retry
+ok 205 - practice and invalid drift receipts never save and a failed save can retry
+  ---
+  duration_ms: 0.415
+  ...
+# Subtest: starter yard contains no purchased buildings and four sequential mixed-material projects
+ok 206 - starter yard contains no purchased buildings and four sequential mixed-material projects
+  ---
+  duration_ms: 3.5961
+  ...
+# Subtest: each construction stage reveals a distinct permanent yard object
+ok 207 - each construction stage reveals a distinct permanent yard object
+  ---
+  duration_ms: 0.7577
+  ...
+# Subtest: progress and balances choose short dialogue without mutating saves
+ok 208 - progress and balances choose short dialogue without mutating saves
+  ---
+  duration_ms: 0.5999
+  ...
+# Subtest: scene provides real play/chat/build buttons and only renders owned placed decoration art
+ok 209 - scene provides real play/chat/build buttons and only renders owned placed decoration art
+  ---
+  duration_ms: 1.2456
+  ...
+# Subtest: building preview does not construct or spend, and names the selected project
+ok 210 - building preview does not construct or spend, and names the selected project
+  ---
+  duration_ms: 1.1585
+  ...
+# Subtest: own carrots alone cannot build a collaboration project and all missing sources are shown
+ok 211 - own carrots alone cannot build a collaboration project and all missing sources are shown
+  ---
+  duration_ms: 0.5116
+  ...
+# Subtest: nine games use one screen library without copied title or result templates
+ok 212 - nine games use one screen library without copied title or result templates
+  ---
+  duration_ms: 46.4345
+  ...
+# Subtest: shared renderer owns event callbacks, current share payload, and instance disposal
+ok 213 - shared renderer owns event callbacks, current share payload, and instance disposal
+  ---
+  duration_ms: 20.1463
+  ...
+# Subtest: shared screen copy is escaped and missing/non-finite results are safe
+ok 214 - shared screen copy is escaped and missing/non-finite results are safe
+  ---
+  duration_ms: 1.1659
+  ...
+# Subtest: shared screen templates provide identical result fields and three actions for all games
+ok 215 - shared screen templates provide identical result fields and three actions for all games
+  ---
+  duration_ms: 0.7607
+  ...
+# Subtest: screen result normalization uses the shared five-level mapping
+ok 216 - screen result normalization uses the shared five-level mapping
+  ---
+  duration_ms: 0.5179
+  ...
+# Subtest: membership invitation follows replay and preserves the three game actions
+ok 217 - membership invitation follows replay and preserves the three game actions
+  ---
+  duration_ms: 0.4239
+  ...
+# Subtest: journeys show discoveries without competitive records
+ok 218 - journeys show discoveries without competitive records
+  ---
+  duration_ms: 0.3902
+  ...
+# Subtest: journey summary uses actual finds and safe text
+ok 219 - journey summary uses actual finds and safe text
+  ---
+  duration_ms: 0.8518
+  ...
+# Subtest: SDK publishes a normal level milestone during play without ending the run or writing scores
+ok 220 - SDK publishes a normal level milestone during play without ending the run or writing scores
+  ---
+  duration_ms: 3.7795
+  ...
+# Subtest: SDK survives a browser denying access to localStorage itself
+ok 221 - SDK survives a browser denying access to localStorage itself
+  ---
+  duration_ms: 1.0667
+  ...
+# Subtest: ToenowGameSDK handles lifecycle, storage, and title records cleanly
+ok 222 - ToenowGameSDK handles lifecycle, storage, and title records cleanly
+  ---
+  duration_ms: 0.8101
+  ...
+# Subtest: ToenowGameSDK guards practice mode from mutating records
+ok 223 - ToenowGameSDK guards practice mode from mutating records
+  ---
+  duration_ms: 0.2516
+  ...
+# Subtest: SDK lifecycle methods invoke configured callbacks and retain practice state
+ok 224 - SDK lifecycle methods invoke configured callbacks and retain practice state
+  ---
+  duration_ms: 0.4537
+  ...
+# Subtest: handleGameOver rejects implausible normal scores and never writes practice records
+ok 225 - handleGameOver rejects implausible normal scores and never writes practice records
+  ---
+  duration_ms: 0.6817
+  ...
+# Subtest: SDK practice bridge passes the actual selected wave to the game callback
+ok 226 - SDK practice bridge passes the actual selected wave to the game callback
+  ---
+  duration_ms: 0.6294
+  ...
+# Subtest: SDK respects hasWaves configuration for level-only games
+ok 227 - SDK respects hasWaves configuration for level-only games
+  ---
+  duration_ms: 0.182
+  ...
+# Subtest: Fox fast answers and wrong-answer timeout are valid before three seconds per wave
+ok 228 - Fox fast answers and wrong-answer timeout are valid before three seconds per wave
+  ---
+  duration_ms: 1.6314
+  ...
+# Subtest: Number Pop accepts actual harvest scoring through wave 22 at a normal tapping pace
+ok 229 - Number Pop accepts actual harvest scoring through wave 22 at a normal tapping pace
+  ---
+  duration_ms: 2.087
+  ...
+# Subtest: Anti-Cheat: 100,000+ points on Number Pop is VALID when duration & wave are proportional
+ok 230 - Anti-Cheat: 100,000+ points on Number Pop is VALID when duration & wave are proportional
+  ---
+  duration_ms: 0.1948
+  ...
+# Subtest: Anti-Cheat: Instant score injection is FLAGGED and BLOCKED
+ok 231 - Anti-Cheat: Instant score injection is FLAGGED and BLOCKED
+  ---
+  duration_ms: 0.2327
+  ...
+# Subtest: Anti-Cheat: Score exceeding maximum wave physics is FLAGGED
+ok 232 - Anti-Cheat: Score exceeding maximum wave physics is FLAGGED
+  ---
+  duration_ms: 0.2854
+  ...
+# Subtest: Ad Anti-Skip: Authentic ad viewing successfully verifies proof token
+ok 233 - Ad Anti-Skip: Authentic ad viewing successfully verifies proof token
+  ---
+  duration_ms: 0.4085
+  ...
+# Subtest: Ad Anti-Skip: Fast-forward / Instant skip exploit is REJECTED
+ok 234 - Ad Anti-Skip: Fast-forward / Instant skip exploit is REJECTED
+  ---
+  duration_ms: 0.2612
+  ...
+# Subtest: Ad Anti-Skip: Forged or tampered token is REJECTED
+ok 235 - Ad Anti-Skip: Forged or tampered token is REJECTED
+  ---
+  duration_ms: 0.1425
+  ...
+# Subtest: ToenowPlatform: Instantiates and exposes standard ad hooks
+ok 236 - ToenowPlatform: Instantiates and exposes standard ad hooks
+  ---
+  duration_ms: 0.2509
+  ...
+# Subtest: a timed run starts with sixty seconds and rewards correct answers up to sixty
+ok 237 - a timed run starts with sixty seconds and rewards correct answers up to sixty
+  ---
+  duration_ms: 1.2269
+  ...
+# Subtest: wrong answers remove five seconds and clamp at zero
+ok 238 - wrong answers remove five seconds and clamp at zero
+  ---
+  duration_ms: 0.2609
+  ...
+# Subtest: ten games use the shared coach and register adapters in their own game engines
+ok 239 - ten games use the shared coach and register adapters in their own game engines
+  ---
+  duration_ms: 35.6284
+  ...
+# Subtest: v2 completion is isolated per game and old illustration completion does not suppress real teaching
+ok 240 - v2 completion is isolated per game and old illustration completion does not suppress real teaching
+  ---
+  duration_ms: 0.4105
+  ...
+# Subtest: session activates protection before engine start and retains it throughout cleanup
+ok 241 - session activates protection before engine start and retains it throughout cleanup
+  ---
+  duration_ms: 0.299
+  ...
+# Subtest: only actual engine completion or explicit skip records teaching as seen
+ok 242 - only actual engine completion or explicit skip records teaching as seen
+  ---
+  duration_ms: 0.1768
+  ...
+# Subtest: unavailable storage does not block teaching or in-page completion
+ok 243 - unavailable storage does not block teaching or in-page completion
+  ---
+  duration_ms: 0.1413
+  ...
+# Subtest: shared coach contains no duplicate game renderer or synthetic answer buttons
+ok 244 - shared coach contains no duplicate game renderer or synthetic answer buttons
+  ---
+  duration_ms: 8.3062
+  ...
+1..244
+# tests 244
+# suites 0
+# pass 244
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5672.2972

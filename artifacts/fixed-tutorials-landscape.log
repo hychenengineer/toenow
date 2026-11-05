@@ -1,0 +1,12 @@
+PASS number-pop 844 en: 3 real game taps, score0, records protected, normal start, replay/cancel
+PASS ball-track 844 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS block-match 844 en: 1 real game taps, score0, records protected, normal start, replay/cancel
+AssertionError [ERR_ASSERTION]: add-up coach blocks real input
+    at complete (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:71:12)
+    at async C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:92:18 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: true,
+  expected: false,
+  operator: 'strictEqual'
+}

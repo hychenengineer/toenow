@@ -1,0 +1,22 @@
+{
+  "checks": [
+    "home 1440 en PASS",
+    "home 1440 zh-Hant PASS",
+    "home 390 en PASS",
+    "home 390 zh-Hant PASS",
+    "home 320 en PASS",
+    "home 320 zh-Hant PASS",
+    "reload persistence PASS",
+    "number-pop standalone SDK receipt PASS",
+    "ball-track standalone SDK receipt PASS",
+    "block-match standalone SDK receipt PASS",
+    "add-up standalone SDK receipt PASS",
+    "space-scale standalone SDK receipt PASS",
+    "tap-match standalone SDK receipt PASS",
+    "spot-quick standalone SDK receipt PASS",
+    "shadow-match standalone SDK receipt PASS",
+    "flash-brain standalone SDK receipt PASS",
+    "animal-rescue-train standalone SDK receipt PASS"
+  ],
+  "errors": []
+}

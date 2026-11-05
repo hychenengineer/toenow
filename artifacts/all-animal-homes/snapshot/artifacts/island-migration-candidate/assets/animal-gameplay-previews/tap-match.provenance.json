@@ -1,0 +1,39 @@
+{
+  "id": "tap-match",
+  "status": "PASS",
+  "url": "http://127.0.0.1:8765/games/tap-match/",
+  "startedAt": "2026-10-25T16:50:04.709Z",
+  "viewport": {
+    "width": 768,
+    "height": 576
+  },
+  "presentationZoom": 1,
+  "actions": [
+    {
+      "action": "Clicked production Start control",
+      "atMs": 1792947005223,
+      "atSeconds": 0.514
+    },
+    {
+      "action": "Collected a matching picture card for Penguin",
+      "atMs": 1792947007713,
+      "atSeconds": 3.004
+    }
+  ],
+  "trimStartSeconds": 0.514,
+  "videoBytes": 249638,
+  "posterBytes": 40198,
+  "videoSha256": "107465f63794eeea8bbd3a6d93a0d96057d5ae73fb79b3b09ddb7d5a36f5249a",
+  "posterSha256": "d6283a900d5a3dc0df08935393b9d4022b0d01e2ab0724281fa9496c44e9fac6",
+  "originalRecording": "recordings/tap-match.webm",
+  "originalRecordingSha256": "931c9488811fb499d57fa0cd745efaa4c74f1d72c0b75a1282a5f86f7c869b3d",
+  "media": {
+    "duration": 7,
+    "width": 768,
+    "height": 576,
+    "decodedTime": 0.201879,
+    "readyState": 4
+  },
+  "errors": [],
+  "storageIsolation": "new nonpersistent browser context; no production browser profile"
+}

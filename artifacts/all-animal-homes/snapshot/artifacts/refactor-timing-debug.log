@@ -1,0 +1,56 @@
+CHECK space-scale 390 en
+STAGE const before =
+STAGE await page.evaluate(()=>{__timedTest.start(true)
+STAGE const embedded =
+STAGE await frame.locator
+STAGE if (width===390
+STAGE await page.reload
+STAGE await page.locator('[data-tutorial-replay]')
+locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-tutorial-replay]')
+    - locator resolved to <button type="button" data-tutorial-replay="" class="toenow-tutorial-replay">Play tutorial</button>
+  - attempting click action
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - performing click action
+
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-total-time-browser.cjs:122:120 {
+  log: [
+    "  - waiting for locator('[data-tutorial-replay]')",
+    '    - locator resolved to <button type="button" data-tutorial-replay="" class="toenow-tutorial-replay">Play tutorial</button>',
+    '  - attempting click action',
+    '    - waiting for element to be visible, enabled and stable',
+    '    - element is visible, enabled and stable',
+    '    - scrolling into view if needed',
+    '    - done scrolling',
+    '    - performing click action'
+  ],
+  name: 'TimeoutError'
+}
+locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-tutorial-replay]')
+    - locator resolved to <button type="button" data-tutorial-replay="" class="toenow-tutorial-replay">Play tutorial</button>
+  - attempting click action
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+    - done scrolling
+    - performing click action
+
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-total-time-browser.cjs:122:120 {
+  log: [
+    "  - waiting for locator('[data-tutorial-replay]')",
+    '    - locator resolved to <button type="button" data-tutorial-replay="" class="toenow-tutorial-replay">Play tutorial</button>',
+    '  - attempting click action',
+    '    - waiting for element to be visible, enabled and stable',
+    '    - element is visible, enabled and stable',
+    '    - scrolling into view if needed',
+    '    - done scrolling',
+    '    - performing click action'
+  ],
+  name: 'TimeoutError'
+}

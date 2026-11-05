@@ -1,0 +1,26 @@
+[
+  {
+    "viewport": 1440,
+    "width": 432,
+    "height": 270,
+    "area": 116640
+  },
+  {
+    "viewport": 1100,
+    "width": 332,
+    "height": 207.5,
+    "area": 68890
+  },
+  {
+    "viewport": 768,
+    "width": 356,
+    "height": 222.5,
+    "area": 79210
+  },
+  {
+    "viewport": 390,
+    "width": 358,
+    "height": 223.75,
+    "area": 80102.5
+  }
+]

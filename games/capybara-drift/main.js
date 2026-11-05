@@ -189,7 +189,7 @@
  }
  function render(){
   const env=E.environment(state),lighting=riverLighting(env);const scene=lighting.scene,night=lighting.night;
-
+  
   const [grass,water,deep]=lighting.colors,rw=riverWidth(),flow=state.elapsed*height*.045,waterFlow=visualTime*height*.045;
   ctx.fillStyle=grass;ctx.fillRect(0,0,width,height);
   // Winding banks: the playable channel remains broad in all scenes.
@@ -228,7 +228,7 @@
   if(mode==='playing')swimmerHeading+=Math.atan2(Math.sin(heading-swimmerHeading),Math.cos(heading-swimmerHeading))*.1;
   capy(px,py,size,float,state.yuzu,false,swimmerHeading);if(state.playTime>0)drawSplash(px,py,size);drawWeather(env,lighting,flow);
   for(const p of state.particles){ctx.globalAlpha=Math.min(1,p.life);ctx.fillStyle='#fffbea';ctx.font='bold 22px ui-rounded,sans-serif';ctx.textAlign='center';riverText(p.type==='hit'?'✦':p.type==='friend'?'♡':p.type==='collectible'?'✧':p.type==='material'?'⌂':'·',waterX(p.x,p.y)-25,p.y*height);ctx.globalAlpha=1;}
-
+  
   if(night){for(let i=0;i<25;i++){const x=(i*173)%width,y=(i*97)%height;ellipse(x+Math.sin(state.elapsed+i)*8,y,1.5,1.5,'#ffe5a9'+(Math.sin(state.elapsed+i)>.1?'bb':'44'));}}
  }
  function tick(now){

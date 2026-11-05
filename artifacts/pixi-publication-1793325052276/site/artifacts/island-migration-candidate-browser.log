@@ -1,0 +1,9 @@
+browserType.launch: Chromium distribution 'msedge' is not found at C:\Users\HsinYuChen\AppData\Local\Microsoft\Edge\Application\msedge.exe
+Run "npx playwright install msedge"
+    at C:\Users\HsinYuChen\source\repos\toenow\artifacts\island-migration-candidate\tools\verify-onboarding-browser.cjs:9:34
+    at Object.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\artifacts\island-migration-candidate\tools\verify-onboarding-browser.cjs:188:3)
+    at [eval]:1:53
+    at [eval]-wrapper:6:24 {
+  log: [],
+  name: 'Error'
+}

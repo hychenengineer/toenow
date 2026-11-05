@@ -1,0 +1,37 @@
+/* Keep the next order beside the field, or within thumb reach on narrow screens. */
+.command-panel{position:sticky;top:12px}
+body[data-state="gameover"] .battle-actions{display:none}
+.command-panel .battle-actions{border:1px solid #d5bb7c;border-radius:12px;padding:12px;gap:10px;margin-top:8px}
+.battle-actions .orders{margin:0;grid-template-columns:1fr}
+.battle-actions .orders button{min-height:44px;padding:10px 8px;font-size:13px}
+.battle-actions .move-confirmation{display:grid;grid-template-columns:1fr 1.4fr;padding:0;border:0;background:none}
+.battle-actions .move-confirmation button{padding:9px 5px;font-size:12px;min-width:0}
+.battle-actions #preview{grid-column:auto;grid-row:auto}
+#remaining-orders{font-size:11px;line-height:1.5;color:#6b654d}
+#board .tile.move-path::after{content:'·';position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-size:38px;color:#fff5be;background:none;pointer-events:none}
+#lesson-shade{position:fixed;inset:0;z-index:41;background:#17271f9c;pointer-events:none}
+#battle-coach[data-guided="true"]{position:fixed;z-index:45;width:min(310px,calc(100vw - 20px));margin:0;box-shadow:0 5px 24px #15261855;border:2px solid #af7826;border-radius:12px;max-height:calc(100dvh - 20px);overflow:auto}
+#battle-coach[data-guided="true"] .battle-coach-heading strong{font-size:11px}
+#battle-coach[data-guided="true"] #battle-coach-prompt{font-size:13px;line-height:1.6}
+#battle[data-lesson="true"] .tile:disabled:not(.wall):not(.tree){opacity:.65}
+#battle[data-lesson="true"] .onboarding-focus{outline:3px solid #fff0a5!important;outline-offset:-3px}
+#pause-layer{z-index:60}
+@media(max-width:780px){
+  #battle{padding-bottom:var(--order-dock-height,300px)}
+  .command-panel{position:static;display:block}
+  .command-panel #roster{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+  .roster-unit{flex-wrap:wrap;justify-content:center;text-align:center;gap:2px}
+  .roster-unit span{flex-basis:100%}
+  .command-panel .selection{padding:10px 0 0}
+  .command-panel .battle-actions{position:fixed;left:0;right:0;bottom:0;z-index:30;margin:0;border-radius:15px 15px 0 0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -4px 20px #263b2726;gap:7px;max-height:58dvh;overflow:auto}
+  .battle-actions .orders{grid-template-columns:1fr 1.6fr;gap:7px;grid-row:auto;grid-column:auto}
+  .battle-actions .move-confirmation{grid-row:auto;grid-column:auto;margin:0;grid-template-columns:1fr 1.6fr}
+  .battle-actions button{font-size:13px;min-height:44px;padding:8px}
+  .battle-actions #preview{min-height:0;font-size:11px;padding:7px 9px}
+  #action-hint{font-size:12px;line-height:1.45}
+  #remaining-orders{font-size:10px}
+}
+@media(max-width:780px) and (max-height:500px){
+  .command-panel .battle-actions{left:auto;width:260px;max-height:calc(100dvh - 60px)}
+  #battle{padding-right:274px;padding-bottom:20px}
+}

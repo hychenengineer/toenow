@@ -1,0 +1,48 @@
+PASS 1100x850 en: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+PASS 1100x850 zh-Hant: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+PASS 390x844 en: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+PASS 390x844 zh-Hant: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+PASS 320x568 en: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+PASS 320x568 zh-Hant: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+PASS 844x390 en: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+PASS 844x390 zh-Hant: touch ripples, pickups, pause/book, material cap/reload, finite landing, retry, practice
+Hub: opening
+Hub: ready
+locator.click: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('#restartGameBtn')
+    - locator resolved to <button type="button" class="theater-btn" id="restartGameBtn">↵          ↺ Restart↵        </button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is not visible
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is not visible
+    - retrying click action
+      - waiting 100ms
+    28 × waiting for element to be visible, enabled and stable
+       - element is not visible
+     - retrying click action
+       - waiting 500ms
+
+    at run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-capybara-journeys.cjs:53:437) {
+  log: [
+    "  - waiting for locator('#restartGameBtn')",
+    '    - locator resolved to <button type="button" class="theater-btn" id="restartGameBtn">↵          ↺ Restart↵        </button>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not visible',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not visible',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    28 × waiting for element to be visible, enabled and stable',
+    '       - element is not visible',
+    '     - retrying click action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}

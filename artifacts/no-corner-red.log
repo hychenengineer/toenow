@@ -1,0 +1,9 @@
+AssertionError [ERR_ASSERTION]: game results must not create corner notifications
+    at finish (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-onboarding-browser.cjs:82:14)
+    at async C:\Users\HsinYuChen\source\repos\toenow\tools\verify-onboarding-browser.cjs:89:5 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 1,
+  expected: 0,
+  operator: 'strictEqual'
+}

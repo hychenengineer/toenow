@@ -1,0 +1,15 @@
+CHECK capybara-drift 320 en
+PASS capybara-drift 320 en
+CHECK capybara-drift 320 zh-Hant
+PASS capybara-drift 320 zh-Hant
+CHECK capybara-drift 390 en
+{
+  before: '<button type="button" class="theater-btn" aria-label="Sound off" title="" aria-pressed="false"><svg viewBox="0 0 24 24"><use href="assets/toenow-control-icons.svg#sound-off"></use></svg></button>',
+  after: '<button type="button" class="theater-btn" aria-label="Sound off" title="" aria-pressed="false"><svg viewBox="0 0 24 24"><use href="assets/toenow-control-icons.svg#sound-off"></use></svg></button>',
+  original: '<button id="sound" type="button" aria-pressed="false" style="display: none !important;">Sound off</button>'
+}
+page.waitForFunction: Timeout 5000ms exceeded.
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-all-title-controls.cjs:47:16 {
+  log: [],
+  name: 'TimeoutError'
+}

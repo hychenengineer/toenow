@@ -1,0 +1,84 @@
+{
+  "checks": [
+    {
+      "width": 1440,
+      "language": "en",
+      "theme": "bright",
+      "minRowClearance": 8.1065673828125,
+      "status": "PASS"
+    },
+    {
+      "width": 1440,
+      "language": "zh-Hant",
+      "theme": "bright",
+      "minRowClearance": 18.65625,
+      "status": "PASS"
+    },
+    {
+      "width": 1024,
+      "language": "en",
+      "theme": "bright",
+      "minRowClearance": 19.48150634765625,
+      "status": "PASS"
+    },
+    {
+      "width": 1024,
+      "language": "zh-Hant",
+      "theme": "bright",
+      "minRowClearance": 30.03125,
+      "status": "PASS"
+    },
+    {
+      "width": 768,
+      "language": "en",
+      "theme": "bright",
+      "minRowClearance": 22.2940673828125,
+      "status": "PASS"
+    },
+    {
+      "width": 768,
+      "language": "zh-Hant",
+      "theme": "bright",
+      "minRowClearance": 32.84375,
+      "status": "PASS"
+    },
+    {
+      "width": 390,
+      "language": "en",
+      "theme": "bright",
+      "minRowClearance": 22.2940673828125,
+      "status": "PASS"
+    },
+    {
+      "width": 390,
+      "language": "zh-Hant",
+      "theme": "bright",
+      "minRowClearance": 32.84375,
+      "status": "PASS"
+    },
+    {
+      "width": 320,
+      "language": "en",
+      "theme": "bright",
+      "minRowClearance": 22.2940673828125,
+      "status": "PASS"
+    },
+    {
+      "width": 320,
+      "language": "zh-Hant",
+      "theme": "bright",
+      "minRowClearance": 32.84375,
+      "status": "PASS"
+    }
+  ],
+  "locations": 10,
+  "statesPerLocation": 5,
+  "illustratedAssets": 50,
+  "artFallback": "PASS",
+  "simpleMapLayout": "PASS",
+  "gameLaunch": "PASS",
+  "normalAndPractice": "PASS",
+  "storageAndReload": "PASS",
+  "keyboardAndLanguage": "PASS",
+  "errors": []
+}

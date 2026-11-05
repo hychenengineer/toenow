@@ -1,0 +1,2483 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Add Up</title>
+    <meta
+      name="description"
+      content="A fast-paced mental arithmetic reflex game. Tap floating number balls to match the core target sum."
+    />
+    <meta property="og:title" content="Add Up" />
+    <meta
+      property="og:description"
+      content="A fast-paced mental arithmetic reflex game. Tap floating number balls to match the core target sum."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+SC:wght@400;600;700;800&family=Outfit:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
+    <script src="../../shared/toenow-levels.js"></script>
+    <script src="../../shared/toenow-security.js"></script>
+    <script src="../../shared/toenow-platform.js"></script>
+    <script src="../../shared/toenow-analytics.js"></script>
+    <script src="../../shared/toenow-sdk.js"></script>
+    <script src="../../shared/toenow-i18n-core.js"></script>
+    <script src="../../shared/toenow-i18n-games-a.js"></script>
+    <script src="../../shared/toenow-i18n-games-b.js"></script>
+    <script src="../../shared/toenow-i18n-animals.js"></script>
+<script src="../../shared/toenow-i18n.js"></script>
+    <link rel="stylesheet" href="../../assets/toenow-tutorials.css">
+    <script src="../../shared/toenow-tutorial-config.js"></script>
+    <script src="../../shared/toenow-tutorials.js"></script>
+<script src="../../shared/toenow-animals.js"></script>
+    <script src="../../shared/toenow-screen-config.js"></script>
+    <script src="../../shared/toenow-screens.js"></script>
+    <style>
+      :root {
+        --bg-deep: #080b10;
+        --bg-panel: rgba(12, 17, 26, 0.94);
+        --bg-panel-elevated: rgba(18, 26, 38, 0.96);
+        --border-steel: rgba(56, 189, 248, 0.24);
+        --border-subtle: rgba(148, 163, 184, 0.16);
+        --cyan-core: #22d3ee;
+        --cyan-bright: #67e8f9;
+        --amber-bright: #fbbf24;
+        --crimson-alert: #f43f5e;
+        --emerald-coolant: #10b981;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --text-muted: #64748b;
+        --font-display: 'Noto Sans SC', 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        --font-mono: 'JetBrains Mono', 'Noto Sans SC', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: var(--bg-deep);
+        color: var(--text-primary);
+        font-family: var(--font-display);
+        touch-action: none;
+      }
+
+      #game-stage {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background: var(--bg-deep);
+      }
+
+      #reactor-canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        cursor: crosshair;
+      }
+
+      /* Perimeter HUD - pointer-events: none so canvas receives all taps */
+      #hud-layer {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 12px 18px;
+        transition: opacity 160ms ease;
+      }
+
+      body[data-state='title'] #hud-layer {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      body[data-state='playing'] #hud-layer,
+      body[data-state='paused'] #hud-layer,
+      body[data-state='gameover'] #hud-layer {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .hud-top-bar {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: start;
+        gap: 12px;
+        width: 100%;
+        max-width: 1420px;
+        margin: 0 auto;
+      }
+
+      /* Left cluster: Score, Best, Wave */
+      .hud-cluster-left {
+        display: flex;
+        align-items: stretch;
+        gap: 8px;
+        justify-self: start;
+      }
+
+      .hud-module {
+        background: var(--bg-panel);
+        border: 1px solid var(--border-steel);
+        border-radius: 6px;
+        padding: 6px 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+      }
+
+      .hud-kicker {
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        display: block;
+        margin-bottom: 2px;
+        white-space: nowrap;
+      }
+
+      .hud-hero-num {
+        font-family: var(--font-mono);
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1.05;
+        font-variant-numeric: tabular-nums;
+        color: var(--text-primary);
+        paint-order: stroke fill;
+        text-shadow: 0 2px 8px rgba(34, 211, 238, 0.25);
+      }
+
+      .hud-sub-row {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-variant-numeric: tabular-nums;
+        color: var(--text-muted);
+        margin-top: 2px;
+        white-space: nowrap;
+      }
+
+      /* Center cluster: Blitz Timer */
+      .hud-cluster-center {
+        background: var(--bg-panel);
+        border: 1px solid var(--border-steel);
+        border-radius: 6px;
+        padding: 8px 16px;
+        min-width: 280px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .timer-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .timer-readout {
+        font-family: var(--font-mono);
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+        color: var(--cyan-bright);
+      }
+
+      .timer-readout[data-critical='true'] {
+        color: var(--crimson-alert);
+      }
+
+      .bar-track {
+        position: relative;
+        width: 100%;
+        height: 6px;
+        background: rgba(15, 23, 42, 0.95);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+
+      .bar-ghost {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background: rgba(244, 63, 94, 0.45);
+        transform-origin: left center;
+        transition: transform 450ms ease-out;
+      }
+
+      .bar-fill-timer {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: var(--cyan-core);
+        transform-origin: left center;
+      }
+
+      .bar-fill-timer[data-critical='true'] {
+        background: var(--crimson-alert);
+      }
+
+      /* Right cluster: Utility Icon Controls */
+      .hud-cluster-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        justify-self: end;
+        pointer-events: auto;
+      }
+
+      .icon-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 6px;
+        background: var(--bg-panel);
+        border: 1px solid var(--border-steel);
+        color: var(--text-primary);
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1px;
+        cursor: pointer;
+        transition: transform 120ms ease, border-color 120ms ease, background-color 120ms ease;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+      }
+
+      .icon-btn:hover {
+        border-color: var(--cyan-bright);
+        background: var(--bg-panel-elevated);
+        transform: translateY(-1px);
+      }
+
+      .icon-btn:active {
+        transform: translateY(0);
+      }
+
+      .icon-btn svg {
+        width: 15px;
+        height: 15px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .icon-btn-key {
+        font-family: var(--font-mono);
+        font-size: 8px;
+        color: var(--text-muted);
+        line-height: 1;
+      }
+
+      /* Overlays: Title, Pause, Game Over */
+      .overlay-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 20px;
+        pointer-events: none;
+      }
+
+      body[data-state='title'] #title-screen {
+        display: flex;
+      }
+
+      body[data-state='paused'] #pause-screen {
+        display: flex;
+      }
+
+      body[data-state='gameover'] #gameover-screen {
+        display: flex;
+      }
+
+      /* Clean, Simple Title Screen Layout */
+      .title-layout {
+        width: 100%;
+        max-width: 440px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+      }
+
+      .eyebrow-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--cyan-bright);
+        background: rgba(34, 211, 238, 0.1);
+        border: 1px solid rgba(34, 211, 238, 0.3);
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-bottom: 14px;
+      }
+
+      .title-card,
+      .unified-title-card {
+        pointer-events: auto;
+        width: 100%;
+        background: rgba(8, 11, 16, 0.94);
+        border: 1px solid rgba(34, 211, 238, 0.3);
+        border-radius: 8px;
+        padding: 24px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85);
+      }
+
+      .title-emblem-svg {
+        width: 100%;
+        max-width: 320px;
+        height: auto;
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      .title-lead {
+        font-size: 13.5px;
+        line-height: 1.4;
+        color: var(--text-secondary);
+        margin-bottom: 14px;
+      }
+
+      /* Title Rules Card */
+      .title-rules-card {
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid var(--border-steel);
+        border-radius: 6px;
+        padding: 12px 14px;
+        margin-bottom: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .title-rules-header {
+        font-family: var(--font-display);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--cyan-bright);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .title-rules-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+
+      .title-rule-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--text-primary);
+        line-height: 1.3;
+      }
+
+      .rule-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: var(--text-secondary);
+        white-space: nowrap;
+      }
+
+      .rule-tag {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 11px;
+        padding: 2px 7px;
+        border-radius: 4px;
+        background: rgba(30, 41, 59, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        color: var(--cyan-bright);
+        white-space: nowrap;
+      }
+
+      .rule-bonus {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+      }
+
+      .rule-bonus[data-tier='none'] {
+        background: rgba(148, 163, 184, 0.15);
+        color: #94a3b8;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+      }
+
+      .rule-bonus[data-tier='positive'] {
+        background: rgba(34, 211, 238, 0.18);
+        color: var(--cyan-bright);
+        border: 1px solid rgba(34, 211, 238, 0.4);
+      }
+
+      .rule-bonus[data-tier='mega'] {
+        background: rgba(251, 191, 36, 0.18);
+        color: var(--amber-bright);
+        border: 1px solid rgba(251, 191, 36, 0.45);
+        box-shadow: 0 0 10px rgba(251, 191, 36, 0.25);
+      }
+
+      .title-meta-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid var(--border-subtle);
+        border-radius: 6px;
+        padding: 9px 14px;
+        margin-bottom: 18px;
+      }
+
+      .meta-box-label {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      .meta-box-val {
+        font-family: var(--font-mono);
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--amber-bright);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .title-actions-row {
+        display: flex;
+        align-items: center;
+      }
+
+      .primary-cta-btn {
+        pointer-events: auto;
+        appearance: none;
+        width: 100%;
+        border: 1px solid var(--cyan-bright);
+        background: var(--cyan-core);
+        color: #041016;
+        font-family: var(--font-display);
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 12px 24px;
+        border-radius: 6px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: transform 140ms cubic-bezier(0.16, 1, 0.3, 1), background-color 140ms ease, box-shadow 140ms ease;
+        box-shadow: 0 0 24px rgba(34, 211, 238, 0.35);
+      }
+
+      .primary-cta-btn:hover {
+        background: var(--cyan-bright);
+        transform: translateY(-1px);
+        box-shadow: 0 0 32px rgba(103, 232, 249, 0.55);
+      }
+
+      .primary-cta-btn:active {
+        transform: translateY(0);
+      }
+
+      .secondary-cta-btn {
+        pointer-events: auto;
+        appearance: none;
+        border: 1px solid var(--border-steel);
+        background: rgba(15, 23, 42, 0.85);
+        color: var(--text-primary);
+        font-family: var(--font-display);
+        font-size: 13.5px;
+        font-weight: 600;
+        padding: 10px 18px;
+        border-radius: 6px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: transform 140ms ease, border-color 140ms ease, background-color 140ms ease;
+      }
+
+      .secondary-cta-btn:hover {
+        border-color: var(--cyan-bright);
+        background: rgba(30, 41, 59, 0.95);
+        transform: translateY(-1px);
+      }
+
+      /* Status Modal Cards */
+      .status-modal-card {
+        pointer-events: auto;
+        width: 100%;
+        max-width: 460px;
+        background: rgba(10, 14, 22, 0.96);
+        border: 1px solid rgba(34, 211, 238, 0.35);
+        border-radius: 8px;
+        padding: 26px 24px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85);
+      }
+
+      .modal-kicker {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--cyan-bright);
+        margin-bottom: 6px;
+      }
+
+      .modal-title {
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+      }
+
+      .modal-subtitle {
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin-bottom: 18px;
+        line-height: 1.5;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .stat-tile {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid var(--border-subtle);
+        border-radius: 6px;
+        padding: 10px 12px;
+      }
+
+      .stat-tile-label {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        display: block;
+        margin-bottom: 3px;
+      }
+
+      .stat-tile-value {
+        font-family: var(--font-mono);
+        font-size: 22px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        color: var(--text-primary);
+      }
+
+      .stat-tile-value.highlight-amber {
+        color: var(--amber-bright);
+      }
+
+      .stat-tile-value.highlight-emerald {
+        color: var(--emerald-coolant);
+      }
+
+      .modal-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .modal-actions .primary-cta-btn {
+        width: auto;
+        flex: 1;
+      }
+
+      /* Screen-reader accessible nodes */
+      .sr-only-nodes {
+        position: fixed;
+        bottom: 4px;
+        left: 4px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+      }
+
+      /* Critical low-time vignette */
+      #critical-vignette {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 5;
+        opacity: 0;
+        box-shadow: inset 0 0 90px rgba(244, 63, 94, 0.55);
+        transition: opacity 250ms ease;
+      }
+
+      #critical-vignette[data-active='true'] {
+        opacity: 1;
+      }
+
+      @media (max-width: 820px) {
+        #hud-layer {
+          padding: 8px 10px;
+        }
+        .hud-top-bar {
+          grid-template-columns: 1fr auto;
+          gap: 6px;
+        }
+        .hud-cluster-left {
+          gap: 6px;
+        }
+        .hud-module {
+          padding: 4px 8px;
+        }
+        .hud-kicker {
+          font-size: 8.5px;
+        }
+        .hud-sub-row {
+          font-size: 9px;
+        }
+        .hud-cluster-center {
+          grid-column: 1 / -1;
+          order: 3;
+          min-width: 0;
+          width: 100%;
+          padding: 5px 10px;
+          gap: 4px;
+        }
+        .hud-hero-num {
+          font-size: 17px;
+        }
+        .timer-readout {
+          font-size: 16px;
+        }
+        .icon-btn {
+          width: 34px;
+          height: 34px;
+        }
+        .icon-btn svg {
+          width: 14px;
+          height: 14px;
+        }
+        @media (max-width: 820px) {
+          .title-layout {
+            max-width: 360px;
+          }
+          .title-card {
+            padding: 20px 18px;
+          }
+        }
+      }
+    </style>
+  <link rel="stylesheet" href="../../assets/toenow-animals.css">
+</head>
+  <body data-state="title">
+    <div id="game-stage">
+      <canvas id="reactor-canvas" data-testid="reactor-canvas" aria-label="Add Up interactive plasma arena"></canvas>
+      <div id="critical-vignette" data-active="false"></div>
+
+      <!-- Accessible live node bank for keyboard/assistive tech -->
+      <div id="accessible-node-bank" class="sr-only-nodes" role="group" aria-label="Floating Number Balls"></div>
+
+      <!-- Playing HUD -->
+      <div id="hud-layer">
+        <div class="hud-top-bar">
+          <!-- Top-Left: Score & Wave -->
+          <div class="hud-cluster-left">
+            <div class="hud-module">
+              <span class="hud-kicker">SCORE</span>
+              <div id="hud-score" class="hud-hero-num">0</div>
+              <div class="hud-sub-row">BEST <span id="hud-best">0</span></div>
+            </div>
+            <div class="hud-module">
+              <span class="hud-kicker">WAVE</span>
+              <div id="hud-wave" class="hud-hero-num">1</div>
+              <div class="hud-sub-row">CLEARED <span id="hud-cores">0</span></div>
+            </div>
+          </div>
+
+          <!-- Top-Center: Timer -->
+          <div class="hud-cluster-center">
+            <div class="timer-header">
+              <span class="hud-kicker">TIME REMAINING</span>
+              <span id="hud-timer" class="timer-readout" data-critical="false">60s</span>
+            </div>
+
+            <div class="bar-track" aria-label="Containment time remaining">
+              <div id="hud-timer-ghost" class="bar-ghost"></div>
+              <div id="hud-timer-fill" class="bar-fill-timer" data-critical="false"></div>
+            </div>
+          </div>
+
+          <!-- Top-Right: Utility Controls -->
+          <div class="hud-cluster-right">
+            <button
+              type="button"
+              id="btn-clear-selection"
+              class="icon-btn"
+              tabindex="-1"
+              aria-label="Clear selected balls"
+              title="Clear Selection [Space]"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+              <span class="icon-btn-key">SPC</span>
+            </button>
+            <button
+              type="button"
+              id="btn-mute"
+              class="icon-btn"
+              tabindex="-1"
+              aria-label="Toggle audio mute"
+              title="Mute Audio [M]"
+            >
+              <svg id="svg-mute-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              id="btn-pause"
+              class="icon-btn"
+              tabindex="-1"
+              aria-label="Pause game"
+              title="Pause [P]"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="6" y="4" width="4" height="16" rx="1" />
+                <rect x="14" y="4" width="4" height="16" rx="1" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              id="btn-restart-hud"
+              class="icon-btn"
+              tabindex="-1"
+              aria-label="Restart game"
+              title="Restart [R]"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                <path d="M3 3v5h5" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Simple & Clean Title Screen Overlay -->
+      <section id="title-screen" class="overlay-screen unified-title-screen" aria-label="Add Up Title Screen" data-toenow-screen="title"></section>
+
+      <!-- Pause Modal Overlay (Anti-cheat blackout) -->
+      <section id="pause-screen" class="overlay-screen unified-pause-screen" role="dialog" aria-modal="true" aria-labelledby="pause-title">
+        <div class="unified-pause-card">
+          <div class="unified-pause-kicker">REACTOR PAUSED</div>
+          <h2 id="pause-title" class="unified-pause-title">PAUSED</h2>
+          <p class="unified-pause-notice">Plasma numbers hidden while paused.</p>
+
+          <div class="unified-pause-stats-grid" style="grid-template-columns: repeat(2, 1fr);">
+            <div class="unified-pause-stat-box">
+              <span class="unified-pause-stat-label">SCORE</span>
+              <span id="pause-score" class="unified-pause-stat-val">0</span>
+            </div>
+            <div class="unified-pause-stat-box">
+              <span class="unified-pause-stat-label">WAVE</span>
+              <span id="pause-wave" class="unified-pause-stat-val">1</span>
+            </div>
+          </div>
+
+          <div class="unified-pause-btn-row">
+            <button type="button" id="btn-resume" class="unified-pause-resume-btn">RESUME</button>
+            <button type="button" id="btn-pause-restart" class="unified-pause-action-btn">RESTART</button>
+            <button type="button" id="btn-pause-title" class="unified-pause-action-btn">TITLE</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Game Over Modal Overlay -->
+      <section id="gameover-screen" class="overlay-screen unified-gameover-screen" role="dialog" aria-modal="true" aria-labelledby="gameover-title" data-toenow-screen="gameover"></section>
+    </div>
+
+    <script>ToenowScreens.mount("add-up");</script>
+    <script>
+      (function () {
+        'use strict';
+
+        const IS_HEADLESS =
+          Boolean(navigator.webdriver) || /HeadlessChrome/i.test(navigator.userAgent || '');
+
+        // --- Meta Progression Storage ---
+        const STORAGE_KEY_BEST = 'overclock_reactor_best_v2';
+        const STORAGE_KEY_CORES = 'overclock_reactor_cores_v2';
+
+        function loadMeta() {
+          let best = 0;
+          let cores = 0;
+          try {
+            const rawBest = localStorage.getItem(STORAGE_KEY_BEST);
+            best = rawBest ? parseInt(rawBest, 10) : 0;
+            if (!Number.isFinite(best) || best < 0) best = 0;
+
+            const rawCores = localStorage.getItem(STORAGE_KEY_CORES);
+            cores = rawCores ? parseInt(rawCores, 10) : 0;
+            if (!Number.isFinite(cores) || cores < 0) cores = 0;
+          } catch (_) {}
+          return { best: best, cores: cores };
+        }
+
+        function saveMeta(best, cores) {
+          if (isPracticeMode) return;
+          try {
+            localStorage.setItem(STORAGE_KEY_BEST, String(Math.round(best)));
+            localStorage.setItem(STORAGE_KEY_CORES, String(Math.round(cores)));
+          } catch (_) {}
+        }
+
+        const meta = loadMeta();
+        let bestScore = meta.best;
+        let isPracticeMode = false;
+        let totalLifetimeCores = meta.cores;
+
+        // Initialize Toenow Game SDK
+        const toenowSdk = typeof ToenowGameSDK !== 'undefined'
+          ? new ToenowGameSDK({ gameId: 'add-up', category: 'math', gameTitle: 'Add Up' })
+          : null;
+
+        // --- Pure Addition Math Rules ---
+        function evaluateSelection(selectedList) {
+          if (!selectedList || selectedList.length === 0) return 0;
+          let total = 0;
+          for (let i = 0; i < selectedList.length; i++) {
+            total += selectedList[i].value;
+          }
+          return total;
+        }
+
+        function randInt(min, max) {
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // Time Reward Rules:
+        // - 2 nodes: +0s
+        // - 3 nodes: +5s
+        // - 4+ nodes: +10s
+        function calculateTimeRefund(nodeCount) {
+          if (nodeCount <= 2) return 0;
+          if (nodeCount === 3) return 5.0;
+          return 10.0;
+        }
+
+        // Score Multiplier Rules:
+        // - 2 nodes: 1x
+        // - 3 nodes: 2x
+        // - 4+ nodes: 3x
+        function getChainMultiplier(nodeCount) {
+          if (nodeCount <= 2) return 1.0;
+          if (nodeCount === 3) return 2.0;
+          return 3.0;
+        }
+
+        // Pure Addition Wave Generator:
+        // Guarantees EVERY wave has 2-node, 3-node, AND 4-node solutions!
+        // Uses hierarchical decomposition:
+        //   c1 + c2 = target (2 nodes)
+        //   (c1a + c1b) + c2 = target AND c1 + (c2a + c2b) = target (3 nodes)
+        //   c1a + c1b + c2a + c2b = target (4 nodes)
+        function getLevelInfoForWave(waveNum) {
+          if (waveNum <= 5) return { level: 1, name: 'BEGINNER' };
+          if (waveNum <= 10) return { level: 2, name: 'INTERMEDIATE' };
+          if (waveNum <= 15) return { level: 3, name: 'ADVANCED' };
+          if (waveNum <= 20) return { level: 4, name: 'EXPERT' };
+          return { level: 5, name: 'MASTER' };
+        }
+
+        function generateWaveData(waveNum) {
+          const lvlInfo = getLevelInfoForWave(waveNum);
+          let targetVal = 20;
+
+          // 5-Level Progressive Math Tuning (5 waves each):
+          // Level 1: Beginner (Waves 1-5) -> target 16-30
+          // Level 2: Intermediate (Waves 6-10) -> target 28-48
+          // Level 3: Advanced (Waves 11-15) -> target 40-65, +1 extra decoy
+          // Level 4: Expert (Waves 16-20) -> target 55-85, +2 extra decoys
+          // Level 5: Master (Waves 21+) -> target 70-120, +2 extra decoys, fast reflex
+          if (waveNum === 1) {
+            targetVal = 20;
+          } else if (waveNum <= 5) {
+            targetVal = randInt(16, 30);
+          } else if (waveNum <= 10) {
+            targetVal = randInt(28, 48);
+          } else if (waveNum <= 15) {
+            targetVal = randInt(40, 65);
+          } else if (waveNum <= 20) {
+            targetVal = randInt(55, 85);
+          } else {
+            targetVal = randInt(70, 120);
+          }
+
+          const c1 = randInt(Math.max(4, Math.floor(targetVal * 0.35)), Math.floor(targetVal * 0.65));
+          const c2 = targetVal - c1;
+
+          const c1a = randInt(2, Math.max(2, c1 - 2));
+          const c1b = c1 - c1a;
+
+          const c2a = randInt(2, Math.max(2, c2 - 2));
+          const c2b = c2 - c2a;
+
+          const values = [c1, c2, c1a, c1b, c2a, c2b];
+
+          const extra1 = randInt(2, Math.max(3, Math.floor(targetVal * 0.3)));
+          values.push(extra1);
+
+          if (waveNum >= 6) {
+            const extra2 = Math.max(2, targetVal - c1a - extra1);
+            values.push(extra2);
+          }
+          if (waveNum >= 16) {
+            values.push(randInt(3, Math.max(4, Math.floor(targetVal * 0.4))));
+          }
+
+          const items = values.map(function (v) {
+            return {
+              op: 'add',
+              value: v,
+              label: String(v),
+            };
+          });
+
+          if (waveNum > 1) {
+            for (let i = items.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              const temp = items[i];
+              items[i] = items[j];
+              items[j] = temp;
+            }
+          }
+
+          return {
+            wave: waveNum,
+            level: lvlInfo.level,
+            levelName: lvlInfo.name,
+            target: targetVal,
+            items: items,
+          };
+        }
+
+        // --- Native Web Audio API Synthesizer ---
+        const Sfx = (function () {
+          let ctx = null;
+          let muted = false;
+
+          function ensureCtx() {
+            if (muted) return null;
+            if (!ctx) {
+              const AudioCtx = window.AudioContext || window.webkitAudioContext;
+              if (AudioCtx) {
+                try {
+                  ctx = new AudioCtx();
+                } catch (_) {
+                  ctx = null;
+                }
+              }
+            }
+            if (ctx && ctx.state === 'suspended') {
+              ctx.resume().catch(function () {});
+            }
+            return ctx;
+          }
+
+          const chordIntervals = [261.63, 329.63, 392.0, 523.25, 587.33, 659.25, 783.99];
+
+          function playSelect(chainIndex) {
+            const ac = ensureCtx();
+            if (!ac) return;
+            const now = ac.currentTime;
+
+            const noteIdx = Math.min(chainIndex, chordIntervals.length - 1);
+            const freq = chordIntervals[noteIdx];
+
+            const osc = ac.createOscillator();
+            const gain = ac.createGain();
+            osc.type = chainIndex >= 3 ? 'sine' : 'triangle';
+            osc.frequency.setValueAtTime(freq * 0.98, now);
+            osc.frequency.exponentialRampToValueAtTime(freq, now + 0.06);
+
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(0.18, now + 0.012);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+
+            osc.connect(gain);
+            gain.connect(ac.destination);
+            osc.start(now);
+            osc.stop(now + 0.19);
+          }
+
+          function playDeselect() {
+            const ac = ensureCtx();
+            if (!ac) return;
+            const now = ac.currentTime;
+            const osc = ac.createOscillator();
+            const gain = ac.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(320, now);
+            osc.frequency.exponentialRampToValueAtTime(180, now + 0.08);
+
+            gain.gain.setValueAtTime(0.09, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+            osc.connect(gain);
+            gain.connect(ac.destination);
+            osc.start(now);
+            osc.stop(now + 0.1);
+          }
+
+          function playValidBoom(nodeCount) {
+            const ac = ensureCtx();
+            if (!ac) return;
+            const now = ac.currentTime;
+
+            const sub = ac.createOscillator();
+            const subGain = ac.createGain();
+            const filter = ac.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(240, now);
+            filter.frequency.exponentialRampToValueAtTime(45, now + 0.42);
+
+            sub.type = 'sawtooth';
+            sub.frequency.setValueAtTime(nodeCount >= 4 ? 110 : 85, now);
+            sub.frequency.exponentialRampToValueAtTime(28, now + 0.45);
+
+            const peakGain = nodeCount >= 4 ? 0.36 : 0.26;
+            subGain.gain.setValueAtTime(0.001, now);
+            subGain.gain.linearRampToValueAtTime(peakGain, now + 0.02);
+            subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+            sub.connect(filter);
+            filter.connect(subGain);
+            subGain.connect(ac.destination);
+            sub.start(now);
+            sub.stop(now + 0.52);
+
+            if (nodeCount >= 4) {
+              const megaNotes = [523.25, 659.25, 783.99, 1046.5, 1318.51];
+              megaNotes.forEach(function (f, idx) {
+                const mOsc = ac.createOscillator();
+                const mGain = ac.createGain();
+                mOsc.type = 'triangle';
+                mOsc.frequency.setValueAtTime(f, now + idx * 0.03);
+                mGain.gain.setValueAtTime(0.1, now + idx * 0.03);
+                mGain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.03 + 0.55);
+                mOsc.connect(mGain);
+                mGain.connect(ac.destination);
+                mOsc.start(now + idx * 0.03);
+                mOsc.stop(now + idx * 0.03 + 0.58);
+              });
+            } else if (nodeCount === 3) {
+              const bells = [880.0, 1318.51];
+              bells.forEach(function (f, idx) {
+                const bOsc = ac.createOscillator();
+                const bGain = ac.createGain();
+                bOsc.type = 'sine';
+                bOsc.frequency.setValueAtTime(f, now + idx * 0.04);
+                bGain.gain.setValueAtTime(0.12, now + idx * 0.04);
+                bGain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.04 + 0.45);
+                bOsc.connect(bGain);
+                bGain.connect(ac.destination);
+                bOsc.start(now + idx * 0.04);
+                bOsc.stop(now + idx * 0.04 + 0.48);
+              });
+            }
+          }
+
+          function playSteamVent() {
+            const ac = ensureCtx();
+            if (!ac) return;
+            const now = ac.currentTime;
+
+            const bufferSize = Math.floor(ac.sampleRate * 0.36);
+            const buffer = ac.createBuffer(1, bufferSize, ac.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+              data[i] = Math.random() * 2 - 1;
+            }
+            const noise = ac.createBufferSource();
+            noise.buffer = buffer;
+
+            const filter = ac.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(1700, now);
+            filter.frequency.exponentialRampToValueAtTime(620, now + 0.32);
+            filter.Q.setValueAtTime(1.4, now);
+
+            const nGain = ac.createGain();
+            nGain.gain.setValueAtTime(0.001, now);
+            nGain.gain.linearRampToValueAtTime(0.24, now + 0.02);
+            nGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+            noise.connect(filter);
+            filter.connect(nGain);
+            nGain.connect(ac.destination);
+            noise.start(now);
+            noise.stop(now + 0.36);
+          }
+
+          function playGameOver() {
+            const ac = ensureCtx();
+            if (!ac) return;
+            const now = ac.currentTime;
+            const notes = [440, 370, 311.13, 246.94];
+            notes.forEach(function (f, idx) {
+              const osc = ac.createOscillator();
+              const gain = ac.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(f, now + idx * 0.12);
+              gain.gain.setValueAtTime(0.1, now + idx * 0.12);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.35);
+              osc.connect(gain);
+              gain.connect(ac.destination);
+              osc.start(now + idx * 0.12);
+              osc.stop(now + idx * 0.12 + 0.38);
+            });
+          }
+
+          return {
+            playSelect: playSelect,
+            playDeselect: playDeselect,
+            playValidBoom: playValidBoom,
+            playSteamVent: playSteamVent,
+            playGameOver: playGameOver,
+            toggleMute: function () {
+              muted = !muted;
+              return muted;
+            },
+          };
+        })();
+
+        // --- Zero-GC Pooled Particles & Shockwaves ---
+        const MAX_PARTICLES = 360;
+        const particlePool = [];
+        for (let i = 0; i < MAX_PARTICLES; i++) {
+          particlePool.push({
+            active: false,
+            x: 0,
+            y: 0,
+            vx: 0,
+            vy: 0,
+            radius: 2,
+            life: 0,
+            maxLife: 1,
+            color: '#22d3ee',
+            isSteam: false,
+          });
+        }
+        let particleCursor = 0;
+
+        function spawnParticle(x, y, vx, vy, radius, maxLife, color, isSteam) {
+          const p = particlePool[particleCursor];
+          particleCursor = (particleCursor + 1) % MAX_PARTICLES;
+          p.active = true;
+          p.x = x;
+          p.y = y;
+          p.vx = vx;
+          p.vy = vy;
+          p.radius = radius;
+          p.life = maxLife;
+          p.maxLife = maxLife;
+          p.color = color;
+          p.isSteam = Boolean(isSteam);
+        }
+
+        function spawnNodeSparkBurst(x, y, color, count) {
+          const n = IS_HEADLESS ? Math.min(6, count) : count;
+          for (let i = 0; i < n; i++) {
+            const angle = (Math.PI * 2 * i) / n + (Math.random() * 0.35 - 0.175);
+            const speed = 75 + Math.random() * 220;
+            spawnParticle(
+              x,
+              y,
+              Math.cos(angle) * speed,
+              Math.sin(angle) * speed,
+              2 + Math.random() * 2.8,
+              0.35 + Math.random() * 0.35,
+              color,
+              false
+            );
+          }
+        }
+
+        function spawnSteamPlume(coreX, coreY, coreRadius) {
+          const count = IS_HEADLESS ? 8 : 28;
+          for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.3 - 0.15);
+            const speed = 90 + Math.random() * 160;
+            const sx = coreX + Math.cos(angle) * (coreRadius * 0.85);
+            const sy = coreY + Math.sin(angle) * (coreRadius * 0.85);
+            spawnParticle(
+              sx,
+              sy,
+              Math.cos(angle) * speed,
+              Math.sin(angle) * speed - 35,
+              6 + Math.random() * 8,
+              0.45 + Math.random() * 0.3,
+              'rgba(226, 232, 240, 0.75)',
+              true
+            );
+          }
+        }
+
+        const MAX_SHOCKWAVES = 8;
+        const shockwaves = [];
+        for (let i = 0; i < MAX_SHOCKWAVES; i++) {
+          shockwaves.push({
+            active: false,
+            x: 0,
+            y: 0,
+            radius: 0,
+            maxRadius: 300,
+            life: 0,
+            maxLife: 0.45,
+            color: '#22d3ee',
+          });
+        }
+
+        function triggerShockwave(x, y, maxRadius, color) {
+          for (let i = 0; i < MAX_SHOCKWAVES; i++) {
+            if (!shockwaves[i].active) {
+              const sw = shockwaves[i];
+              sw.active = true;
+              sw.x = x;
+              sw.y = y;
+              sw.radius = 45;
+              sw.maxRadius = maxRadius;
+              sw.life = 0.52;
+              sw.maxLife = 0.52;
+              sw.color = color;
+              return;
+            }
+          }
+        }
+
+        const MAX_CALLOUTS = 8;
+        const floatingCallouts = [];
+        for (let i = 0; i < MAX_CALLOUTS; i++) {
+          floatingCallouts.push({
+            active: false,
+            x: 0,
+            y: 0,
+            text: '',
+            subtext: '',
+            color: '#67e8f9',
+            life: 0,
+            maxLife: 0.95,
+          });
+        }
+
+        function spawnCallout(x, y, text, subtext, color) {
+          for (let i = 0; i < MAX_CALLOUTS; i++) {
+            if (!floatingCallouts[i].active) {
+              const fc = floatingCallouts[i];
+              fc.active = true;
+              fc.x = x;
+              fc.y = y;
+              fc.text = text;
+              fc.subtext = subtext || '';
+              fc.color = color || '#67e8f9';
+              fc.life = 1.0;
+              fc.maxLife = 1.0;
+              return;
+            }
+          }
+        }
+
+        // --- DOM Elements ---
+        const canvas = document.getElementById('reactor-canvas');
+        const ctx = canvas.getContext('2d');
+        const accessibleNodeBank = document.getElementById('accessible-node-bank');
+        const criticalVignette = document.getElementById('critical-vignette');
+
+        const hudScoreEl = document.getElementById('hud-score');
+        const hudBestEl = document.getElementById('hud-best');
+        const hudWaveEl = document.getElementById('hud-wave');
+        const hudCoresEl = document.getElementById('hud-cores');
+        const hudTimerEl = document.getElementById('hud-timer');
+        const hudTimerFillEl = document.getElementById('hud-timer-fill');
+        const hudTimerGhostEl = document.getElementById('hud-timer-ghost');
+        const titleScreenEl = document.getElementById('title-screen');
+        const pauseScoreEl = document.getElementById('pause-score');
+        const pauseWaveEl = document.getElementById('pause-wave');
+
+        // --- Game State Variables ---
+        const MAX_BANKED_TIME = 60.0;
+        let state = 'title'; // 'title' | 'playing' | 'paused' | 'gameover'
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        let dpr = 1;
+        let coreX = width * 0.5;
+        let coreY = height * 0.52;
+        let coreRadius = 74;
+
+        let score = 0;
+        let wave = 1;
+        let wavesStabilizedThisRun = 0;
+        let target = 20;
+
+        let timeLeft = MAX_BANKED_TIME;
+        let ghostTimeLeft = MAX_BANKED_TIME;
+
+        let hitstopTimer = 0;
+        let cameraTrauma = 0;
+        let steamAlertTimer = 0;
+        let coreFlashTimer = 0;
+        let coreStatusText = 'STABLE';
+        let worldTime = 0;
+
+        let pointerX = width * 0.5;
+        let pointerY = height * 0.5;
+        let hoveredNode = null;
+
+        let nodes = [];
+        let selectedNodes = [];
+
+        function syncMetaUI() {
+          hudBestEl.textContent = String(Math.round(bestScore));
+          ToenowScreens.updateTitle('add-up', { bestScore: bestScore, bestWave: parseInt(localStorage.getItem('add_up_best_wave') || '1', 10) });
+          hudCoresEl.textContent = String(totalLifetimeCores);
+        }
+
+        function getActiveCoreCenter() {
+          const isCompact = width < 820;
+          return { x: width * 0.5, y: isCompact ? height * 0.54 : height * 0.52 };
+        }
+
+        function computeNodeOrbitPosition(idx, count) {
+          const isCompact = width < 820;
+          const center = getActiveCoreCenter();
+          const nodeRadius = isCompact
+            ? Math.max(26, Math.min(32, Math.min(width, height) * 0.074))
+            : Math.max(34, Math.min(43, Math.min(width, height) * 0.052));
+
+          const orbitMin = coreRadius + nodeRadius + (isCompact ? 26 : 54);
+          const availHalfW = width * 0.43;
+          const availHalfH = height * (isCompact ? 0.33 : 0.37);
+          const orbitMaxX = Math.max(orbitMin + 16, availHalfW - nodeRadius);
+          const orbitMaxY = Math.max(orbitMin + 24, availHalfH - nodeRadius);
+
+          const baseAngle = (Math.PI * 2 * idx) / Math.max(1, count) - Math.PI * 0.5;
+          const ringFactor = idx % 2 === 0 ? 0.65 : 0.92;
+          const rx = orbitMin + (orbitMaxX - orbitMin) * ringFactor;
+          const ry = orbitMin + (orbitMaxY - orbitMin) * ringFactor;
+
+          return {
+            x: center.x + Math.cos(baseAngle) * rx,
+            y: center.y + Math.sin(baseAngle) * ry,
+            radius: nodeRadius,
+            baseAngle: baseAngle,
+          };
+        }
+
+        function repositionNodesForViewport() {
+          if (!nodes || nodes.length === 0) return;
+          const count = nodes.length;
+          for (let i = 0; i < count; i++) {
+            const orbit = computeNodeOrbitPosition(i, count);
+            nodes[i].x = orbit.x;
+            nodes[i].y = orbit.y;
+            nodes[i].radius = orbit.radius;
+          }
+        }
+
+        function updateCanvasSize() {
+          const rect = canvas.getBoundingClientRect();
+          const prevW = width;
+          const prevH = height;
+          width = Math.max(320, rect.width || window.innerWidth);
+          height = Math.max(320, rect.height || window.innerHeight);
+          dpr = IS_HEADLESS ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.round(width * dpr);
+          canvas.height = Math.round(height * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+          const isCompact = width < 820;
+          coreRadius = isCompact
+            ? Math.max(48, Math.min(62, Math.min(width, height) * 0.135))
+            : Math.max(58, Math.min(82, Math.min(width, height) * 0.11));
+
+          const center = getActiveCoreCenter();
+          coreX = center.x;
+          coreY = center.y;
+
+          if (Math.abs(width - prevW) > 4 || Math.abs(height - prevH) > 4) {
+            repositionNodesForViewport();
+          }
+        }
+
+        updateCanvasSize();
+        if (typeof ResizeObserver !== 'undefined') {
+          const ro = new ResizeObserver(function () {
+            updateCanvasSize();
+          });
+          ro.observe(canvas);
+        }
+        window.addEventListener('resize', updateCanvasSize);
+
+        function rebuildAccessibleNodeButtons() {
+          accessibleNodeBank.innerHTML = '';
+          nodes.forEach(function (node, idx) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.dataset.nodeIndex = String(idx);
+            btn.textContent =
+              'Plasma Node ' + (idx + 1) + ': ' + node.label + (node.selected ? ' (Linked)' : '');
+            btn.addEventListener('click', function () {
+              if (state === 'playing') {
+                toggleNodeSelection(node);
+              }
+            });
+            accessibleNodeBank.appendChild(btn);
+          });
+        }
+
+        function spawnWaveNodes(waveNum) {
+          if (window.ToenowAnimals) window.ToenowAnimals.setWave('add-up', waveNum);
+          const waveData = generateWaveData(waveNum);
+          wave = waveData.wave;
+          target = waveData.target;
+          coreStatusText = 'STABLE';
+          selectedNodes = [];
+
+          const center = getActiveCoreCenter();
+          coreX = center.x;
+          coreY = center.y;
+
+          const count = waveData.items.length;
+          nodes = waveData.items.map(function (item, idx) {
+            const orbit = computeNodeOrbitPosition(idx, count);
+            // Constant normal speed across all waves!
+            const speed = 18 + Math.random() * 12;
+            const velAngle = orbit.baseAngle + Math.PI * 0.5 + (Math.random() * 0.5 - 0.25);
+
+            return {
+              id: idx + 1,
+              index: idx,
+              op: 'add',
+              value: item.value,
+              label: item.label,
+              x: orbit.x,
+              y: orbit.y,
+              vx: Math.cos(velAngle) * speed,
+              vy: Math.sin(velAngle) * speed,
+              radius: orbit.radius,
+              selected: false,
+              scaleX: 1,
+              scaleY: 1,
+              flash: 0,
+              phase: idx * 0.9,
+            };
+          });
+
+          rebuildAccessibleNodeButtons();
+          updateHUD();
+        }
+
+        function setGameState(nextState) {
+          const prevState = state;
+          state = nextState;
+          document.body.dataset.state = nextState;
+          if (titleScreenEl) {
+            titleScreenEl.classList.toggle('hidden', nextState !== 'title');
+          }
+          const center = getActiveCoreCenter();
+          coreX = center.x;
+          coreY = center.y;
+          if (prevState !== nextState && (prevState === 'title' || nextState === 'title')) {
+            repositionNodesForViewport();
+          }
+          if (document.activeElement && document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+          }
+        }
+
+        function startNewGame(startWave = 1, isPractice = false) {
+          if (toenowSdk && !window.ToenowTutorials?.isActive('add-up')) toenowSdk.startRun({ wave: startWave, isPractice });
+          isPracticeMode = Boolean(isPractice);
+          score = 0;
+          wave = startWave;
+          wavesStabilizedThisRun = 0;
+          timeLeft = MAX_BANKED_TIME;
+          ghostTimeLeft = MAX_BANKED_TIME;
+
+          hitstopTimer = 0;
+          cameraTrauma = 0;
+          steamAlertTimer = 0;
+          coreFlashTimer = 0;
+          coreStatusText = 'STABLE';
+
+          criticalVignette.dataset.active = 'false';
+
+          setGameState('playing');
+          spawnWaveNodes(1);
+          updateHUD();
+        }
+
+        function triggerGameOver() {
+          if (window.ToenowTutorials?.isActive('add-up')) return;
+          const finalScore = Math.round(score);
+          if (!isPracticeMode && finalScore > bestScore) {
+            bestScore = finalScore;
+          }
+          if (!isPracticeMode) {
+            totalLifetimeCores += wavesStabilizedThisRun;
+            saveMeta(bestScore, totalLifetimeCores);
+            const curBestWave = parseInt(localStorage.getItem('add_up_best_wave') || '1', 10) || 1;
+            if (wavesStabilizedThisRun > curBestWave) {
+              try {
+                localStorage.setItem('add_up_best_wave', String(wavesStabilizedThisRun));
+              } catch (_) {}
+            }
+            syncMetaUI();
+          }
+
+          ToenowScreens.updateGameOver('add-up', { score: finalScore, bestScore, wave: wave, combo: null });
+                    criticalVignette.dataset.active = 'false';
+          Sfx.playGameOver();
+          setGameState('gameover');
+
+          // Toenow Game SDK Unified Lifecycle & Hub Contract
+          if (toenowSdk) {
+            toenowSdk.reportGameOver({
+              score: finalScore,
+              wave: wavesStabilizedThisRun || 1,
+              isPractice: isPracticeMode
+            });
+          } else {
+            try {
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage(
+                  {
+                    type: 'GAME_OVER',
+                    gameId: 'add-up',
+                    category: 'math',
+                    score: finalScore,
+                    isPractice: Boolean(isPracticeMode),
+                    wave: wavesStabilizedThisRun || 1
+                  },
+                  '*'
+                );
+              }
+            } catch (_) {}
+          }
+        }
+
+        function clearCurrentSelection(withSound) {
+          if (selectedNodes.length === 0) return;
+          for (let i = 0; i < nodes.length; i++) {
+            nodes[i].selected = false;
+          }
+          selectedNodes = [];
+          if (withSound) {
+            Sfx.playDeselect();
+          }
+          rebuildAccessibleNodeButtons();
+          updateHUD();
+        }
+
+        function toggleNodeSelection(node) {
+          if (state !== 'playing' || !node) return;
+          if (window.ToenowTutorials?.isActive('add-up') && window.ToenowTutorials?.isComplete('add-up')) return;
+
+          if (node.selected) {
+            node.selected = false;
+            const idx = selectedNodes.indexOf(node);
+            if (idx !== -1) selectedNodes.splice(idx, 1);
+            node.scaleX = 0.88;
+            node.scaleY = 1.12;
+            Sfx.playDeselect();
+            rebuildAccessibleNodeButtons();
+            updateHUD();
+            return;
+          }
+
+          // Select node
+          node.selected = true;
+          selectedNodes.push(node);
+          node.scaleX = 1.24;
+          node.scaleY = 0.82;
+          node.flash = 1.0;
+
+          spawnNodeSparkBurst(node.x, node.y, '#22d3ee', 10);
+          Sfx.playSelect(selectedNodes.length - 1);
+
+          const currentVal = evaluateSelection(selectedNodes);
+
+          if (currentVal === target && selectedNodes.length >= 2) {
+            if (window.ToenowTutorials?.isActive('add-up')) {
+              coreStatusText = 'STABLE';
+              Sfx.playValidBoom(selectedNodes.length);
+              selectedNodes.forEach(sn => spawnNodeSparkBurst(sn.x, sn.y, '#67e8f9', 18));
+              coreFlashTimer = 0.35;
+              rebuildAccessibleNodeButtons();
+              updateHUD();
+              window.ToenowTutorials.complete('add-up');
+              return;
+            }
+            // EXACT MATCH!
+            if (window.ToenowAnimals) window.ToenowAnimals.feedback('add-up', true);
+            supplyDeliveryUntil = performance.now() + 800;
+            const usedCount = selectedNodes.length;
+
+            // Score & Time Rules:
+            // - 2 nodes: +0s, 1x score, no extra subtext
+            // - 3 nodes: +5s, 2x score
+            // - 4+ nodes: +10s, 3x score
+            const chainMult = getChainMultiplier(usedCount);
+            const refundSecs = calculateTimeRefund(usedCount);
+            const basePoints = 100 + wave * 20;
+            const pointsEarned = Math.round(basePoints * chainMult);
+
+            score += pointsEarned;
+            wavesStabilizedThisRun += 1;
+
+            if (!isPracticeMode && score > bestScore) {
+              bestScore = score;
+              syncMetaUI();
+            }
+
+            if (refundSecs > 0) {
+              timeLeft = Math.min(MAX_BANKED_TIME, timeLeft + refundSecs);
+              ghostTimeLeft = Math.max(ghostTimeLeft, timeLeft);
+            }
+
+            Sfx.playValidBoom(usedCount);
+
+            for (let i = 0; i < selectedNodes.length; i++) {
+              const sn = selectedNodes[i];
+              spawnNodeSparkBurst(sn.x, sn.y, '#67e8f9', usedCount >= 4 ? 32 : 18);
+            }
+
+            const shockColor = usedCount >= 4 ? '#fbbf24' : '#22d3ee';
+            triggerShockwave(
+              coreX,
+              coreY,
+              Math.max(width, height) * (usedCount >= 4 ? 0.65 : 0.45),
+              shockColor
+            );
+
+            hitstopTimer = usedCount >= 4 ? 0.07 : 0.04;
+            cameraTrauma = Math.min(1.0, cameraTrauma + (usedCount >= 4 ? 0.7 : 0.4));
+            coreFlashTimer = 0.35;
+
+            let subLabel = '';
+            if (usedCount === 3) {
+              subLabel = '2X SCORE · +5s';
+            } else if (usedCount >= 4) {
+              subLabel = '3X SCORE · +10s';
+            }
+
+            spawnCallout(
+              coreX,
+              coreY - coreRadius - 24,
+              '+' + pointsEarned,
+              subLabel,
+              shockColor
+            );
+
+            // Advance to next wave
+            spawnWaveNodes(wave + 1);
+          } else if (currentVal > target) {
+            // OVERSHOOT -> STEAM VENT & CLEAR!
+            if (window.ToenowAnimals) window.ToenowAnimals.feedback('add-up', false);
+            Sfx.playSteamVent();
+            spawnSteamPlume(coreX, coreY, coreRadius);
+            cameraTrauma = Math.min(1.0, cameraTrauma + 0.55);
+            steamAlertTimer = 0.6;
+            coreStatusText = 'OVERLOAD';
+
+            for (let i = 0; i < nodes.length; i++) {
+              if (nodes[i].selected) {
+                nodes[i].selected = false;
+                nodes[i].scaleX = 1.3;
+                nodes[i].scaleY = 0.72;
+                const dx = nodes[i].x - coreX;
+                const dy = nodes[i].y - coreY;
+                const dist = Math.hypot(dx, dy) || 1;
+                nodes[i].vx += (dx / dist) * 85;
+                nodes[i].vy += (dy / dist) * 85;
+              }
+            }
+            selectedNodes = [];
+            rebuildAccessibleNodeButtons();
+            updateHUD();
+          } else {
+            coreStatusText = 'LINKING';
+            rebuildAccessibleNodeButtons();
+            updateHUD();
+          }
+        }
+
+        function updateHUD() {
+          hudScoreEl.textContent = String(Math.round(score));
+          hudWaveEl.textContent = String(wave);
+          hudCoresEl.textContent = String(totalLifetimeCores + wavesStabilizedThisRun);
+
+          const secs = Math.max(0, Math.ceil(timeLeft));
+          const isCrit = state === 'playing' && timeLeft <= 10.0;
+
+          hudTimerEl.textContent = window.ToenowTutorials?.isActive('add-up') ? '∞' : secs + 's';
+          hudTimerEl.dataset.critical = isCrit ? 'true' : 'false';
+          hudTimerFillEl.dataset.critical = isCrit ? 'true' : 'false';
+          criticalVignette.dataset.active = isCrit ? 'true' : 'false';
+
+          const ratio = Math.max(0, Math.min(1, timeLeft / MAX_BANKED_TIME));
+          const ghostRatio = Math.max(ratio, Math.min(1, ghostTimeLeft / MAX_BANKED_TIME));
+          hudTimerFillEl.style.transform = 'scaleX(' + ratio.toFixed(3) + ')';
+          hudTimerGhostEl.style.transform = 'scaleX(' + ghostRatio.toFixed(3) + ')';
+        }
+
+        // --- Coordinate Conversion & Hit Testing ---
+        function screenToWorld(clientX, clientY) {
+          const rect = canvas.getBoundingClientRect();
+          return {
+            x: clientX - rect.left,
+            y: clientY - rect.top,
+          };
+        }
+
+        function findNodeAt(wx, wy) {
+          let closest = null;
+          let minDist = Infinity;
+          for (let i = 0; i < nodes.length; i++) {
+            const n = nodes[i];
+            const d = Math.hypot(wx - n.x, wy - n.y);
+            if (d <= n.radius + 8 && d < minDist) {
+              minDist = d;
+              closest = n;
+            }
+          }
+          return closest;
+        }
+
+        function handleCanvasPointer(clientX, clientY) {
+          const pt = screenToWorld(clientX, clientY);
+          pointerX = pt.x;
+          pointerY = pt.y;
+          hoveredNode = findNodeAt(pt.x, pt.y);
+          if (state !== 'playing') return;
+
+          if (hoveredNode) {
+            toggleNodeSelection(hoveredNode);
+          } else {
+            const distToCore = Math.hypot(pt.x - coreX, pt.y - coreY);
+            if (distToCore <= coreRadius && selectedNodes.length > 0) {
+              clearCurrentSelection(true);
+            }
+          }
+        }
+
+        // Use one input stream: touch can emit a compatibility mousedown on
+        // release, well after pointerdown, which would toggle the same bag twice.
+        const canvasPressEvent = typeof window.PointerEvent === 'function' ? 'pointerdown' : 'mousedown';
+        canvas.addEventListener(canvasPressEvent, function (e) {
+          handleCanvasPointer(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('pointermove', function (e) {
+          const pt = screenToWorld(e.clientX, e.clientY);
+          pointerX = pt.x;
+          pointerY = pt.y;
+          hoveredNode = findNodeAt(pt.x, pt.y);
+        });
+
+        // --- Keyboard Shortcuts ---
+        const pressedKeys = new Set();
+        window.addEventListener('keydown', function (e) {
+          if (pressedKeys.has(e.code)) return;
+          pressedKeys.add(e.code);
+
+          if (state === 'title' || state === 'gameover') {
+            if (e.code === 'Enter' || e.code === 'Space') {
+              e.preventDefault();
+              startNewGame();
+            }
+            return;
+          }
+
+          if (e.code === 'KeyP' || e.code === 'Escape') {
+            e.preventDefault();
+            if (state === 'playing') {
+              pauseScoreEl.textContent = String(Math.round(score));
+              pauseWaveEl.textContent = String(wave);
+              setGameState('paused');
+            } else if (state === 'paused') {
+              setGameState('playing');
+            }
+            return;
+          }
+
+          if (e.code === 'KeyM') {
+            e.preventDefault();
+            toggleMuteButton();
+            return;
+          }
+
+          if (e.code === 'KeyR' && (state === 'playing' || state === 'paused')) {
+            e.preventDefault();
+            startNewGame();
+            return;
+          }
+
+          if (state === 'playing') {
+            if (e.code === 'Space' || e.code === 'Backspace') {
+              e.preventDefault();
+              clearCurrentSelection(true);
+              return;
+            }
+            if (e.code.startsWith('Digit') || e.code.startsWith('Numpad')) {
+              const num = parseInt(e.code.replace('Digit', '').replace('Numpad', ''), 10);
+              if (num >= 1 && num <= nodes.length) {
+                e.preventDefault();
+                toggleNodeSelection(nodes[num - 1]);
+              }
+            }
+          }
+        });
+
+        window.addEventListener('keyup', function (e) {
+          pressedKeys.delete(e.code);
+        });
+
+        window.addEventListener('blur', function () {
+          pressedKeys.clear();
+        });
+
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden) pressedKeys.clear();
+        });
+
+        function toggleMuteButton() {
+          const isMuted = Sfx.toggleMute();
+          const svg = document.getElementById('svg-mute-icon');
+          if (isMuted) {
+            svg.innerHTML =
+              '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" />';
+          } else {
+            svg.innerHTML =
+              '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14" />';
+          }
+        }
+
+        // UI Buttons
+        document.getElementById('btn-start-game').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          startNewGame();
+        });
+        document.getElementById('btn-clear-selection').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          clearCurrentSelection(true);
+        });
+        document.getElementById('btn-mute').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          toggleMuteButton();
+        });
+        document.getElementById('btn-pause').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          if (state === 'playing') {
+            pauseScoreEl.textContent = String(Math.round(score));
+            pauseWaveEl.textContent = String(wave);
+            setGameState('paused');
+          }
+        });
+        document.getElementById('btn-restart-hud').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          startNewGame();
+        });
+        document.getElementById('btn-resume').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          setGameState('playing');
+        });
+        document.getElementById('btn-pause-restart').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          startNewGame();
+        });
+        document.getElementById('btn-pause-title').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          setGameState('title');
+          spawnWaveNodes(1);
+        });
+
+        document.getElementById('btn-retry').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          startNewGame();
+        });
+        document.getElementById('btn-gameover-title').addEventListener('click', function (e) {
+          e.currentTarget.blur();
+          setGameState('title');
+          spawnWaveNodes(1);
+        });
+
+        // --- Simulation Physics Update (Constant Normal Speed) ---
+        function updateSimulation(rawDt) {
+          const dt = Math.min(rawDt, 0.05);
+          worldTime += dt;
+
+          cameraTrauma = Math.max(0, cameraTrauma - dt * 1.85);
+          steamAlertTimer = Math.max(0, steamAlertTimer - dt);
+          coreFlashTimer = Math.max(0, coreFlashTimer - dt);
+
+          for (let i = 0; i < MAX_PARTICLES; i++) {
+            const p = particlePool[i];
+            if (!p.active) continue;
+            p.life -= dt;
+            if (p.life <= 0) {
+              p.active = false;
+              continue;
+            }
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.vx *= p.isSteam ? 0.94 : 0.96;
+            p.vy *= p.isSteam ? 0.94 : 0.96;
+            if (p.isSteam) {
+              p.radius += dt * 18;
+            }
+          }
+
+          for (let i = 0; i < MAX_SHOCKWAVES; i++) {
+            const sw = shockwaves[i];
+            if (!sw.active) continue;
+            sw.life -= dt;
+            if (sw.life <= 0) {
+              sw.active = false;
+              continue;
+            }
+            const progress = 1 - sw.life / sw.maxLife;
+            sw.radius = 45 + (sw.maxRadius - 45) * (1 - Math.pow(1 - progress, 3));
+          }
+
+          for (let i = 0; i < MAX_CALLOUTS; i++) {
+            const fc = floatingCallouts[i];
+            if (!fc.active) continue;
+            fc.life -= dt;
+            if (fc.life <= 0) {
+              fc.active = false;
+              continue;
+            }
+            fc.y -= dt * 26;
+          }
+
+          if (state === 'paused' || state === 'gameover') return;
+
+          if (hitstopTimer > 0) {
+            hitstopTimer = Math.max(0, hitstopTimer - dt);
+            return;
+          }
+
+          if (state === 'playing' && !window.ToenowTutorials?.isActive('add-up')) {
+            timeLeft = Math.max(0, timeLeft - dt);
+
+            if (ghostTimeLeft > timeLeft) {
+              ghostTimeLeft = Math.max(timeLeft, ghostTimeLeft - dt * 4.5);
+            }
+            if (timeLeft <= 0) {
+              triggerGameOver();
+              return;
+            }
+
+            updateHUD();
+          }
+
+          // Node physics (Constant Normal Drift Speed = 1.0x)
+          const isCompact = width < 820;
+          const topSafeY = isCompact ? 110 : 88;
+          const bottomSafeY = height - 24;
+          const leftSafeX = 18;
+          const rightSafeX = width - 18;
+          const coreClearance = coreRadius + (isCompact ? 18 : 24);
+
+          for (let i = 0; i < nodes.length; i++) {
+            const n = nodes[i];
+            n.scaleX += (1 - n.scaleX) * Math.min(1, dt * 14);
+            n.scaleY += (1 - n.scaleY) * Math.min(1, dt * 14);
+            n.flash = Math.max(0, n.flash - dt * 3.2);
+
+            if (window.ToenowTutorials?.isActive('add-up')) {
+              n.x = Math.max(leftSafeX + n.radius, Math.min(rightSafeX - n.radius, n.x));
+              n.y = Math.max(topSafeY + n.radius, Math.min(bottomSafeY - n.radius, n.y));
+              continue;
+            }
+
+            const bobX = Math.cos(worldTime * 1.4 + n.phase) * 5;
+            const bobY = Math.sin(worldTime * 1.7 + n.phase) * 5;
+            n.x += (n.vx + bobX) * dt;
+            n.y += (n.vy + bobY) * dt;
+
+            const spd = Math.hypot(n.vx, n.vy);
+            const maxSpd = 38;
+            const minSpd = 14;
+            if (spd > maxSpd) {
+              n.vx = (n.vx / spd) * maxSpd;
+              n.vy = (n.vy / spd) * maxSpd;
+            } else if (spd < minSpd && spd > 0.001) {
+              n.vx = (n.vx / spd) * minSpd;
+              n.vy = (n.vy / spd) * minSpd;
+            }
+
+            if (n.x - n.radius < leftSafeX) {
+              n.x = leftSafeX + n.radius;
+              n.vx = Math.abs(n.vx);
+            } else if (n.x + n.radius > rightSafeX) {
+              n.x = rightSafeX - n.radius;
+              n.vx = -Math.abs(n.vx);
+            }
+
+            if (n.y - n.radius < topSafeY) {
+              n.y = topSafeY + n.radius;
+              n.vy = Math.abs(n.vy);
+            } else if (n.y + n.radius > bottomSafeY) {
+              n.y = bottomSafeY - n.radius;
+              n.vy = -Math.abs(n.vy);
+            }
+
+            const dxCore = n.x - coreX;
+            const dyCore = n.y - coreY;
+            const distCore = Math.hypot(dxCore, dyCore) || 1;
+            const minDistCore = coreClearance + n.radius;
+            if (distCore < minDistCore) {
+              const nx = dxCore / distCore;
+              const ny = dyCore / distCore;
+              const overlap = minDistCore - distCore;
+              n.x += nx * overlap;
+              n.y += ny * overlap;
+              const dot = n.vx * nx + n.vy * ny;
+              if (dot < 0) {
+                n.vx -= 1.8 * dot * nx;
+                n.vy -= 1.8 * dot * ny;
+              }
+            }
+          }
+
+          // Node collisions
+          for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+              const a = nodes[i];
+              const b = nodes[j];
+              const dx = b.x - a.x;
+              const dy = b.y - a.y;
+              const dist = Math.hypot(dx, dy) || 1;
+              const minDist = a.radius + b.radius + 10;
+              if (dist < minDist) {
+                const nx = dx / dist;
+                const ny = dy / dist;
+                const overlap = (minDist - dist) * 0.5;
+                a.x -= nx * overlap;
+                a.y -= ny * overlap;
+                b.x += nx * overlap;
+                b.y += ny * overlap;
+
+                const dvx = b.vx - a.vx;
+                const dvy = b.vy - a.vy;
+                const relDot = dvx * nx + dvy * ny;
+                if (relDot < 0) {
+                  const impulse = relDot * 0.85;
+                  a.vx += nx * impulse;
+                  a.vy += ny * impulse;
+                  b.vx -= nx * impulse;
+                  b.vy -= ny * impulse;
+                }
+              }
+            }
+          }
+        }
+
+        // --- Canvas 2D Renderer ---
+        let supplyDeliveryUntil = 0;
+        function drawNutBag(ctx, r, selected, hovered) {
+          ctx.beginPath();ctx.moveTo(-r*.43,-r*.72);ctx.lineTo(r*.43,-r*.72);
+          ctx.bezierCurveTo(r*.18,-r*.32,r*1.1,-r*.1,r*.83,r*.62);
+          ctx.quadraticCurveTo(0,r*1.04,-r*.83,r*.62);
+          ctx.bezierCurveTo(-r*1.1,-r*.1,-r*.18,-r*.32,-r*.43,-r*.72);
+          ctx.closePath();ctx.fillStyle=selected?'#c7b982':'#ead8ac';ctx.fill();
+          ctx.strokeStyle=selected?'#448365':'#9b7752';ctx.lineWidth=selected||hovered?4:2;ctx.stroke();
+          ctx.beginPath();ctx.moveTo(-r*.44,-r*.49);ctx.lineTo(r*.44,-r*.49);ctx.stroke();
+          ctx.fillStyle='#fff8df';ctx.beginPath();ctx.arc(0,2,r*.5,0,Math.PI*2);ctx.fill();
+        }
+
+        function renderArena() {
+          ctx.save();
+          ctx.fillStyle = '#e5ddc7';
+          ctx.fillRect(0, 0, width, height);
+
+          // In title screen state, hide the game arena behind the title card
+          if (state === 'title') {
+            ctx.restore();
+            return;
+          }
+
+          if (cameraTrauma > 0.001) {
+            const shakeMag = cameraTrauma * cameraTrauma * 16;
+            const sx = (Math.random() * 2 - 1) * shakeMag;
+            const sy = (Math.random() * 2 - 1) * shakeMag;
+            ctx.translate(sx, sy);
+          }
+
+          const parallaxX = state === 'title' ? ((pointerX - width * 0.5) / width) * 18 : 0;
+          const parallaxY = state === 'title' ? ((pointerY - height * 0.5) / height) * 18 : 0;
+          const cx = coreX + parallaxX;
+          const cy = coreY + parallaxY;
+
+          // Depot floorboards frame the moving supplies without obscuring labels.
+          ctx.strokeStyle='rgba(140,107,70,.13)';ctx.lineWidth=2;
+          for(let y=0;y<height;y+=75){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(width,y);ctx.stroke();}
+
+          // 2. Real-time Laser Beams between Selected Nodes
+          if (selectedNodes.length >= 2) {
+            ctx.save();
+            for (let i = 0; i < selectedNodes.length - 1; i++) {
+              const nA = selectedNodes[i];
+              const nB = selectedNodes[i + 1];
+
+              ctx.strokeStyle = selectedNodes.length >= 4 ? '#fef08a' : '#22d3ee';
+              ctx.globalAlpha = 0.5;
+              ctx.lineWidth = selectedNodes.length >= 4 ? 8 : 5;
+              ctx.beginPath();
+              ctx.moveTo(nA.x, nA.y);
+              ctx.lineTo(nB.x, nB.y);
+              ctx.stroke();
+
+              ctx.globalAlpha = 0.95;
+              ctx.lineWidth = selectedNodes.length >= 4 ? 3 : 2;
+              ctx.strokeStyle = '#ffffff';
+              ctx.beginPath();
+              ctx.moveTo(nA.x, nA.y);
+              ctx.lineTo(nB.x, nB.y);
+              ctx.stroke();
+
+              if (selectedNodes.length >= 4) {
+                ctx.strokeStyle = '#fef08a';
+                ctx.lineWidth = 1.6;
+                ctx.beginPath();
+                ctx.moveTo(nA.x, nA.y);
+                const segs = 4;
+                const ddx = nB.x - nA.x;
+                const ddy = nB.y - nA.y;
+                const perpX = -ddy / (Math.hypot(ddx, ddy) || 1);
+                const perpY = ddx / (Math.hypot(ddx, ddy) || 1);
+                for (let s = 1; s < segs; s++) {
+                  const t = s / segs;
+                  const jitt = Math.sin(worldTime * 32 + s * 3.1 + i) * 9;
+                  ctx.lineTo(nA.x + ddx * t + perpX * jitt, nA.y + ddy * t + perpY * jitt);
+                }
+                ctx.lineTo(nB.x, nB.y);
+                ctx.stroke();
+              }
+            }
+            ctx.restore();
+          }
+
+          // 3. Energy Tethers to Central Core
+          const currentSum = evaluateSelection(selectedNodes);
+          for (let i = 0; i < selectedNodes.length; i++) {
+            const sn = selectedNodes[i];
+
+            ctx.save();
+            ctx.strokeStyle = '#22d3ee';
+            ctx.globalAlpha = 0.38;
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            ctx.moveTo(sn.x, sn.y);
+            ctx.lineTo(cx, cy);
+            ctx.stroke();
+
+            ctx.globalAlpha = 0.92;
+            ctx.lineWidth = 2.2;
+            ctx.strokeStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.moveTo(sn.x, sn.y);
+            const segs = 5;
+            const dx = cx - sn.x;
+            const dy = cy - sn.y;
+            const perpX = -dy / (Math.hypot(dx, dy) || 1);
+            const perpY = dx / (Math.hypot(dx, dy) || 1);
+            for (let s = 1; s < segs; s++) {
+              const t = s / segs;
+              const jitt = Math.sin(worldTime * 24 + s * 2.2 + i) * 5;
+              ctx.lineTo(sn.x + dx * t + perpX * jitt, sn.y + dy * t + perpY * jitt);
+            }
+            ctx.lineTo(cx, cy);
+            ctx.stroke();
+
+            const pulseT = (worldTime * 2.8 + i * 0.25) % 1;
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(sn.x + dx * pulseT, sn.y + dy * pulseT, 3.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+
+          // 4. Shockwaves
+          for (let i = 0; i < MAX_SHOCKWAVES; i++) {
+            const sw = shockwaves[i];
+            if (!sw.active) continue;
+            const alpha = Math.max(0, sw.life / sw.maxLife);
+            ctx.save();
+            ctx.strokeStyle = sw.color;
+            ctx.globalAlpha = alpha * 0.85;
+            ctx.lineWidth = 3 + (1 - alpha) * 8;
+            ctx.beginPath();
+            ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          // 7. Particles
+          for (let i = 0; i < MAX_PARTICLES; i++) {
+            const p = particlePool[i];
+            if (!p.active) continue;
+            const alpha = Math.max(0, p.life / p.maxLife);
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+
+
+          // 5. Central Reactor Core
+          ctx.save();
+          const coreAccent =
+            steamAlertTimer > 0
+              ? '#f43f5e'
+              : selectedNodes.length > 0
+                ? '#67e8f9'
+                : '#22d3ee';
+
+          // Wooden order board: the requested total remains at the same position.
+          ctx.fillStyle = '#70523d';ctx.strokeStyle='#b69368';ctx.lineWidth=6;
+          ctx.beginPath();ctx.rect(cx-coreRadius,cy-coreRadius,coreRadius*2,coreRadius*2);ctx.fill();ctx.stroke();
+          if (window.ToenowAnimals) {
+            const delivered = performance.now() < supplyDeliveryUntil;
+            window.ToenowAnimals.drawAnimal(ctx,'squirrel',cx+coreRadius*.83,cy-coreRadius*.83-(delivered?8:0),coreRadius*.7);
+          }
+
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          const monoFont = getComputedStyle(document.documentElement).getPropertyValue('--font-mono');
+
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '700 9.5px ' + monoFont;
+          ctx.fillText(window.ToenowI18n ? window.ToenowI18n.t('Supply order') : 'Supply order', cx, cy - coreRadius * 0.42);
+
+          ctx.fillStyle = '#f8fafc';
+          const targetFontPx = Math.round(coreRadius * 0.56);
+          ctx.font = '800 ' + targetFontPx + 'px ' + monoFont;
+          ctx.fillText(String(target), cx, cy + 2);
+
+          ctx.fillStyle = selectedNodes.length > 0 ? coreAccent : '#64748b';
+          ctx.font = '700 10px ' + monoFont;
+          const sumLabel =
+            selectedNodes.length > 0 ? 'SUM: ' + currentSum : coreStatusText;
+          ctx.fillText(sumLabel, cx, cy + coreRadius * 0.46);
+          ctx.restore();
+
+          // 6. Floating Plasma Battery Nodes (Pure Cyan Addition Cells)
+          for (let i = 0; i < nodes.length; i++) {
+            const n = nodes[i];
+            ctx.save();
+            ctx.translate(n.x + parallaxX * 0.4, n.y + parallaxY * 0.4);
+            ctx.scale(n.scaleX, n.scaleY);
+
+            drawNutBag(ctx, n.radius, n.selected, hoveredNode === n);
+
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#4d3c29';
+            const valFontPx = Math.round(n.radius * 0.54);
+            ctx.font = '700 ' + valFontPx + 'px ' + monoFont;
+            ctx.fillText(n.label, 0, 2);
+
+            ctx.fillStyle = n.selected ? '#276448' : '#6e5035';
+            ctx.font = '600 8.5px ' + monoFont;
+            ctx.fillText('[' + n.id + ']', 0, -n.radius * 0.54);
+
+            ctx.restore();
+          }
+
+          // 8. Floating Callouts
+          for (let i = 0; i < MAX_CALLOUTS; i++) {
+            const fc = floatingCallouts[i];
+            if (!fc.active) continue;
+            const alpha = Math.max(0, Math.min(1, (fc.life / fc.maxLife) * 1.4));
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = '800 17px ' + monoFont;
+            ctx.fillStyle = '#e5ddc7';
+            ctx.fillText(fc.text, fc.x + 1, fc.y + 1);
+            ctx.fillStyle = fc.color;
+            ctx.fillText(fc.text, fc.x, fc.y);
+
+            if (fc.subtext) {
+              ctx.font = '700 11.5px ' + monoFont;
+              ctx.fillStyle = '#e2e8f0';
+              ctx.fillText(fc.subtext, fc.x, fc.y + 18);
+            }
+            ctx.restore();
+          }
+
+          ctx.restore();
+        }
+
+        // Test & inspection hook
+        window.__overclockReactor = {
+          getState: function () {
+            return {
+              state: state,
+              score: score,
+              bestScore: bestScore,
+              wave: wave,
+              target: target,
+              timeLeft: timeLeft,
+              selectedSum: evaluateSelection(selectedNodes),
+              nodes: nodes.map(function (n) {
+                return {
+                  id: n.id,
+                  label: n.label,
+                  op: n.op,
+                  value: n.value,
+                  selected: n.selected,
+                  x: Math.round(n.x),
+                  y: Math.round(n.y),
+                };
+              }),
+            };
+          },
+          startNewGame: startNewGame,
+          triggerGameOver: triggerGameOver,
+          setWave: function (w) {
+            wave = w;
+            spawnWaveNodes(w);
+          },
+        };
+
+        window.ToenowTutorials?.register('add-up', {
+          start() {
+            startNewGame(1, true);
+            target = 5;
+            nodes = nodes.slice(0, 3);
+            nodes.forEach((node, i) => {
+              const orbit = computeNodeOrbitPosition(i, 3);
+              node.x = orbit.x;
+              node.y = Math.max((width < 820 ? 110 : 88) + orbit.radius, Math.min(height - 24 - orbit.radius, orbit.y));
+              node.radius = orbit.radius;
+              node.value = [2, 3, 7][i];
+              node.label = String(node.value);
+              node.vx = node.vy = 0;
+              node.selected = false;
+            });
+            selectedNodes = [];
+            rebuildAccessibleNodeButtons();
+            updateHUD();
+          },
+          stop() {
+            isPracticeMode = false;
+            score = wavesStabilizedThisRun = 0;
+            selectedNodes = [];
+            nodes = [];
+            rebuildAccessibleNodeButtons();
+            setGameState('title');
+          },
+          getGuide() {
+            const node = nodes.find(n => n.value === 2 && !n.selected) || nodes.find(n => n.value === 3 && !n.selected);
+            if (!node) return { done: true };
+            const rect = canvas.getBoundingClientRect();
+            return { prompt: 'Tap 2, then 3. Their sum matches the target 5.', rect: {
+              x: rect.left + node.x - node.radius, y: rect.top + node.y - node.radius,
+              width: node.radius * 2, height: node.radius * 2
+            }};
+          }
+        });
+
+        syncMetaUI();
+        spawnWaveNodes(1);
+        const params = new URLSearchParams(window.location.search);
+        if (typeof ToenowLevels !== 'undefined' && ToenowLevels.setupPracticeMode) {
+          ToenowLevels.setupPracticeMode({
+            container: '#title-screen .unified-title-card',
+            onStartGame: (startWave, isPractice) => {
+              startNewGame(startWave, isPractice);
+            }
+          });
+        }
+        if (params.get('autostart') === '1') {
+          startNewGame();
+        } else {
+          setGameState('title');
+        }
+
+        let lastFrameTime = performance.now();
+        function frame(now) {
+          const rawDt = Math.max(0.001, (now - lastFrameTime) / 1000);
+          lastFrameTime = now;
+          updateSimulation(rawDt);
+          renderArena();
+
+          if (IS_HEADLESS) {
+            setTimeout(function () {
+              requestAnimationFrame(frame);
+            }, 50);
+          } else {
+            requestAnimationFrame(frame);
+          }
+        }
+        requestAnimationFrame(frame);
+      })();
+    </script>
+  </body>
+</html>

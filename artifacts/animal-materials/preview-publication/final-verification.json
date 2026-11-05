@@ -1,0 +1,26 @@
+{
+  "verifiedAt": "2026-10-27T02:35:32.901Z",
+  "previewSHA": "ca7599653550ee3f11a6a9df9874fdf59cd9bb9e",
+  "mainSHA": "c1e2572b0e58a69909823058389173b86fb7c36c",
+  "pagesSource": {
+    "branch": "preview",
+    "path": "/"
+  },
+  "pagesBuild": "built",
+  "pagesBuildSHA": "ca7599653550ee3f11a6a9df9874fdf59cd9bb9e",
+  "cloudflarePreviewSetting": "none",
+  "cloudflareProductionUnchanged": true,
+  "cloudflarePushRecord": {
+    "id": "7aca653f-cefe-49c1-beb7-9c5097e3c290",
+    "isSkipped": true,
+    "skipReason": "preview_deployments_disabled",
+    "stagesStarted": 0
+  },
+  "liveBrowser": "PASS",
+  "unitTests": "197/197",
+  "sharedScreens": {
+    "standalone": 40,
+    "iframe": 10,
+    "practice": 10
+  }
+}

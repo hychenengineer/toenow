@@ -1,0 +1,88 @@
+/* Approved direction C: cool forest/water, warm settlements, parchment and gold. */
+body:has(#expedition:not([hidden])){
+  background:radial-gradient(ellipse at 30% 15%,#284b38 0,#152f28 48%,#0c211f 100%);
+  background-attachment:fixed;
+  height:auto;min-height:100vh;
+}
+html:has(#expedition:not([hidden])){background:#0c211f}
+body:has(#expedition:not([hidden])) .topbar{
+  background:linear-gradient(180deg,#50341f,#2e2117 92%,#8f6731);
+  color:#f3dfb2;border-bottom:2px solid #b38b4e;box-shadow:0 4px 14px #0005;
+}
+body:has(#expedition:not([hidden])) .topbar span{color:#d5bc83}
+#expedition{max-width:1500px;padding:27px 30px 38px;color:#3c2c1b}
+.expedition-heading{color:#ffedc4;gap:24px}
+.expedition-heading .eyebrow{color:#c7c98b;letter-spacing:3px}
+.expedition-heading h1{font-family:Georgia,"Microsoft JhengHei",serif;font-size:37px;letter-spacing:1px;color:#ffedc4;text-shadow:0 2px 4px #05160e;margin-top:9px}
+.expedition-heading p{color:#b5cbb4;font-size:12px}
+.exp-resources{gap:9px;min-width:270px}
+.exp-resources>span{background:linear-gradient(#63452b,#362719);border:2px solid #bb8f4e;color:#f6e4b6;box-shadow:inset 0 0 0 2px #e7c07822,0 4px 9px #03170f66;border-radius:13px;padding:10px 15px}
+.exp-resources b{color:#fff4d5;font-size:21px}
+.exp-notice{background:linear-gradient(90deg,#eee0b6,#f6edce 55%,#e8d6a5);border:1px solid #b69a5c;border-left:5px solid #d2aa59;box-shadow:0 5px 15px #001b1729;color:#4b5330;font-size:12px;margin-bottom:18px;padding:12px 17px}
+.expedition-layout{grid-template-columns:minmax(0,1fr) 320px;gap:20px}
+.exp-map-card{border:3px solid #b28b4d;border-radius:19px;background:#37291d;box-shadow:0 0 0 3px #32271a,0 14px 32px #0006;overflow:hidden}
+.exp-map{
+  aspect-ratio:4/3;
+  background:#183f35 url('../../assets/animal-siege/kingdom-map-v1.webp') center/100% 100% no-repeat;
+}
+.exp-map::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 35px #06221a55;z-index:0}
+.exp-map .island-land,.exp-map .island-paths,.exp-map .map-tree,.exp-map .map-caption{display:none}
+.map-node{width:116px;height:112px;border-radius:30%;isolation:isolate;transition:filter .18s,background .18s;z-index:2}
+.map-node>img{visibility:hidden;width:110px;height:83px;filter:none}
+.map-node:hover,.map-node:focus-visible{background:radial-gradient(ellipse,#ffe9a83d,transparent 70%);filter:brightness(1.12)}
+.map-node:focus-visible{outline:3px solid #ffe6a2;outline-offset:2px}
+.map-node.chosen{background:radial-gradient(ellipse,#ffe5a53d 0,transparent 72%)}
+.map-node>span{font-size:11px;color:#fff2cd;background:linear-gradient(#37513a,#203c2c);border:1px solid #d1a85f;border-radius:9px;padding:5px 10px;box-shadow:0 2px 0 #624b2a,0 4px 9px #0a251ca8;text-shadow:0 1px #162619}
+.map-node.chosen>span{background:linear-gradient(#79562a,#4e351c);border-color:#ffe0a0;color:#fff6d8;box-shadow:0 0 0 2px #eed08b36,0 3px 10px #041c17}
+.map-node>b{background:linear-gradient(#e5bb68,#9f642b);border:2px solid #ffecb9;color:#492d12;right:6px;top:5px;width:26px;height:30px;border-radius:7px 7px 11px 11px;font-size:16px;line-height:25px;box-shadow:0 2px 5px #0c271ba6}
+.map-node.locked>b{background:#39473f;color:#f0d69b;border-color:#a5a47b}
+.map-node.locked>span{background:linear-gradient(#465448,#2c3d32);color:#dedcc5;border-color:#adad8b}
+.map-node.captured>b{background:#3b7145;color:#fff0b8;border-color:#e6c476}
+@media(min-width:1051px){.map-node:not(.foggy):not(.revealed){width:17%;height:22%;max-width:180px;max-height:155px}}
+.trail-fog,.trail-find{width:46px;height:46px;margin:10px 0;background:radial-gradient(circle,#364e47e8,#18382ed9);border:2px solid #dcc484;color:#fff0c7;box-shadow:0 0 16px 7px #d9e7dc60,0 4px 9px #05241e99;font-size:27px;font-weight:600;line-height:1}
+.trail-find{color:#ffe29b;background:radial-gradient(circle,#697143,#304b35);border-style:solid}
+.trail-find img{width:37px;height:39px;object-fit:contain}
+.map-node.claimed{opacity:1}
+.map-node.claimed .trail-find{box-shadow:0 2px 7px #0b271f88;border-color:#a3b48a;background:#234c39;color:#e8edc1}
+.map-node.claimed>span{opacity:.82}
+.kingdom-party{position:absolute;left:28%;top:48%;display:flex;align-items:flex-end;gap:2px;pointer-events:none;z-index:1;filter:drop-shadow(0 5px 3px #11251999)}
+.kingdom-party img{height:52px;width:42px;object-fit:contain}
+.kingdom-party::before{content:"⚑";font-size:34px;color:#ffdf86;align-self:flex-start;margin-right:-8px;text-shadow:1px 2px #2b4f32}
+.travel-army{background:linear-gradient(#503923,#2e251c);border-top:2px solid #b79251;color:#f6e4b9;margin:0;padding:15px 14px 8px;gap:10px}
+.travel-squad{font-size:11px;gap:7px}
+.travel-squad img{width:41px;height:43px;border:1px solid #c3a060;border-radius:50%;background:radial-gradient(#bbad72,#6b7047)}
+.travel-squad strong{color:#ffdf8b;font-size:20px}.travel-squad small{color:#ffdc83}
+.map-footnote{background:#2e251c;color:#c8c2a0;font-size:10px;padding:3px 12px 12px}
+.expedition-detail{position:relative;border:6px solid #664728;border-radius:20px;padding:23px 20px 20px;background:radial-gradient(ellipse at 65% 10%,#fff5d6,#eddbb1 85%);outline:2px solid #bc9656;outline-offset:-3px;box-shadow:0 0 0 2px #2d241a,0 12px 28px #041e1677,inset 0 0 24px #af82432e}
+.expedition-detail::before{content:"❧";position:absolute;top:6px;right:14px;color:#9f7b3c;font-size:28px;line-height:1;pointer-events:none}
+.expedition-detail .eyebrow{color:#81632c;font-size:10px;letter-spacing:2px}
+.expedition-detail h2{font:600 28px Georgia,"Microsoft JhengHei",serif;color:#3d2f1c;margin:10px 0;border-bottom:1px solid #ba9b5c;padding-bottom:12px}
+.expedition-detail p{font-size:12px;color:#655b3c;line-height:1.85;margin:12px 0}
+.recruit-card{padding:15px 0;border-bottom:1px solid #bfa36a}
+.recruit-title{gap:10px}.recruit-title img{width:59px;height:64px;object-fit:contain;border:2px solid #b08d4a;border-radius:50%;background:radial-gradient(#c6c595,#6d8257);box-shadow:0 2px 0 #75562d33}
+.recruit-title strong{font-size:12px;color:#3e351f}.recruit-title small{color:#77603a;font-size:10px}.recruit-title>b{font:600 28px Georgia,serif;color:#4d3c1b}
+.recruit-actions{gap:8px}.recruit-actions .exp-action{font-size:14px;min-height:37px;margin-top:9px}
+.exp-action{background:linear-gradient(#5f7949,#355639);color:#fff0c7;border:1px solid #d0b06b;border-radius:9px;box-shadow:inset 0 0 0 2px #fff0b918,0 2px 0 #7b5b2d55;font-weight:600}
+.exp-action:hover:not(:disabled){background:linear-gradient(#789257,#446c42);border-color:#ffe5a2}
+.exp-action.primary{background:linear-gradient(#a77b35,#78501e);color:#fff3d0;border-color:#eac984;box-shadow:inset 0 0 0 2px #f8dc9f33,0 3px 0 #4d351b55}
+.exp-action:focus-visible{outline:3px solid #6b4921;outline-offset:3px}
+.exp-action:disabled{opacity:.6;box-shadow:none}
+.upgrade-line{gap:7px;margin-top:10px}.upgrade-line small{color:#705c36;font-size:10px}.upgrade-line .exp-action{background:linear-gradient(#e3d3a5,#cdb67f);color:#51462e;border-color:#ad9257;font-weight:500}
+.scouting-art{height:140px;filter:drop-shadow(0 4px 3px #73562c22)}
+.scouted-army>div{background:#ddcb9e80;border:1px solid #cbb27a;color:#4e4026}.scouted-army b{color:#725020}.fort-loot{color:#7a5727;font-weight:600}.captured-note{color:#3d632d!important}
+@media(max-width:1050px){
+  #expedition{padding:25px 20px 32px}.expedition-layout{grid-template-columns:minmax(0,1fr) 290px;gap:17px}.expedition-heading h1{font-size:31px}.exp-resources{min-width:230px}.exp-resources>span{padding:9px 11px}
+  .map-node{width:90px;height:96px}.map-node>img{width:87px;height:69px}.map-node>span{font-size:10px;padding:4px 7px}.map-node>b{width:23px;height:26px;line-height:21px;font-size:14px;right:0}.kingdom-party img{height:41px;width:32px}.kingdom-party::before{font-size:27px}.travel-squad span{display:none}.expedition-detail{padding:21px 17px 17px}
+}
+@media(max-width:780px){
+  .expedition-layout{grid-template-columns:minmax(0,1fr)}.expedition-heading{display:block}.exp-resources{justify-content:flex-start;margin-top:17px}.travel-squad span{display:block}.exp-map{aspect-ratio:4/3}.expedition-detail{padding:22px}.map-node{width:104px;height:105px}.map-node>img{width:99px;height:78px}.map-node>span{font-size:11px}
+}
+@media(max-width:520px){
+  #expedition{padding:22px 11px 30px}.expedition-heading h1{font-size:29px;letter-spacing:0}.expedition-heading .eyebrow{font-size:9px;letter-spacing:2px}.expedition-heading p{font-size:11px;line-height:1.8}.exp-resources{gap:6px;margin-top:14px}.exp-resources>span{padding:7px 10px;font-size:10px;border-width:1px}.exp-resources b{font-size:17px}.exp-notice{font-size:11px;padding:10px 12px;margin-bottom:15px}.exp-map-card{border-width:2px;border-radius:14px}.expedition-layout{gap:17px}
+  .map-node{width:69px;height:75px}.map-node>img{width:65px;height:51px}.map-node>span{font-size:9px;padding:4px 5px;border-radius:6px}.map-node>b{width:19px;height:23px;line-height:18px;font-size:12px;top:0;right:0;border-width:1px}.trail-fog,.trail-find{width:31px;height:31px;margin:9px 0;font-size:21px;border-width:1px;box-shadow:0 0 10px 4px #d9e7dc66,0 3px 6px #05241eaa}.trail-find img{width:27px;height:28px}.kingdom-party{gap:0;left:26%;top:47%}.kingdom-party img{width:24px;height:33px}.kingdom-party::before{font-size:21px;margin-right:-5px}
+  .travel-army{padding:10px 7px 7px;gap:5px}.travel-squad{gap:4px;font-size:10px}.travel-squad img{width:29px;height:32px}.travel-squad span{font-size:9px}.travel-squad strong{font-size:16px}.map-footnote{font-size:9px;padding:4px 8px 10px;line-height:1.7}
+  .expedition-detail{border-width:5px;border-radius:17px;padding:20px 15px 15px}.expedition-detail h2{font-size:25px}.expedition-detail:has(.recruit-card){display:block}.expedition-detail p{font-size:11px}.recruit-card{padding:13px 0}.recruit-title{flex-wrap:nowrap;gap:10px}.recruit-title img{width:54px;height:58px}.recruit-title>div{min-width:0}.recruit-title strong{font-size:13px}.recruit-title small{font-size:10px}.recruit-title>b{font-size:27px}.recruit-actions{padding-left:64px;gap:8px;margin-top:-3px}.recruit-actions .exp-action{min-height:37px;font-size:14px}.upgrade-line{display:flex;padding-left:64px;margin-top:9px;gap:7px}.upgrade-line small{font-size:10px}.upgrade-line .exp-action{width:auto;margin:0;padding:7px 9px;font-size:10px;min-height:34px}
+}
+@media(max-width:360px){
+  .map-node{width:61px;height:71px}.map-node>img{width:58px;height:48px}.map-node>span{font-size:8px;padding:3px 4px}.expedition-heading h1{font-size:26px}.travel-squad span{display:none}.expedition-detail:has(.recruit-card){padding:19px 13px 13px}.upgrade-line,.recruit-actions{padding-left:0}
+}

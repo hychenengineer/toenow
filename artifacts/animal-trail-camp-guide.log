@@ -1,0 +1,4 @@
+PASS 1280 zh-Hant expedition: removed panel, full chain, real stats, upgrades, language, modal focus, draft and enemy pause, restart
+PASS 390 en battle: removed panel, full chain, real stats, upgrades, language, modal focus, draft and enemy pause, restart
+PASS 320 zh-Hant expedition: removed panel, full chain, real stats, upgrades, language, modal focus, draft and enemy pause, restart
+PASS iframe: handbook opens modally and closes inside the embedded game

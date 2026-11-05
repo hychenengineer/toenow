@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: source inspection follows local scripts and styles in page order without expanding shared dependencies
+ok 1 - source inspection follows local scripts and styles in page order without expanding shared dependencies
+  ---
+  duration_ms: 14.3162
+  ...
+# Subtest: extracted addition rules retain exact-sum solutions at every difficulty
+not ok 2 - extracted addition rules retain exact-sum solutions at every difficulty
+  ---
+  duration_ms: 2.0352
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\game-modules.test.cjs:29:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    11 !== 16
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 16
+  actual: 11
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\game-modules.test.cjs:34:14)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: extracted rules preserve valid boards, unique numeric choices and matching criteria
+not ok 3 - extracted rules preserve valid boards, unique numeric choices and matching criteria
+  ---
+  duration_ms: 9.153
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\game-modules.test.cjs:41:1'
+  failureType: 'testCodeFailure'
+  error: 'shapes.slice is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    Object.canonicalKey (C:\Users\HsinYuChen\source\repos\toenow\games\shadow-match\rules.js:164:25)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\game-modules.test.cjs:64:26)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: Spot Quick rules produce four distinct choices including the target across all five tiers
+ok 4 - Spot Quick rules produce four distinct choices including the target across all five tiers
+  ---
+  duration_ms: 23.1893
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 2
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 113.8681

@@ -1,0 +1,25 @@
+PASS bright/1790: both languages; row alignment and no page overflow
+PASS bright/1634: both languages; row alignment and no page overflow
+PASS bright/1440: both languages; row alignment and no page overflow
+PASS bright/1280: both languages; row alignment and no page overflow
+PASS bright/1100: both languages; row alignment and no page overflow
+PASS bright/768: both languages; row alignment and no page overflow
+PASS bright/390: both languages; row alignment and no page overflow
+PASS bright/320: both languages; row alignment and no page overflow
+PASS arena/1790: both languages; row alignment and no page overflow
+PASS arena/1634: both languages; row alignment and no page overflow
+PASS arena/1440: both languages; row alignment and no page overflow
+PASS arena/1280: both languages; row alignment and no page overflow
+PASS arena/1100: both languages; row alignment and no page overflow
+PASS arena/768: both languages; row alignment and no page overflow
+PASS arena/390: both languages; row alignment and no page overflow
+PASS arena/320: both languages; row alignment and no page overflow
+PASS calm/1790: both languages; row alignment and no page overflow
+PASS calm/1634: both languages; row alignment and no page overflow
+PASS calm/1440: both languages; row alignment and no page overflow
+PASS calm/1280: both languages; row alignment and no page overflow
+PASS calm/1100: both languages; row alignment and no page overflow
+PASS calm/768: both languages; row alignment and no page overflow
+PASS calm/390: both languages; row alignment and no page overflow
+PASS calm/320: both languages; row alignment and no page overflow
+PASS complete-state controls and new-visitor simplified header

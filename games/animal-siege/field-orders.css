@@ -1,0 +1,45 @@
+/* The scene owns the row. Orders travel with the selected squad. */
+#battle{width:100%;max-width:1500px;padding:24px 24px 30px}
+#battle .battle-layout{display:block}
+#battle .battlefield{width:100%;min-width:0}
+#battle .board-surround{overflow:hidden}
+#board .tile{overflow:visible}
+#board .unit-status{position:absolute;left:50%;top:0;transform:translateX(-50%);display:flex;gap:3px;align-items:center;white-space:nowrap;background:#173b2fef;border:1px solid #c1cd83;color:#f6f3c8;border-radius:6px;padding:2px 5px;z-index:5;font-size:11px;pointer-events:none}
+#board .unit-status i{font-style:normal}
+#board [data-action-state=acted] .unit-status{background:#454c42;color:#dbe0c9}
+#board [data-action-state=guarding] .unit-status{background:#325572;color:#eff8ff}
+#board [data-action-state=moved] .unit-status{background:#775326;color:#fff2c8}
+#board .unit-hp{position:absolute;bottom:7px;left:2px;font-size:10px;font-weight:700;padding:1px 4px;border-radius:4px;background:#163a2cde;color:#fff4ca;z-index:5;pointer-events:none}
+#board .unit-health{position:absolute;bottom:1px;left:4%;width:66%;height:4px;border-radius:4px;background:#402f25;overflow:hidden;box-shadow:0 0 0 1px #e4d5a580;z-index:5;pointer-events:none}
+#board .unit-health i{display:block;height:100%;background:#a2d26a}
+#board .enemy-unit .unit-health i{background:#ef936d}
+#board .unit-capability{position:absolute;top:22px;left:50%;transform:translateX(-50%);font-size:10px;color:#fff5cc;background:#193b2cc7;padding:1px 4px;border-radius:4px;white-space:nowrap;z-index:5;pointer-events:none}
+#unit-orders.battle-actions{position:absolute;right:auto;bottom:auto;z-index:12;width:max-content;max-width:calc(100% - 16px);max-height:none;margin:0;padding:6px;border:1px solid #e0ba6a;border-radius:10px;background:#193d30f5;color:#fff0c8;box-shadow:0 4px 12px #09281c66;display:block;overflow:visible}
+#unit-orders .selection{display:none}
+#unit-orders .selection strong{display:none}
+#unit-orders .move-confirmation{margin:0;display:flex;gap:5px}
+#unit-orders button{width:auto;min-height:36px;padding:7px 10px;font-size:12px;white-space:nowrap;border:1px solid #cab277;border-radius:7px;background:#f4e7be;color:#513c22}
+#unit-orders #confirm-move{background:#336c88;color:#fff8dd}
+#unit-orders #defend{width:100%;background:#385d42;color:#fff0c2}
+.field-turn-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0 4px;flex-wrap:wrap}
+.field-turn-controls #restart{display:inline-block;margin:0;padding:8px 0;font-size:12px;color:#d5c7a1}
+.field-turn-controls #remaining-orders{font-size:12px;color:#d7d8b6}
+#end-turn{position:fixed;right:20px;bottom:20px;z-index:25;min-height:44px;padding:11px 22px;background:linear-gradient(#a47a37,#78501f);color:#fff3ce;border:1px solid #efcc82;border-radius:9px;font-size:14px;font-weight:600;box-shadow:0 4px 16px #07271b88}
+#board .tile.spent{opacity:1}
+#board .tile.spent>img{opacity:.6;filter:grayscale(.45)}
+#action-hint{font-size:12px;color:#d2d5b6;margin:8px 0 0;line-height:1.6}
+.battle-confirm{width:min(450px,calc(100% - 28px));max-width:calc(100% - 28px);max-height:calc(100dvh - 28px);padding:0;margin:auto;border:2px solid #c49b54;border-radius:18px;background:#fff1ce;color:#543619;box-shadow:0 20px 80px #00160fcc;overflow:auto}
+.battle-confirm::backdrop{background:#061d16b8;backdrop-filter:blur(3px)}
+.battle-confirm-card{padding:25px}
+.battle-confirm h2{font:600 25px Georgia,'Microsoft JhengHei',serif;margin:0 0 15px}
+#order-actors{display:flex;justify-content:center;align-items:center;gap:20px}
+#order-actors img{width:78px;height:90px;object-fit:contain}
+#order-actors span{font-size:27px;color:#927039}
+.battle-confirm #preview{min-height:0;background:#ecdfb7;color:#573e21;line-height:1.8;font-size:14px;padding:14px;margin:12px 0 20px;border-radius:9px}
+.order-confirm-buttons{display:flex;gap:10px}
+.order-confirm-buttons button{min-height:44px;flex:1;padding:10px;font:inherit;border:1px solid #ad8a4e;border-radius:8px;background:#fff6dc;color:#60431d}
+.order-confirm-buttons #confirm-attack,.order-confirm-buttons #order-accept{background:#396242;color:#fff2c7;flex:2}
+body:has(#battle-order[open]){overflow:hidden}
+body:not([data-state="playing"]) #unit-orders,body:not([data-state="playing"]) #end-turn{display:none}
+@media(max-width:780px){#battle{padding:18px 10px 25px}.field-turn-controls{gap:8px}.field-turn-controls #remaining-orders{order:3;width:100%;text-align:right;font-size:11px}.battle-confirm-card{padding:20px}#unit-orders .selection{font-size:9px}}
+@media(max-width:520px){#board .unit-status{top:-1px;font-size:9px;padding:1px 3px}#board .unit-status>span{display:none}#board .unit-hp{bottom:5px;left:0;padding:0 2px;font-size:8px}#board .unit-health{height:3px;bottom:0;width:58%;left:1%}#board .unit-capability{top:12px;font-size:8px}#board .unit-count{z-index:6}#unit-orders button{min-height:36px;font-size:11px;padding:6px 9px}#unit-orders .selection{display:none}}

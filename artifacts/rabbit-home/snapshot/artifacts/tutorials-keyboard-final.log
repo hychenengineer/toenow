@@ -1,0 +1,3 @@
+PASS keyboard, mid-lesson language switch and shared switch restoration
+PASS blocked storage: completion stays in memory and play is available
+{"lessonScenarios":0,"skipScenarios":0,"iframeScenarios":0,"edgeCases":2}

@@ -1,0 +1,3 @@
+PASS 1280 zh-Hant battle: reversible preview, retarget/cancel/origin/squad/Escape, pause/language, explicit commit, one move, lifecycle reset
+PASS 390 zh-Hant expedition: reversible preview, retarget/cancel/origin/squad/Escape, pause/language, explicit commit, one move, lifecycle reset
+PASS 390 en battle: reversible preview, retarget/cancel/origin/squad/Escape, pause/language, explicit commit, one move, lifecycle reset

@@ -1,0 +1,47 @@
+{
+  "checkedAt": "2026-10-27T02:24:17.397Z",
+  "project": "toenow",
+  "repository": "hychenengineer/toenow",
+  "before": {
+    "owner": "hychenengineer",
+    "owner_id": "146131911",
+    "repo_name": "toenow",
+    "repo_id": "1424973698",
+    "production_branch": "main",
+    "pr_comments_enabled": true,
+    "deployments_enabled": true,
+    "production_deployments_enabled": true,
+    "preview_deployment_setting": "all",
+    "preview_branch_includes": [
+      "*"
+    ],
+    "preview_branch_excludes": [],
+    "path_includes": [
+      "*"
+    ],
+    "path_excludes": []
+  },
+  "after": {
+    "owner": "hychenengineer",
+    "owner_id": "146131911",
+    "repo_name": "toenow",
+    "repo_id": "1424973698",
+    "production_branch": "main",
+    "pr_comments_enabled": true,
+    "deployments_enabled": true,
+    "production_deployments_enabled": true,
+    "preview_deployment_setting": "none",
+    "preview_branch_includes": [
+      "*"
+    ],
+    "preview_branch_excludes": [],
+    "path_includes": [
+      "*"
+    ],
+    "path_excludes": []
+  },
+  "productionDeploymentBefore": "fcc91c4f-7199-4ff7-bd58-d717f6d56cdc",
+  "productionDeploymentAfter": "fcc91c4f-7199-4ff7-bd58-d717f6d56cdc",
+  "productionUnchanged": true,
+  "pushed": false
+}

@@ -1,0 +1,13 @@
+.expedition-main{min-width:0}
+.battle-report h3{font-family:Georgia,"Microsoft JhengHei",serif;font-size:23px;margin:7px 0 12px;color:#53391e}
+
+.recruit-recommendation{display:block;font-size:10px;font-weight:750;color:#3c692e;background:#e5edc9;border-radius:5px;padding:5px 7px;margin-bottom:8px;line-height:1.5}
+.scout-main{margin:12px 0;padding:10px 12px;background:#f1d49e;border:1px solid #b18b49;border-radius:7px;color:#6c451f;font-weight:700;font-size:12px;line-height:1.7}
+.battle-report{margin:0 0 20px;background:#fff0c9;border:2px solid #b88b44;border-radius:14px;color:#4b3924;overflow:hidden}
+.report-heading{padding:16px 20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:14px;list-style:none}
+.report-heading::-webkit-details-marker{display:none}.report-heading::after{content:"＋";font-size:20px;color:#846327}.battle-report[open]>.report-heading::after{content:"−"}.report-heading:focus-visible{outline:3px solid #1c7ba8;outline-offset:-4px}
+.report-heading h3{font-size:20px;margin-bottom:0}.report-reward{font-size:13px;color:#796024;font-weight:750;line-height:1.8;margin-left:auto}
+.report-body{padding:0 20px 18px}.report-totals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 14px}
+.report-totals>span{padding:12px;border:1px solid #c6a365;background:#fff9e8;border-radius:9px;font-size:12px;text-align:center}.report-totals b{display:block;font-size:27px;margin-top:4px}.report-totals>span:last-child{background:#e3ecc7;border-color:#91a565}
+.battle-report table{border-collapse:collapse;width:100%;font-size:12px;text-align:center}.battle-report caption{text-align:left;font-size:11px;color:#846c48;padding:6px 0 10px;line-height:1.6}.battle-report th,.battle-report td{padding:8px;border-bottom:1px solid #d6c396}.battle-report thead th{background:#eadbb2}.battle-report tbody th{display:flex;align-items:center;gap:8px;text-align:left;font-weight:600}.battle-report tbody img{width:28px;height:31px;object-fit:contain}.battle-report p{font-size:12px;line-height:1.8;margin:12px 0 0}.report-takeaway{color:#4f6e32;font-weight:700}
+@media(max-width:520px){.report-heading{padding:13px 11px;flex-wrap:wrap;gap:8px}.report-heading>div:first-child{flex:1 1 75%}.report-heading h3{font-size:18px}.report-reward{margin:0;font-size:11px}.report-body{padding:0 10px 13px}.report-totals{gap:7px}.report-totals>span{padding:10px 5px;font-size:11px}.report-totals b{font-size:23px}.battle-report th,.battle-report td{padding:7px 4px;font-size:11px}.battle-report tbody th{gap:3px}.battle-report tbody img{width:23px;height:28px}.recruit-recommendation{font-size:9px;padding:4px 5px}}

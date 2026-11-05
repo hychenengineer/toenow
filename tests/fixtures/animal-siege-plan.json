@@ -1,0 +1,22 @@
+[
+  [1,"p-beaver",1,1,null],
+  [1,"p-squirrel",1,4,null],
+  [1,"p-fox",0,3,null],
+  [2,"p-beaver",1,1,"e-fox"],
+  [2,"p-fox",2,2,"e-fox"],
+  [2,"p-squirrel",0,3,"e-fox"],
+  [3,"p-beaver",1,1,"e-fox"],
+  [3,"p-squirrel",0,1,"e-fox"],
+  [3,"p-fox",3,4,"e-squirrel"],
+  [4,"p-squirrel",0,2,"e-squirrel"],
+  [4,"p-fox",3,2,"e-squirrel"],
+  [4,"p-beaver",1,1,null],
+  [5,"p-fox",4,2,"e-beaver"],
+  [5,"p-squirrel",0,2,null],
+  [5,"p-beaver",1,1,null],
+  [6,"p-squirrel",0,2,null],
+  [6,"p-beaver",1,1,null],
+  [7,"p-squirrel",0,3,"e-beaver"],
+  [7,"p-beaver",3,1,"e-beaver"],
+  [8,"p-squirrel",0,3,"e-beaver"]
+]

@@ -1,0 +1,29 @@
+{
+  "generator": "OpenAI imagegen (built-in)",
+  "assets": [
+    {
+      "kind": "background",
+      "source": "sources/background.png",
+      "runtime": "background.webp",
+      "sourceImage": "exec-f07fc318-a7b4-4f25-b76c-0b70be37f5af.png",
+      "width": 1448,
+      "height": 1086,
+      "hasAlpha": false,
+      "transparentFraction": 0,
+      "sha256": "9b255b6f5aa19d83a86e1eaecb03f91ccdd29f28073dcc8c08768713cf8aba27",
+      "prompt": "Game environment background, 4:3 landscape. Warm hand-painted cozy children's storybook illustration matching a pastoral animal village game. Scene: a woodland carpenter's clearing, tiny rustic timber workshop cottage at upper left, a single small log chopping block at x35% y45%; spacious warm grassy yard on the right and foreground, brook and trees in the distance. Eye-level slightly elevated view, perspective and scale suitable for adding a standing animal at left foreground (x20% y68%) and four independent building sprites on right half later. Only the modest starter home is present, clustered in leftmost 35% at top/middle; the right 60% is deliberately empty walkable buildable terrain with no structures. Full coherent environment filling canvas, soft natural lighting, painterly detailed edges, clear simple ground. No animals or people, no text, no signs with letters, no UI, no borders, no purchased future buildings. Keep foreground at x20% y68% uncluttered for character overlay."
+    },
+    {
+      "kind": "buildings",
+      "source": "sources/buildings.png",
+      "runtime": "buildings.webp",
+      "sourceImage": "exec-69a3c069-e04f-4ff6-a6d4-7b24ab60e29a.png",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "transparentFraction": 0.49857648213704425,
+      "sha256": "c8eddda7e728b42adfebeb5d973215e233c2beb8195b2519d7e7642a80f3cf8f",
+      "prompt": "Transparent sprite atlas for a cozy hand-painted storybook animal village game. Exactly SIX isolated objects, 3 columns x 2 rows, equal square cells, overall landscape 3:2. Top row left to right: a wooden carpenter work table; a small red-roof wooden tool shed; an orderly little lumber store rack. Bottom row left to right: an open timber woodworking pavilion; a small wall-standing carpenter tool rack; a carved wooden workshop sign on a post with no text. Each object centered in its own equal cell with at least 8% transparent padding, completely contained, no overlap or crossing cells. All same warm painted woodland style, three-quarter slightly elevated perspective. Fully transparent alpha around and between objects and through open spaces. NO backdrop, no colored gradient, no ground plates, no cast shadows outside object, no scenery, no characters, no text, no UI, no grid lines. Only the six specified objects; retain transparent alpha."
+    }
+  ]
+}

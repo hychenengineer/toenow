@@ -1,0 +1,16 @@
+{
+  "run": {
+    "state": "gameover",
+    "wave": 20,
+    "score": 12104,
+    "busy": false,
+    "correct": 4,
+    "wrong": 1
+  },
+  "receipt": "🎀 +8 Ribbons\nNext home stage: 🎀 8 / 16\nBuild on island",
+  "status": "collected",
+  "balance": 8,
+  "wallSeconds": 20.404,
+  "answers": 31,
+  "errors": []
+}

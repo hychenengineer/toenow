@@ -1,0 +1,31 @@
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process');
+const git=(args,options={})=>cp.execFileSync('git',args,{...options});
+const state=JSON.parse(fs.readFileSync('artifacts/game-ui-publication-state.json','utf8'));
+const log=fs.readFileSync('artifacts/game-ui-publication-npm.log','utf8');
+if(!/# fail 0\r?\n/.test(log)||!/# tests \d+/.test(log))throw Error('Passing snapshot tests are required');
+if(git(['rev-parse','HEAD']).toString().trim()!==state.base)throw Error('Local HEAD changed');
+const realIndex=git(['rev-parse','--git-path','index']).toString().trim();
+const originalIndex=fs.readFileSync(realIndex);
+const patch=git(['diff','--binary','--','index.html','shared/toenow-i18n.js']);
+const combinedIndex=path.join(state.temp,'combined.index');
+fs.writeFileSync(combinedIndex,originalIndex);
+const env={...process.env,GIT_INDEX_FILE:combinedIndex};
+git(['apply','--cached','--check','-'],{env,input:patch});
+git(['apply','--cached','-'],{env,input:patch});
+const verifyEnv={...process.env,GIT_INDEX_FILE:path.join(state.temp,'verify.index')};
+git(['read-tree',state.base],{env:verifyEnv});
+git(['apply','--cached','-'],{env:verifyEnv,input:patch});
+if(git(['write-tree'],{env:verifyEnv}).toString().trim()!==state.tree)throw Error('Publication content changed');
+
+const commit=git(['commit-tree',state.tree,'-p',state.base],{input:'Remove in-game language switches and game path badges\n'}).toString().trim();
+console.log(git(['show','--stat','--oneline',commit]).toString());
+console.log(git(['push','origin',commit+':refs/heads/main']).toString());
+const remote=git(['ls-remote','origin','refs/heads/main']).toString().trim().split(/\s/)[0];
+if(remote!==commit)throw Error('Remote commit does not match');
+if(git(['rev-parse','HEAD']).toString().trim()===state.base&&fs.readFileSync(realIndex).equals(originalIndex)){
+ fs.writeFileSync(path.join(state.temp,'original.index'),originalIndex);
+ git(['update-ref','HEAD',commit,state.base]);
+ fs.copyFileSync(combinedIndex,realIndex);
+ console.log('Local branch advanced; unrelated staged and unstaged changes preserved.');
+}else console.log('Local workspace changed concurrently; left its branch and index untouched.');
+console.log('VERIFIED '+commit);

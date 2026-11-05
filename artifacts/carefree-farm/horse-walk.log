@@ -1,0 +1,8 @@
+{
+  "species": 5,
+  "independentlyMovingLegs": 20,
+  "maxAngle": 3.5,
+  "modalPaused": true,
+  "reducedMotionStill": true,
+  "errors": []
+}

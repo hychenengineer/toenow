@@ -1,0 +1,53 @@
+const {chromium}=require('playwright');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const base=process.env.TOENOW_TEST_URL||'http://127.0.0.1:8774';
+async function run(){
+  const dir=path.resolve(__dirname,'../artifacts/animal-attack-guidance');fs.mkdirSync(dir,{recursive:true});
+  const browser=await chromium.launch({channel:'msedge',headless:true});
+  try{for(const [width,lang] of [[1280,'zh-Hant'],[390,'en'],[320,'zh-Hant']]){
+    const p=await browser.newPage({viewport:{width,height:950},isMobile:width<700,hasTouch:width<700,reducedMotion:'reduce'}),errors=[];
+    p.on('pageerror',e=>errors.push(e.message));await p.addInitScript(l=>{localStorage.setItem('toenow_language_v1',l);localStorage.setItem('animal_siege_hands_on_v2','completed');},lang);
+    let source=fs.readFileSync(path.resolve(__dirname,'../games/animal-siege/main.js'),'utf8');
+    source=source.replace(/\}\)\(\);\s*$/,'window.__guideSnapshot=()=>structuredClone(state);window.__guideSetup=()=>{byId("p-beaver").x=3;render();};})();');
+    await p.route('**/games/animal-siege/main.js*',r=>r.fulfill({contentType:'application/javascript',body:source}));
+    await p.goto(base+'/games/animal-siege/?mode=battle');await p.locator('#btn-start').click();
+    assert.equal(await p.locator('#confirm-attack').count(),1,'an explicit attack button must exist');
+    assert.equal(await p.locator('#confirm-attack').isVisible(),false);
+    assert.match(await p.locator('#action-hint').innerText(),/move|移動/);
+    const colors=await p.locator('.tile.reachable').first().evaluate(e=>({fill:getComputedStyle(e).backgroundColor,range:getComputedStyle(document.querySelector('.tile.attack-range'),'::before').backgroundImage}));
+    assert.notEqual(colors.fill,'rgba(0, 0, 0, 0)');assert.match(colors.range,/gradient/);
+    await p.evaluate(async()=>{const i=new Image();i.src='../../assets/animal-siege/acorn-battle-v1.webp';await i.decode();});
+    await p.screenshot({path:path.join(dir,width+'-'+lang+'-ranges.png'),fullPage:true});
+    await p.locator('[data-cell="2,1"]').click();await p.locator('#confirm-move').click();
+    await p.waitForFunction(()=>document.getElementById('board').getAttribute('aria-busy')!=='true');
+    assert.match(await p.locator('#action-hint').innerText(),/No enemy|沒有可攻擊/);
+    await p.evaluate(()=>ToenowGameSDK.getInstance('animal-siege').restart());await p.evaluate(()=>window.__guideSetup());
+    await p.locator('[data-cell="5,1"]').click();
+    assert.equal(await p.locator('#confirm-attack').isVisible(),false);
+    await p.locator('#confirm-move').click();await p.waitForFunction(()=>document.getElementById('board').getAttribute('aria-busy')!=='true');
+    assert.match(await p.locator('#action-hint').innerText(),/still attack|還可以攻擊/);
+    assert.ok(await p.locator('.tile.target .target-marker').count()>0);
+    await p.screenshot({path:path.join(dir,width+'-'+lang+'-after-move.png'),fullPage:true});
+    const before=await p.evaluate(()=>window.__guideSnapshot());
+    await p.locator('[data-cell="6,1"]').click();await p.locator('[data-cell="6,1"]').click();
+    assert.deepEqual(await p.evaluate(()=>window.__guideSnapshot()),before,'enemy taps only select, never attack');
+    assert.equal(await p.locator('#confirm-attack').isEnabled(),true);
+    assert.equal(await p.locator('.tile.attack-picked').count(),1);
+    assert.match(await p.locator('#confirm-attack').innerText(),/Fox|狐狸/);
+    assert.match(await p.locator('#preview').innerText(),/damage|傷害/);
+    await p.evaluate(async()=>{const i=new Image();i.src='../../assets/animal-siege/acorn-battle-v1.webp';await i.decode();});
+    await p.screenshot({path:path.join(dir,width+'-'+lang+'-attack.png'),fullPage:true});
+    await p.locator('#board').evaluate(()=>ToenowGameSDK.getInstance('animal-siege').pause());assert.equal(await p.locator('#confirm-attack').isVisible(),false);await p.locator('#resume').click();
+    await p.locator('#confirm-attack').click();await p.waitForFunction(()=>document.getElementById('board').getAttribute('aria-busy')!=='true');
+    const after=await p.evaluate(()=>window.__guideSnapshot());assert.equal(after.log.length,before.log.length+1);assert.ok(after.units.find(u=>u.id==='e-fox').hp<before.units.find(u=>u.id==='e-fox').hp);
+    assert.equal(await p.locator('#confirm-attack').isVisible(),false);
+    await p.locator('[data-unit="p-squirrel"]').click();await p.locator('[data-cell="6,5"]').click();
+    assert.equal(await p.locator('#confirm-attack').isVisible(),false,'out-of-range targets cannot expose attack');
+    assert.match(await p.locator('#preview').innerText(),/Out of reach|距離太遠/);
+    assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.deepEqual(errors,[]);
+    console.log('PASS '+width+' '+lang+': range contrast, move guidance, explicit attack, no double-tap attack, pause and illegal target protection');await p.close();
+  }}finally{await browser.close();}
+}
+run().catch(e=>{console.error(e);process.exitCode=1;});

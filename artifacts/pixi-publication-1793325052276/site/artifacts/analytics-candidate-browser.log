@@ -1,0 +1,32 @@
+PASS number-pop standalone
+PASS number-pop embedded
+PASS number-pop practice
+PASS ball-track standalone
+PASS ball-track embedded
+PASS ball-track practice
+PASS block-match standalone
+PASS block-match embedded
+PASS block-match practice
+PASS add-up standalone
+PASS add-up embedded
+PASS add-up practice
+PASS space-scale standalone
+PASS space-scale embedded
+PASS space-scale practice
+PASS tap-match standalone
+PASS tap-match embedded
+PASS tap-match practice
+PASS spot-quick standalone
+PASS spot-quick embedded
+PASS spot-quick practice
+PASS shadow-match standalone
+PASS shadow-match embedded
+PASS shadow-match practice
+locator.waitFor: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator('#btn-start-game') to be visible
+
+    at C:\Users\HsinYuChen\source\repos\toenow\.git\analytics-candidate-browser.cjs:24:36 {
+  log: [ "  - waiting for locator('#btn-start-game') to be visible" ],
+  name: 'TimeoutError'
+}

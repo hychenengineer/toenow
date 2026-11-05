@@ -1,0 +1,255 @@
+TAP version 13
+# Subtest: counter chain rewards the same species on either side equally
+ok 1 - counter chain rewards the same species on either side equally
+  ---
+  duration_ms: 1.2426
+  ...
+# Subtest: movement follows paths and cannot cross walls or occupied tiles
+ok 2 - movement follows paths and cannot cross walls or occupied tiles
+  ---
+  duration_ms: 0.4895
+  ...
+# Subtest: ranged attacks require clear sight and never damage allies
+ok 3 - ranged attacks require clear sight and never damage allies
+  ---
+  duration_ms: 0.1895
+  ...
+# Subtest: attack consumes action; defending reduces damage until next own turn
+ok 4 - attack consumes action; defending reduces damage until next own turn
+  ---
+  duration_ms: 0.4608
+  ...
+# Subtest: AI obeys terrain, finishes turns, and terminal battles reject further actions
+ok 5 - AI obeys terrain, finishes turns, and terminal battles reject further actions
+  ---
+  duration_ms: 0.2458
+  ...
+# Subtest: five practice tiers scale defenders while keeping the board valid
+ok 6 - five practice tiers scale defenders while keeping the board valid
+  ---
+  duration_ms: 0.2492
+  ...
+# Subtest: production installs GA once, strips query and fragment, and records actual runs
+ok 7 - production installs GA once, strips query and fragment, and records actual runs
+  ---
+  duration_ms: 4.2842
+  ...
+# Subtest: local development sends nothing; unknown event data cannot leak into GA
+ok 8 - local development sends nothing; unknown event data cannot leak into GA
+  ---
+  duration_ms: 7.1797
+  ...
+# Subtest: the configured Cloudflare production stream and custom domains all collect
+ok 9 - the configured Cloudflare production stream and custom domains all collect
+  ---
+  duration_ms: 3.5397
+  ...
+# Subtest: same-origin game iframe uses parent tag without an extra page view
+ok 10 - same-origin game iframe uses parent tag without an extra page view
+  ---
+  duration_ms: 1.9531
+  ...
+# Subtest: every entry point loads analytics before SDK
+ok 11 - every entry point loads analytics before SDK
+  ---
+  duration_ms: 10.0882
+  ...
+# Subtest: SDK start and settlement call shared analytics, without changing game-over payload
+ok 12 - SDK start and settlement call shared analytics, without changing game-over payload
+  ---
+  duration_ms: 5.4279
+  ...
+# Subtest: Animal island provides one distinct partner and habitat for each existing game
+ok 13 - Animal island provides one distinct partner and habitat for each existing game
+  ---
+  duration_ms: 0.9535
+  ...
+# Subtest: Animal building stages are bounded and follow the shared five-tier wave mapping
+ok 14 - Animal building stages are bounded and follow the shared five-tier wave mapping
+  ---
+  duration_ms: 0.317
+  ...
+# Subtest: Theme helpers work without DOM and never alter scores or practice records
+ok 15 - Theme helpers work without DOM and never alter scores or practice records
+  ---
+  duration_ms: 0.3352
+  ...
+# Subtest: Watercolor characters have one reusable asset per species
+ok 16 - Watercolor characters have one reusable asset per species
+  ---
+  duration_ms: 0.1719
+  ...
+# Subtest: The title guide reads normal-play records, never practice stage or malformed values
+ok 17 - The title guide reads normal-play records, never practice stage or malformed values
+  ---
+  duration_ms: 0.224
+  ...
+# Subtest: Leaderboard stays locked until every game clears Level 1, including the last discovered place
+ok 18 - Leaderboard stays locked until every game clears Level 1, including the last discovered place
+  ---
+  duration_ms: 2.2822
+  ...
+# Subtest: Leaderboard unlocks when all saved normal Level 1 milestones reconcile
+ok 19 - Leaderboard unlocks when all saved normal Level 1 milestones reconcile
+  ---
+  duration_ms: 1.0302
+  ...
+# Subtest: Moving map landmarks preserves the existing route and earned discoveries
+ok 20 - Moving map landmarks preserves the existing route and earned discoveries
+  ---
+  duration_ms: 0.8838
+  ...
+# Subtest: The established route starts bottom-left with Rabbit and ends top-right with Panda
+ok 21 - The established route starts bottom-left with Rabbit and ends top-right with Panda
+  ---
+  duration_ms: 0.2514
+  ...
+# Subtest: Updating the old random route keeps completion credit and uses the earned fixed route
+ok 22 - Updating the old random route keeps completion credit and uses the earned fixed route
+  ---
+  duration_ms: 0.3529
+  ...
+# Subtest: Saved normal milestones unlock one building even while the iframe remains active
+ok 23 - Saved normal milestones unlock one building even while the iframe remains active
+  ---
+  duration_ms: 0.3395
+  ...
+# Subtest: The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building
+ok 24 - The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building
+  ---
+  duration_ms: 0.3169
+  ...
+# Subtest: Malformed version-2 opened lists never leave a player with zero usable games
+ok 25 - Malformed version-2 opened lists never leave a player with zero usable games
+  ---
+  duration_ms: 0.3382
+  ...
+# Subtest: Fresh and settings-only players start with one persisted rabbit garden
+ok 26 - Fresh and settings-only players start with one persisted rabbit garden
+  ---
+  duration_ms: 0.3188
+  ...
+# Subtest: Existing score-only and zero-score attempts enter exploration without losing records
+ok 27 - Existing score-only and zero-score attempts enter exploration without losing records
+  ---
+  duration_ms: 0.386
+  ...
+# Subtest: Persisted legacy access migrates once to version 3 and cannot be restored by cloud sign-in
+ok 28 - Persisted legacy access migrates once to version 3 and cannot be restored by cloud sign-in
+  ---
+  duration_ms: 0.4862
+  ...
+# Subtest: Returning players open only the contiguous cleared route while keeping later-game credit
+ok 29 - Returning players open only the contiguous cleared route while keeping later-game credit
+  ---
+  duration_ms: 0.6676
+  ...
+# Subtest: An older open tab cannot overwrite the migrated exploration policy
+ok 30 - An older open tab cannot overwrite the migrated exploration policy
+  ---
+  duration_ms: 0.2877
+  ...
+# Subtest: Only an unlocked game reaching Wave 6 in normal play opens one new place once
+ok 31 - Only an unlocked game reaching Wave 6 in normal play opens one new place once
+  ---
+  duration_ms: 0.5884
+  ...
+# Subtest: Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+ok 32 - Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+  ---
+  duration_ms: 0.3473
+  ...
+# Subtest: Every distinct completion opens at most one place and the final place finishes cleanly
+ok 33 - Every distinct completion opens at most one place and the final place finishes cleanly
+  ---
+  duration_ms: 0.4952
+  ...
+# Subtest: Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+ok 34 - Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+  ---
+  duration_ms: 0.63
+  ...
+# Subtest: A readable but unwritable existing save retains this session progress
+ok 35 - A readable but unwritable existing save retains this session progress
+  ---
+  duration_ms: 0.2086
+  ...
+# Subtest: Rejected run records cannot bypass validation through reconciliation or reload
+ok 36 - Rejected run records cannot bypass validation through reconciliation or reload
+  ---
+  duration_ms: 0.3267
+  ...
+# Subtest: Another tab cannot reconcile an active iframe record before its result is validated
+ok 37 - Another tab cannot reconcile an active iframe record before its result is validated
+  ---
+  duration_ms: 0.4275
+  ...
+# Subtest: Iframe validation guard survives replay and closing removes the marker safely
+ok 38 - Iframe validation guard survives replay and closing removes the marker safely
+  ---
+  duration_ms: 0.331
+  ...
+# Subtest: Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+ok 39 - Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+  ---
+  duration_ms: 0.3846
+  ...
+# Subtest: Corrupt nested run metadata cannot crash the saved journey
+ok 40 - Corrupt nested run metadata cannot crash the saved journey
+  ---
+  duration_ms: 0.2462
+  ...
+# Subtest: Older tabs still guard raw saves after the policy has migrated
+ok 41 - Older tabs still guard raw saves after the policy has migrated
+  ---
+  duration_ms: 0.3622
+  ...
+# Subtest: Imported iframe guards settle when an older tab closes its run
+ok 42 - Imported iframe guards settle when an older tab closes its run
+  ---
+  duration_ms: 0.3398
+  ...
+# Subtest: A validated older-tab result settles an imported guard and earns the next place
+ok 43 - A validated older-tab result settles an imported guard and earns the next place
+  ---
+  duration_ms: 0.2954
+  ...
+# Subtest: Explorers Island has one distinct location per explorer game; Carefree games stay separate
+ok 44 - Explorers Island has one distinct location per explorer game; Carefree games stay separate
+  ---
+  duration_ms: 1.3139
+  ...
+# Subtest: Island stages follow the five shared wave ranges without claiming tier completion
+ok 45 - Island stages follow the five shared wave ranges without claiming tier completion
+  ---
+  duration_ms: 0.3928
+  ...
+# Subtest: Island reconciles canonical and aggregate records, preserving the highest valid normal record
+ok 46 - Island reconciles canonical and aggregate records, preserving the highest valid normal record
+  ---
+  duration_ms: 0.912
+  ...
+# Subtest: Missing, malformed and unavailable storage safely leaves locations unexplored
+ok 47 - Missing, malformed and unavailable storage safely leaves locations unexplored
+  ---
+  duration_ms: 0.4522
+  ...
+# Subtest: Invalid negative/fractional/object records cannot manufacture a higher island stage
+ok 48 - Invalid negative/fractional/object records cannot manufacture a higher island stage
+  ---
+  duration_ms: 0.4576
+  ...
+# Subtest: A formal zero-score attempt is explored without elevating its stage
+ok 49 - A formal zero-score attempt is explored without elevating its stage
+  ---
+  duration_ms: 0.2194
+  ...
+1..49
+# tests 49
+# suites 0
+# pass 49
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 117.3064

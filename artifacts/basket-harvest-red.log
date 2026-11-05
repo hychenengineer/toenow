@@ -1,0 +1,8 @@
+AssertionError [ERR_ASSERTION]: one brief collection animation starts
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-number-pop-quiet-browser.cjs:31:16 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual'
+}

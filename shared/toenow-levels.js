@@ -7,6 +7,7 @@ var LEVELS = [
 ];
 
 var GAME_STORAGE_KEYS = {
+  'animal-siege': { score: 'animal_siege_best_score_v1', wave: 'animal_siege_best_wave_v1', island: 'expedition' },
   'carefree-farm': { score: 'carefree_farm_best_score_v1', wave: 'carefree_farm_best_wave_v1', progress: 'toenow_carefree_farm_v1', island: 'carefree' },
   'capybara-drift': { score: 'capybara_drift_best_score_v1', wave: 'capybara_drift_best_wave_v1', island: 'carefree' },
   'animal-rescue-train': { score: 'animal_rescue_train_best_score', wave: 'animal_rescue_train_best_wave', session: 'animal_rescue_train_guest_v2', puzzles: 'animal_rescue_train_puzzle_history_v1' },

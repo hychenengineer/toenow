@@ -1,0 +1,155 @@
+TAP version 13
+# Subtest: guarded trail reveals clues before guards and blocks treasure until a real victory
+not ok 1 - guarded trail reveals clues before guards and blocks treasure until a real victory
+  ---
+  duration_ms: 1.1387
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-siege-campaign.test.cjs:8:1'
+  failureType: 'testCodeFailure'
+  error: 'C.beginTrailBattle is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-siege-campaign.test.cjs:9:37)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    node:internal/test_runner/harness:252:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+  ...
+# Subtest: trail retreats retain both armies and reject stale battles without rerolling guards
+not ok 2 - trail retreats retain both armies and reject stale battles without rerolling guards
+  ---
+  duration_ms: 0.1891
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-siege-campaign.test.cjs:21:1'
+  failureType: 'testCodeFailure'
+  error: 'C.investigate is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-siege-campaign.test.cjs:22:45)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: inaccessible guarded loot cannot keep a wiped expedition alive
+not ok 3 - inaccessible guarded loot cannot keep a wiped expedition alive
+  ---
+  duration_ms: 0.8432
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-siege-campaign.test.cjs:29:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-siege-campaign.test.cjs:31:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: preparation follows surviving defenders and quotes real recruitment and training budgets without spending
+ok 4 - preparation follows surviving defenders and quotes real recruitment and training budgets without spending
+  ---
+  duration_ms: 1.2241
+  ...
+# Subtest: battle report counts deployed troops, exact losses, actual counter damage and paid rewards once
+ok 5 - battle report counts deployed troops, exact losses, actual counter damage and paid rewards once
+  ---
+  duration_ms: 0.7444
+  ...
+# Subtest: whole battle counter totals include attacks older than the eight-entry journal
+ok 6 - whole battle counter totals include attacks older than the eight-entry journal
+  ---
+  duration_ms: 0.4682
+  ...
+# Subtest: attacking a different available fort keeps its preparation after retreat
+ok 7 - attacking a different available fort keeps its preparation after retreat
+  ---
+  duration_ms: 0.2149
+  ...
+# Subtest: expedition starts with exact original army health and three distinct forts
+ok 8 - expedition starts with exact original army health and three distinct forts
+  ---
+  duration_ms: 0.1458
+  ...
+# Subtest: one-time exploration supplies and recruitment spend resources without healing wounded survivors
+not ok 9 - one-time exploration supplies and recruitment spend resources without healing wounded survivors
+  ---
+  duration_ms: 0.5871
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-siege-campaign.test.cjs:81:1'
+  failureType: 'testCodeFailure'
+  error: 'C.investigate is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    clearTrail (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-siege-campaign.test.cjs:6:51)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-siege-campaign.test.cjs:83:3)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: retreat and defeat keep exact health on both sides and reject stale or duplicate settlement
+ok 10 - retreat and defeat keep exact health on both sides and reject stale or duplicate settlement
+  ---
+  duration_ms: 0.3346
+  ...
+# Subtest: capturing both outer forts opens final fort and rewards cannot be farmed
+ok 11 - capturing both outer forts opens final fort and rewards cannot be farmed
+  ---
+  duration_ms: 0.3199
+  ...
+# Subtest: wiped armies can use hidden reinforcements; no army and no recovery ends the run
+ok 12 - wiped armies can use hidden reinforcements; no army and no recovery ends the run
+  ---
+  duration_ms: 0.1836
+  ...
+# Subtest: training changes only the trained species and affects real range, movement and incoming damage
+ok 13 - training changes only the trained species and affects real range, movement and incoming damage
+  ---
+  duration_ms: 0.2663
+  ...
+# Subtest: spending the last discovery on wood ends a wiped run when recovery becomes impossible
+not ok 14 - spending the last discovery on wood ends a wiped run when recovery becomes impossible
+  ---
+  duration_ms: 0.2542
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\animal-siege-campaign.test.cjs:126:1'
+  failureType: 'testCodeFailure'
+  error: 'C.investigate is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    clearTrail (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-siege-campaign.test.cjs:6:51)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\animal-siege-campaign.test.cjs:127:22)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 9
+# fail 5
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 83.0342

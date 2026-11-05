@@ -1,0 +1,63 @@
+TAP version 13
+# Subtest: nine games use one screen library without copied title or result templates
+ok 1 - nine games use one screen library without copied title or result templates
+  ---
+  duration_ms: 35.4173
+  ...
+# Subtest: shared renderer owns event callbacks, current share payload, and instance disposal
+ok 2 - shared renderer owns event callbacks, current share payload, and instance disposal
+  ---
+  duration_ms: 18.5944
+  ...
+# Subtest: shared screen copy is escaped and missing/non-finite results are safe
+ok 3 - shared screen copy is escaped and missing/non-finite results are safe
+  ---
+  duration_ms: 0.8961
+  ...
+# Subtest: shared screen templates provide identical result fields and three actions for all games
+ok 4 - shared screen templates provide identical result fields and three actions for all games
+  ---
+  duration_ms: 0.4923
+  ...
+# Subtest: screen result normalization uses the shared five-level mapping
+ok 5 - screen result normalization uses the shared five-level mapping
+  ---
+  duration_ms: 0.3234
+  ...
+# Subtest: membership invitation follows replay and preserves the three game actions
+ok 6 - membership invitation follows replay and preserves the three game actions
+  ---
+  duration_ms: 0.2253
+  ...
+# Subtest: journeys show discoveries without competitive records
+ok 7 - journeys show discoveries without competitive records
+  ---
+  duration_ms: 0.216
+  ...
+# Subtest: journey summary uses actual finds and safe text
+not ok 8 - journey summary uses actual finds and safe text
+  ---
+  duration_ms: 0.5699
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-screens.test.cjs:118:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'innerHTML')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-screens.test.cjs:127:50)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 7
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 166.5386

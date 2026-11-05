@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const GAMES = [
+  { id: 'animal-siege', path: 'games/animal-siege/index.html', titleCardId: 'title-screen' },
   { id: 'carefree-farm', path: 'games/carefree-farm/index.html', titleCardId: 'title-screen' },
   { id: 'capybara-drift', path: 'games/capybara-drift/index.html', titleCardId: 'title-screen' },
   { id: 'animal-rescue-train', path: 'games/animal-rescue-train/index.html', titleCardId: 'menu-screen', controller: 'games/animal-rescue-train/game.js' },

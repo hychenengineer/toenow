@@ -1,0 +1,5 @@
+page.waitForFunction: Timeout 5000ms exceeded.
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-island-progression-browser.cjs:31:16 {
+  log: [],
+  name: 'TimeoutError'
+}

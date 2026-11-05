@@ -1,0 +1,2 @@
+Playing live Number Pop with actual click; waiting for natural timer.
+PASS {"commit":"df21541bc0ba5b16c8f9ff2efd864e54fa962633","checked":["index.html","shared/toenow-rabbit-home.js","shared/toenow-island.js","shared/toenow-i18n-core.js","assets/toenow-rabbit-home.css","assets/rabbit-home/background.webp","assets/rabbit-home/rabbit.webp","assets/rabbit-home/buildings.webp"],"score":144,"receipt":"🥕 +4 紅蘿蔔\n下一階段: 🥕 4 / 16\n回小島建造","elapsedMs":65317,"actualClicks":true,"naturalTimeout":true,"clockOrScoreMutation":false,"craftAndReload":"PASS","errors":[]}

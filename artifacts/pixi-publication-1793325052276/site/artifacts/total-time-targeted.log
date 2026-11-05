@@ -1,0 +1,100 @@
+TAP version 13
+# Subtest: otter leaves conceal target identity throughout shuffle and selection, even with residual opening
+ok 1 - otter leaves conceal target identity throughout shuffle and selection, even with residual opening
+  ---
+  duration_ms: 6.2489
+  ...
+# Subtest: otter replaces the revealed core only at original reveal phases
+ok 2 - otter replaces the revealed core only at original reveal phases
+  ---
+  duration_ms: 4.9079
+  ...
+# Subtest: timber carving removes only excess cells and preserves required cells with original penalty
+ok 3 - timber carving removes only excess cells and preserves required cells with original penalty
+  ---
+  duration_ms: 2.1456
+  ...
+# Subtest: raccoon theater keeps correct-card award and wrong-card time penalty
+ok 4 - raccoon theater keeps correct-card award and wrong-card time penalty
+  ---
+  duration_ms: 4.1617
+  ...
+# Subtest: timber blueprints invert their axes without changing required/excess cell identity
+ok 5 - timber blueprints invert their axes without changing required/excess cell identity
+  ---
+  duration_ms: 2.4928
+  ...
+# Subtest: raccoon puppeteer stays above the stage instruction band
+ok 6 - raccoon puppeteer stays above the stage instruction band
+  ---
+  duration_ms: 1.8978
+  ...
+# Subtest: beaver portrait fits between stacked boards without blueprint clipping
+ok 7 - beaver portrait fits between stacked boards without blueprint clipping
+  ---
+  duration_ms: 4.1634
+  ...
+# Subtest: Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+ok 8 - Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 23.3924
+  ...
+# Subtest: Game [number-pop] initializes cleanly and binds START GAME without runtime error
+ok 9 - Game [number-pop] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 20.352
+  ...
+# Subtest: Game [ball-track] initializes cleanly and binds START GAME without runtime error
+ok 10 - Game [ball-track] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 5.175
+  ...
+# Subtest: Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+ok 11 - Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 5.3984
+  ...
+# Subtest: Game [tap-match] initializes cleanly and binds START GAME without runtime error
+ok 12 - Game [tap-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 3.0609
+  ...
+# Subtest: Game [add-up] initializes cleanly and binds START GAME without runtime error
+ok 13 - Game [add-up] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 5.0329
+  ...
+# Subtest: Game [block-match] initializes cleanly and binds START GAME without runtime error
+ok 14 - Game [block-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 4.7745
+  ...
+# Subtest: Game [space-scale] initializes cleanly and binds START GAME without runtime error
+ok 15 - Game [space-scale] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 3.9764
+  ...
+# Subtest: Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+ok 16 - Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 4.5164
+  ...
+# Subtest: a timed run starts with sixty seconds and rewards correct answers up to sixty
+ok 17 - a timed run starts with sixty seconds and rewards correct answers up to sixty
+  ---
+  duration_ms: 1.0189
+  ...
+# Subtest: wrong answers remove five seconds and clamp at zero
+ok 18 - wrong answers remove five seconds and clamp at zero
+  ---
+  duration_ms: 0.2661
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 155.8509

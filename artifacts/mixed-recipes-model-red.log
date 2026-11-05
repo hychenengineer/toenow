@@ -1,0 +1,80 @@
+TAP version 13
+# Subtest: starter yard contains no purchased buildings and four sequential mixed-material projects
+ok 1 - starter yard contains no purchased buildings and four sequential mixed-material projects
+  ---
+  duration_ms: 1.3841
+  ...
+# Subtest: each construction stage reveals a distinct permanent yard object
+ok 2 - each construction stage reveals a distinct permanent yard object
+  ---
+  duration_ms: 0.3425
+  ...
+# Subtest: progress and balances choose short dialogue without mutating saves
+not ok 3 - progress and balances choose short dialogue without mutating saves
+  ---
+  duration_ms: 1.5874
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-rabbit-home.test.cjs:6:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    4 !== 8
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 8
+  actual: 4
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-rabbit-home.test.cjs:6:234)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: scene provides real play/chat/build buttons and only renders owned placed decoration art
+ok 4 - scene provides real play/chat/build buttons and only renders owned placed decoration art
+  ---
+  duration_ms: 0.5231
+  ...
+# Subtest: building preview does not construct or spend, and names the selected project
+ok 5 - building preview does not construct or spend, and names the selected project
+  ---
+  duration_ms: 0.27
+  ...
+# Subtest: own carrots alone cannot build a collaboration project and all missing sources are shown
+not ok 6 - own carrots alone cannot build a collaboration project and all missing sources are shown
+  ---
+  duration_ms: 0.1914
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-rabbit-home.test.cjs:10:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-rabbit-home.test.cjs:10:170)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 4
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 130.1296

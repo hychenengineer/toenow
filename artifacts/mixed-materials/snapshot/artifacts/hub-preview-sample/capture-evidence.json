@@ -1,0 +1,3416 @@
+[
+  {
+    "id": "number-pop",
+    "raw": "C:\\Users\\HsinYuChen\\source\\repos\\toenow\\artifacts\\hub-preview-sample\\raw\\page@5d8da3de3bd9ba9e6b25419db15ef6aa.webm",
+    "captureStart": 1.1526000000238419,
+    "duration": 11.071,
+    "actions": 14,
+    "errors": [],
+    "final": {
+      "state": "playing",
+      "wave": 4,
+      "waveType": "DOUBLE_DIGIT",
+      "score": 5150,
+      "combo": 14,
+      "maxCombo": 14,
+      "timeLeft": 56.156600000000495,
+      "runDuration": 11.343400000000017,
+      "decayMultiplier": 1,
+      "maxBank": 60,
+      "shakeTrauma": 0,
+      "hudBottom": 173,
+      "arenaBounds": {
+        "left": 320,
+        "right": 960,
+        "top": 173,
+        "bottom": 785
+      },
+      "touchHitboxExpansion": 20,
+      "cores": [
+        {
+          "id": 1,
+          "value": 9,
+          "label": "9",
+          "parsedFraction": null,
+          "radius": 46,
+          "hitRadius": 66,
+          "x": 697.9668800263082,
+          "y": 463.57210335650586,
+          "popped": true,
+          "freezeTimer": 0
+        },
+        {
+          "id": 2,
+          "value": 33,
+          "label": "33",
+          "parsedFraction": null,
+          "radius": 52,
+          "hitRadius": 72,
+          "x": 894.6643717477716,
+          "y": 455.10155651367234,
+          "popped": true,
+          "freezeTimer": 0
+        },
+        {
+          "id": 3,
+          "value": 35,
+          "label": "35",
+          "parsedFraction": null,
+          "radius": 46,
+          "hitRadius": 66,
+          "x": 475.175583491669,
+          "y": 664.8627765897261,
+          "popped": false,
+          "freezeTimer": 0
+        },
+        {
+          "id": 4,
+          "value": 47,
+          "label": "47",
+          "parsedFraction": null,
+          "radius": 52,
+          "hitRadius": 72,
+          "x": 735.7485982438253,
+          "y": 624.3848356700406,
+          "popped": false,
+          "freezeTimer": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "block-match",
+    "raw": "C:\\Users\\HsinYuChen\\source\\repos\\toenow\\artifacts\\hub-preview-sample\\raw\\page@b80c12ac6e837029ff252e04e09ff62e.webm",
+    "captureStart": 0.7875,
+    "duration": 10.663,
+    "actions": 12,
+    "errors": [],
+    "final": {
+      "mode": "playing",
+      "wave": 6,
+      "score": 9600,
+      "highScore": 9600,
+      "totalShards": 12,
+      "combo": 13,
+      "timeLeft": 98.83230000000007,
+      "elapsedTime": 10.559000000000026,
+      "freezeTimer": 0,
+      "pendingBriefing": null,
+      "board": {
+        "config": {
+          "wave": 6,
+          "phase": 2,
+          "phaseName": "INTERMEDIATE",
+          "gridSize": 4,
+          "excessCount": 3,
+          "compassNotch": "FLIP-H"
+        },
+        "carvingTargetGrid": [
+          [
+            0,
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            0,
+            0
+          ]
+        ],
+        "blueprintGrid": [
+          [
+            1,
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "activeGrid": [
+          [
+            0,
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            0,
+            2
+          ]
+        ],
+        "remainingExcess": 3,
+        "blocksShatteredInWave": 0,
+        "waveStartTime": 9.391300000000022
+      },
+      "layout": {
+        "vw": 1280,
+        "vh": 800,
+        "leftBox": {
+          "x": 246,
+          "y": 268,
+          "size": 373,
+          "cellSize": 80,
+          "pad": 16,
+          "gap": 7
+        },
+        "rightBox": {
+          "x": 660,
+          "y": 268,
+          "size": 373,
+          "cellSize": 80,
+          "pad": 16,
+          "gap": 7
+        }
+      }
+    }
+  },
+  {
+    "id": "ball-track",
+    "raw": "C:\\Users\\HsinYuChen\\source\\repos\\toenow\\artifacts\\hub-preview-sample\\raw\\page@26f51337391d6f6c5cab9bf7c891e09f.webm",
+    "captureStart": 2.5,
+    "duration": 14,
+    "actions": 1,
+    "errors": [],
+    "initial": {
+      "mode": "playing",
+      "phase": "wave_ready",
+      "wave": 1,
+      "tier": 1,
+      "tierName": "LEVEL 1 · BEGINNER (SINGLE RING)",
+      "isDualRing": false,
+      "innerRingCount": 0,
+      "outerRingCount": 3,
+      "score": 0,
+      "bestScore": 0,
+      "bestWave": 1,
+      "streak": 0,
+      "shields": 3,
+      "maxShields": 3,
+      "shieldsLostThisWave": 0,
+      "perkDoubleSurge": false,
+      "perkCalmDriftCount": 0,
+      "isOverdrive": false,
+      "overdriveMultiplier": 1,
+      "targetCount": 1,
+      "shellCount": 3,
+      "shells": [
+        {
+          "id": 0,
+          "slotIndex": 0,
+          "ring": "single",
+          "hasCore": false,
+          "targetOrder": -1,
+          "picked": false,
+          "x": 640,
+          "y": 263.89000000000004,
+          "lineupX": 0,
+          "lineupY": 0,
+          "revealedState": "none"
+        },
+        {
+          "id": 1,
+          "slotIndex": 1,
+          "ring": "single",
+          "hasCore": false,
+          "targetOrder": -1,
+          "picked": false,
+          "x": 780.2528141428899,
+          "y": 506.815,
+          "lineupX": 0,
+          "lineupY": 0,
+          "revealedState": "none"
+        },
+        {
+          "id": 2,
+          "slotIndex": 2,
+          "ring": "single",
+          "hasCore": true,
+          "targetOrder": 0,
+          "picked": false,
+          "x": 887,
+          "y": 191,
+          "lineupX": 887,
+          "lineupY": 191,
+          "revealedState": "none"
+        }
+      ]
+    },
+    "final": {
+      "mode": "playing",
+      "phase": "shuffle",
+      "wave": 2,
+      "tier": 1,
+      "tierName": "LEVEL 1 · BEGINNER (SINGLE RING)",
+      "isDualRing": false,
+      "innerRingCount": 0,
+      "outerRingCount": 4,
+      "score": 100,
+      "bestScore": 100,
+      "bestWave": 2,
+      "streak": 1,
+      "shields": 3,
+      "maxShields": 3,
+      "shieldsLostThisWave": 0,
+      "perkDoubleSurge": false,
+      "perkCalmDriftCount": 0,
+      "isOverdrive": false,
+      "overdriveMultiplier": 1,
+      "targetCount": 1,
+      "shellCount": 4,
+      "shells": [
+        {
+          "id": 0,
+          "slotIndex": 2,
+          "ring": "single",
+          "hasCore": false,
+          "targetOrder": -1,
+          "picked": false,
+          "x": 685.6254072833037,
+          "y": 321.9790183145572,
+          "lineupX": 0,
+          "lineupY": 0,
+          "revealedState": "none"
+        },
+        {
+          "id": 1,
+          "slotIndex": 3,
+          "ring": "single",
+          "hasCore": false,
+          "targetOrder": -1,
+          "picked": false,
+          "x": 478.05,
+          "y": 425.84000000000003,
+          "lineupX": 0,
+          "lineupY": 0,
+          "revealedState": "none"
+        },
+        {
+          "id": 2,
+          "slotIndex": 0,
+          "ring": "single",
+          "hasCore": false,
+          "targetOrder": -1,
+          "picked": false,
+          "x": 594.3745927166965,
+          "y": 529.7009816854428,
+          "lineupX": 0,
+          "lineupY": 0,
+          "revealedState": "none"
+        },
+        {
+          "id": 3,
+          "slotIndex": 1,
+          "ring": "single",
+          "hasCore": true,
+          "targetOrder": 0,
+          "picked": false,
+          "x": 801.95,
+          "y": 425.84000000000003,
+          "lineupX": 887,
+          "lineupY": 191,
+          "revealedState": "none"
+        }
+      ]
+    }
+  },
+  {
+    "id": "add-up",
+    "raw": "C:\\Users\\HsinYuChen\\source\\repos\\toenow\\artifacts\\hub-preview-sample\\raw\\page@5461094b6d51e753e3bf81f726311837.webm",
+    "captureStart": 2.5,
+    "duration": 14,
+    "actions": 17,
+    "errors": [],
+    "initial": {
+      "state": "playing",
+      "score": 0,
+      "bestScore": 0,
+      "wave": 1,
+      "target": 20,
+      "timeLeft": 60,
+      "selectedSum": 0,
+      "nodes": [
+        {
+          "id": 1,
+          "label": "10",
+          "op": "add",
+          "value": 10,
+          "selected": false,
+          "x": 640,
+          "y": 188
+        },
+        {
+          "id": 2,
+          "label": "10",
+          "op": "add",
+          "value": 10,
+          "selected": false,
+          "x": 1017,
+          "y": 261
+        },
+        {
+          "id": 3,
+          "label": "7",
+          "op": "add",
+          "value": 7,
+          "selected": false,
+          "x": 1023,
+          "y": 467
+        },
+        {
+          "id": 4,
+          "label": "3",
+          "op": "add",
+          "value": 3,
+          "selected": false,
+          "x": 849,
+          "y": 640
+        },
+        {
+          "id": 5,
+          "label": "5",
+          "op": "add",
+          "value": 5,
+          "selected": false,
+          "x": 470,
+          "y": 621
+        },
+        {
+          "id": 6,
+          "label": "5",
+          "op": "add",
+          "value": 5,
+          "selected": false,
+          "x": 170,
+          "y": 471
+        },
+        {
+          "id": 7,
+          "label": "3",
+          "op": "add",
+          "value": 3,
+          "selected": false,
+          "x": 333,
+          "y": 274
+        }
+      ]
+    },
+    "final": {
+      "state": "playing",
+      "score": 1500,
+      "bestScore": 1500,
+      "wave": 7,
+      "target": 43,
+      "timeLeft": 56.4500000000002,
+      "selectedSum": 22,
+      "nodes": [
+        {
+          "id": 1,
+          "label": "6",
+          "op": "add",
+          "value": 6,
+          "selected": false,
+          "x": 661,
+          "y": 187
+        },
+        {
+          "id": 2,
+          "label": "3",
+          "op": "add",
+          "value": 3,
+          "selected": false,
+          "x": 995,
+          "y": 254
+        },
+        {
+          "id": 3,
+          "label": "17",
+          "op": "add",
+          "value": 17,
+          "selected": false,
+          "x": 1029,
+          "y": 446
+        },
+        {
+          "id": 4,
+          "label": "22",
+          "op": "add",
+          "value": 22,
+          "selected": true,
+          "x": 957,
+          "y": 609
+        },
+        {
+          "id": 5,
+          "label": "21",
+          "op": "add",
+          "value": 21,
+          "selected": false,
+          "x": 617,
+          "y": 644
+        },
+        {
+          "id": 6,
+          "label": "4",
+          "op": "add",
+          "value": 4,
+          "selected": false,
+          "x": 278,
+          "y": 578
+        },
+        {
+          "id": 7,
+          "label": "16",
+          "op": "add",
+          "value": 16,
+          "selected": false,
+          "x": 253,
+          "y": 389
+        },
+        {
+          "id": 8,
+          "label": "36",
+          "op": "add",
+          "value": 36,
+          "selected": false,
+          "x": 310,
+          "y": 218
+        }
+      ]
+    }
+  },
+  {
+    "id": "tap-match",
+    "raw": "C:\\Users\\HsinYuChen\\source\\repos\\toenow\\artifacts\\hub-preview-sample\\raw\\page@63780fc5ded6611e848bd17e714d650e.webm",
+    "captureStart": 2.5,
+    "duration": 14,
+    "actions": 12,
+    "errors": [],
+    "initial": {
+      "phase": "STAGING",
+      "wave": 1,
+      "score": 0,
+      "streak": 0,
+      "peakStreak": 0,
+      "waveHits": 0,
+      "waveQuota": 20,
+      "faults": 0,
+      "timeLeft": 65,
+      "stagingTimer": 1.6,
+      "stagingDuration": 1.6,
+      "stagingBeepStep": 2,
+      "totalTaps": 0,
+      "validHits": 0,
+      "reactionSumMs": 0,
+      "target": {
+        "mode": "SHAPE",
+        "shape": "CIRCLE",
+        "color": null,
+        "glyph": null,
+        "label": "CIRCLE",
+        "rulePrimary": "Tap any node with an outer <strong>CIRCLE</strong> shape.",
+        "ruleSecondary": "Color and inner symbol do not matter (any color / symbol).",
+        "accentHex": "#f1f5f9",
+        "cssClass": "hud-highlight-white"
+      },
+      "gridSize": 3,
+      "speedLabel": "SLOW",
+      "nodes": [
+        {
+          "index": 0,
+          "row": 0,
+          "col": 0,
+          "x": 89,
+          "y": 232,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "DOT",
+          "color": "CYAN",
+          "isTarget": false,
+          "elapsedMs": 0,
+          "durationMs": 2400,
+          "feedbackMs": 0,
+          "feedbackLabel": "",
+          "feedbackType": "NONE"
+        },
+        {
+          "index": 1,
+          "row": 0,
+          "col": 1,
+          "x": 240,
+          "y": 232,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "DOT",
+          "color": "CYAN",
+          "isTarget": false,
+          "elapsedMs": 0,
+          "durationMs": 2400,
+          "feedbackMs": 0,
+          "feedbackLabel": "",
+          "feedbackType": "NONE"
+        },
+        {
+          "index": 2,
+          "row": 0,
+          "col": 2,
+          "x": 391,
+          "y": 232,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "DOT",
+          "color": "CYAN",
+          "isTarget": false,
+          "elapsedMs": 0,
+          "durationMs": 2400,
+          "feedbackMs": 0,
+          "feedbackLabel": "",
+          "feedbackType": "NONE"
+        },
+        {
+          "index": 3,
+          "row": 1,
+          "col": 0,
+          "x": 89,
+          "y": 383,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "DOT",
+          "color": "CYAN",
+          "isTarget": false,
+          "elapsedMs": 0,
+          "durationMs": 2400,
+          "feedbackMs": 0,
+          "feedbackLabel": "",
+          "feedbackType": "NONE"
+        },
+        {
+          "index": 4,
+          "row": 1,
+          "col": 1,
+          "x": 240,
+          "y": 383,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "DOT",
+          "color": "CYAN",
+          "isTarget": false,
+          "elapsedMs": 0,
+          "durationMs": 2400,
+          "feedbackMs": 0,
+          "feedbackLabel": "",
+          "feedbackType": "NONE"
+        },
+        {
+          "index": 5,
+          "row": 1,
+          "col": 2,
+          "x": 391,
+          "y": 383,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "DOT",
+          "color": "CYAN",
+          "isTarget": false,
+          "elapsedMs": 0,
+          "durationMs": 2400,
+          "feedbackMs": 0,
+          "feedbackLabel": "",
+          "feedbackType": "NONE"
+        },
+        {
+          "index": 6,
+          "row": 2,
+          "col": 0,
+          "x": 89,
+          "y": 534,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "DOT",
+          "color": "CYAN",
+          "isTarget": false,
+          "elapsedMs": 0,
+          "durationMs": 2400,
+          "feedbackMs": 0,
+          "feedbackLabel": "",
+          "feedbackType": "NONE"
+        },
+        {
+          "index": 7,
+          "row": 2,
+          "col": 1,
+          "x": 240,
+          "y": 534,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "DOT",
+          "color": "CYAN",
+          "isTarget": false,
+          "elapsedMs": 0,
+          "durationMs": 2400,
+          "feedbackMs": 0,
+          "feedbackLabel": "",
+          "feedbackType": "NONE"
+        },
+        {
+          "index": 8,
+          "row": 2,
+          "col": 2,
+          "x": 391,
+          "y": 534,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "DOT",
+          "color": "CYAN",
+          "isTarget": false,
+          "elapsedMs": 0,
+          "durationMs": 2400,
+          "feedbackMs": 0,
+          "feedbackLabel": "",
+          "feedbackType": "NONE"
+        }
+      ],
+      "spawnCooldown": 250,
+      "activeWindowMs": 2400,
+      "spawnIntervalMs": 850,
+      "maxConcurrentNodes": 3,
+      "guaranteedTargetCounter": 2,
+      "width": 480,
+      "height": 714,
+      "dpr": 1,
+      "safeTopY": 20,
+      "isPractice": false
+    },
+    "final": {
+      "phase": "PLAYING",
+      "wave": 1,
+      "score": 230,
+      "streak": 12,
+      "peakStreak": 12,
+      "waveHits": 12,
+      "waveQuota": 20,
+      "faults": 0,
+      "timeLeft": 57.68940000000047,
+      "stagingTimer": -0.001299999999998986,
+      "stagingDuration": 1.6,
+      "stagingBeepStep": 1,
+      "totalTaps": 12,
+      "validHits": 12,
+      "reactionSumMs": 1134.0000000000014,
+      "target": {
+        "mode": "SHAPE",
+        "shape": "CIRCLE",
+        "color": null,
+        "glyph": null,
+        "label": "CIRCLE",
+        "rulePrimary": "Tap any node with an outer <strong>CIRCLE</strong> shape.",
+        "ruleSecondary": "Color and inner symbol do not matter (any color / symbol).",
+        "accentHex": "#f1f5f9",
+        "cssClass": "hud-highlight-white"
+      },
+      "gridSize": 3,
+      "speedLabel": "SLOW",
+      "nodes": [
+        {
+          "index": 0,
+          "row": 0,
+          "col": 0,
+          "x": 89,
+          "y": 232,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "SQUARE",
+          "glyph": "CROSS",
+          "color": "MAGENTA",
+          "isTarget": false,
+          "elapsedMs": 2401.7999999999993,
+          "durationMs": 2400,
+          "feedbackMs": 0,
+          "feedbackLabel": "+18",
+          "feedbackType": "HIT"
+        },
+        {
+          "index": 1,
+          "row": 0,
+          "col": 1,
+          "x": 240,
+          "y": 232,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "SLASH",
+          "color": "VOLT",
+          "isTarget": true,
+          "elapsedMs": 16.600000000000364,
+          "durationMs": 2400,
+          "feedbackMs": -10.399999999999636,
+          "feedbackLabel": "+21",
+          "feedbackType": "HIT"
+        },
+        {
+          "index": 2,
+          "row": 0,
+          "col": 2,
+          "x": 391,
+          "y": 232,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "CROSS",
+          "color": "MAGENTA",
+          "isTarget": true,
+          "elapsedMs": 33.29999999999973,
+          "durationMs": 2400,
+          "feedbackMs": -10.200000000000273,
+          "feedbackLabel": "+17",
+          "feedbackType": "HIT"
+        },
+        {
+          "index": 3,
+          "row": 1,
+          "col": 0,
+          "x": 89,
+          "y": 383,
+          "radius": 57,
+          "status": "ACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "CROSS",
+          "color": "VOLT",
+          "isTarget": true,
+          "elapsedMs": 100.19999999999891,
+          "durationMs": 2400,
+          "feedbackMs": 0,
+          "feedbackLabel": "",
+          "feedbackType": "NONE"
+        },
+        {
+          "index": 4,
+          "row": 1,
+          "col": 1,
+          "x": 240,
+          "y": 383,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "DELTA",
+          "color": "CYAN",
+          "isTarget": true,
+          "elapsedMs": 133.39999999999964,
+          "durationMs": 2400,
+          "feedbackMs": -10.300000000001091,
+          "feedbackLabel": "+21",
+          "feedbackType": "HIT"
+        },
+        {
+          "index": 5,
+          "row": 1,
+          "col": 2,
+          "x": 391,
+          "y": 383,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "CROSS",
+          "color": "VOLT",
+          "isTarget": true,
+          "elapsedMs": 116.69999999999891,
+          "durationMs": 2400,
+          "feedbackMs": -10.100000000000364,
+          "feedbackLabel": "+19",
+          "feedbackType": "HIT"
+        },
+        {
+          "index": 6,
+          "row": 2,
+          "col": 0,
+          "x": 89,
+          "y": 534,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "DOT",
+          "color": "CYAN",
+          "isTarget": true,
+          "elapsedMs": 16.700000000000728,
+          "durationMs": 2400,
+          "feedbackMs": -10.099999999998545,
+          "feedbackLabel": "+20",
+          "feedbackType": "HIT"
+        },
+        {
+          "index": 7,
+          "row": 2,
+          "col": 1,
+          "x": 240,
+          "y": 534,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "DOT",
+          "color": "CYAN",
+          "isTarget": false,
+          "elapsedMs": 0,
+          "durationMs": 2400,
+          "feedbackMs": 0,
+          "feedbackLabel": "",
+          "feedbackType": "NONE"
+        },
+        {
+          "index": 8,
+          "row": 2,
+          "col": 2,
+          "x": 391,
+          "y": 534,
+          "radius": 57,
+          "status": "INACTIVE",
+          "shape": "CIRCLE",
+          "glyph": "SLASH",
+          "color": "CYAN",
+          "isTarget": true,
+          "elapsedMs": 150,
+          "durationMs": 2400,
+          "feedbackMs": -10.099999999999454,
+          "feedbackLabel": "+18",
+          "feedbackType": "HIT"
+        }
+      ],
+      "spawnCooldown": 766.5,
+      "activeWindowMs": 2400,
+      "spawnIntervalMs": 850,
+      "maxConcurrentNodes": 3,
+      "guaranteedTargetCounter": 0,
+      "width": 480,
+      "height": 714,
+      "dpr": 1,
+      "safeTopY": 20,
+      "isPractice": false
+    }
+  },
+  {
+    "id": "spot-quick",
+    "raw": "C:\\Users\\HsinYuChen\\source\\repos\\toenow\\artifacts\\hub-preview-sample\\raw\\page@57347e6a6af420587ff76b491e08e4dc.webm",
+    "captureStart": 2.5,
+    "duration": 14,
+    "actions": 5,
+    "errors": [],
+    "initial": {
+      "mode": "STAGING",
+      "wave": 1,
+      "score": 0,
+      "streak": 0,
+      "peakStreak": 0,
+      "timeRemaining": 60,
+      "currentTier": {
+        "level": 1,
+        "name": "BEGINNER",
+        "focusWindow": 10
+      },
+      "focusWindow": 10,
+      "elapsedInWave": 0,
+      "clarity": 0,
+      "stagingTimer": 0.3533,
+      "stagingTotal": 0.42,
+      "confirmTimer": 0,
+      "inputFreezeTimer": 0,
+      "lastAwardedPts": 0,
+      "targetSpecimen": {
+        "id": "TELESCOPE",
+        "cluster": "ASTRONOMY"
+      },
+      "candidates": [
+        {
+          "index": 0,
+          "id": "SATURN_RING",
+          "cluster": "ASTRONOMY",
+          "correct": false,
+          "depleted": false,
+          "selectedCorrect": false,
+          "rect": {
+            "x": 8,
+            "y": 579,
+            "w": 227,
+            "h": 60
+          }
+        },
+        {
+          "index": 1,
+          "id": "SHARK",
+          "cluster": "OCEAN_DEEP",
+          "correct": false,
+          "depleted": false,
+          "selectedCorrect": false,
+          "rect": {
+            "x": 245,
+            "y": 579,
+            "w": 227,
+            "h": 60
+          }
+        },
+        {
+          "index": 2,
+          "id": "TELESCOPE",
+          "cluster": "ASTRONOMY",
+          "correct": true,
+          "depleted": false,
+          "selectedCorrect": false,
+          "rect": {
+            "x": 8,
+            "y": 649,
+            "w": 227,
+            "h": 60
+          }
+        },
+        {
+          "index": 3,
+          "id": "COMET",
+          "cluster": "ASTRONOMY",
+          "correct": false,
+          "depleted": false,
+          "selectedCorrect": false,
+          "rect": {
+            "x": 245,
+            "y": 649,
+            "w": 227,
+            "h": 60
+          }
+        }
+      ],
+      "subjectAngle": 5.6747254387789745,
+      "subjectAngularVel": 0.10620641082822474,
+      "lastHistoryIds": [
+        "TELESCOPE"
+      ],
+      "layout": {
+        "width": 480,
+        "height": 723,
+        "dpr": 1,
+        "spotlightX": 240,
+        "spotlightY": 291,
+        "spotlightRadius": 132,
+        "gridTop": 579
+      },
+      "isPractice": false
+    },
+    "final": {
+      "mode": "ACTIVE",
+      "wave": 6,
+      "score": 550,
+      "streak": 5,
+      "peakStreak": 5,
+      "timeRemaining": 59.69970000000002,
+      "currentTier": {
+        "level": 2,
+        "name": "INTERMEDIATE",
+        "focusWindow": 20
+      },
+      "focusWindow": 20,
+      "elapsedInWave": 0.30030000000000123,
+      "clarity": 0.015015000000000061,
+      "stagingTimer": -0.013299999999999326,
+      "stagingTotal": 0.42,
+      "confirmTimer": -0.0038000000000011497,
+      "inputFreezeTimer": 0,
+      "lastAwardedPts": 0,
+      "targetSpecimen": {
+        "id": "CUP",
+        "cluster": "OBJECTS"
+      },
+      "candidates": [
+        {
+          "index": 0,
+          "id": "APPLE",
+          "cluster": "FRUIT",
+          "correct": false,
+          "depleted": false,
+          "selectedCorrect": false,
+          "rect": {
+            "x": 8,
+            "y": 579,
+            "w": 227,
+            "h": 60
+          }
+        },
+        {
+          "index": 1,
+          "id": "CUP",
+          "cluster": "OBJECTS",
+          "correct": true,
+          "depleted": false,
+          "selectedCorrect": false,
+          "rect": {
+            "x": 245,
+            "y": 579,
+            "w": 227,
+            "h": 60
+          }
+        },
+        {
+          "index": 2,
+          "id": "BELL",
+          "cluster": "OBJECTS",
+          "correct": false,
+          "depleted": false,
+          "selectedCorrect": false,
+          "rect": {
+            "x": 8,
+            "y": 649,
+            "w": 227,
+            "h": 60
+          }
+        },
+        {
+          "index": 3,
+          "id": "CHERRY",
+          "cluster": "FRUIT",
+          "correct": false,
+          "depleted": false,
+          "selectedCorrect": false,
+          "rect": {
+            "x": 245,
+            "y": 649,
+            "w": 227,
+            "h": 60
+          }
+        }
+      ],
+      "subjectAngle": 1.1997488837853332,
+      "subjectAngularVel": -0.06437604449583811,
+      "lastHistoryIds": [
+        "TELESCOPE",
+        "HAT",
+        "PACIFIER",
+        "GLASSES",
+        "BAT",
+        "CUP"
+      ],
+      "layout": {
+        "width": 480,
+        "height": 723,
+        "dpr": 1,
+        "spotlightX": 240,
+        "spotlightY": 291,
+        "spotlightRadius": 132,
+        "gridTop": 579
+      },
+      "isPractice": false
+    }
+  },
+  {
+    "id": "space-scale",
+    "raw": "C:\\Users\\HsinYuChen\\source\\repos\\toenow\\artifacts\\hub-preview-sample\\raw\\page@4a0fc404f75dbe3391716e35be5ff36e.webm",
+    "captureStart": 2.5,
+    "duration": 14,
+    "actions": 7,
+    "errors": [],
+    "initial": {
+      "mode": "playing",
+      "wave": 1,
+      "score": 0,
+      "puzzle": {
+        "wave": 1,
+        "level": 1,
+        "modeLabel": "LEVEL 1 · BEGINNER (EQUAL ARMS)",
+        "directive": "min",
+        "directiveTitle": "IDENTIFY MINIMUM MASS",
+        "directiveSub": "TAP THE LIGHTEST CELESTIAL ENTITY",
+        "waveDurationSec": 8,
+        "bodies": [
+          {
+            "id": "alpha",
+            "label": "ALPHA",
+            "symbol": "α",
+            "keyIndex": 1,
+            "archetype": "nebula_bubble",
+            "archetypeName": "Rose Cloud Cluster",
+            "densityDesc": "Diffuse Gas Cloud",
+            "mass": 50,
+            "visualRadius": 47,
+            "primaryColor": "#f43f5e",
+            "secondaryColor": "#fda4af",
+            "coreColor": "#fff1f2"
+          },
+          {
+            "id": "beta",
+            "label": "BETA",
+            "symbol": "β",
+            "keyIndex": 2,
+            "archetype": "neutron_star",
+            "archetypeName": "Cross-Beam Pulsar",
+            "densityDesc": "Extreme Nuclear Density",
+            "mass": 100,
+            "visualRadius": 26,
+            "primaryColor": "#22d3ee",
+            "secondaryColor": "#e0f2fe",
+            "coreColor": "#ffffff"
+          }
+        ],
+        "scales": [
+          {
+            "id": "scale-1",
+            "type": "simple",
+            "leftItems": [
+              {
+                "type": "body",
+                "id": "beta",
+                "bodyId": "beta",
+                "mass": 100
+              }
+            ],
+            "rightItems": [
+              {
+                "type": "body",
+                "id": "alpha",
+                "bodyId": "alpha",
+                "mass": 50
+              }
+            ],
+            "leftDistance": 1,
+            "rightDistance": 1,
+            "leftTorque": 100,
+            "rightTorque": 50,
+            "targetAngle": -0.22125,
+            "currentAngle": 0,
+            "angularVel": 0,
+            "settled": false,
+            "equality": false
+          }
+        ],
+        "targetBodyId": "alpha"
+      },
+      "targets": []
+    },
+    "final": {
+      "mode": "playing",
+      "wave": 8,
+      "score": 2778,
+      "puzzle": {
+        "wave": 8,
+        "level": 2,
+        "modeLabel": "LEVEL 2 · INTERMEDIATE (2 SCALES)",
+        "directive": "max",
+        "directiveTitle": "IDENTIFY MAXIMUM MASS",
+        "directiveSub": "TAP THE HEAVIEST CELESTIAL ENTITY",
+        "waveDurationSec": 7.3,
+        "bodies": [
+          {
+            "id": "alpha",
+            "label": "ALPHA",
+            "symbol": "α",
+            "keyIndex": 1,
+            "archetype": "neutron_star",
+            "archetypeName": "Cross-Beam Pulsar",
+            "densityDesc": "Extreme Nuclear Density",
+            "mass": 35,
+            "visualRadius": 26,
+            "primaryColor": "#22d3ee",
+            "secondaryColor": "#e0f2fe",
+            "coreColor": "#ffffff"
+          },
+          {
+            "id": "beta",
+            "label": "BETA",
+            "symbol": "β",
+            "keyIndex": 2,
+            "archetype": "yellow_sun",
+            "archetypeName": "Blazing Sun",
+            "densityDesc": "Solar Corona Star",
+            "mass": 90,
+            "visualRadius": 34,
+            "primaryColor": "#facc15",
+            "secondaryColor": "#f97316",
+            "coreColor": "#fef9c3"
+          },
+          {
+            "id": "gamma",
+            "label": "GAMMA",
+            "symbol": "γ",
+            "keyIndex": 3,
+            "archetype": "blue_dwarf",
+            "archetypeName": "Emerald Crystal",
+            "densityDesc": "Crystalline Core",
+            "mass": 160,
+            "visualRadius": 36,
+            "primaryColor": "#10b981",
+            "secondaryColor": "#6ee7b7",
+            "coreColor": "#ecfdf5"
+          }
+        ],
+        "scales": [
+          {
+            "id": "scale-1",
+            "type": "lever_asymmetric",
+            "leftItems": [
+              {
+                "type": "body",
+                "id": "beta",
+                "bodyId": "beta",
+                "mass": 90
+              }
+            ],
+            "rightItems": [
+              {
+                "type": "body",
+                "id": "alpha",
+                "bodyId": "alpha",
+                "mass": 35
+              }
+            ],
+            "leftDistance": 1,
+            "rightDistance": 2,
+            "leftTorque": 90,
+            "rightTorque": 70,
+            "targetAngle": -0.17250000000000001,
+            "currentAngle": -0.08621856475575,
+            "angularVel": -0.35269404061500004,
+            "settled": false,
+            "equality": false
+          },
+          {
+            "id": "scale-2",
+            "type": "simple",
+            "leftItems": [
+              {
+                "type": "body",
+                "id": "beta",
+                "bodyId": "beta",
+                "mass": 90
+              }
+            ],
+            "rightItems": [
+              {
+                "type": "body",
+                "id": "gamma",
+                "bodyId": "gamma",
+                "mass": 160
+              }
+            ],
+            "leftDistance": 1,
+            "rightDistance": 1,
+            "leftTorque": 90,
+            "rightTorque": 160,
+            "targetAngle": 0.25375000000000003,
+            "currentAngle": 0.12682875830012502,
+            "angularVel": 0.5188180452525002,
+            "settled": false,
+            "equality": false
+          }
+        ],
+        "targetBodyId": "gamma"
+      },
+      "targets": [
+        {
+          "bodyId": "beta",
+          "x": 214.83753056174402,
+          "y": 448.7347811708743,
+          "hitRadius": 50.56
+        },
+        {
+          "bodyId": "alpha",
+          "x": 476.3624694382561,
+          "y": 432.85043765825134,
+          "hitRadius": 44
+        },
+        {
+          "bodyId": "beta",
+          "x": 810.403998966023,
+          "y": 425.3888732981489,
+          "hitRadius": 50.56
+        },
+        {
+          "bodyId": "gamma",
+          "x": 1058.396001033977,
+          "y": 455.3311267018512,
+          "hitRadius": 52.239999999999995
+        }
+      ]
+    }
+  },
+  {
+    "id": "shadow-match",
+    "raw": "C:\\Users\\HsinYuChen\\source\\repos\\toenow\\artifacts\\hub-preview-sample\\raw\\page@6b0f2906e76e1fdcf69fdfc4db42e997.webm",
+    "captureStart": 2.5,
+    "duration": 14,
+    "actions": 7,
+    "errors": [],
+    "initial": {
+      "mode": "playing",
+      "score": 0,
+      "combo": 1,
+      "peakCombo": 1,
+      "timeRemaining": 59.9333,
+      "wave": 1,
+      "level": 1,
+      "correctCardIndex": 1,
+      "targetShapes": [
+        "HOURGLASS",
+        "HEX_NUT"
+      ],
+      "phantomShape": null
+    },
+    "final": {
+      "mode": "playing",
+      "score": 16400,
+      "combo": 8,
+      "peakCombo": 8,
+      "timeRemaining": 58.22260000000011,
+      "wave": 8,
+      "level": 2,
+      "correctCardIndex": 2,
+      "targetShapes": [
+        "WRENCH",
+        "ANCHOR_CROSS"
+      ],
+      "phantomShape": null
+    }
+  },
+  {
+    "id": "flash-brain",
+    "raw": "C:\\Users\\HsinYuChen\\source\\repos\\toenow\\artifacts\\hub-preview-sample\\raw\\page@c2e958dbebad5ab1f2816eefdf63c173.webm",
+    "captureStart": 2.5,
+    "duration": 14,
+    "actions": 9,
+    "errors": [],
+    "initial": {
+      "globalTimeRemaining": 60,
+      "lastTickSecond": 60,
+      "score": 0,
+      "bestScore": 0,
+      "combo": 1,
+      "peakCombo": 1,
+      "wavesCleared": 0,
+      "totalTaps": 0,
+      "correctTaps": 0,
+      "highestLevel": 1,
+      "waveState": {
+        "config": {
+          "wave": 1,
+          "level": 1,
+          "gridSize": 3,
+          "cyanTargetCount": 3,
+          "minTargetCount": 3,
+          "maxTargetCount": 4,
+          "priorityAnchorCount": 0,
+          "decoyCount": 0,
+          "preFlashDuration": 0.65,
+          "flashDuration": 1.5,
+          "retentionDuration": 0.5,
+          "rotationChoices": [
+            0
+          ],
+          "parTime": 5
+        },
+        "rotationDeg": 0,
+        "cells": [
+          {
+            "id": 0,
+            "row": 0,
+            "col": 0,
+            "type": "TARGET",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 1,
+            "row": 0,
+            "col": 1,
+            "type": "TARGET",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 2,
+            "row": 0,
+            "col": 2,
+            "type": "EMPTY",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 3,
+            "row": 1,
+            "col": 0,
+            "type": "EMPTY",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 4,
+            "row": 1,
+            "col": 1,
+            "type": "TARGET",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 5,
+            "row": 1,
+            "col": 2,
+            "type": "EMPTY",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 6,
+            "row": 2,
+            "col": 0,
+            "type": "EMPTY",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 7,
+            "row": 2,
+            "col": 1,
+            "type": "EMPTY",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 8,
+            "row": 2,
+            "col": 2,
+            "type": "EMPTY",
+            "tapped": false,
+            "offending": false
+          }
+        ],
+        "signature": "3:TTEETEEEE",
+        "totalTargetsRequired": 3,
+        "tappedTargetsCount": 0,
+        "prioritySatisfied": true
+      },
+      "phase": "PHASE_PRE_FLASH",
+      "phaseElapsed": 0.0665,
+      "inputElapsed": 0,
+      "shakeTrauma": 0,
+      "hoverX": -1000,
+      "hoverY": -1000,
+      "lastTouchTime": 0,
+      "cellScreenGeometries": [
+        {
+          "id": 0,
+          "centerX": 121,
+          "centerY": 197,
+          "cellSize": 129
+        },
+        {
+          "id": 1,
+          "centerX": 259,
+          "centerY": 197,
+          "cellSize": 129
+        },
+        {
+          "id": 2,
+          "centerX": 397,
+          "centerY": 197,
+          "cellSize": 129
+        },
+        {
+          "id": 3,
+          "centerX": 121,
+          "centerY": 335,
+          "cellSize": 129
+        },
+        {
+          "id": 4,
+          "centerX": 259,
+          "centerY": 335,
+          "cellSize": 129
+        },
+        {
+          "id": 5,
+          "centerX": 397,
+          "centerY": 335,
+          "cellSize": 129
+        },
+        {
+          "id": 6,
+          "centerX": 121,
+          "centerY": 473,
+          "cellSize": 129
+        },
+        {
+          "id": 7,
+          "centerX": 259,
+          "centerY": 473,
+          "cellSize": 129
+        },
+        {
+          "id": 8,
+          "centerX": 397,
+          "centerY": 473,
+          "cellSize": 129
+        }
+      ],
+      "particles": [
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        }
+      ],
+      "callouts": [
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        }
+      ]
+    },
+    "final": {
+      "globalTimeRemaining": 59.49600000000023,
+      "lastTickSecond": 60,
+      "score": 4800,
+      "bestScore": 4800,
+      "combo": 4,
+      "peakCombo": 4,
+      "wavesCleared": 3,
+      "totalTaps": 9,
+      "correctTaps": 9,
+      "highestLevel": 1,
+      "waveState": {
+        "config": {
+          "wave": 4,
+          "level": 1,
+          "gridSize": 3,
+          "cyanTargetCount": 3,
+          "minTargetCount": 3,
+          "maxTargetCount": 4,
+          "priorityAnchorCount": 0,
+          "decoyCount": 0,
+          "preFlashDuration": 0.65,
+          "flashDuration": 1.5,
+          "retentionDuration": 0.5,
+          "rotationChoices": [
+            0
+          ],
+          "parTime": 5
+        },
+        "rotationDeg": 0,
+        "cells": [
+          {
+            "id": 0,
+            "row": 0,
+            "col": 0,
+            "type": "EMPTY",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 1,
+            "row": 0,
+            "col": 1,
+            "type": "EMPTY",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 2,
+            "row": 0,
+            "col": 2,
+            "type": "TARGET",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 3,
+            "row": 1,
+            "col": 0,
+            "type": "EMPTY",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 4,
+            "row": 1,
+            "col": 1,
+            "type": "EMPTY",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 5,
+            "row": 1,
+            "col": 2,
+            "type": "EMPTY",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 6,
+            "row": 2,
+            "col": 0,
+            "type": "EMPTY",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 7,
+            "row": 2,
+            "col": 1,
+            "type": "TARGET",
+            "tapped": false,
+            "offending": false
+          },
+          {
+            "id": 8,
+            "row": 2,
+            "col": 2,
+            "type": "TARGET",
+            "tapped": false,
+            "offending": false
+          }
+        ],
+        "signature": "3:EETEEEETT",
+        "totalTargetsRequired": 3,
+        "tappedTargetsCount": 0,
+        "prioritySatisfied": true
+      },
+      "phase": "PHASE_RETENTION",
+      "phaseElapsed": 0.117,
+      "inputElapsed": 0,
+      "shakeTrauma": 0,
+      "hoverX": 397,
+      "hoverY": 334.15625,
+      "lastTouchTime": 0,
+      "cellScreenGeometries": [
+        {
+          "id": 0,
+          "centerX": 121,
+          "centerY": 197,
+          "cellSize": 129
+        },
+        {
+          "id": 1,
+          "centerX": 259,
+          "centerY": 197,
+          "cellSize": 129
+        },
+        {
+          "id": 2,
+          "centerX": 397,
+          "centerY": 197,
+          "cellSize": 129
+        },
+        {
+          "id": 3,
+          "centerX": 121,
+          "centerY": 335,
+          "cellSize": 129
+        },
+        {
+          "id": 4,
+          "centerX": 259,
+          "centerY": 335,
+          "cellSize": 129
+        },
+        {
+          "id": 5,
+          "centerX": 397,
+          "centerY": 335,
+          "cellSize": 129
+        },
+        {
+          "id": 6,
+          "centerX": 121,
+          "centerY": 473,
+          "cellSize": 129
+        },
+        {
+          "id": 7,
+          "centerX": 259,
+          "centerY": 473,
+          "cellSize": 129
+        },
+        {
+          "id": 8,
+          "centerX": 397,
+          "centerY": 473,
+          "cellSize": 129
+        }
+      ],
+      "particles": [
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "life": 0,
+          "maxLife": 1,
+          "color": "#00f3ff",
+          "size": 3
+        }
+      ],
+      "callouts": [
+        {
+          "active": false,
+          "x": 259,
+          "y": 76.05359999999997,
+          "text": "PAR CLEAR +1.5s",
+          "color": "#00f3ff",
+          "life": 0.6505999999999986,
+          "maxLife": 0.65
+        },
+        {
+          "active": false,
+          "x": 397,
+          "y": 305.2536000000003,
+          "text": "+1800 CLEAR!",
+          "color": "#00ff88",
+          "life": 0.6505999999999986,
+          "maxLife": 0.65
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        },
+        {
+          "active": false,
+          "x": 0,
+          "y": 0,
+          "text": "",
+          "color": "#00ff88",
+          "life": 0,
+          "maxLife": 0.7
+        }
+      ]
+    }
+  },
+  {
+    "id": "animal-rescue-train",
+    "raw": "C:\\Users\\HsinYuChen\\source\\repos\\toenow\\artifacts\\hub-preview-sample\\raw\\page@73c40cd3f9eab9f80365d040e7fac86b.webm",
+    "captureStart": 1.5027999999523163,
+    "duration": 10.503,
+    "actions": 6,
+    "errors": [],
+    "final": {
+      "moves": "6"
+    }
+  }
+]

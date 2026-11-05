@@ -1,0 +1,64 @@
+/* The tactical cells are transparent interaction areas on the painted terrain. */
+#board{background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;gap:0}
+.board-surround #board .tile{background:transparent;border:0;border-radius:0;box-shadow:none}
+#board .tile.reachable{background:#168ed65c;box-shadow:inset 0 0 0 2px #a5e8ff;border-radius:3px}
+#board .tile.reachable::after{content:"👣";width:22px;height:22px;line-height:22px;font-size:16px;background:#d9f5ffcc;border:0;border-radius:50%;box-shadow:none;left:50%;bottom:14%;transform:translateX(-50%);z-index:2}
+#board .tile.attack-range::before{inset:2px;border:2px solid #ff6e26;border-radius:3px;background:repeating-linear-gradient(135deg,#ff7a354d 0 4px,#ffdcad1a 4px 10px);box-shadow:inset 0 0 0 1px #ffe5bd77}
+#board .tile.range-preview::before{border-style:dashed}
+#board .tile.has-unit{isolation:isolate}
+#board .tile.has-unit::before{content:"";position:absolute;inset:auto;left:50%;bottom:3%;width:73%;height:18%;border:1px solid #e4ebbd88;border-radius:50%;background:#79a65e20;transform:translateX(-50%);z-index:1;pointer-events:none}
+#board .tile.has-unit::after{content:"";position:absolute;left:50%;bottom:7%;width:53%;height:10%;border:0;border-radius:50%;background:#273a2790;box-shadow:0 2px 3px #2533244d;transform:translateX(-50%);z-index:0;pointer-events:none}
+#board .tile.enemy-unit::before{border-color:#f2c08f9c;background:#b66d3a20}
+#board .tile.has-unit.attack-range::before{border-color:#dba448;background:#f1c16a20}
+#board .tile.selected::before{border:2px solid #e6edb6;box-shadow:0 0 0 2px #4d7b4b8c;background:#a6cd6936}
+#board .tile.target::before{border:3px solid #e33126;box-shadow:0 0 0 2px #fff0cbbb;background:#d83c354d}
+#board .tile.target img{filter:drop-shadow(0 0 2px #fff0cc) drop-shadow(0 0 3px #c52d24)}
+.target-marker{position:absolute;right:2%;top:0;z-index:6;display:grid;place-items:center;width:25px;height:25px;border:2px solid #ffe4b6;border-radius:50%;background:#b92d21;color:#fff3d1;font-size:17px;box-shadow:0 2px 5px #3b201d77;pointer-events:none}
+#board .tile.attack-picked::before{border-color:#fff4cf;box-shadow:0 0 0 3px #bb2f20;background:#df463f55}
+#board .tile.attack-picked .target-marker{background:#fff3d1;color:#ae291d;border-color:#b72e21}
+#board .tile.move-destination::before{border:2px dashed #f8dfa3;background:#e7b75333;box-shadow:0 0 0 2px #a87d3d88}
+#board .tile.move-origin{align-items:flex-end;padding-bottom:13%;font-size:24px;color:#f3e6b0;text-shadow:0 1px 2px #28482b}
+#board .tile.move-origin::before{content:"";position:absolute;inset:auto;left:50%;bottom:3%;width:72%;height:18%;border:1px dashed #f4e6b3aa;border-radius:50%;background:#77975c24;transform:translateX(-50%)}
+#board .tile.has-unit img{position:absolute;left:50%;bottom:12%;width:78%;height:84%;margin:0;transform:translateX(-50%);object-fit:contain;filter:drop-shadow(0 2px 1px #263b2733);z-index:3}
+#board .tile.spent img{filter:grayscale(.55) drop-shadow(0 2px 1px #263b2733);opacity:.72}
+#board .tile.move-destination img{opacity:.6}
+#board .unit-count{bottom:0;right:6%;z-index:5;border:1px solid #ffedc7cc;box-shadow:0 1px 3px #183c2b66;border-radius:7px;padding:1px 5px;font-size:11px}
+#board .tile.wall,#board .tile.tree,#board .tile.gate{background:transparent;border:0;box-shadow:none}
+.wood-wall{inset:7% 8% 11%;filter:drop-shadow(0 4px 2px #35412966)}
+.battle-tree{filter:drop-shadow(1px 4px 2px #21392577)}
+.gate-lane{inset:5% 6% 10%;filter:drop-shadow(0 3px 1px #37442c44)}
+#board .wood-wall,#board .gate-lane{inset:0;background-position:center;background-size:100% 100%;background-repeat:no-repeat;filter:drop-shadow(1px 2px 1px #273a2b66)}
+#board .wood-wall i{display:none}
+#board .wood-wall::before,#board .wood-wall::after,#board .gate-lane::before,#board .gate-lane::after{content:none}
+#board .tile.wall:disabled{opacity:1}
+#battle[data-fort="acorn"] .wood-wall{background-image:url('../../assets/animal-siege/acorn-wall-side-v1.webp')}
+#battle[data-fort="acorn"] .gate-lane{background-image:url('../../assets/animal-siege/acorn-gate-side-v1.webp')}
+#battle[data-fort="river"] .wood-wall{background-image:url('../../assets/animal-siege/river-wall-side-v1.webp')}
+#battle[data-fort="river"] .gate-lane{background-image:url('../../assets/animal-siege/river-gate-side-v1.webp')}
+#battle[data-fort="tower"] .wood-wall{background-image:url('../../assets/animal-siege/tower-wall-side-v1.webp')}
+#battle[data-fort="tower"] .gate-lane{background-image:url('../../assets/animal-siege/tower-gate-side-v1.webp')}
+#battle[data-fort="river"] .battle-tree,#battle[data-fort="tower"] .battle-tree{width:88%;height:96%;background-position:center bottom;background-size:contain;background-repeat:no-repeat;filter:drop-shadow(1px 3px 1px #21392577)}
+#battle[data-fort="river"] .tile.tree:disabled,#battle[data-fort="tower"] .tile.tree:disabled{opacity:1}
+#battle[data-fort="river"] .battle-tree{background-image:url('../../assets/animal-siege/river-tree-v1.webp')}
+#battle[data-fort="tower"] .battle-tree{background-image:url('../../assets/animal-siege/tower-tree-v1.webp')}
+#battle[data-fort="river"] .battle-tree::before,#battle[data-fort="tower"] .battle-tree::before{content:none}
+#battle[data-fort="river"] .siege-flag[data-owner="defenders"] .flag-cloth{background:linear-gradient(100deg,#276258,#4b9e8f,#2a665e);color:#fff0bf}
+#battle[data-fort="tower"] .siege-flag[data-owner="defenders"] .flag-cloth{background:linear-gradient(100deg,#64415c,#a1647c,#69405c);color:#ffe7a3}
+#board .tile.combat-occupied::after{opacity:0}
+.combat-actor,.combat-victim,.combat-walker{position:absolute;display:block;transform-origin:50% 88%;pointer-events:none}
+.combat-actor::after,.combat-victim::after,.combat-walker::after{content:"";position:absolute;left:50%;bottom:7%;width:53%;height:10%;border-radius:50%;background:#273a2780;box-shadow:0 2px 3px #25332444;transform:translateX(-50%);z-index:-1}
+.combat-actor img,.combat-victim img,.combat-walker img{position:absolute;left:50%;bottom:12%;width:78%;height:84%;object-fit:contain;transform:translateX(-50%);filter:drop-shadow(0 2px 1px #263b2733)}
+.combat-walker{z-index:3}
+.walker-count{position:absolute;right:6%;bottom:0;min-width:20px;padding:1px 5px;border:1px solid #ffedc7cc;border-radius:7px;background:#365e47;color:#fff8dc;font-size:11px;font-weight:750;text-align:center;box-shadow:0 1px 3px #183c2b66}
+.combat-walker[data-team="enemy"] .walker-count{background:#a45936}
+.battle-actions{padding:13px 16px;background:#fff1cd;color:#3f3624;border-top:2px solid #b18b48;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.battle-actions #action-hint,.battle-actions #preview,.battle-actions #move-confirmation,.battle-actions #confirm-attack{grid-area:auto}
+#action-hint{font-size:13px;font-weight:700;line-height:1.6}
+#action-hint[data-step="target"],#action-hint[data-step="attack"]{color:#9c321f}
+.battle-actions #preview{margin:0;padding:10px 12px;border:1px solid #cf9b60;border-radius:8px;background:#fffaf0;color:#65482d;font-size:12px;line-height:1.7}
+.battle-actions .move-confirmation{margin:0;display:flex;gap:10px;justify-content:flex-end}
+.battle-actions button{min-height:46px;padding:10px 18px;border:1px solid #997538;border-radius:9px;font-weight:750;font-size:14px;background:#fff7dd;color:#51422a;touch-action:manipulation}
+.battle-actions #confirm-move{background:#1a729b;color:#fff;border-color:#174f68}
+.battle-actions #confirm-attack{width:100%;background:linear-gradient(#c64d2c,#a93120);color:#fff4dd;border:2px solid #842c1a;box-shadow:0 3px 0 #722b1c}
+.battle-actions button:focus-visible{outline:3px solid #1975ac;outline-offset:3px}
+@media(max-width:520px){#board .tile.reachable::after{width:16px;height:16px;line-height:16px;font-size:12px}#board .unit-count,.walker-count{font-size:10px;min-width:16px;padding:0 3px;border-radius:5px}#board .tile.move-origin{font-size:20px}.target-marker{width:20px;height:20px;font-size:13px;border-width:1px}.battle-actions{padding:11px 10px;gap:8px}#action-hint{font-size:12px}}

@@ -1,0 +1,54 @@
+{
+  "generator": "Built-in image_gen",
+  "generatedOn": "2026-11-04",
+  "reference": "sources/terrain-props-v1.png (approved painted timber terrain)",
+  "source": "sources/open-gates-v1.png",
+  "prompt": "Use case: stylized-concept. Asset type: production transparent 2-by-2 sprite atlas for woodland animal siege game. Supplied image is STYLE REFERENCE ONLY, matching its rich painterly wood grain, honey sunlight, charming fantasy craft and crisp silhouettes. Make THREE isolated open double wooden gateway sprites, one in each specified quarter; leave the fourth quarter entirely transparent. ONE square image, true alpha transparent background. No text, grid lines, labels, animals, people, castle building, ground tile, scenery, or closed doors.\nCRITICAL: Each gateway has two sturdy short posts joined by a readable carved timber lintel across the TOP, and TWO wood-plank DOOR LEAVES physically attached at the side posts, swung WIDE OPEN OUTWARD toward the viewer at about 70 degrees. Their carved front faces are visible at the sides. The CENTER HALF of the gateway is an empty clear transparent passage from beneath the overhead lintel all the way down to its base. DO NOT draw a solid horizontal fence, threshold plank, low brace or barrier across this walk-through opening. No doorway filled with shadow color; the central opening must be transparent so game grass and animal sprites show through. Not just two poles: hinges, angled open door panels and the top frame must read instantly. Subtly elevated three-quarter view consistent with a small square tactical tile. Tiny contact shadows only under posts. All components fully contained with ample transparent margins inside each quarter, no overlap across central seams. Each sprite occupies about 80% of its quarter's width and height.\nTOP LEFT: Acorn Fort gateway, warm honey cedar frame and two outward-open golden-brown plank leaves, iron hinges and subtle carved acorn ornament at top center, no flag or sign.\nTOP RIGHT: River Keep gateway, weathered bark cedar with teal rope wraps and two outward-open grey-brown plank doors with teal cross straps, natural moss touches at post bases.\nBOTTOM LEFT: Treetop Citadel gateway, elegantly carved golden cedar frame with restrained ivy on the outside of posts, two wide-open golden wood door leaves and small bronze hinge studs, no symbol or flag blocking passage.\nBOTTOM RIGHT: completely blank transparent quarter, no object.\nHigh-quality hand-painted game sprites, not a flat vector icon, not a geometric schematic, not photorealism, no heavy black outlines.",
+  "cleanupPrompt": "Edit the supplied transparent gate sprite atlas. Preserve all three gate designs, open door poses, 2x2 layout, framing, wood colors and painterly details exactly. REMOVE the milky white/gray haze and background remnants around the gates and above their lintels. The existing outside corners have partially opaque white background that must be entirely erased. Make every non-object pixel fully alpha-transparent, including the entire clear walk-through opening between each pair of open doors. No backdrop, glow, atmospheric haze, cast shadow, drop shadow, floor patch or colored background whatsoever. Keep ONLY the wooden frames, two open door leaves, metal/rope fittings and the small ivy attached to the posts. Bottom-right quarter stays entirely empty and transparent. Keep all three objects separate within their existing quarters. Do not fill the openings. Return actual clean transparent alpha, suitable to place directly over a grass game map.",
+  "notes": "Three open double-gate sprites. Quadrant extraction and WebP encoding only; walkable gate tile coordinates and all collision rules remain unchanged.",
+  "sourceSha256": "ce4136249648f659f5751215601465c42ef1a98077e77832520ae80148a64cf2",
+  "sprites": [
+    {
+      "runtime": "acorn-gate-v1.webp",
+      "crop": {
+        "left": 0,
+        "top": 0,
+        "width": 627,
+        "height": 627
+      },
+      "runtimeDimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "runtimeSha256": "0890ab0fee8d7594b69c0c7e87de62dd2b2a05f24a51715f7cc09c415010ebc2"
+    },
+    {
+      "runtime": "river-gate-v1.webp",
+      "crop": {
+        "left": 627,
+        "top": 0,
+        "width": 627,
+        "height": 627
+      },
+      "runtimeDimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "runtimeSha256": "181d87acfc70e3f38ab2ebc78af241890bf832897e0e36f5fc965f3e6941d900"
+    },
+    {
+      "runtime": "tower-gate-v1.webp",
+      "crop": {
+        "left": 0,
+        "top": 627,
+        "width": 627,
+        "height": 627
+      },
+      "runtimeDimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "runtimeSha256": "39ef0e9c2ecec38bac09ee85e8b4cb88bf42b8cb10dc9b0cf50881ec7db3846e"
+    }
+  ]
+}

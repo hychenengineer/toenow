@@ -1,0 +1,407 @@
+ M assets/toenow-tutorials.css
+ M games/add-up/index.html
+ M games/ball-track/index.html
+ M games/block-match/index.html
+ M games/flash-brain/assets/index-cr-6j3L1.js
+ M games/flash-brain/index.html
+ M games/flash-brain/tutorial.js
+ M games/number-pop/index.html
+ M games/shadow-match/index.html
+ M games/space-scale/index.html
+ M games/spot-quick/index.html
+ M games/tap-match/index.html
+ M index.html
+ M package.json
+ M shared/toenow-i18n-animals.js
+ M shared/toenow-i18n-core.js
+ M shared/toenow-i18n-games-a.js
+ M shared/toenow-island.js
+ M shared/toenow-tutorial-config.js
+ M shared/toenow-tutorials.js
+ M tests/animal-numeric-theme.test.cjs
+ M tests/animal-recognition.test.cjs
+ M tests/animal-spatial.test.cjs
+ M tests/best-score-sync.test.cjs
+ M tests/flash-brain.test.cjs
+ M tests/games-runtime.test.cjs
+ M tests/number-pop-math.test.cjs
+ M tests/practice-mode.test.cjs
+ M tests/toenow-screens.test.cjs
+ M tests/toenow-tutorials.test.cjs
+ M tools/capture-animal-gameplay-previews.cjs
+ M tools/verify-animal-numeric-browser.cjs
+ M tools/verify-flash-priority-notice-browser.cjs
+ M tools/verify-island-briefings-browser.cjs
+ M tools/verify-island-browser.cjs
+ M tools/verify-membership-browser.cjs
+ M tools/verify-onboarding-browser.cjs
+ M tools/verify-shared-screens-browser.cjs
+ M tools/verify-total-time-browser.cjs
+ M tools/verify-tutorials-browser.cjs
+?? .codex-remote-attachments/
+?? artifacts/add-up-input-before-push.log
+?? artifacts/add-up-input-browser.log
+?? artifacts/add-up-input-npm-test.log
+?? artifacts/add-up-input-shared-screens.log
+?? artifacts/all-local-status.txt
+?? artifacts/analytics-before-push.log
+?? artifacts/analytics-browser-final.log
+?? artifacts/analytics-browser-results.json
+?? artifacts/analytics-browser.log
+?? artifacts/analytics-candidate-browser-remaining.log
+?? artifacts/analytics-candidate-browser.log
+?? artifacts/analytics-custom-dimensions.jpg
+?? artifacts/analytics-failure.png
+?? artifacts/analytics-focus.log
+?? artifacts/analytics-game-report.jpg
+?? artifacts/analytics-npm-test-final.log
+?? artifacts/analytics-npm-test-final2.log
+?? artifacts/analytics-npm-test.log
+?? artifacts/analytics-production.log
+?? artifacts/analytics-shared-screens.log
+?? artifacts/animal-island/
+?? artifacts/animal-rescue-simple-before-publish.log
+?? artifacts/animal-rescue-simple-browser-final.log
+?? artifacts/animal-rescue-simple-browser-reviewed.log
+?? artifacts/animal-rescue-simple-browser.log
+?? artifacts/animal-rescue-simple-contrast-red.log
+?? artifacts/animal-rescue-simple-live-hashes.json
+?? artifacts/animal-rescue-simple-npm-final.log
+?? artifacts/animal-rescue-simple-npm-reviewed.log
+?? artifacts/animal-rescue-simple-npm.log
+?? artifacts/animal-rescue-simple-release.json
+?? artifacts/animal-rescue-simple-shared.log
+?? artifacts/animal-rescue-simple-success-final.log
+?? artifacts/animal-rescue-simple-success.log
+?? artifacts/animal-rescue-train/picker-browser-results.json
+?? artifacts/animal-rescue-train/simple-board/
+?? artifacts/animal-rescue-train/success/
+?? artifacts/ball-memory-browser-final.log
+?? artifacts/ball-memory-browser-verified.log
+?? artifacts/ball-memory-browser.log
+?? artifacts/ball-memory-npm.log
+?? artifacts/ball-memory-red.log
+?? artifacts/ball-memory-screens.log
+?? artifacts/ball-memory-time.log
+?? artifacts/ball-memory-tutorials.log
+?? artifacts/ball-memory/
+?? artifacts/block-match-success-browser-final.log
+?? artifacts/block-match-success-browser.log
+?? artifacts/block-match-success-npm.log
+?? artifacts/block-match-success-publish-browser.log
+?? artifacts/block-match-success-publish-npm.log
+?? artifacts/block-match-success-shared-screens.log
+?? artifacts/block-match-success/
+?? artifacts/build-flash-hud.py
+?? artifacts/build-light-hud-gallery.py
+?? artifacts/build-light-hud.py
+?? artifacts/challenge-publication-state.json
+?? artifacts/explorer-return-label-npm.log
+?? artifacts/flash-priority-after-1100-en.png
+?? artifacts/flash-priority-after-1100-zh-Hant.png
+?? artifacts/flash-priority-after-390-en.png
+?? artifacts/flash-priority-after-390-zh-Hant.png
+?? artifacts/flash-priority-notice-1100-en.png
+?? artifacts/flash-priority-notice-1100-zh-Hant.png
+?? artifacts/flash-priority-notice-390-en.png
+?? artifacts/flash-priority-notice-390-zh-Hant.png
+?? artifacts/flash-priority-notice-browser.log
+?? artifacts/flash-priority-notice-npm.log
+?? artifacts/flash-priority-notice-shared-screens.log
+?? artifacts/flash-progressive-all-screens.log
+?? artifacts/flash-progressive-all-tutorials.log
+?? artifacts/flash-progressive-browser-final.log
+?? artifacts/flash-progressive-browser-reviewed.log
+?? artifacts/flash-progressive-browser.log
+?? artifacts/flash-progressive-npm.log
+?? artifacts/flash-progressive-priority-final.log
+?? artifacts/flash-progressive-priority-notice.log
+?? artifacts/flash-progressive-screens.log
+?? artifacts/flash-progressive-tutorial-regression.log
+?? artifacts/flash-progressive/
+?? artifacts/flash-wave-clear-browser.log
+?? artifacts/flash-wave-clear-npm.log
+?? artifacts/flash-wave-clear-screens.log
+?? artifacts/flash-wave-clear/
+?? artifacts/game-launch-browser.log
+?? artifacts/game-launch-npm.log
+?? artifacts/game-launch-shared-screens.log
+?? artifacts/game-launch/
+?? artifacts/game-ui-cleanup-browser.log
+?? artifacts/game-ui-cleanup-npm.log
+?? artifacts/game-ui-cleanup-shared-screens.log
+?? artifacts/game-ui-publication-npm.log
+?? artifacts/game-ui-publication-state.json
+?? artifacts/github-language-controls.log
+?? artifacts/github-number-pop-controls.log
+?? artifacts/github-timed-games-npm.log
+?? artifacts/github-total-time-browser.log
+?? artifacts/hub-account-label-preview.png
+?? artifacts/hub-gameplay-previews/
+?? artifacts/hub-preview-sample/
+?? artifacts/hub-themes-npm-test.log
+?? artifacts/hub-themes-shared-screens.log
+?? artifacts/hub-themes/arena-1440.png
+?? artifacts/hub-themes/arena-390.png
+?? artifacts/hub-themes/bright-1440.png
+?? artifacts/hub-themes/bright-390.png
+?? artifacts/hub-themes/browser-before-push.log
+?? artifacts/hub-themes/calm-1440.png
+?? artifacts/hub-themes/calm-390.png
+?? artifacts/hub-themes/diagnostic.log
+?? artifacts/in-game-tutorials-browser.log
+?? artifacts/in-game-tutorials-final-layout.log
+?? artifacts/in-game-tutorials-final-mobile.log
+?? artifacts/in-game-tutorials-flash-final.log
+?? artifacts/in-game-tutorials-flash.log
+?? artifacts/in-game-tutorials-keys.log
+?? artifacts/in-game-tutorials-npm-final.log
+?? artifacts/in-game-tutorials-npm.log
+?? artifacts/in-game-tutorials-publish-npm.log
+?? artifacts/in-game-tutorials-shared-screens.log
+?? artifacts/in-game-tutorials/
+?? artifacts/island-briefing-block-match-1100-en-21.png
+?? artifacts/island-briefing-block-match-1100-en-6.png
+?? artifacts/island-briefing-block-match-1100-zh-Hant-21.png
+?? artifacts/island-briefing-block-match-1100-zh-Hant-6.png
+?? artifacts/island-briefing-block-match-390-en-21.png
+?? artifacts/island-briefing-block-match-390-en-6.png
+?? artifacts/island-briefing-block-match-390-zh-Hant-21.png
+?? artifacts/island-briefing-block-match-390-zh-Hant-6.png
+?? artifacts/island-briefing-tap-match-1100-en-1.png
+?? artifacts/island-briefing-tap-match-1100-en-21.png
+?? artifacts/island-briefing-tap-match-1100-zh-Hant-1.png
+?? artifacts/island-briefing-tap-match-1100-zh-Hant-21.png
+?? artifacts/island-briefing-tap-match-390-en-1.png
+?? artifacts/island-briefing-tap-match-390-en-21.png
+?? artifacts/island-briefing-tap-match-390-zh-Hant-1.png
+?? artifacts/island-briefing-tap-match-390-zh-Hant-21.png
+?? artifacts/island-briefings-1792964068709/
+?? artifacts/island-briefings-before-push.log
+?? artifacts/island-briefings-browser-final.log
+?? artifacts/island-briefings-browser.log
+?? artifacts/island-briefings-npm-final.log
+?? artifacts/island-briefings-npm.log
+?? artifacts/island-briefings-shared-screens.log
+?? artifacts/island-building-art/all-stages.png
+?? artifacts/island-building-art/browser-before-push.log
+?? artifacts/island-building-art/browser-test.log
+?? artifacts/island-building-art/masters.png
+?? artifacts/island-building-art/npm-before-push.log
+?? artifacts/island-building-art/npm-final-push.log
+?? artifacts/island-building-art/npm-test.log
+?? artifacts/island-explorer/island-arena-desktop.png
+?? artifacts/island-explorer/island-bright-desktop.png
+?? artifacts/island-explorer/island-calm-desktop.png
+?? artifacts/island-explorer/island-mobile.png
+?? artifacts/island-explorer/island-stage5-preview.png
+?? artifacts/island-explorer/location-five-stages.png
+?? artifacts/island-explorer/location-mobile.png
+?? artifacts/island-migration-accepted-red.log
+?? artifacts/island-migration-all.log
+?? artifacts/island-migration-browser-final.log
+?? artifacts/island-migration-browser-final2.log
+?? artifacts/island-migration-browser.log
+?? artifacts/island-migration-candidate-browser.log
+?? artifacts/island-migration-candidate-browser2.log
+?? artifacts/island-migration-candidate-tests.log
+?? artifacts/island-migration-candidate/
+?? artifacts/island-migration-cross-version-red.log
+?? artifacts/island-migration-final.log
+?? artifacts/island-migration-final2.log
+?? artifacts/island-migration-index.patch
+?? artifacts/island-migration-map.log
+?? artifacts/island-migration-map/
+?? artifacts/island-migration-progression.log
+?? artifacts/island-migration-red.log
+?? artifacts/island-migration-unit.log
+?? artifacts/island-npm-test.log
+?? artifacts/island-onboarding-before-push.log
+?? artifacts/island-onboarding-browser.log
+?? artifacts/island-onboarding-island.log
+?? artifacts/island-onboarding-metadata-red.log
+?? artifacts/island-onboarding-orphan-red.log
+?? artifacts/island-onboarding-publish-browser.log
+?? artifacts/island-onboarding-quota-red.log
+?? artifacts/island-onboarding-rejected-red.log
+?? artifacts/island-onboarding-replay-red.log
+?? artifacts/island-onboarding-shared-screens.log
+?? artifacts/island-onboarding-tabs-red.log
+?? artifacts/island-onboarding-unit.log
+?? artifacts/island-onboarding/
+?? artifacts/island-progression/
+?? artifacts/island-route-block-red.log
+?? artifacts/island-route-browser-red.log
+?? artifacts/island-route-browser.log
+?? artifacts/island-route-map.log
+?? artifacts/island-route-onboarding.log
+?? artifacts/island-route-opened-red.log
+?? artifacts/island-route-recovery-red.log
+?? artifacts/island-route-red.log
+?? artifacts/island-route-shared-screens.log
+?? artifacts/island-route-targeted.log
+?? artifacts/island-route-unit-all.log
+?? artifacts/island-route-unit.log
+?? artifacts/island-screen-smoke.log
+?? artifacts/island-screens-browser-final.log
+?? artifacts/island-screens-browser.log
+?? artifacts/island-screens-npm-final.log
+?? artifacts/island-screens-npm.log
+?? artifacts/island-screens/
+?? artifacts/island-shared-screens.log
+?? artifacts/light-hud-before-push.log
+?? artifacts/light-hud-browser.log
+?? artifacts/light-hud-npm.log
+?? artifacts/light-hud-screens-remaining.log
+?? artifacts/light-hud-screens.log
+?? artifacts/light-hud-unit.log
+?? artifacts/light-hud/
+?? artifacts/membership-before-push.log
+?? artifacts/membership-browser-before-push.log
+?? artifacts/membership-browser-edge.log
+?? artifacts/membership-browser-final.log
+?? artifacts/membership-browser.log
+?? artifacts/membership-npm-test.log
+?? artifacts/membership-preview-zh.png
+?? artifacts/membership-preview.html
+?? artifacts/membership-result-en.png
+?? artifacts/membership-result-zh-Hant.png
+?? artifacts/membership-shared-screens.log
+?? artifacts/number-pop-title-controls-browser.log
+?? artifacts/number-pop-title-controls-npm-final.log
+?? artifacts/number-pop-title-controls-npm.log
+?? artifacts/number-pop-title-controls/
+?? artifacts/prepare-challenge-publication.cjs
+?? artifacts/prepare-game-ui-publication.cjs
+?? artifacts/profile-copy-npm-test.log
+?? artifacts/profile-simple-en.png
+?? artifacts/profile-simple-zh.png
+?? artifacts/push-challenge-publication.cjs
+?? artifacts/push-game-ui-publication.cjs
+?? artifacts/real-tutorial-unit.log
+?? artifacts/refactor-after/
+?? artifacts/refactor-all-unit-first.log
+?? artifacts/refactor-baseline.log
+?? artifacts/refactor-before/
+?? artifacts/refactor-final-npm.log
+?? artifacts/refactor-final-shared-browser.log
+?? artifacts/refactor-final/
+?? artifacts/refactor-games.cjs
+?? artifacts/refactor-modules-red.log
+?? artifacts/refactor-original-pages.json
+?? artifacts/refactor-remaining-red.log
+?? artifacts/refactor-renderer-first.log
+?? artifacts/refactor-renderer-green.log
+?? artifacts/refactor-renderer-red.log
+?? artifacts/refactor-renderers.cjs
+?? artifacts/refactor-rules-green.log
+?? artifacts/refactor-rules.log
+?? artifacts/refactor-shared-browser.log
+?? artifacts/refactor-spot-after-browser.log
+?? artifacts/refactor-spot-before-browser.log
+?? artifacts/refactor-spot-unit.log
+?? artifacts/refactor-timing-browser.log
+?? artifacts/refactor-timing-debug.log
+?? artifacts/refactor-timing-debug2.log
+?? artifacts/refactor-timing-final.log
+?? artifacts/refactor-tutorial-browser.log
+?? artifacts/refactor-tutorial-final.log
+?? artifacts/refine-ball-hud.py
+?? artifacts/remove-language-controls-browser.log
+?? artifacts/remove-language-controls-mobile.png
+?? artifacts/remove-language-controls-npm.log
+?? artifacts/remove-language-controls-shared-final.log
+?? artifacts/remove-language-controls-shared.log
+?? artifacts/run-light-hud-checks.py
+?? artifacts/test-game-ui-publication.cjs
+?? artifacts/timed-games-initial.log
+?? artifacts/timed-games-initial2.log
+?? artifacts/total-time-browser-final.log
+?? artifacts/total-time-browser-reviewed.log
+?? artifacts/total-time-npm-final.log
+?? artifacts/total-time-npm-verified.log
+?? artifacts/total-time-npm.log
+?? artifacts/total-time-shared.log
+?? artifacts/total-time-targeted.log
+?? artifacts/total-time/
+?? artifacts/train-island-screens-final.log
+?? artifacts/train-island-screens.log
+?? artifacts/tutorials-block-browser.log
+?? artifacts/tutorials-browser-final.log
+?? artifacts/tutorials-browser.log
+?? artifacts/tutorials-final-touchup-browser.log
+?? artifacts/tutorials-first-browser.log
+?? artifacts/tutorials-keyboard-before.log
+?? artifacts/tutorials-keyboard-final.log
+?? artifacts/tutorials-npm-final.log
+?? artifacts/tutorials-npm.log
+?? artifacts/tutorials-publish-npm.log
+?? artifacts/tutorials-shared-screens.log
+?? artifacts/tutorials/
+?? artifacts/verify-game-ui-cleanup.cjs
+?? docs/GAME_MAINTENANCE.md
+?? docs/GAME_SOURCE_SPLIT_RUN_REPORT.md
+?? docs/superpowers/plans/2026-10-26-flash-progressive-tutorial.md
+?? docs/superpowers/plans/2026-10-26-game-source-split.md
+?? games/add-up/README.md
+?? games/add-up/audio.js
+?? games/add-up/main.js
+?? games/add-up/renderer.js
+?? games/add-up/rules.js
+?? games/add-up/style.css
+?? games/ball-track/README.md
+?? games/ball-track/audio.js
+?? games/ball-track/main.js
+?? games/ball-track/renderer.js
+?? games/ball-track/rules.js
+?? games/ball-track/style.css
+?? games/block-match/README.md
+?? games/block-match/audio.js
+?? games/block-match/main.js
+?? games/block-match/renderer.js
+?? games/block-match/rules.js
+?? games/block-match/style.css
+?? games/flash-brain/wave-clear.css
+?? games/flash-brain/wave-clear.js
+?? games/number-pop/README.md
+?? games/number-pop/audio.js
+?? games/number-pop/main.js
+?? games/number-pop/renderer.js
+?? games/number-pop/rules.js
+?? games/number-pop/style.css
+?? games/shadow-match/README.md
+?? games/shadow-match/audio.js
+?? games/shadow-match/main.js
+?? games/shadow-match/renderer.js
+?? games/shadow-match/rules.js
+?? games/shadow-match/shapes.js
+?? games/shadow-match/style.css
+?? games/space-scale/README.md
+?? games/space-scale/audio.js
+?? games/space-scale/data.js
+?? games/space-scale/main.js
+?? games/space-scale/renderer.js
+?? games/space-scale/rules.js
+?? games/space-scale/style.css
+?? games/spot-quick/README.md
+?? games/spot-quick/audio.js
+?? games/spot-quick/main.js
+?? games/spot-quick/renderer.js
+?? games/spot-quick/rules.js
+?? games/spot-quick/shapes.js
+?? games/spot-quick/style.css
+?? games/tap-match/README.md
+?? games/tap-match/audio.js
+?? games/tap-match/data.js
+?? games/tap-match/main.js
+?? games/tap-match/renderer.js
+?? games/tap-match/rules.js
+?? games/tap-match/style.css
+?? tests/flash-progressive-tutorial.test.cjs
+?? tests/game-modules.test.cjs
+?? tools/lib/
+?? tools/verify-analytics-browser.cjs
+?? tools/verify-ball-memory-browser.cjs
+?? tools/verify-flash-progressive-browser.cjs
+?? tools/verify-flash-wave-clear-browser.cjs
+?? tools/verify-game-launch-browser.cjs

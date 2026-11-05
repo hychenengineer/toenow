@@ -1,0 +1,14 @@
+PASS number-pop 568 zh-Hant: 3 real game taps, score0, records protected, normal start, replay/cancel
+PASS ball-track 568 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS block-match 568 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS add-up 568 zh-Hant: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS space-scale 568 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+AssertionError [ERR_ASSERTION]: tap-match real target outside viewport
+    at complete (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:94:12)
+    at async C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:117:18 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '=='
+}

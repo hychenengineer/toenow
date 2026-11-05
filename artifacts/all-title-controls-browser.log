@@ -1,0 +1,176 @@
+CHECK number-pop 320 en
+PASS number-pop 320 en
+CHECK ball-track 320 en
+PASS ball-track 320 en
+CHECK block-match 320 en
+PASS block-match 320 en
+CHECK add-up 320 en
+PASS add-up 320 en
+CHECK space-scale 320 en
+PASS space-scale 320 en
+CHECK tap-match 320 en
+PASS tap-match 320 en
+CHECK spot-quick 320 en
+PASS spot-quick 320 en
+CHECK shadow-match 320 en
+PASS shadow-match 320 en
+CHECK flash-brain 320 en
+PASS flash-brain 320 en
+CHECK animal-rescue-train 320 en
+PASS animal-rescue-train 320 en
+CHECK capybara-drift 320 en
+PASS capybara-drift 320 en
+CHECK number-pop 320 zh-Hant
+PASS number-pop 320 zh-Hant
+CHECK ball-track 320 zh-Hant
+PASS ball-track 320 zh-Hant
+CHECK block-match 320 zh-Hant
+PASS block-match 320 zh-Hant
+CHECK add-up 320 zh-Hant
+PASS add-up 320 zh-Hant
+CHECK space-scale 320 zh-Hant
+PASS space-scale 320 zh-Hant
+CHECK tap-match 320 zh-Hant
+PASS tap-match 320 zh-Hant
+CHECK spot-quick 320 zh-Hant
+PASS spot-quick 320 zh-Hant
+CHECK shadow-match 320 zh-Hant
+PASS shadow-match 320 zh-Hant
+CHECK flash-brain 320 zh-Hant
+PASS flash-brain 320 zh-Hant
+CHECK animal-rescue-train 320 zh-Hant
+PASS animal-rescue-train 320 zh-Hant
+CHECK capybara-drift 320 zh-Hant
+PASS capybara-drift 320 zh-Hant
+CHECK number-pop 390 en
+sound OK
+pause clicked
+resume OK
+restart clicked
+PASS number-pop 390 en
+CHECK ball-track 390 en
+sound OK
+pause clicked
+resume OK
+restart clicked
+PASS ball-track 390 en
+CHECK block-match 390 en
+sound OK
+pause clicked
+resume OK
+restart clicked
+PASS block-match 390 en
+CHECK add-up 390 en
+sound OK
+pause clicked
+resume OK
+restart clicked
+PASS add-up 390 en
+CHECK space-scale 390 en
+sound OK
+pause clicked
+resume OK
+restart clicked
+PASS space-scale 390 en
+CHECK tap-match 390 en
+sound OK
+pause clicked
+resume OK
+restart clicked
+PASS tap-match 390 en
+CHECK spot-quick 390 en
+sound OK
+pause clicked
+resume OK
+restart clicked
+PASS spot-quick 390 en
+CHECK shadow-match 390 en
+sound OK
+pause clicked
+resume OK
+restart clicked
+PASS shadow-match 390 en
+CHECK flash-brain 390 en
+sound OK
+pause clicked
+resume OK
+restart clicked
+PASS flash-brain 390 en
+CHECK animal-rescue-train 390 en
+pause clicked
+resume OK
+restart clicked
+PASS animal-rescue-train 390 en
+CHECK capybara-drift 390 en
+sound OK
+pause clicked
+resume OK
+restart clicked
+PASS capybara-drift 390 en
+CHECK number-pop 390 zh-Hant
+PASS number-pop 390 zh-Hant
+CHECK ball-track 390 zh-Hant
+PASS ball-track 390 zh-Hant
+CHECK block-match 390 zh-Hant
+PASS block-match 390 zh-Hant
+CHECK add-up 390 zh-Hant
+PASS add-up 390 zh-Hant
+CHECK space-scale 390 zh-Hant
+PASS space-scale 390 zh-Hant
+CHECK tap-match 390 zh-Hant
+PASS tap-match 390 zh-Hant
+CHECK spot-quick 390 zh-Hant
+PASS spot-quick 390 zh-Hant
+CHECK shadow-match 390 zh-Hant
+PASS shadow-match 390 zh-Hant
+CHECK flash-brain 390 zh-Hant
+PASS flash-brain 390 zh-Hant
+CHECK animal-rescue-train 390 zh-Hant
+PASS animal-rescue-train 390 zh-Hant
+CHECK capybara-drift 390 zh-Hant
+PASS capybara-drift 390 zh-Hant
+CHECK number-pop 1100 en
+PASS number-pop 1100 en
+CHECK ball-track 1100 en
+PASS ball-track 1100 en
+CHECK block-match 1100 en
+PASS block-match 1100 en
+CHECK add-up 1100 en
+PASS add-up 1100 en
+CHECK space-scale 1100 en
+PASS space-scale 1100 en
+CHECK tap-match 1100 en
+PASS tap-match 1100 en
+CHECK spot-quick 1100 en
+PASS spot-quick 1100 en
+CHECK shadow-match 1100 en
+PASS shadow-match 1100 en
+CHECK flash-brain 1100 en
+PASS flash-brain 1100 en
+CHECK animal-rescue-train 1100 en
+PASS animal-rescue-train 1100 en
+CHECK capybara-drift 1100 en
+PASS capybara-drift 1100 en
+CHECK number-pop 1100 zh-Hant
+PASS number-pop 1100 zh-Hant
+CHECK ball-track 1100 zh-Hant
+PASS ball-track 1100 zh-Hant
+CHECK block-match 1100 zh-Hant
+PASS block-match 1100 zh-Hant
+CHECK add-up 1100 zh-Hant
+PASS add-up 1100 zh-Hant
+CHECK space-scale 1100 zh-Hant
+PASS space-scale 1100 zh-Hant
+CHECK tap-match 1100 zh-Hant
+PASS tap-match 1100 zh-Hant
+CHECK spot-quick 1100 zh-Hant
+PASS spot-quick 1100 zh-Hant
+CHECK shadow-match 1100 zh-Hant
+PASS shadow-match 1100 zh-Hant
+CHECK flash-brain 1100 zh-Hant
+PASS flash-brain 1100 zh-Hant
+CHECK animal-rescue-train 1100 zh-Hant
+PASS animal-rescue-train 1100 zh-Hant
+CHECK capybara-drift 1100 zh-Hant
+PASS capybara-drift 1100 zh-Hant
+{"checks":66,"errors":0,"out":"artifacts/title-controls/run-1793060432979"}

@@ -1,0 +1,16 @@
+{
+  "commit": "63ea51696b3475aced9fbd513f0864d997b13da7",
+  "root": "C:\\Users\\HsinYuChen\\source\\repos\\toenow\\.wrangler\\tmp\\publish-63ea516",
+  "files": 238,
+  "bytes": 38425353,
+  "exclusions": [
+    "/sources/",
+    "station-source.png",
+    "docs",
+    "tests",
+    "tools",
+    "artifacts",
+    ".git",
+    ".env"
+  ]
+}

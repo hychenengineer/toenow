@@ -1,0 +1,27 @@
+const {prepareJourneyAction}=require('./lib/animal-journey-driver.cjs');
+const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const base=process.env.TOENOW_TEST_URL||'http://127.0.0.1:8774',dir=path.resolve(__dirname,'../artifacts/animal-map-dialog');
+async function run(){fs.mkdirSync(dir,{recursive:true});const browser=await chromium.launch({channel:'msedge',headless:true});try{
+for(const [width,lang] of [[1280,'zh-Hant'],[1024,'en'],[390,'en'],[320,'zh-Hant']]){
+ const p=await browser.newPage({viewport:{width,height:950},reducedMotion:'reduce'}),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.addInitScript(l=>{localStorage.setItem('toenow_language_v1',l);localStorage.setItem('animal_siege_hands_on_v2','completed');},lang);
+ const source=fs.readFileSync(path.resolve(__dirname,'../games/animal-siege/main.js'),'utf8').replace(/\}\)\(\);\s*$/,'window.__emptyExpedition=()=>{run.army={beaver:0,fox:0,squirrel:0};run.gold=0;run.sites.cache.claimed=true;run.sites.friends.claimed=true;run.sites.timber.claimed=false;};})();');
+ await p.route('**/games/animal-siege/main.js*',r=>r.fulfill({contentType:'application/javascript',body:source}));
+ const uiClick=async selector=>{if(!await prepareJourneyAction(p,selector))await p.locator(selector).click();};await p.goto(base+'/games/animal-siege/?mode=expedition');await uiClick('#btn-start');assert.equal(await p.locator('#location-dialog').isVisible(),false,'no unsolicited location popup');
+ const card=await p.locator('.exp-map-card').boundingBox();assert.ok(card.x>=0&&card.x+card.width<=width,'both map borders fit');assert.ok(card.width>=width*.88,'map uses the available width');assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+ await p.screenshot({path:path.join(dir,width+'-'+lang+'-map.png'),fullPage:true});
+ await uiClick('[data-location="acorn"]');assert.equal(await p.locator('#location-dialog').isVisible(),true);let box=await p.locator('#location-dialog').boundingBox();assert.ok(Math.abs(box.x+box.width/2-width/2)<3,'popup is centered');assert.ok(box.x>=0&&box.x+box.width<=width);assert.ok(box.y>=0&&box.y+box.height<=950);
+ await p.screenshot({path:path.join(dir,width+'-'+lang+'-popup.png'),fullPage:true});
+ await p.keyboard.press('Escape');assert.equal(await p.locator('#location-dialog').isVisible(),false);assert.equal(await p.locator('#pause-layer').isVisible(),false);assert.equal(await p.locator('[data-location="acorn"]').evaluate(el=>el===document.activeElement),true);
+ await uiClick('[data-location="home"]');await uiClick('#location-dialog [data-enter-camp]');assert.equal(await p.locator('#camp').isVisible(),true);assert.equal(await p.locator('#location-dialog').isVisible(),false);
+ await uiClick('[data-building="beaver"]');await uiClick('[data-building="fox"]');await uiClick('#camp-dialog-close');await p.locator('[data-building="beaver"]').hover();
+ assert.deepEqual(await p.locator('.camp-building[aria-pressed="true"]').evaluateAll(els=>els.map(e=>e.dataset.building)),['fox']);
+ for(const el of await p.locator('.camp-building').all()){const style=await el.evaluate(el=>{const s=getComputedStyle(el);return {outline:s.outlineStyle,shadow:s.boxShadow,bg:s.backgroundColor};});assert.equal(style.outline,'none');assert.equal(style.shadow,'none');assert.equal(style.bg,'rgba(0, 0, 0, 0)');}
+ await p.locator('[data-building="fox"]').focus();await p.screenshot({path:path.join(dir,width+'-'+lang+'-camp.png'),fullPage:true});
+ await uiClick('#unit-guide-open');await uiClick('#unit-guide-close');assert.equal(await p.locator('[data-building="fox"]').getAttribute('aria-pressed'),'true');await uiClick('#camp-exit');assert.equal(await p.locator('#location-dialog').isVisible(),false);
+ await uiClick('[data-location="timber"]');await uiClick('#location-dialog [data-explore="timber"]');await uiClick('#location-dialog [data-claim="timber"][data-choice="wood"]');assert.equal(await p.locator('#exp-wood').innerText(),'70');
+ await p.evaluate(l=>ToenowI18n.setLanguage(l==='en'?'zh-Hant':'en'),lang);assert.equal(await p.locator('#location-dialog').isVisible(),true);await uiClick('#location-close');
+ await uiClick('[data-location="acorn"]');await uiClick('#location-dialog [data-attack="acorn"]');assert.equal(await p.locator('#battle').isVisible(),true);assert.equal(await p.locator('#location-dialog').isVisible(),false);await uiClick('#restart');await p.locator('#expedition').waitFor({state:'visible'});assert.equal(await p.locator('#location-dialog').isVisible(),false);
+ await p.evaluate(()=>window.__emptyExpedition());await uiClick('[data-location="timber"]');await uiClick('#location-dialog [data-claim="timber"][data-choice="wood"]');assert.equal(await p.locator('#gameover-screen').isVisible(),true);assert.equal(await p.locator('#location-dialog').isVisible(),false,'location modal must not cover results');await uiClick('#btn-retry');assert.equal(await p.locator('#location-dialog').isVisible(),false);
+ assert.deepEqual(errors,[]);assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);console.log('PASS '+width+' '+lang+': full-width map, contained borders, centered dialog, close/focus/language, camp nameplate-only selection, exploration, battle, retreat and results cleanup');await p.close();
+}}finally{await browser.close();}}
+run().catch(e=>{console.error(e);process.exitCode=1;});

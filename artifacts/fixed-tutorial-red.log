@@ -1,0 +1,10 @@
+AssertionError [ERR_ASSERTION]: tutorial card and message stay in one fixed position
+    at assertProtected (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:54:10)
+    at async complete (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:74:5)
+    at async C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:91:18 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [Array],
+  expected: [],
+  operator: 'deepStrictEqual'
+}

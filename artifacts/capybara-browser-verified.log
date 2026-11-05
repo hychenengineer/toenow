@@ -1,0 +1,13 @@
+PASS 1100x850 en: steering, collection, friends, pause, cosmetics, resume, practice
+PASS 1100x850 zh-Hant: steering, collection, friends, pause, cosmetics, resume, practice
+PASS 390x844 en: steering, collection, friends, pause, cosmetics, resume, practice
+PASS 390x844 zh-Hant: steering, collection, friends, pause, cosmetics, resume, practice
+PASS 320x568 en: steering, collection, friends, pause, cosmetics, resume, practice
+PASS 320x568 zh-Hant: steering, collection, friends, pause, cosmetics, resume, practice
+PASS 844x390 en: steering, collection, friends, pause, cosmetics, resume, practice
+PASS 844x390 zh-Hant: steering, collection, friends, pause, cosmetics, resume, practice
+Hub: load fresh player
+Hub: guest welcomed
+Hub: Capybara opened
+Hub: game resting
+PASS 8 gameplay combinations and fresh-player Hub launch/exit

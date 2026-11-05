@@ -1,0 +1,19 @@
+{
+  "generator": "Built-in image_gen",
+  "generatedOn": "2026-11-03",
+  "reference": "kingdom-map-v1.png (approved animal kingdom palette and environment style)",
+  "source": "sources/acorn-battle-v1.png",
+  "runtime": "acorn-battle-v1.webp",
+  "prompt": "Production environment illustration for a playable turn-based animal siege battlefield, in the exact rich woodland kingdom art direction of the reference image. The reference is STYLE only, not a UI edit target.\nOutput ONE SQUARE image, full-bleed painterly fantasy game environment, high overhead camera with only subtle isometric depth. No UI, no grid, no words, no icons, no creatures, no soldiers, no humans, no banners or flags. The real game will overlay an 8-column x 6-row square-tile grid, real palisade obstacles, animal units and a dynamic flag.\nCRITICAL PLAYABLE COMPOSITION: the lower 80% of the image must be a broad, almost flat, very low-detail open meadow and packed-earth courtyard, unobstructed from left to right. Soft short grass on the left two thirds, warm lightly worn sandy courtyard on the right third; very subtle brush texture so tile highlights and animals stay legible. Keep ALL actual buildings and dense foliage out of this lower playable area. No painted obstacles, rocks, walls, ruins, puddles, bridges or trees inside this open area.\nTOP 20%: a compact Acorn Fort with golden-orange roofs and sturdy timber gatehouse is seen across the top-right background band, with a tower at x80% and the gate near x65%; it must sit above the playable area, not extend into the middle or bottom. A bright turquoise stream and dense emerald forest are visible only along the distant upper-left edge; leafy branches frame the extreme top corners. Sunlit leaves, carved acorn details on the gatehouse, warm timber and a few tiny flowers at the outermost edges. Any distant fence is entirely confined to the top 20% band.\nPalette: saturated deep emerald forest shadows, teal water glimpses, honey-gold sunlight, amber roofs; keep the central playable ground a lighter muted moss/sage green with warm earth, not so saturated it competes with tokens. Inviting, charming, premium indie fantasy strategy art, not a physical board on a table, not a photograph, not flat schematic grass. Maintain the same visual world as the reference. No giant castle filling the frame.",
+  "notes": "Background scenery only. Actual 8x6 grid, wood-wall obstacles, open gates, animal squads, flag ownership and reward feedback are rendered by the game.",
+  "runtimeDimensions": {
+    "width": 1254,
+    "height": 1254
+  },
+  "runtimeEncoding": {
+    "format": "webp",
+    "quality": 90
+  },
+  "sourceSha256": "ac62ffe7b6a625d0a56f03ef8d3fd8012b5aebf9fb7d51954317d05efe0d2c8c",
+  "runtimeSha256": "ecdbfd90584ef7398c5b83568ad7ecf2f751629fa8c3f65bcc06dcfa39e1fcb3"
+}

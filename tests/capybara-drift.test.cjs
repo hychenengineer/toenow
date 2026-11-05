@@ -121,3 +121,4 @@ test('gift event offers one extra collectible to pick up and cannot respawn afte
  E.checkpoint(storage,s);const r=E.restore(storage);assert.equal(r.featured.event,true);for(let i=0;i<40;i++)E.step(r,.05,()=>.5);assert(r.items.filter(i=>i.eventGift).length<=1);const gift=r.items.find(i=>i.eventGift);assert(gift);gift.x=r.x;gift.y=.72;E.step(r,.01,()=>.5);assert.equal(r.inventory[r.trip.collectible],1);E.checkpoint(storage,r);const after=E.restore(storage);for(let i=0;i<200;i++)E.step(after,.05,()=>.5);assert.equal(after.items.filter(i=>i.eventGift).length,0);assert.equal(after.inventory[after.trip.collectible],1);
 });
 test('other journey events do not create gift pickups',()=>{const s=E.create();s.trip.event='fish';s.elapsed=64.99;s.items=[];s.featured={friend:true,collectible:true,material:true};E.step(s,.02,()=>.5);assert.equal(s.items.filter(i=>i.eventGift).length,0);});
+

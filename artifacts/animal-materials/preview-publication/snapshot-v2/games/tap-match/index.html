@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Tap Match</title>
+    <meta name="description" content="High-speed cyber-analytic spatial node matching arcade game with geometric glyph configurations and escalating wave criteria." />
+    <meta property="og:title" content="Tap Match" />
+    <meta property="og:description" content="High-speed cyber-analytic spatial node matching arcade game with geometric glyph configurations and escalating wave criteria." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../assets/unified-title-menu.css" />
+    <script src="../../shared/toenow-levels.js"></script>
+    <script src="../../shared/toenow-security.js"></script>
+    <script src="../../shared/toenow-platform.js"></script>
+    <script src="../../shared/toenow-analytics.js"></script>
+    <script src="../../shared/toenow-materials.js"></script>
+    <script src="../../shared/toenow-materials-ui.js"></script>
+    <script src="../../shared/toenow-sdk.js"></script>
+    <script src="../../shared/toenow-time.js"></script>
+    <script src="../../shared/toenow-i18n-core.js"></script>
+    <script src="../../shared/toenow-i18n-games-a.js"></script>
+    <script src="../../shared/toenow-i18n-games-b.js"></script>
+    <script src="../../shared/toenow-i18n-animals.js"></script>
+<script src="../../shared/toenow-i18n.js"></script>
+    <link rel="stylesheet" href="../../assets/toenow-tutorials.css">
+    <script src="../../shared/toenow-tutorial-config.js"></script>
+    <script src="../../shared/toenow-tutorials.js"></script>
+<script src="../../shared/toenow-animals.js"></script>
+    <script src="../../shared/toenow-screen-config.js"></script>
+    <script src="../../shared/toenow-screens.js"></script>
+    <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="../../assets/toenow-animals.css">
+<link rel="stylesheet" href="../../assets/toenow-game-hud.css">
+</head>
+  <body>
+    <div class="app-wrapper">
+      <!-- Top Status HUD -->
+      <header id="hud-container" aria-label="Game Status HUD"><div class="island-live-hud" data-metrics="3"><div class="island-hud-metric"><span class="island-hud-label">TIME</span><span id="hud-time" class="island-hud-value">65</span></div><div class="island-hud-metric"><span class="island-hud-label">SCORE</span><span id="hud-score" class="hud-value island-hud-value">0</span></div><div class="island-hud-metric"><span class="island-hud-label">COMBO</span><span id="hud-streak" class="island-hud-value">0</span></div><div class="island-hud-controls"><button type="button" id="btn-audio" class="hud-btn toenow-icon-control" aria-label="Toggle Audio" title="Toggle Audio" aria-pressed="true" data-muted="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use class="control-sound-on" href="../../assets/toenow-control-icons.svg#sound-on"/><use class="control-sound-off" href="../../assets/toenow-control-icons.svg#sound-off"/></svg></button><button type="button" id="btn-pause-hud" class="hud-btn toenow-icon-control" aria-label="Pause Game (P)" title="Pause Game (P)"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#pause"/></svg></button><button type="button" id="btn-reset" class="hud-btn toenow-icon-control" aria-label="Restart Run" title="Restart Run"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../../assets/toenow-control-icons.svg#restart"/></svg></button></div><div class="island-hud-task"><span id="hud-target" class="hud-highlight-white">DIAMOND</span></div></div><div class="island-hud-legacy" aria-hidden="true">
+        <div class="hud-piped-bar">
+          <span class="hud-segment">WAVE <span id="hud-wave">1</span></span>
+          <span class="hud-pipe">|</span>
+          <span class="hud-target-segment">TARGET: </span>
+          <span class="hud-pipe">|</span>
+          <span class="hud-segment">STREAK: </span>
+          <span class="hud-pipe">|</span>
+          <span class="hud-segment">TIME: s</span>
+        </div>
+        <div class="hud-sub-bar">
+          <div class="hud-sub-group">
+            <span>SCORE </span>
+            <span class="hud-sep">·</span>
+            <span>HITS <span id="hud-hits" class="hud-value">0/20</span></span>
+            <span class="hud-sep">·</span>
+            <span>FAULTS <span id="hud-faults" class="hud-value">0</span></span>
+          </div>
+          <div class="hud-controls">
+
+
+
+          </div>
+        </div>
+      </div></header>
+
+      <!-- Main Playable Stage -->
+      <main class="canvas-stage">
+        <canvas id="game-canvas"></canvas>
+
+        <!-- Ultra-Concise Start Menu -->
+        <div id="modal-start" class="modal-backdrop unified-title-screen" role="dialog" aria-modal="true" aria-labelledby="start-title" data-toenow-screen="title"></div>
+
+        <!-- Pause Modal (Anti-cheat blackout) -->
+        <div id="modal-pause" class="modal-backdrop unified-pause-screen hidden" role="dialog" aria-modal="true" aria-labelledby="pause-title">
+          <div class="unified-pause-card">
+            <div class="unified-pause-kicker">MATRIX SUSPENDED</div>
+            <h2 id="pause-title" class="unified-pause-title">PAUSED</h2>
+            <p class="unified-pause-notice">Target node matrix hidden while paused.</p>
+
+            <div class="unified-pause-stats-grid">
+              <div class="unified-pause-stat-box">
+                <span class="unified-pause-stat-label">SCORE</span>
+                <span id="pause-score-val" class="unified-pause-stat-val">0</span>
+              </div>
+              <div class="unified-pause-stat-box">
+                <span class="unified-pause-stat-label">WAVE</span>
+                <span id="pause-wave-val" class="unified-pause-stat-val">1</span>
+              </div>
+              <div class="unified-pause-stat-box">
+                <span class="unified-pause-stat-label">TIME</span>
+                <span id="pause-time-val" class="unified-pause-stat-val">65s</span>
+              </div>
+            </div>
+
+            <div class="unified-pause-btn-row">
+              <button id="btn-resume-whack" type="button" class="unified-pause-resume-btn">RESUME</button>
+              <button id="btn-restart-whack" type="button" class="unified-pause-action-btn">RESTART</button>
+              <button id="btn-title-whack" type="button" class="unified-pause-action-btn">TITLE</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Per-Wave Target Briefing Modal -->
+        <div id="modal-wave-brief" class="modal-backdrop island-briefing hidden" data-toenow-game="tap-match" role="dialog" aria-modal="true" aria-labelledby="brief-title">
+          <div class="modal-card">
+            <div id="brief-kicker" class="modal-kicker">WAVE 1 BRIEFING · 3x3 MATRIX</div>
+            <h2 id="brief-title" class="modal-title">Target Assignment</h2>
+            <div class="wave-preview-box">
+              <canvas id="wave-preview-canvas" width="168" height="168"></canvas>
+              <div class="wave-preview-info">
+                <div id="brief-target-name" class="wave-target-badge hud-highlight-white">TARGET: DIAMOND</div>
+                <div id="brief-rule-detail" class="wave-rule-detail">
+                  Tap any node with an outer <strong>DIAMOND</strong> shape.
+                </div>
+                <div id="brief-rule-sub" class="wave-rule-sub">
+                  Any color or inner symbol is valid.
+                </div>
+              </div>
+            </div>
+            <div class="action-row">
+              <button type="button" id="btn-begin-wave" class="action-btn">[BEGIN WAVE 1]</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="modal-wave-clear" class="modal-backdrop island-briefing hidden" data-toenow-game="tap-match" role="dialog" aria-modal="true" aria-labelledby="wave-clear-title" aria-hidden="true" inert>
+          <div class="modal-card">
+            <h2 id="wave-clear-title" class="modal-title">Wave cleared!</h2>
+            <p id="wave-clear-summary" class="wave-rule-detail" role="status"></p>
+            <div class="action-row">
+              <button type="button" id="btn-next-wave" class="action-btn">Next wave</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game Over Summary Modal -->
+        <div id="modal-gameover" class="modal-backdrop unified-gameover-screen hidden" role="dialog" aria-modal="true" aria-labelledby="gameover-title" data-toenow-screen="gameover"></div>
+      </main>
+    </div>
+
+
+    <script src="./data.js"></script>
+    <script src="./audio.js"></script>
+    <script src="./rules.js"></script>
+    <script src="./renderer.js"></script>
+    <script src="./main.js"></script>
+  </body>
+</html>

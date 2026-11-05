@@ -1,0 +1,11 @@
+AssertionError [ERR_ASSERTION]: map uses the available width
+    at run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-animal-map-dialog-browser.cjs:7:137)
+    at runNextTicks (node:internal/process/task_queues:60:5)
+    at process.processImmediate (node:internal/timers:454:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '=='
+}

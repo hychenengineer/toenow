@@ -7,8 +7,8 @@
   const STORAGE_KEY = 'toenow_exploration_v3';
   const LEGACY_STORAGE_KEY = 'toenow_exploration_v1';
   function create({ storage, levels, gameIds, ownerId = `${Date.now()}-${Math.random()}` }) {
-    // Carefree games are always available and do not extend the Explorers route.
-    const ids = [...new Set(gameIds)].filter(id => levels.GAME_STORAGE_KEYS[id]?.island !== 'carefree');
+    // Separate islands do not extend the established Explorers route.
+    const ids = [...new Set(gameIds)].filter(id => (!levels.GAME_STORAGE_KEYS[id]?.island || levels.GAME_STORAGE_KEYS[id]?.island === 'explorers'));
     const first = ids.includes('number-pop') ? 'number-pop' : ids[0];
     const route = [first];
     // Keep the established route independent of visual landmark placement.

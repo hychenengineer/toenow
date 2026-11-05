@@ -1,0 +1,11 @@
+PASS number-pop 320 zh-Hant: 3 real game taps, score0, records protected, normal start, replay/cancel
+PASS ball-track 320 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS block-match 320 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS add-up 320 zh-Hant: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS space-scale 320 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS tap-match 320 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS spot-quick 320 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS shadow-match 320 zh-Hant: 1 real game taps, score0, records protected, normal start, replay/cancel
+PASS flash-brain 320 zh-Hant: 2 real game taps, score0, records protected, normal start, replay/cancel
+PASS animal-rescue-train 320 zh-Hant: 6 real game taps, score0, records protected, normal start, replay/cancel
+{"realGameLessons":10,"height":640}

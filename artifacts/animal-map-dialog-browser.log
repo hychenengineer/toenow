@@ -1,0 +1,4 @@
+PASS 1280 zh-Hant: full-width map, contained borders, centered dialog, close/focus/language, camp nameplate-only selection, exploration, battle, retreat and results cleanup
+PASS 1024 en: full-width map, contained borders, centered dialog, close/focus/language, camp nameplate-only selection, exploration, battle, retreat and results cleanup
+PASS 390 en: full-width map, contained borders, centered dialog, close/focus/language, camp nameplate-only selection, exploration, battle, retreat and results cleanup
+PASS 320 zh-Hant: full-width map, contained borders, centered dialog, close/focus/language, camp nameplate-only selection, exploration, battle, retreat and results cleanup

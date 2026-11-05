@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Animal Siege · Toenow</title>
+  <link rel="stylesheet" href="../../assets/unified-title-menu.css">
+  <script src="../../shared/toenow-levels.js"></script>
+  <script src="../../shared/toenow-security.js"></script>
+  <script src="../../shared/toenow-platform.js"></script>
+  <script src="../../shared/toenow-analytics.js"></script>
+  <script src="../../shared/toenow-sdk.js"></script>
+  <script src="../../shared/toenow-i18n-core.js"></script>
+  <script src="../../shared/toenow-i18n-games-a.js"></script>
+  <script src="../../shared/toenow-i18n-games-b.js"></script>
+  <script src="../../shared/toenow-i18n.js"></script>
+  <script src="../../shared/toenow-screen-config.js"></script>
+  <script src="../../shared/toenow-screens.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-state="title">
+  <header class="topbar"><button id="back" type="button">← Back to Hub</button><span>TOENOW · EXPEDITION</span><button id="menu" type="button">Menu</button></header>
+  <main id="expedition" hidden data-i18n-ignore></main>
+  <main id="battle" hidden data-i18n-ignore>
+    <div class="battle-heading"><div><span class="eyebrow" id="edition"></span><h1 id="battle-name"></h1><p id="objective"></p></div><div class="round"><span id="round-label"></span><strong id="round-number">1</strong></div></div>
+    <div class="battle-layout">
+      <section class="battlefield" aria-label="Battlefield">
+        <div class="field-legend"><span class="ally" id="ally-label"></span><span id="phase-label" role="status"></span><span class="enemy" id="enemy-label"></span></div>
+        <div class="board-surround"><div class="castle-silhouette" aria-hidden="true">♜</div><div id="board" role="group" aria-label="Battlefield"></div></div>
+        <div class="field-bottom"><span id="tile-help"></span><span id="reward-preview"></span></div>
+      </section>
+      <aside class="command-panel">
+        <div class="panel-label" id="squad-label"></div><div id="roster"></div>
+        <div id="selection" class="selection"></div>
+        <div id="preview" class="preview" aria-live="polite"></div>
+        <div class="orders"><button id="defend" type="button"></button><button id="end-turn" type="button"></button></div>
+        <button id="restart" type="button" class="text-button"></button>
+      </aside>
+    </div>
+    <section class="counter-strip" id="counter-strip" aria-label="Unit counters"></section>
+    <section class="journal"><span class="panel-label" id="journal-label"></span><div id="journal" role="log" aria-live="polite"></div></section>
+    <p class="prototype-note" id="prototype-note"></p>
+  </main>
+  <section id="title-screen" data-toenow-screen="title" class="screen active"></section>
+  <section id="gameover-screen" data-toenow-screen="gameover" class="screen hidden" hidden></section>
+  <div id="outcome" class="outcome" hidden data-i18n-ignore role="status"></div>
+  <div id="pause-layer" hidden data-i18n-ignore><div><h2 id="pause-label"></h2><button id="resume" type="button"></button><button id="title-button" type="button"></button></div></div>
+  <script src="engine.js"></script>
+  <script src="campaign.js"></script>
+  <script src="expedition-view.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

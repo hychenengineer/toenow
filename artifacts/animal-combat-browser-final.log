@@ -1,0 +1,3 @@
+PASS 1280 zh-Hant reduced=false: exact range/LOS, reversible range preview, attack motion, actual HP/troops lost, enemy feedback, restart cleanup
+PASS 390 en reduced=false: exact range/LOS, reversible range preview, attack motion, actual HP/troops lost, enemy feedback, restart cleanup
+PASS 390 zh-Hant reduced=true: exact range/LOS, reversible range preview, attack motion, actual HP/troops lost, enemy feedback, restart cleanup

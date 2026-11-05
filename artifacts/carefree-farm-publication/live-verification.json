@@ -1,0 +1,10 @@
+{
+  "url": "https://hychenengineer.github.io/toenow/",
+  "farm": "https://hychenengineer.github.io/toenow/games/carefree-farm/",
+  "commit": "77ac05dd005fae2b7ae7fd2954692d44c11da0ef",
+  "adjacent": true,
+  "below": true,
+  "initialPlots": 3,
+  "initialAnimals": 1,
+  "errors": []
+}

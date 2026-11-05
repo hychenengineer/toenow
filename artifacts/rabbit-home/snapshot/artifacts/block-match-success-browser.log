@@ -1,0 +1,4 @@
+PASS 390 zh-Hant: success, frozen timer/input, next wave, phase briefing, restart
+PASS 390 en: success, frozen timer/input, next wave, phase briefing, restart
+PASS 1100 zh-Hant: success, frozen timer/input, next wave, phase briefing, restart
+PASS 1100 en: success, frozen timer/input, next wave, phase briefing, restart

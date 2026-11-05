@@ -1,0 +1,90 @@
+TAP version 13
+# Subtest: Harvest baskets keep numeric labels and the fraction gauge
+ok 1 - Harvest baskets keep numeric labels and the fraction gauge
+  ---
+  duration_ms: 5.5749
+  ...
+# Subtest: Supply bags leave exact-sum, two-item minimum and overshoot logic intact
+ok 2 - Supply bags leave exact-sum, two-item minimum and overshoot logic intact
+  ---
+  duration_ms: 3.5586
+  ...
+# Subtest: Parcel render never uses hidden mass and keeps symbols distinct
+ok 3 - Parcel render never uses hidden mass and keeps symbols distinct
+  ---
+  duration_ms: 3.9994
+  ...
+# Subtest: Supply orders retain two, three and four bag solutions in every tier
+ok 4 - Supply orders retain two, three and four bag solutions in every tier
+  ---
+  duration_ms: 11.9122
+  ...
+# Subtest: Mystery parcel directive is decided by hidden mass across the unchanged tiers
+ok 5 - Mystery parcel directive is decided by hidden mass across the unchanged tiers
+  ---
+  duration_ms: 6.3059
+  ...
+# Subtest: Supply bag labels render after spark particles in dark ink
+ok 6 - Supply bag labels render after spark particles in dark ink
+  ---
+  duration_ms: 2.9713
+  ...
+# Subtest: otter leaves conceal target identity throughout shuffle and selection, even with residual opening
+ok 7 - otter leaves conceal target identity throughout shuffle and selection, even with residual opening
+  ---
+  duration_ms: 7.0319
+  ...
+# Subtest: otter replaces the revealed core only at original reveal phases
+ok 8 - otter replaces the revealed core only at original reveal phases
+  ---
+  duration_ms: 5.3322
+  ...
+# Subtest: timber carving removes only excess cells and preserves required cells with original penalty
+ok 9 - timber carving removes only excess cells and preserves required cells with original penalty
+  ---
+  duration_ms: 3.8309
+  ...
+# Subtest: raccoon theater keeps correct-card award and wrong-card time penalty
+ok 10 - raccoon theater keeps correct-card award and wrong-card time penalty
+  ---
+  duration_ms: 10.4377
+  ...
+# Subtest: timber blueprints invert their axes without changing required/excess cell identity
+ok 11 - timber blueprints invert their axes without changing required/excess cell identity
+  ---
+  duration_ms: 1.6966
+  ...
+# Subtest: raccoon puppeteer stays above the stage instruction band
+ok 12 - raccoon puppeteer stays above the stage instruction band
+  ---
+  duration_ms: 3.6146
+  ...
+# Subtest: beaver portrait fits between stacked boards without blueprint clipping
+ok 13 - beaver portrait fits between stacked boards without blueprint clipping
+  ---
+  duration_ms: 6.7111
+  ...
+# Subtest: source inspection follows local scripts and styles in page order without expanding shared dependencies
+ok 14 - source inspection follows local scripts and styles in page order without expanding shared dependencies
+  ---
+  duration_ms: 14.4486
+  ...
+# Subtest: extracted rules preserve valid boards, unique numeric choices and matching criteria
+ok 15 - extracted rules preserve valid boards, unique numeric choices and matching criteria
+  ---
+  duration_ms: 21.7536
+  ...
+# Subtest: Spot Quick rules produce four distinct choices including the target across all five tiers
+ok 16 - Spot Quick rules produce four distinct choices including the target across all five tiers
+  ---
+  duration_ms: 21.5174
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 140.6425

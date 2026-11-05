@@ -1,0 +1,38 @@
+{
+  "id": "ball-track",
+  "status": "PASS",
+  "url": "http://127.0.0.1:8765/games/ball-track/",
+  "startedAt": "2026-10-25T16:47:53.878Z",
+  "viewport": {
+    "width": 768,
+    "height": 576
+  },
+  "actions": [
+    {
+      "action": "Clicked production Start control",
+      "atMs": 1792946874280,
+      "atSeconds": 0.402
+    },
+    {
+      "action": "Followed leaves and selected a remembered otter",
+      "atMs": 1792946882322,
+      "atSeconds": 8.444
+    }
+  ],
+  "trimStartSeconds": 3.644000000000001,
+  "videoBytes": 298514,
+  "posterBytes": 151635,
+  "videoSha256": "635b95c8ab0fa8488f4bc60b14791af017c4b7a43364268a35a22eaf97bcd777",
+  "posterSha256": "2ae080672499794de6f1beb5cf24ae60e3bd5d5cc7c9aa8b5e7ed386df2a9dfc",
+  "originalRecording": "recordings/ball-track.webm",
+  "originalRecordingSha256": "d58bb6c5575ebfb68d8100b9c3da2ddc876082e3ed593ed4080e1240bbd92c11",
+  "media": {
+    "duration": 7,
+    "width": 768,
+    "height": 576,
+    "decodedTime": 0.244114,
+    "readyState": 4
+  },
+  "errors": [],
+  "storageIsolation": "new nonpersistent browser context; no production browser profile"
+}

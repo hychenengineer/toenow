@@ -1,0 +1,19 @@
+{
+  "generator": "Built-in image_gen",
+  "generatedOn": "2026-11-04",
+  "reference": "acorn-battle-v1.webp (approved woodland art and playable composition)",
+  "source": "sources/tower-battle-v1.png",
+  "runtime": "tower-battle-v1.webp",
+  "prompt": "Use case: stylized-concept. Asset type: production square painted terrain background for an existing playable animal siege web game. The supplied image is a STYLE AND COMPOSITION REFERENCE ONLY; create a NEW TREETOP CITADEL battlefield. Match the reference's premium richly painted woodland storybook strategy art, strong contrast, intricate emerald woodland and warm golden sunlight, subtle overhead perspective. ONE SQUARE full-bleed image. No text, grid, UI, characters, animals, flags, banners or tokens.\nCRITICAL COMPOSITION: exactly the TOP 24% is scenic architecture. A majestic ancient woodland citadel built around enormous trees rises across the upper-right background band: interwoven timber halls, elegant pointed amber/copper roofs, an imposing carved wooden gate near x66%, taller watchtower near x83%, subtle rope walkways only in the distant background, layered high canopy and warm shafts of afternoon light in the upper left. It is the final stronghold: grander, taller and more ancient than the reference Acorn Fort, with ivy, little amber windows, restrained deep plum foliage at the extreme corners and a tall emerald canopy. All architecture, massive trunks, roots, walkways, dense foliage and buildings MUST stay above y24%; absolutely NO raised platforms or bridges in the gameplay area. Bottom 76% is a broad, flat, completely unobstructed walkable forest clearing at ground level, a muted moss/sage meadow on left transitioning gently into pale warm ochre courtyard soil on right, very low-detail texture with soft diffuse leafy shadows. Border leaves only at the extreme outer edges. No painted trees, roots, rocks, walls, fences, buildings, bridges, water or clutter within the lower playable area. Actual collision trees and barriers are overlaid by the real game at specific positions. Keep the same framing as the reference so its lower 76% tactical area stays equally open and animal sprites will remain easy to read. A strong silhouette and richly lit distinct canopy fortress, not a giant castle occupying the entire image, not a raised tabletop board, no tile lines.",
+  "notes": "Background scenery only. Collision walls, trees and open gates are rendered from the actual 8x6 battle terrain; no gameplay balance changes.",
+  "runtimeDimensions": {
+    "width": 1254,
+    "height": 1254
+  },
+  "runtimeEncoding": {
+    "format": "webp",
+    "quality": 90
+  },
+  "sourceSha256": "720c4c64a96b7bf1162c5a0c84f01822896fa9fd98bf38ef0f7a9e7f0a7841cd",
+  "runtimeSha256": "902f467a880d4a761ed2f4d3765768521c67942fd6b065bab351eaafda389ca9"
+}

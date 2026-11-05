@@ -1,0 +1,133 @@
+TAP version 13
+# Subtest: Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+ok 1 - Game [animal-rescue-train] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 877.039
+  ...
+# Subtest: Game [number-pop] initializes cleanly and binds START GAME without runtime error
+ok 2 - Game [number-pop] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 18.5993
+  ...
+# Subtest: Game [ball-track] initializes cleanly and binds START GAME without runtime error
+not ok 3 - Game [ball-track] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 4.2894
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\games-runtime.test.cjs:124:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Runtime error during initial boot of ball-track: ToenowTime is not defined
+    ReferenceError: ToenowTime is not defined
+        at eval (eval at <anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\games-runtime.test.cjs:203:20), <anonymous>:764:23)
+        at eval (eval at <anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\games-runtime.test.cjs:203:20), <anonymous>:2509:9)
+        at TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\games-runtime.test.cjs:227:14)
+        at Test.runInAsyncScope (node:async_hooks:206:9)
+        at Test.run (node:internal/test_runner/test:789:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+        at Test.postRun (node:internal/test_runner/test:885:19)
+        at Test.run (node:internal/test_runner/test:831:12)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    eval (eval at <anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\games-runtime.test.cjs:203:20), <anonymous>:764:23)
+    eval (eval at <anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\games-runtime.test.cjs:203:20), <anonymous>:2509:9)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\games-runtime.test.cjs:227:14)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\games-runtime.test.cjs:245:14)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+ok 4 - Game [spot-quick] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 5.649
+  ...
+# Subtest: Game [tap-match] initializes cleanly and binds START GAME without runtime error
+ok 5 - Game [tap-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 2.5036
+  ...
+# Subtest: Game [add-up] initializes cleanly and binds START GAME without runtime error
+ok 6 - Game [add-up] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 5.3421
+  ...
+# Subtest: Game [block-match] initializes cleanly and binds START GAME without runtime error
+ok 7 - Game [block-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 3.5611
+  ...
+# Subtest: Game [space-scale] initializes cleanly and binds START GAME without runtime error
+not ok 8 - Game [space-scale] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 2.172
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\games-runtime.test.cjs:124:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Runtime error during initial boot of space-scale: ToenowTime is not defined
+    ReferenceError: ToenowTime is not defined
+        at eval (eval at <anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\games-runtime.test.cjs:203:20), <anonymous>:673:29)
+        at eval (eval at <anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\games-runtime.test.cjs:203:20), <anonymous>:1779:9)
+        at TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\games-runtime.test.cjs:227:14)
+        at Test.runInAsyncScope (node:async_hooks:206:9)
+        at Test.run (node:internal/test_runner/test:789:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+        at Test.postRun (node:internal/test_runner/test:885:19)
+        at Test.run (node:internal/test_runner/test:831:12)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    eval (eval at <anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\games-runtime.test.cjs:203:20), <anonymous>:673:29)
+    eval (eval at <anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\games-runtime.test.cjs:203:20), <anonymous>:1779:9)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\games-runtime.test.cjs:227:14)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\games-runtime.test.cjs:245:14)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+ok 9 - Game [shadow-match] initializes cleanly and binds START GAME without runtime error
+  ---
+  duration_ms: 5.153
+  ...
+# Subtest: a timed run starts with sixty seconds and rewards correct answers up to sixty
+ok 10 - a timed run starts with sixty seconds and rewards correct answers up to sixty
+  ---
+  duration_ms: 0.9543
+  ...
+# Subtest: wrong answers remove five seconds and clamp at zero
+ok 11 - wrong answers remove five seconds and clamp at zero
+  ---
+  duration_ms: 0.1713
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 9
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 993.9262

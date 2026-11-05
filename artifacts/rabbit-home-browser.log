@@ -1,0 +1,12 @@
+Starter garden, contextual chat, keyboard picker and no-spend build preview PASS
+All four sequential builds create real scene objects PASS
+Decoration craft/place/put-away and save reload PASS
+1440x1000 en visit/decorate PASS
+1440x1000 zh-Hant visit/decorate PASS
+390x844 en visit/decorate PASS
+390x844 zh-Hant visit/decorate PASS
+320x740 en visit/decorate PASS
+320x740 zh-Hant visit/decorate PASS
+844x390 en visit/decorate PASS
+844x390 zh-Hant visit/decorate PASS
+Keyboard close/focus and real Number Pop iframe launch PASS

@@ -1,0 +1,14 @@
+PASS 1280 zh-Hant: legal 15 vs 19 victory, touch/click, restart, pause, practice, title
+PASS 390 zh-Hant: legal 15 vs 19 victory, touch/click, restart, pause, practice, title
+PASS 390 en: legal 15 vs 19 victory, touch/click, restart, pause, practice, title
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+2 !== 6
+
+    at run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-animal-siege-browser.cjs:61:307) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 2,
+  expected: 6,
+  operator: 'strictEqual'
+}

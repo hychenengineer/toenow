@@ -1,0 +1,22 @@
+assets/rabbit-home/background.webp               | Bin 0 -> 536234 bytes
+ assets/rabbit-home/buildings.webp                | Bin 0 -> 494194 bytes
+ assets/rabbit-home/manifest.json                 |  40 ++++++++++++++++
+ assets/rabbit-home/rabbit.webp                   | Bin 0 -> 193058 bytes
+ assets/rabbit-home/sources/approved-concept.png  | Bin 0 -> 2880610 bytes
+ assets/rabbit-home/sources/background.png        | Bin 0 -> 3399265 bytes
+ assets/rabbit-home/sources/buildings.png         | Bin 0 -> 2709528 bytes
+ assets/rabbit-home/sources/rabbit.png            | Bin 0 -> 1159028 bytes
+ assets/toenow-rabbit-home.css                    |  50 ++++++++++++++++++++
+ docs/RABBIT_HOME_RUN_REPORT.md                   |  11 +++++
+ docs/superpowers/plans/2026-10-27-rabbit-home.md |  15 ++++++
+ index.html                                       |   6 ++-
+ package.json                                     |   2 +-
+ shared/toenow-i18n-core.js                       |   7 +++
+ shared/toenow-island.js                          |  56 +++++++++++++++++++++--
+ shared/toenow-rabbit-home.js                     |  39 ++++++++++++++++
+ tests/toenow-rabbit-home.test.cjs                |   8 ++++
+ tools/verify-island-browser.cjs                  |   3 +-
+ tools/verify-materials-browser.cjs               |   8 ++--
+ tools/verify-materials-lifecycle-browser.cjs     |   4 +-
+ tools/verify-rabbit-home-browser.cjs             |  50 ++++++++++++++++++++
+ 21 files changed, 285 insertions(+), 14 deletions(-)

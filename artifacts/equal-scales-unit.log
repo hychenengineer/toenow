@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: Harvest baskets keep numeric labels without the colored fraction rim
+ok 1 - Harvest baskets keep numeric labels without the colored fraction rim
+  ---
+  duration_ms: 7.979
+  ...
+# Subtest: Supply bags leave exact-sum, two-item minimum and overshoot logic intact
+ok 2 - Supply bags leave exact-sum, two-item minimum and overshoot logic intact
+  ---
+  duration_ms: 3.3445
+  ...
+# Subtest: Parcel render never uses hidden mass and keeps symbols distinct
+ok 3 - Parcel render never uses hidden mass and keeps symbols distinct
+  ---
+  duration_ms: 5.3251
+  ...
+# Subtest: Supply orders retain two, three and four bag solutions in every tier
+ok 4 - Supply orders retain two, three and four bag solutions in every tier
+  ---
+  duration_ms: 13.0842
+  ...
+# Subtest: Mystery parcel directive is decided by hidden mass across the unchanged tiers
+ok 5 - Mystery parcel directive is decided by hidden mass across the unchanged tiers
+  ---
+  duration_ms: 5.1684
+  ...
+# Subtest: Every scale has equal arms and its visible comparisons uniquely determine the answer
+ok 6 - Every scale has equal arms and its visible comparisons uniquely determine the answer
+  ---
+  duration_ms: 5.9876
+  ...
+# Subtest: Supply bag labels render after spark particles in dark ink
+ok 7 - Supply bag labels render after spark particles in dark ink
+  ---
+  duration_ms: 3.2117
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 137.3527

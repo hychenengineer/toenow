@@ -1,0 +1,4 @@
+PASS train island title/result/replay-to-title 1100 en
+PASS train island title/result/replay-to-title 1100 zh-Hant
+PASS train island title/result/replay-to-title 390 en
+PASS train island title/result/replay-to-title 390 zh-Hant

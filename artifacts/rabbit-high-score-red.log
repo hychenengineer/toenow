@@ -1,0 +1,196 @@
+TAP version 13
+# Subtest: all ten homes progress from one to three to four material recipes with balanced collaboration
+ok 1 - all ten homes progress from one to three to four material recipes with balanced collaboration
+  ---
+  duration_ms: 2.1617
+  ...
+# Subtest: a missing collaboration material prevents all spending; success deducts every ingredient once
+ok 2 - a missing collaboration material prevents all spending; success deducts every ingredient once
+  ---
+  duration_ms: 1.1663
+  ...
+# Subtest: existing built stages and owned decorations survive the recipe change without retroactive costs
+ok 3 - existing built stages and owned decorations survive the recipe change without retroactive costs
+  ---
+  duration_ms: 0.2162
+  ...
+# Subtest: exactly ten explorer games own distinct materials; carefree is excluded
+ok 4 - exactly ten explorer games own distinct materials; carefree is excluded
+  ---
+  duration_ms: 0.101
+  ...
+# Subtest: normal play credits only its own item, survives reload, and cannot repeat a receipt
+ok 5 - normal play credits only its own item, survives reload, and cannot repeat a receipt
+  ---
+  duration_ms: 0.2124
+  ...
+# Subtest: practice, preview, zero work, unknown and implausible attempts do not award
+ok 6 - practice, preview, zero work, unknown and implausible attempts do not award
+  ---
+  duration_ms: 0.1911
+  ...
+# Subtest: own material upgrades are affordable, atomic and separate from challenge records
+ok 7 - own material upgrades are affordable, atomic and separate from challenge records
+  ---
+  duration_ms: 0.3383
+  ...
+# Subtest: starter and collaboration decorations spend exact recipes once and can be toggled
+ok 8 - starter and collaboration decorations spend exact recipes once and can be toggled
+  ---
+  duration_ms: 0.4602
+  ...
+# Subtest: legacy challenge stage is preserved once and later high scores do not build houses
+ok 9 - legacy challenge stage is preserved once and later high scores do not build houses
+  ---
+  duration_ms: 0.2046
+  ...
+# Subtest: latest balance is read for sequential clients and storage errors never report success
+ok 10 - latest balance is read for sequential clients and storage errors never report success
+  ---
+  duration_ms: 0.5214
+  ...
+# Subtest: malformed balances cannot create spendable resources
+ok 11 - malformed balances cannot create spendable resources
+  ---
+  duration_ms: 0.2944
+  ...
+# Subtest: SDK lifecycle awards once, clears on replay and never awards a practice result
+ok 12 - SDK lifecycle awards once, clears on replay and never awards a practice result
+  ---
+  duration_ms: 1.8314
+  ...
+# Subtest: Number Pop accepts an immediate first start and deduplicates its compatibility click
+ok 13 - Number Pop accepts an immediate first start and deduplicates its compatibility click
+  ---
+  duration_ms: 0.9205
+  ...
+# Subtest: interrupted runs lose their reward token
+ok 14 - interrupted runs lose their reward token
+  ---
+  duration_ms: 0.24
+  ...
+# Subtest: a legitimate six figure rabbit result is credited once rather than silently rejected
+not ok 15 - a legitimate six figure rabbit result is credited once rather than silently rejected
+  ---
+  duration_ms: 1.6227
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-materials.test.cjs:45:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 8
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 8
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-materials.test.cjs:49:9)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: a finished run with no reward explains why to the result UI
+not ok 16 - a finished run with no reward explains why to the result UI
+  ---
+  duration_ms: 0.5258
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-materials.test.cjs:54:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + undefined
+    - 'no-score'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'no-score'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-materials.test.cjs:56:9)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: a short legitimate scored run earns materials without a ten second cutoff
+ok 17 - a short legitimate scored run earns materials without a ten second cutoff
+  ---
+  duration_ms: 0.5437
+  ...
+# Subtest: Number Pop accepts actual harvest scoring through wave 22 at a normal tapping pace
+not ok 18 - Number Pop accepts actual harvest scoring through wave 22 at a normal tapping pace
+  ---
+  duration_ms: 3.2423
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-security.test.cjs:6:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-security.test.cjs:17:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    node:internal/test_runner/harness:252:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+  ...
+# Subtest: Anti-Cheat: 100,000+ points on Number Pop is VALID when duration & wave are proportional
+ok 19 - Anti-Cheat: 100,000+ points on Number Pop is VALID when duration & wave are proportional
+  ---
+  duration_ms: 0.1635
+  ...
+# Subtest: Anti-Cheat: Instant score injection is FLAGGED and BLOCKED
+ok 20 - Anti-Cheat: Instant score injection is FLAGGED and BLOCKED
+  ---
+  duration_ms: 0.1084
+  ...
+# Subtest: Anti-Cheat: Score exceeding maximum wave physics is FLAGGED
+ok 21 - Anti-Cheat: Score exceeding maximum wave physics is FLAGGED
+  ---
+  duration_ms: 0.0856
+  ...
+# Subtest: Ad Anti-Skip: Authentic ad viewing successfully verifies proof token
+ok 22 - Ad Anti-Skip: Authentic ad viewing successfully verifies proof token
+  ---
+  duration_ms: 0.3037
+  ...
+# Subtest: Ad Anti-Skip: Fast-forward / Instant skip exploit is REJECTED
+ok 23 - Ad Anti-Skip: Fast-forward / Instant skip exploit is REJECTED
+  ---
+  duration_ms: 0.1126
+  ...
+# Subtest: Ad Anti-Skip: Forged or tampered token is REJECTED
+ok 24 - Ad Anti-Skip: Forged or tampered token is REJECTED
+  ---
+  duration_ms: 0.1406
+  ...
+# Subtest: ToenowPlatform: Instantiates and exposes standard ad hooks
+ok 25 - ToenowPlatform: Instantiates and exposes standard ad hooks
+  ---
+  duration_ms: 0.1929
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 22
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 107.6135

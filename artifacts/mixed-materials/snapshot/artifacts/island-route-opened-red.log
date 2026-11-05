@@ -1,0 +1,119 @@
+TAP version 13
+# Subtest: The nearest-neighbour route starts bottom-left with Rabbit and ends top-right with Panda
+ok 1 - The nearest-neighbour route starts bottom-left with Rabbit and ends top-right with Panda
+  ---
+  duration_ms: 37.7225
+  ...
+# Subtest: Updating the old random route preserves its opened buildings and actual completion credit
+ok 2 - Updating the old random route preserves its opened buildings and actual completion credit
+  ---
+  duration_ms: 37.5823
+  ...
+# Subtest: Saved normal milestones unlock one building even while the iframe remains active
+ok 3 - Saved normal milestones unlock one building even while the iframe remains active
+  ---
+  duration_ms: 14.5422
+  ...
+# Subtest: The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building
+ok 4 - The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building
+  ---
+  duration_ms: 2.1613
+  ...
+# Subtest: Malformed version-2 opened lists never leave a player with zero usable games
+not ok 5 - Malformed version-2 opened lists never leave a player with zero usable games
+  ---
+  duration_ms: 64.0125
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-exploration.test.cjs:41:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + []
+    - [
+    -   'number-pop'
+    - ]
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'number-pop'
+  actual:
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-exploration.test.cjs:45:12)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: Fresh and settings-only players start with one persisted rabbit garden
+ok 6 - Fresh and settings-only players start with one persisted rabbit garden
+  ---
+  duration_ms: 66.7133
+  ...
+# Subtest: Actual legacy history retains all games, including zero-score attempts
+ok 7 - Actual legacy history retains all games, including zero-score attempts
+  ---
+  duration_ms: 1.6317
+  ...
+# Subtest: Only an unlocked game reaching Wave 6 in normal play opens one new place once
+ok 8 - Only an unlocked game reaching Wave 6 in normal play opens one new place once
+  ---
+  duration_ms: 0.7982
+  ...
+# Subtest: Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+ok 9 - Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+  ---
+  duration_ms: 22.361
+  ...
+# Subtest: Every distinct completion opens at most one place and the final place finishes cleanly
+ok 10 - Every distinct completion opens at most one place and the final place finishes cleanly
+  ---
+  duration_ms: 51.8021
+  ...
+# Subtest: Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+ok 11 - Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+  ---
+  duration_ms: 2.2527
+  ...
+# Subtest: A readable but unwritable existing save retains this session progress
+ok 12 - A readable but unwritable existing save retains this session progress
+  ---
+  duration_ms: 41.7928
+  ...
+# Subtest: Rejected run records cannot bypass validation through reconciliation or reload
+ok 13 - Rejected run records cannot bypass validation through reconciliation or reload
+  ---
+  duration_ms: 15.2794
+  ...
+# Subtest: Another tab cannot reconcile an active iframe record before its result is validated
+ok 14 - Another tab cannot reconcile an active iframe record before its result is validated
+  ---
+  duration_ms: 34.4382
+  ...
+# Subtest: Iframe validation guard survives replay and closing removes the marker safely
+ok 15 - Iframe validation guard survives replay and closing removes the marker safely
+  ---
+  duration_ms: 37.9179
+  ...
+# Subtest: Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+ok 16 - Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+  ---
+  duration_ms: 1.8398
+  ...
+# Subtest: Corrupt nested run metadata cannot crash the saved journey
+ok 17 - Corrupt nested run metadata cannot crash the saved journey
+  ---
+  duration_ms: 0.5505
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 16
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5853.716

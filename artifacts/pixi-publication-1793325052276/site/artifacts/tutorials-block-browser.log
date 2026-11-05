@@ -1,0 +1,6 @@
+PASS block-match 390 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS block-match 390 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS block-match 1100 en: first/returning/replay, real actions, frozen engine, records, layout
+PASS block-match 1100 zh-Hant: first/returning/replay, real actions, frozen engine, records, layout
+PASS block-match: cancel remains new, explicit skip persists and starts
+{"lessonScenarios":4,"skipScenarios":1}

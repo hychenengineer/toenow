@@ -1,0 +1,165 @@
+TAP version 13
+# Subtest: expedition starts with exact original army health and three distinct forts
+ok 1 - expedition starts with exact original army health and three distinct forts
+  ---
+  duration_ms: 3.0737
+  ...
+# Subtest: one-time exploration supplies and recruitment spend resources without healing wounded survivors
+ok 2 - one-time exploration supplies and recruitment spend resources without healing wounded survivors
+  ---
+  duration_ms: 0.5823
+  ...
+# Subtest: retreat and defeat keep exact health on both sides and reject stale or duplicate settlement
+ok 3 - retreat and defeat keep exact health on both sides and reject stale or duplicate settlement
+  ---
+  duration_ms: 0.6089
+  ...
+# Subtest: capturing both outer forts opens final fort and rewards cannot be farmed
+ok 4 - capturing both outer forts opens final fort and rewards cannot be farmed
+  ---
+  duration_ms: 0.6178
+  ...
+# Subtest: wiped armies can use hidden reinforcements; no army and no recovery ends the run
+ok 5 - wiped armies can use hidden reinforcements; no army and no recovery ends the run
+  ---
+  duration_ms: 0.2921
+  ...
+# Subtest: training changes only the trained species and affects real range, movement and incoming damage
+ok 6 - training changes only the trained species and affects real range, movement and incoming damage
+  ---
+  duration_ms: 1.3598
+  ...
+# Subtest: spending the last discovery on wood ends a wiped run when recovery becomes impossible
+ok 7 - spending the last discovery on wood ends a wiped run when recovery becomes impossible
+  ---
+  duration_ms: 0.2774
+  ...
+# Subtest: counter chain rewards the same species on either side equally
+ok 8 - counter chain rewards the same species on either side equally
+  ---
+  duration_ms: 2.7403
+  ...
+# Subtest: movement follows paths and cannot cross walls or occupied tiles
+ok 9 - movement follows paths and cannot cross walls or occupied tiles
+  ---
+  duration_ms: 0.891
+  ...
+# Subtest: ranged attacks require clear sight and never damage allies
+ok 10 - ranged attacks require clear sight and never damage allies
+  ---
+  duration_ms: 0.3763
+  ...
+# Subtest: attack consumes action; defending reduces damage until next own turn
+ok 11 - attack consumes action; defending reduces damage until next own turn
+  ---
+  duration_ms: 0.8535
+  ...
+# Subtest: AI obeys terrain, finishes turns, and terminal battles reject further actions
+ok 12 - AI obeys terrain, finishes turns, and terminal battles reject further actions
+  ---
+  duration_ms: 2.8116
+  ...
+# Subtest: five practice tiers scale defenders while keeping the board valid
+ok 13 - five practice tiers scale defenders while keeping the board valid
+  ---
+  duration_ms: 0.4183
+  ...
+# Subtest: the smaller starting army can capture the fort through legal movement and counters
+ok 14 - the smaller starting army can capture the fort through legal movement and counters
+  ---
+  duration_ms: 7.7753
+  ...
+# Subtest: Expedition battles do not add a locked place to the existing exploration route
+ok 15 - Expedition battles do not add a locked place to the existing exploration route
+  ---
+  duration_ms: 12.6601
+  ...
+# Subtest: Local preview server supports accurate video byte ranges and invalid-range fallback
+ok 16 - Local preview server supports accurate video byte ranges and invalid-range fallback
+  ---
+  duration_ms: 131.9085
+  ...
+# Subtest: Gameplay previews load on demand, play one video, and cancel late playback
+ok 17 - Gameplay previews load on demand, play one video, and cancel late playback
+  ---
+  duration_ms: 3.119
+  ...
+# Subtest: Gameplay preview failure preserves poster and reports a fallback
+ok 18 - Gameplay preview failure preserves poster and reports a fallback
+  ---
+  duration_ms: 0.3599
+  ...
+# Subtest: Hub index.html scripts have zero syntax errors and render all game cards cleanly
+ok 19 - Hub index.html scripts have zero syntax errors and render all game cards cleanly
+  ---
+  duration_ms: 8.782
+  ...
+# Subtest: OS/browser language selects Chinese only for Chinese preferences
+ok 20 - OS/browser language selects Chinese only for Chinese preferences
+  ---
+  duration_ms: 1.1664
+  ...
+# Subtest: manual preference persists separately from scores and survives recreation
+ok 21 - manual preference persists separately from scores and survives recreation
+  ---
+  duration_ms: 0.3389
+  ...
+# Subtest: blocked storage does not prevent live switching or translation
+ok 22 - blocked storage does not prevent live switching or translation
+  ---
+  duration_ms: 0.6592
+  ...
+# Subtest: every game and Hub load the same catalogs before the runtime
+ok 23 - every game and Hub load the same catalogs before the runtime
+  ---
+  duration_ms: 21.1102
+  ...
+# Subtest: nine games use one screen library without copied title or result templates
+ok 24 - nine games use one screen library without copied title or result templates
+  ---
+  duration_ms: 286.2619
+  ...
+# Subtest: shared renderer owns event callbacks, current share payload, and instance disposal
+ok 25 - shared renderer owns event callbacks, current share payload, and instance disposal
+  ---
+  duration_ms: 19.5535
+  ...
+# Subtest: shared screen copy is escaped and missing/non-finite results are safe
+ok 26 - shared screen copy is escaped and missing/non-finite results are safe
+  ---
+  duration_ms: 1.4786
+  ...
+# Subtest: shared screen templates provide identical result fields and three actions for all games
+ok 27 - shared screen templates provide identical result fields and three actions for all games
+  ---
+  duration_ms: 0.7043
+  ...
+# Subtest: screen result normalization uses the shared five-level mapping
+ok 28 - screen result normalization uses the shared five-level mapping
+  ---
+  duration_ms: 0.4034
+  ...
+# Subtest: membership invitation follows replay and preserves the three game actions
+ok 29 - membership invitation follows replay and preserves the three game actions
+  ---
+  duration_ms: 0.3256
+  ...
+# Subtest: journeys show discoveries without competitive records
+ok 30 - journeys show discoveries without competitive records
+  ---
+  duration_ms: 0.2097
+  ...
+# Subtest: journey summary uses actual finds and safe text
+ok 31 - journey summary uses actual finds and safe text
+  ---
+  duration_ms: 0.5132
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 431.3685

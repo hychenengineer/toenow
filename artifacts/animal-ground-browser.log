@@ -1,0 +1,3 @@
+PASS 1280 zh-Hant reduced=false: transparent terrain, grounded units, reversible draft, walking, pause/resume, enemy turn and restart
+PASS 390 en reduced=false: transparent terrain, grounded units, reversible draft, walking, pause/resume, enemy turn and restart
+PASS 320 zh-Hant reduced=true: transparent terrain, grounded units, reversible draft, walking, pause/resume, enemy turn and restart

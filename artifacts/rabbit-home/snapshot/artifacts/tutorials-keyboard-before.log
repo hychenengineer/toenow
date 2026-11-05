@@ -1,0 +1,8 @@
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('#toenow-tutorial') to be visible
+
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-tutorials-browser.cjs:101:46 {
+  log: [ "  - waiting for locator('#toenow-tutorial') to be visible" ],
+  name: 'TimeoutError'
+}

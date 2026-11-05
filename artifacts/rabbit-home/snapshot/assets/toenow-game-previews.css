@@ -1,0 +1,29 @@
+/* Authentic gameplay tiles. Preserve the complete recorded frame. */
+.main-container{container-type:inline-size}
+/* Scale both dimensions by sqrt(0.5), then pack the smaller tiles into rows. */
+.bento-grid{--tile-original-columns:1;grid-template-columns:repeat(auto-fill,calc((100% - (var(--tile-original-columns) - 1) * 1.5rem) / var(--tile-original-columns) * .70710678));justify-content:center}
+@container(min-width:664px){.bento-grid{--tile-original-columns:2}}
+@container(min-width:1008px){.bento-grid{--tile-original-columns:3}}
+.game-card{min-height:0;backdrop-filter:none;-webkit-backdrop-filter:none;overflow:visible;background:transparent;border:0;box-shadow:none;border-radius:16px;justify-content:flex-start}
+.game-card::before{display:none}
+.game-card:hover{background:transparent;border-color:transparent;box-shadow:none;transform:none}
+.game-launch{position:relative;width:100%;aspect-ratio:16/10;padding:0;display:block;border:1px solid var(--border-glass);border-radius:16px;overflow:hidden;background:#080b12;cursor:pointer;transition:transform .2s,border-color .2s}
+.game-launch:hover,.game-launch:focus-visible{transform:translateY(-4px);border-color:var(--accent-cyan);outline:2px solid var(--accent-cyan);outline-offset:3px}
+.game-launch img,.game-launch video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;display:block;filter:none;transform:none}
+.game-launch video{opacity:0;transition:opacity .18s;pointer-events:none}
+.preview-playing .game-launch video{opacity:1}
+.game-tile-caption{display:flex;align-items:center;gap:9px;padding:12px 2px 4px;min-width:0}
+.game-tile-caption h2{font-size:.95rem;line-height:1.4;font-weight:600;color:var(--text-primary);margin:0 auto 0 0;min-width:0}
+.game-preview-button,.game-tile-caption .card-share-btn,.game-preview-close{font:inherit;font-size:.74rem;white-space:nowrap;border:1px solid var(--border-glass);color:var(--text-secondary);background:var(--bg-card);border-radius:8px;min-height:34px;padding:7px 10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.game-tile-caption .card-share-btn{min-width:34px;width:34px;padding:7px;font-size:16px}
+.game-preview-button:hover,.game-tile-caption .card-share-btn:hover,.game-preview-close:hover{color:var(--text-primary);border-color:var(--accent-cyan)}
+.game-preview-button:focus-visible,.game-tile-caption .card-share-btn:focus-visible,.game-preview-close:focus-visible{outline:2px solid var(--accent-cyan);outline-offset:3px}
+.game-preview-dialog{width:min(1150px,94vw);max-height:94dvh;padding:16px;border:1px solid #363d50;border-radius:16px;background:#0b0d14;color:#f4f5fa;overflow:auto}
+.game-preview-dialog::backdrop{background:#000c}
+.game-preview-dialog-header{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:12px}
+.game-preview-dialog h2{font-size:17px;margin:0}
+.game-preview-dialog video{display:block;width:100%;height:min(72dvh,760px);object-fit:contain;background:#080b12}
+.game-preview-status{font-size:14px;line-height:1.5;margin:10px 0 0}
+.game-preview-status:empty{display:none}
+@media(max-width:540px){.game-launch:hover{transform:none}.game-tile-caption{gap:7px}.game-preview-button{min-height:40px}.game-tile-caption .card-share-btn{min-height:40px;width:40px}}
+@media(prefers-reduced-motion:reduce){.game-launch,.game-launch video{transition:none}.game-launch:hover,.game-launch:focus-visible{transform:none}}

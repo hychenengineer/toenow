@@ -1,0 +1,24 @@
+{
+  "checked": [
+    "otter/background.webp",
+    "otter/buildings.webp",
+    "beaver/background.webp",
+    "beaver/buildings.webp",
+    "squirrel/background.webp",
+    "squirrel/buildings.webp",
+    "fox/background.webp",
+    "fox/buildings.webp",
+    "penguin/background.webp",
+    "penguin/buildings.webp",
+    "owl/background.webp",
+    "owl/buildings.webp",
+    "raccoon/background.webp",
+    "raccoon/buildings.webp",
+    "elephant/background.webp",
+    "elephant/buildings.webp",
+    "panda/background.webp",
+    "panda/buildings.webp"
+  ],
+  "count": 18,
+  "canonicalCharactersPreserved": true
+}

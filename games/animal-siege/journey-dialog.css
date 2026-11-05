@@ -1,0 +1,18 @@
+#camp,#trail{width:100%;max-width:1500px;margin-top:24px}
+#camp .journey-layout,#trail .journey-layout{display:block}
+.army-summary{display:flex;align-items:center;gap:18px;margin:0 0 18px;padding:10px 16px;border:1px solid #a98b4e;border-radius:13px;background:linear-gradient(110deg,#2b4432,#18352b);color:#ffedc4}
+.army-summary-label{font-size:11px;letter-spacing:1px;font-weight:700;white-space:nowrap}
+.army-summary-units{display:flex;gap:24px;flex:1;justify-content:space-around}
+.army-summary-units>div{display:flex;align-items:center;gap:9px;min-width:0}
+.army-summary img{width:40px;height:44px;object-fit:contain;filter:drop-shadow(0 2px 2px #0006)}
+.army-summary span{font-size:12px}.army-summary b{font-size:21px;color:#ffdf8c}.army-summary small{color:#ffdf8c}
+.journey-dialog{padding:0;border:0;border-radius:18px;background:transparent;width:min(440px,calc(100% - 32px));max-width:calc(100% - 32px);max-height:calc(100dvh - 32px);margin:auto;overflow:auto;color:#543110;box-shadow:0 20px 80px #00160fcc;overscroll-behavior:contain}
+.journey-dialog::backdrop{background:#071e18c4;backdrop-filter:blur(4px)}
+.journey-dialog .journey-panel{position:relative;padding:28px 24px 24px}
+.journey-dialog h2{padding-right:30px}
+.journey-panel .journey-dialog-close{position:absolute;right:10px;top:8px;width:34px;height:34px;margin:0;padding:0;border-radius:50%;border:1px solid #9f8048;background:#f7eac6;color:#65451e;font-size:25px;line-height:1}
+body:has(.journey-dialog[open]){overflow:hidden}
+button.trail-scene-caption{border:1px solid #d6b567;font:inherit;cursor:pointer;text-align:center}
+.trail-scene-caption strong{display:block;margin-top:8px;color:#ffe49b;font-size:14px}
+.trail-scene-caption:hover{background:#37573bf5}
+@media(max-width:780px){#camp,#trail{padding:0 12px 28px}.army-summary{gap:8px;padding:8px 10px;flex-wrap:wrap}.army-summary-label{width:100%}.army-summary-units{gap:10px;width:100%}.army-summary-units>div{gap:5px;flex:1;justify-content:center;flex-wrap:wrap}.army-summary img{width:30px;height:34px}.army-summary-units span{font-size:10px;order:3;width:100%;text-align:center}.army-summary b{font-size:19px}.journey-dialog .journey-panel{padding:25px 18px 20px}}

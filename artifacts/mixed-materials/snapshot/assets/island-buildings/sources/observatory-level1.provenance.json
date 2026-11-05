@@ -1,0 +1,10 @@
+{
+  "kind": "observatory",
+  "level": 1,
+  "method": "built-in image_gen",
+  "source": "C:\\Users\\HsinYuChen\\.codex\\generated_images\\01a16a47-2f32-7341-83dd-edc8be80d6f0\\exec-46f4ba23-3444-41f1-a65d-c68109c03df4.png",
+  "references": [
+    "C:\\Users\\HsinYuChen\\.codex\\generated_images\\01a16a47-2f32-7341-83dd-edc8be80d6f0\\exec-4957052d-3829-4335-b1e7-42a4457785d5.png"
+  ],
+  "prompt": "SINGLE production game landmark sprite, premium richly detailed hand-painted isometric 2.5D storybook architecture matching the approved reference, tactile stone/wood/roof tiles, soft ambient occlusion, afternoon light from upper-left. Fixed 35-degree overhead isometric camera, entrance facing lower-left, ground centered horizontally near 80% image height, square sprite canvas with roughly 10% clear transparent margin. Genuinely TRANSPARENT background and soft alpha contact shadow. Entire subject including roofs and tiny ground patch visible, no cropping. No typography, labels, level numerals, icons, UI, characters, opaque paper, sky, sea, broad terrain, giant plinth or floating land cube. Keep architecture readable at map size; restrained local grass, steps and planting only. EDIT TARGET: the supplied mature Star Observatory sprite. Produce its LEVEL 1 growth variant. EARLIEST SMALL OUTPOST. Keep only the main circular cream-stone observatory at exactly the same position, perspective and scale as the reference main dome. Plain closed teal dome without ornate brass ribs, a simple wooden door, two small unlit windows, two entrance steps. Remove the entire library wing, telescope, star finial, elaborate entrance canopy, compass court, railing, lamps, planters and flowers. A small quiet grass patch under the same main building. This is a finished humble building, not rubble or construction scaffolding. Keep the square/portrait canvas dimensions, camera, lighting direction, main structure anchor and main building scale consistent with the source. Actual new illustration with fewer elements, not a color filter or scaled-down copy. Isolated alpha background remains truly transparent."
+}

@@ -1,0 +1,190 @@
+TAP version 13
+# Subtest: Moving map landmarks preserves the existing route and earned discoveries
+not ok 1 - Moving map landmarks preserves the existing route and earned discoveries
+  ---
+  duration_ms: 3.6452
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\toenow-exploration.test.cjs:12:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'number-pop',
+    +   'block-match',
+    +   'space-scale',
+    +   'add-up',
+    +   'flash-brain',
+    +   'ball-track',
+    +   'tap-match',
+    +   'shadow-match',
+    +   'spot-quick',
+    -   'space-scale',
+    -   'add-up',
+    -   'flash-brain',
+    -   'ball-track',
+    -   'tap-match',
+    -   'block-match',
+    -   'spot-quick',
+    -   'shadow-match',
+        'animal-rescue-train'
+      ]
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'number-pop'
+    1: 'space-scale'
+    2: 'add-up'
+    3: 'flash-brain'
+    4: 'ball-track'
+    5: 'tap-match'
+    6: 'block-match'
+    7: 'spot-quick'
+    8: 'shadow-match'
+    9: 'animal-rescue-train'
+  actual:
+    0: 'number-pop'
+    1: 'block-match'
+    2: 'space-scale'
+    3: 'add-up'
+    4: 'flash-brain'
+    5: 'ball-track'
+    6: 'tap-match'
+    7: 'shadow-match'
+    8: 'spot-quick'
+    9: 'animal-rescue-train'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\toenow-exploration.test.cjs:22:12)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    node:internal/test_runner/harness:252:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+  ...
+# Subtest: The nearest-neighbour route starts bottom-left with Rabbit and ends top-right with Panda
+ok 2 - The nearest-neighbour route starts bottom-left with Rabbit and ends top-right with Panda
+  ---
+  duration_ms: 0.423
+  ...
+# Subtest: Updating the old random route keeps completion credit and uses the earned fixed route
+ok 3 - Updating the old random route keeps completion credit and uses the earned fixed route
+  ---
+  duration_ms: 0.9353
+  ...
+# Subtest: Saved normal milestones unlock one building even while the iframe remains active
+ok 4 - Saved normal milestones unlock one building even while the iframe remains active
+  ---
+  duration_ms: 0.4963
+  ...
+# Subtest: The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building
+ok 5 - The old delayed-result bug recovers a plausible saved Rabbit completion without opening every building
+  ---
+  duration_ms: 0.2815
+  ...
+# Subtest: Malformed version-2 opened lists never leave a player with zero usable games
+ok 6 - Malformed version-2 opened lists never leave a player with zero usable games
+  ---
+  duration_ms: 0.3448
+  ...
+# Subtest: Fresh and settings-only players start with one persisted rabbit garden
+ok 7 - Fresh and settings-only players start with one persisted rabbit garden
+  ---
+  duration_ms: 0.3581
+  ...
+# Subtest: Existing score-only and zero-score attempts enter exploration without losing records
+ok 8 - Existing score-only and zero-score attempts enter exploration without losing records
+  ---
+  duration_ms: 0.3777
+  ...
+# Subtest: Persisted legacy access migrates once to version 3 and cannot be restored by cloud sign-in
+ok 9 - Persisted legacy access migrates once to version 3 and cannot be restored by cloud sign-in
+  ---
+  duration_ms: 0.7821
+  ...
+# Subtest: Returning players open only the contiguous cleared route while keeping later-game credit
+ok 10 - Returning players open only the contiguous cleared route while keeping later-game credit
+  ---
+  duration_ms: 0.3304
+  ...
+# Subtest: An older open tab cannot overwrite the migrated exploration policy
+ok 11 - An older open tab cannot overwrite the migrated exploration policy
+  ---
+  duration_ms: 0.2791
+  ...
+# Subtest: Only an unlocked game reaching Wave 6 in normal play opens one new place once
+ok 12 - Only an unlocked game reaching Wave 6 in normal play opens one new place once
+  ---
+  duration_ms: 0.3656
+  ...
+# Subtest: Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+ok 13 - Saved normal records reconcile after standalone/iframe exit without duplicate unlocks
+  ---
+  duration_ms: 0.2504
+  ...
+# Subtest: Every distinct completion opens at most one place and the final place finishes cleanly
+ok 14 - Every distinct completion opens at most one place and the final place finishes cleanly
+  ---
+  duration_ms: 0.5241
+  ...
+# Subtest: Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+ok 15 - Invalid state and unavailable storage stay playable; snapshots cannot mutate progress
+  ---
+  duration_ms: 0.6255
+  ...
+# Subtest: A readable but unwritable existing save retains this session progress
+ok 16 - A readable but unwritable existing save retains this session progress
+  ---
+  duration_ms: 0.2383
+  ...
+# Subtest: Rejected run records cannot bypass validation through reconciliation or reload
+ok 17 - Rejected run records cannot bypass validation through reconciliation or reload
+  ---
+  duration_ms: 0.4057
+  ...
+# Subtest: Another tab cannot reconcile an active iframe record before its result is validated
+ok 18 - Another tab cannot reconcile an active iframe record before its result is validated
+  ---
+  duration_ms: 0.4511
+  ...
+# Subtest: Iframe validation guard survives replay and closing removes the marker safely
+ok 19 - Iframe validation guard survives replay and closing removes the marker safely
+  ---
+  duration_ms: 0.3201
+  ...
+# Subtest: Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+ok 20 - Reloading a tab recovers its orphan iframe and later standalone progress remains usable
+  ---
+  duration_ms: 0.3238
+  ...
+# Subtest: Corrupt nested run metadata cannot crash the saved journey
+ok 21 - Corrupt nested run metadata cannot crash the saved journey
+  ---
+  duration_ms: 0.1863
+  ...
+# Subtest: Older tabs still guard raw saves after the policy has migrated
+ok 22 - Older tabs still guard raw saves after the policy has migrated
+  ---
+  duration_ms: 0.2504
+  ...
+# Subtest: Imported iframe guards settle when an older tab closes its run
+ok 23 - Imported iframe guards settle when an older tab closes its run
+  ---
+  duration_ms: 0.2725
+  ...
+# Subtest: A validated older-tab result settles an imported guard and earns the next place
+ok 24 - A validated older-tab result settles an imported guard and earns the next place
+  ---
+  duration_ms: 0.3034
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 23
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 86.141

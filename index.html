@@ -1587,6 +1587,11 @@
       <div><span class="carefree-kicker">CAREFREE ISLAND</span><h2 id="carefree-entry-title">Capybara Hot Spring Garden</h2><p>A little spring, a world of possibilities.</p></div>
       <button id="open-capybara" type="button">Visit Capybara</button>
     </section>
+    <section class="carefree-entry" aria-labelledby="animal-siege-entry-title">
+      <img src="assets/animal-siege-preview.png" alt="" width="155" height="100">
+      <div><span class="carefree-kicker">EXPEDITION ISLAND</span><h2 id="animal-siege-entry-title">Animal Siege</h2><p>Explore the mist. Build your animal army. Capture three forts.</p></div>
+      <button id="open-animal-siege" type="button">Open expedition</button>
+    </section>
     <section class="carefree-entry" aria-labelledby="carefree-farm-title">
       <img src="assets/carefree-farm-preview.png" alt="" width="155" height="100">
       <div><span class="carefree-kicker">CAREFREE ISLAND</span><h2 id="carefree-farm-title">Carefree Farm</h2><p>Plant a little, raise a friend, grow together.</p></div>
@@ -1808,6 +1813,7 @@
        1. UNIVERSAL GAME MOUNTING & RESOLUTION
        ============================================================================ */
     const GAMES_CONFIG = [
+      { id: 'animal-siege', island: 'expedition', title: 'Animal Siege', category: 'logic', icon: '🦫', url: 'games/animal-siege/index.html', preview: 'assets/animal-siege-preview.png', difficulty: 2, leaderboard: false, description: 'Explore the mist. Build your animal army. Capture three forts.', scoreKey: 'animal_siege_best_score_v1', waveKey: 'animal_siege_best_wave_v1' },
       { id: 'carefree-farm', title: 'Carefree Farm', category: 'relax', icon: '🌿', url: 'games/carefree-farm/index.html', preview: 'assets/carefree-farm-preview.png', difficulty: 1, leaderboard: false, description: 'Plant a little, raise a friend, grow together.', scoreKey: 'carefree_farm_best_score_v1', waveKey: 'carefree_farm_best_wave_v1' },
       {
         id: 'capybara-drift', title: 'Capybara Hot Spring Garden', category: 'relax', icon: '🍊',
@@ -2361,7 +2367,7 @@
       }
 
       grid.innerHTML = filtered.map(game => {
-        const locked = game.category !== 'relax' && exploration && !exploration.isUnlocked(game.id);
+        const locked = game.category !== 'relax' && game.island !== 'expedition' && exploration && !exploration.isUnlocked(game.id);
         const known = ['animal-rescue-train','number-pop','ball-track','block-match','add-up','space-scale','tap-match','spot-quick','shadow-match','flash-brain'].includes(game.id);
         const poster = known ? 'assets/animal-gameplay-previews/' + game.id + '-poster.png' : (game.preview || 'assets/number-pop-preview.png');
         const video = known ? '<video muted playsinline loop preload="none" data-src="assets/animal-gameplay-previews/' + game.id + '.webm" aria-hidden="true"></video>' : '';
@@ -2532,7 +2538,7 @@
     }
 
     function openTheaterModal(game, onReady) {
-      if (game.category !== 'relax' && exploration && !exploration.isUnlocked(game.id)) {
+      if (game.category !== 'relax' && game.island !== 'expedition' && exploration && !exploration.isUnlocked(game.id)) {
         islandExplorer?.showLocation(game.id);
         return;
       }
@@ -3334,6 +3340,7 @@
       });
       window.addEventListener('toenow:languagechange', showLeaderboardUnlockNotice);
 
+      document.getElementById('open-animal-siege').addEventListener('click', () => openTheaterModal(GAMES_CONFIG.find(game => game.id === 'animal-siege')));
       document.getElementById('open-carefree-farm').addEventListener('click', () => openTheaterModal(GAMES_CONFIG.find(game => game.id === 'carefree-farm')));
       document.getElementById('open-capybara').addEventListener('click', () => openTheaterModal(GAMES_CONFIG.find(game => game.id === 'capybara-drift')));
       document.getElementById('openLeaderboardBtn').addEventListener('click', () => {

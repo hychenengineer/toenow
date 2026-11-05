@@ -1,0 +1,7 @@
+PASS 320x568 en: layout, selection, save, undo, all tiers and practice
+PASS 320x568 zh-Hant: layout, selection, save, undo, all tiers and practice
+PASS 390x720 en: layout, selection, save, undo, all tiers and practice
+PASS 390x720 zh-Hant: layout, selection, save, undo, all tiers and practice
+PASS 1280x900 en: layout, selection, save, undo, all tiers and practice
+PASS 1280x900 zh-Hant: layout, selection, save, undo, all tiers and practice
+PASS 407 checks

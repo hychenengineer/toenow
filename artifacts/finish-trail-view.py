@@ -1,0 +1,2 @@
+from pathlib import Path
+p=Path('games/animal-siege/trail-view.js');s=p.read_text(encoding='utf-8-sig');needle="+'\"><div class=\"trail-scene-caption\">'";replacement="+'\">'+(s.stage==='guards'?'<div class=\"trail-patrol\" aria-hidden=\"true\">'+Object.keys(E.TYPES).filter(k=>s.guardHP[k]>0).map(image).join('')+'</div>':'')+'<div class=\"trail-scene-caption\">'";assert needle in s;s=s.replace(needle,replacement);p.write_text(s,encoding='utf-8')

@@ -1,0 +1,224 @@
+{
+  "checks": [
+    {
+      "width": 1440,
+      "language": "en",
+      "theme": "bright",
+      "minRowClearance": 44.9503173828125,
+      "status": "PASS"
+    },
+    {
+      "width": 1440,
+      "language": "en",
+      "theme": "arena",
+      "minRowClearance": 44.9503173828125,
+      "status": "PASS"
+    },
+    {
+      "width": 1440,
+      "language": "en",
+      "theme": "calm",
+      "minRowClearance": 44.9503173828125,
+      "status": "PASS"
+    },
+    {
+      "width": 1440,
+      "language": "zh-Hant",
+      "theme": "bright",
+      "minRowClearance": 55.5,
+      "status": "PASS"
+    },
+    {
+      "width": 1440,
+      "language": "zh-Hant",
+      "theme": "arena",
+      "minRowClearance": 55.5,
+      "status": "PASS"
+    },
+    {
+      "width": 1440,
+      "language": "zh-Hant",
+      "theme": "calm",
+      "minRowClearance": 55.5,
+      "status": "PASS"
+    },
+    {
+      "width": 1024,
+      "language": "en",
+      "theme": "bright",
+      "minRowClearance": 5.04400634765625,
+      "status": "PASS"
+    },
+    {
+      "width": 1024,
+      "language": "en",
+      "theme": "arena",
+      "minRowClearance": 5.04400634765625,
+      "status": "PASS"
+    },
+    {
+      "width": 1024,
+      "language": "en",
+      "theme": "calm",
+      "minRowClearance": 5.04400634765625,
+      "status": "PASS"
+    },
+    {
+      "width": 1024,
+      "language": "zh-Hant",
+      "theme": "bright",
+      "minRowClearance": 15.59375,
+      "status": "PASS"
+    },
+    {
+      "width": 1024,
+      "language": "zh-Hant",
+      "theme": "arena",
+      "minRowClearance": 15.59375,
+      "status": "PASS"
+    },
+    {
+      "width": 1024,
+      "language": "zh-Hant",
+      "theme": "calm",
+      "minRowClearance": 15.59375,
+      "status": "PASS"
+    },
+    {
+      "width": 768,
+      "language": "en",
+      "theme": "bright",
+      "minRowClearance": 8.3125,
+      "status": "PASS"
+    },
+    {
+      "width": 768,
+      "language": "en",
+      "theme": "arena",
+      "minRowClearance": 8.3125,
+      "status": "PASS"
+    },
+    {
+      "width": 768,
+      "language": "en",
+      "theme": "calm",
+      "minRowClearance": 8.3125,
+      "status": "PASS"
+    },
+    {
+      "width": 768,
+      "language": "zh-Hant",
+      "theme": "bright",
+      "minRowClearance": 24.296875,
+      "status": "PASS"
+    },
+    {
+      "width": 768,
+      "language": "zh-Hant",
+      "theme": "arena",
+      "minRowClearance": 24.296875,
+      "status": "PASS"
+    },
+    {
+      "width": 768,
+      "language": "zh-Hant",
+      "theme": "calm",
+      "minRowClearance": 24.296875,
+      "status": "PASS"
+    },
+    {
+      "width": 390,
+      "language": "en",
+      "theme": "bright",
+      "minRowClearance": 8.3125,
+      "status": "PASS"
+    },
+    {
+      "width": 390,
+      "language": "en",
+      "theme": "arena",
+      "minRowClearance": 8.3125,
+      "status": "PASS"
+    },
+    {
+      "width": 390,
+      "language": "en",
+      "theme": "calm",
+      "minRowClearance": 8.3125,
+      "status": "PASS"
+    },
+    {
+      "width": 390,
+      "language": "zh-Hant",
+      "theme": "bright",
+      "minRowClearance": 24.296875,
+      "status": "PASS"
+    },
+    {
+      "width": 390,
+      "language": "zh-Hant",
+      "theme": "arena",
+      "minRowClearance": 24.296875,
+      "status": "PASS"
+    },
+    {
+      "width": 390,
+      "language": "zh-Hant",
+      "theme": "calm",
+      "minRowClearance": 24.296875,
+      "status": "PASS"
+    },
+    {
+      "width": 320,
+      "language": "en",
+      "theme": "bright",
+      "minRowClearance": 8.3125,
+      "status": "PASS"
+    },
+    {
+      "width": 320,
+      "language": "en",
+      "theme": "arena",
+      "minRowClearance": 8.3125,
+      "status": "PASS"
+    },
+    {
+      "width": 320,
+      "language": "en",
+      "theme": "calm",
+      "minRowClearance": 8.3125,
+      "status": "PASS"
+    },
+    {
+      "width": 320,
+      "language": "zh-Hant",
+      "theme": "bright",
+      "minRowClearance": 24.296875,
+      "status": "PASS"
+    },
+    {
+      "width": 320,
+      "language": "zh-Hant",
+      "theme": "arena",
+      "minRowClearance": 24.296875,
+      "status": "PASS"
+    },
+    {
+      "width": 320,
+      "language": "zh-Hant",
+      "theme": "calm",
+      "minRowClearance": 24.296875,
+      "status": "PASS"
+    }
+  ],
+  "locations": 10,
+  "statesPerLocation": 5,
+  "illustratedAssets": 50,
+  "artFallback": "PASS",
+  "previewIsolation": "PASS",
+  "gameLaunch": "PASS",
+  "normalAndPractice": "PASS",
+  "storageAndReload": "PASS",
+  "keyboardAndLanguage": "PASS",
+  "errors": []
+}

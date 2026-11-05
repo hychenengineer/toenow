@@ -1,0 +1,8 @@
+AssertionError [ERR_ASSERTION]: local orders must not cover a reachable tile or target
+    at run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-animal-field-orders-browser.cjs:10:86) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: true,
+  expected: false,
+  operator: 'strictEqual'
+}

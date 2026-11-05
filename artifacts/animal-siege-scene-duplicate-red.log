@@ -1,0 +1,8 @@
+AssertionError [ERR_ASSERTION]: duplicate finish cannot skip the capture feedback
+    at run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-animal-siege-scene-browser.cjs:25:60) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual'
+}

@@ -1,0 +1,19 @@
+{
+  "checks": [
+    "number-pop: real start/end + visible receipt + duplicate guard PASS",
+    "ball-track: real start/end + visible receipt + duplicate guard PASS",
+    "block-match: real start/end + visible receipt + duplicate guard PASS",
+    "add-up: real start/end + visible receipt + duplicate guard PASS",
+    "space-scale: real start/end + visible receipt + duplicate guard PASS",
+    "tap-match: real start/end + visible receipt + duplicate guard PASS",
+    "spot-quick: real start/end + visible receipt + duplicate guard PASS",
+    "shadow-match: real start/end + visible receipt + duplicate guard PASS",
+    "flash-brain: real start/end + visible receipt + duplicate guard PASS",
+    "animal-rescue-train: real start/end + visible receipt + duplicate guard PASS",
+    "Flash autostart practice=0 PASS",
+    "Flash autostart practice=1 PASS",
+    "Interrupted run / partial score save does not award PASS",
+    "Hub iframe receipt → same home PASS"
+  ],
+  "errors": []
+}

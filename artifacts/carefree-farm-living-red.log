@@ -1,0 +1,185 @@
+TAP version 13
+# Subtest: v1 migration preserves a mature farm and pending rewards without writing on read
+not ok 1 - v1 migration preserves a mature farm and pending rewards without writing on read
+  ---
+  duration_ms: 1.7733
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\carefree-farm-living.test.cjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 2
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 2
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\carefree-farm-living.test.cjs:6:78)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    node:internal/test_runner/harness:252:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+  ...
+# Subtest: quantity sales are exact, bounded integers and revalidate current stock
+not ok 2 - quantity sales are exact, bounded integers and revalidate current stock
+  ---
+  duration_ms: 0.3903
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\carefree-farm-living.test.cjs:12:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    11 !== 9
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 9
+  actual: 11
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\carefree-farm-living.test.cjs:14:73)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: favorite meals and pet cooldown build permanent friendship exactly once
+not ok 3 - favorite meals and pet cooldown build permanent friendship exactly once
+  ---
+  duration_ms: 5.0681
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\carefree-farm-living.test.cjs:18:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert(F.act(s,{type:'pet',animal:0},1000).ok)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\carefree-farm-living.test.cjs:20:2)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: gifts keep their old rewards and add unique tier-gated keepsakes
+not ok 4 - gifts keep their old rewards and add unique tier-gated keepsakes
+  ---
+  duration_ms: 2.1306
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\carefree-farm-living.test.cjs:24:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert(first.keepsake)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\carefree-farm-living.test.cjs:26:68)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: orders persist, consume exactly their requirements and cannot pay twice
+not ok 5 - orders persist, consume exactly their requirements and cannot pay twice
+  ---
+  duration_ms: 0.2083
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\carefree-farm-living.test.cjs:31:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading '0')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\carefree-farm-living.test.cjs:32:39)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: recurring orders only ask for accessible ingredients at every stage
+not ok 6 - recurring orders only ask for accessible ingredients at every stage
+  ---
+  duration_ms: 0.1851
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\carefree-farm-living.test.cjs:40:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading '0')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\carefree-farm-living.test.cjs:43:44)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: decorations have meaningful milestones, costs and persistent ownership
+not ok 7 - decorations have meaningful milestones, costs and persistent ownership
+  ---
+  duration_ms: 0.4716
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\carefree-farm-living.test.cjs:47:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'flowerbed')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\carefree-farm-living.test.cjs:48:41)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+# Subtest: grass remains free recovery food; every other crop earns more per plot-minute
+not ok 8 - grass remains free recovery food; every other crop earns more per plot-minute
+  ---
+  duration_ms: 0.2119
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\carefree-farm-living.test.cjs:52:1'
+  failureType: 'testCodeFailure'
+  error: 'carrot'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\carefree-farm-living.test.cjs:54:62)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:517:7)
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 0
+# fail 8
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 75.8354

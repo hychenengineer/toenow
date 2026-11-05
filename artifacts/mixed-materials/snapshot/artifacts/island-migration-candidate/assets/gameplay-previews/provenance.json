@@ -1,0 +1,112 @@
+{
+  "number-pop": {
+    "width": 960,
+    "height": 600,
+    "duration": 7.897,
+    "posterTime": 2.5,
+    "bytes": 1182865,
+    "sourceRaw": "artifacts/hub-preview-sample/raw/page@5d8da3de3bd9ba9e6b25419db15ef6aa.webm",
+    "actualPointerActions": 14,
+    "finalScore": 5150,
+    "finalWave": 4
+  },
+  "block-match": {
+    "width": 960,
+    "height": 600,
+    "duration": 7.911,
+    "posterTime": 1,
+    "bytes": 1301286,
+    "sourceRaw": "artifacts/hub-preview-sample/raw/page@b80c12ac6e837029ff252e04e09ff62e.webm",
+    "actualPointerActions": 12,
+    "finalScore": 9600,
+    "finalWave": 6
+  },
+  "animal-rescue-train": {
+    "width": 960,
+    "height": 788,
+    "duration": 7.901,
+    "posterTime": 1,
+    "bytes": 601887,
+    "sourceRaw": "artifacts/hub-preview-sample/raw/page@73c40cd3f9eab9f80365d040e7fac86b.webm",
+    "actualPointerActions": 6,
+    "finalScore": null,
+    "finalWave": null
+  },
+  "ball-track": {
+    "width": 960,
+    "height": 600,
+    "duration": 7.899,
+    "posterTime": 1,
+    "bytes": 1239662,
+    "sourceRaw": "artifacts/hub-preview-sample/raw/page@26f51337391d6f6c5cab9bf7c891e09f.webm",
+    "actualPointerActions": 1,
+    "finalScore": 100,
+    "finalWave": 2
+  },
+  "add-up": {
+    "width": 960,
+    "height": 600,
+    "duration": 7.899,
+    "posterTime": 1,
+    "bytes": 1359926,
+    "sourceRaw": "artifacts/hub-preview-sample/raw/page@5461094b6d51e753e3bf81f726311837.webm",
+    "actualPointerActions": 17,
+    "finalScore": 1500,
+    "finalWave": 7
+  },
+  "tap-match": {
+    "width": 960,
+    "height": 600,
+    "duration": 7.913,
+    "posterTime": 5,
+    "bytes": 436780,
+    "sourceRaw": "artifacts/hub-preview-sample/raw/page@63780fc5ded6611e848bd17e714d650e.webm",
+    "actualPointerActions": 12,
+    "finalScore": 230,
+    "finalWave": 1
+  },
+  "spot-quick": {
+    "width": 960,
+    "height": 600,
+    "duration": 7.899,
+    "posterTime": 1,
+    "bytes": 643057,
+    "sourceRaw": "artifacts/hub-preview-sample/raw/page@57347e6a6af420587ff76b491e08e4dc.webm",
+    "actualPointerActions": 5,
+    "finalScore": 550,
+    "finalWave": 6
+  },
+  "space-scale": {
+    "width": 960,
+    "height": 600,
+    "duration": 7.906,
+    "posterTime": 1,
+    "bytes": 1332881,
+    "sourceRaw": "artifacts/hub-preview-sample/raw/page@4a0fc404f75dbe3391716e35be5ff36e.webm",
+    "actualPointerActions": 7,
+    "finalScore": 2778,
+    "finalWave": 8
+  },
+  "shadow-match": {
+    "width": 960,
+    "height": 600,
+    "duration": 7.9,
+    "posterTime": 1,
+    "bytes": 1083867,
+    "sourceRaw": "artifacts/hub-preview-sample/raw/page@6b0f2906e76e1fdcf69fdfc4db42e997.webm",
+    "actualPointerActions": 7,
+    "finalScore": 16400,
+    "finalWave": 8
+  },
+  "flash-brain": {
+    "width": 960,
+    "height": 600,
+    "duration": 7.896,
+    "posterTime": 3.5,
+    "bytes": 651046,
+    "sourceRaw": "artifacts/hub-preview-sample/raw/page@c2e958dbebad5ab1f2816eefdf63c173.webm",
+    "actualPointerActions": 9,
+    "finalScore": 4800,
+    "finalWave": null
+  }
+}

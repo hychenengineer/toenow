@@ -1,0 +1,115 @@
+TAP version 13
+# Subtest: five real successes earn one item for every material game, with no base reward or per-run ceiling
+ok 1 - five real successes earn one item for every material game, with no base reward or per-run ceiling
+  ---
+  duration_ms: 3.9426
+  ...
+# Subtest: wrong-answer score penalties never remove successful work; retries cannot repeat keyed successes
+ok 2 - wrong-answer score penalties never remove successful work; retries cannot repeat keyed successes
+  ---
+  duration_ms: 0.1823
+  ...
+# Subtest: old saves keep balances and homes and start remainder progress at zero
+ok 3 - old saves keep balances and homes and start remainder progress at zero
+  ---
+  duration_ms: 0.2338
+  ...
+# Subtest: all ten homes progress from one to three to four material recipes with balanced collaboration
+ok 4 - all ten homes progress from one to three to four material recipes with balanced collaboration
+  ---
+  duration_ms: 1.5728
+  ...
+# Subtest: a missing collaboration material prevents all spending; success deducts every ingredient once
+ok 5 - a missing collaboration material prevents all spending; success deducts every ingredient once
+  ---
+  duration_ms: 0.6164
+  ...
+# Subtest: existing built stages and owned decorations survive the recipe change without retroactive costs
+ok 6 - existing built stages and owned decorations survive the recipe change without retroactive costs
+  ---
+  duration_ms: 0.2125
+  ...
+# Subtest: exactly ten explorer games own distinct materials; carefree is excluded
+ok 7 - exactly ten explorer games own distinct materials; carefree is excluded
+  ---
+  duration_ms: 0.1673
+  ...
+# Subtest: normal play credits only its own item, survives reload, and cannot repeat a receipt
+ok 8 - normal play credits only its own item, survives reload, and cannot repeat a receipt
+  ---
+  duration_ms: 0.1731
+  ...
+# Subtest: practice, preview, zero work, unknown and implausible attempts do not award
+ok 9 - practice, preview, zero work, unknown and implausible attempts do not award
+  ---
+  duration_ms: 0.2461
+  ...
+# Subtest: own material upgrades are affordable, atomic and separate from challenge records
+ok 10 - own material upgrades are affordable, atomic and separate from challenge records
+  ---
+  duration_ms: 0.3391
+  ...
+# Subtest: starter and collaboration decorations spend exact recipes once and can be toggled
+ok 11 - starter and collaboration decorations spend exact recipes once and can be toggled
+  ---
+  duration_ms: 0.4068
+  ...
+# Subtest: legacy challenge stage is preserved once and later high scores do not build houses
+ok 12 - legacy challenge stage is preserved once and later high scores do not build houses
+  ---
+  duration_ms: 0.1461
+  ...
+# Subtest: latest balance is read for sequential clients and storage errors never report success
+ok 13 - latest balance is read for sequential clients and storage errors never report success
+  ---
+  duration_ms: 0.3311
+  ...
+# Subtest: malformed balances cannot create spendable resources
+ok 14 - malformed balances cannot create spendable resources
+  ---
+  duration_ms: 0.8088
+  ...
+# Subtest: SDK lifecycle awards once, clears on replay and never awards a practice result
+ok 15 - SDK lifecycle awards once, clears on replay and never awards a practice result
+  ---
+  duration_ms: 3.1277
+  ...
+# Subtest: Number Pop accepts an immediate first start and deduplicates its compatibility click
+ok 16 - Number Pop accepts an immediate first start and deduplicates its compatibility click
+  ---
+  duration_ms: 1.4569
+  ...
+# Subtest: interrupted runs lose their reward token
+ok 17 - interrupted runs lose their reward token
+  ---
+  duration_ms: 0.1981
+  ...
+# Subtest: fox wave-20 result earns ribbons even when wrong answers end the run early
+ok 18 - fox wave-20 result earns ribbons even when wrong answers end the run early
+  ---
+  duration_ms: 0.4171
+  ...
+# Subtest: a legitimate six figure rabbit result is credited once rather than silently rejected
+ok 19 - a legitimate six figure rabbit result is credited once rather than silently rejected
+  ---
+  duration_ms: 0.5102
+  ...
+# Subtest: a finished run with no reward explains why to the result UI
+ok 20 - a finished run with no reward explains why to the result UI
+  ---
+  duration_ms: 0.3207
+  ...
+# Subtest: a short legitimate scored run earns materials without a ten second cutoff
+ok 21 - a short legitimate scored run earns materials without a ten second cutoff
+  ---
+  duration_ms: 0.9778
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 135.3015

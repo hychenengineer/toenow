@@ -1,0 +1,19 @@
+.tile.attack-range{background-color:#f6ca6673}
+.tile.attack-range::before{content:"";position:absolute;inset:3px;border:1px solid #ae762e;border-radius:6px;background:#ffd87e20;pointer-events:none;z-index:1}
+.tile.attack-range.reachable::after{z-index:2}
+.tile.attack-range.has-unit::before{background:transparent;inset:1px}
+.tile.attack-range.range-preview::before{border-style:dashed}
+.tile.target{box-shadow:0 0 0 2px #c35335;background:#ffdfac}
+.tile.target::before{border:2px solid #c35335;background:#e8964820}
+#combat-effects{position:absolute;inset:0;pointer-events:none;z-index:8;overflow:hidden}
+.combat-actor,.combat-victim{position:absolute;display:grid;place-items:center;transform-origin:center;pointer-events:none}
+.combat-actor{z-index:2}.combat-victim{z-index:1}
+.combat-actor img,.combat-victim img{width:85%;height:91%;object-fit:contain;filter:drop-shadow(0 3px 2px #33422c44)}
+.combat-projectile{position:absolute;display:grid;place-items:center;font-size:20px;filter:drop-shadow(0 2px 2px #5a3b1d99);z-index:3}
+.combat-impact{position:absolute;display:grid;place-items:center;color:#fff2ae;font-size:47px;text-shadow:0 0 6px #e78629,0 0 14px #ffb94c;z-index:4}
+.combat-float{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;line-height:1.1;z-index:6;pointer-events:none;filter:drop-shadow(0 2px 2px #fff8dabb)}
+.combat-float strong{font:800 24px "Segoe UI","Microsoft JhengHei",sans-serif;color:#aa3028;-webkit-text-stroke:.5px #fff4d7;text-shadow:0 1px #fff9e3,1px 0 #fff9e3,-1px 0 #fff9e3}
+.combat-float span{font-size:13px;color:#fff7dc;background:#7d352be8;border:1px solid #ffdbab;border-radius:6px;padding:2px 7px;margin-top:3px;font-weight:700}
+.combat-float small{font-size:10px;font-weight:750;color:#6a3b0b;background:#ffe091;border-radius:4px;padding:1px 5px;margin-top:3px}
+.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+@media(max-width:520px){.tile.attack-range::before{inset:2px;border-radius:4px}.combat-float strong{font-size:21px}.combat-float span{font-size:11px}.combat-impact{font-size:36px}.field-bottom{flex-wrap:wrap}#tile-help{line-height:1.7}}

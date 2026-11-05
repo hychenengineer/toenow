@@ -1,0 +1,23 @@
+docs/MATERIAL_COLLECTION_CACHE_FIX.md         | 28 +++++++++++++++++++++++++++
+ games/add-up/index.html                       | 12 ++++++------
+ games/animal-rescue-train/index.html          | 12 ++++++------
+ games/ball-track/index.html                   | 12 ++++++------
+ games/block-match/index.html                  | 12 ++++++------
+ games/flash-brain/index.html                  | 14 +++++++-------
+ games/number-pop/index.html                   | 12 ++++++------
+ games/shadow-match/index.html                 | 12 ++++++------
+ games/space-scale/index.html                  | 12 ++++++------
+ games/spot-quick/index.html                   | 12 ++++++------
+ games/tap-match/index.html                    | 12 ++++++------
+ index.html                                    | 17 +++++++++++-----
+ tools/diagnose-material-collection.cjs        | 15 ++++++++++++++
+ tools/lib/game-source.cjs                     |  5 +++--
+ tools/verify-block-mirror-lessons-browser.cjs |  2 +-
+ tools/verify-equal-scales-browser.cjs         |  2 +-
+ tools/verify-materials-lifecycle-browser.cjs  |  4 ++--
+ tools/verify-materials-warm-cache.cjs         |  6 ++++++
+ tools/verify-number-pop-quiet-browser.cjs     |  2 +-
+ tools/verify-shared-screens-browser.cjs       |  4 ++--
+ tools/verify-tap-wave-clear-browser.cjs       |  2 +-
+ tools/verify-train-island-screens.cjs         |  2 +-
+ 22 files changed, 134 insertions(+), 77 deletions(-)

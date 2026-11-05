@@ -1,0 +1,66 @@
+TAP version 13
+# Subtest: source inspection follows local scripts and styles in page order without expanding shared dependencies
+ok 1 - source inspection follows local scripts and styles in page order without expanding shared dependencies
+  ---
+  duration_ms: 13.0514
+  ...
+# Subtest: extracted addition rules retain exact-sum solutions at every difficulty
+not ok 2 - extracted addition rules retain exact-sum solutions at every difficulty
+  ---
+  duration_ms: 0.5571
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\game-modules.test.cjs:29:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Cannot find module '../games/add-up/rules.js'
+    Require stack:
+    - C:\Users\HsinYuChen\source\repos\toenow\tests\game-modules.test.cjs
+  code: 'MODULE_NOT_FOUND'
+  stack: |-
+    Module._resolveFilename (node:internal/modules/cjs/loader:1225:15)
+    Module._load (node:internal/modules/cjs/loader:1051:27)
+    Module.require (node:internal/modules/cjs/loader:1311:19)
+    require (node:internal/modules/helpers:179:18)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\game-modules.test.cjs:30:17)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+  ...
+# Subtest: extracted rules preserve valid boards, unique numeric choices and matching criteria
+not ok 3 - extracted rules preserve valid boards, unique numeric choices and matching criteria
+  ---
+  duration_ms: 0.3154
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\game-modules.test.cjs:41:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Cannot find module '../games/number-pop/rules.js'
+    Require stack:
+    - C:\Users\HsinYuChen\source\repos\toenow\tests\game-modules.test.cjs
+  code: 'MODULE_NOT_FOUND'
+  stack: |-
+    Module._resolveFilename (node:internal/modules/cjs/loader:1225:15)
+    Module._load (node:internal/modules/cjs/loader:1051:27)
+    Module.require (node:internal/modules/cjs/loader:1311:19)
+    require (node:internal/modules/helpers:179:18)
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\game-modules.test.cjs:42:19)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    Test.postRun (node:internal/test_runner/test:885:19)
+    Test.run (node:internal/test_runner/test:831:12)
+  ...
+# Subtest: Spot Quick rules produce four distinct choices including the target across all five tiers
+ok 4 - Spot Quick rules produce four distinct choices including the target across all five tiers
+  ---
+  duration_ms: 24.0003
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 2
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 100.8616

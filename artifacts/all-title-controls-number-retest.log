@@ -1,0 +1,84 @@
+CHECK number-pop 320 en
+PASS number-pop 320 en
+CHECK number-pop 320 zh-Hant
+PASS number-pop 320 zh-Hant
+CHECK number-pop 390 en
+sound OK
+<div class="theater-game-actions" id="theaterGameActions"><button type="button" class="theater-btn" aria-label="Toggle Audio Mute" title="Mute / Unmute Audio (M)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+              </svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+              </svg>
+            </button><button type="button" class="theater-btn" aria-label="Pause Game" title="Pause Game (P / Esc)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+                <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+              </svg>
+            </button><button type="button" class="theater-btn" aria-label="Restart Run" title="Instant Restart (R)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+            </button></div>
+locator.click: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator('#theaterGameActions').getByRole('button', { name: /pause|暫停/i })
+    - locator resolved to <button type="button" class="theater-btn" aria-label="Pause Game" title="Pause Game (P / Esc)">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <button type="button" class="theater-btn" id="fullscreenGameBtn">↵          ⛶ Fullscreen↵        </button> from <div class="theater-controls">…</div> subtree intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <button type="button" class="theater-btn" id="fullscreenGameBtn">↵          ⛶ Fullscreen↵        </button> from <div class="theater-controls">…</div> subtree intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    9 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <button type="button" class="theater-btn" id="fullscreenGameBtn">↵          ⛶ Fullscreen↵        </button> from <div class="theater-controls">…</div> subtree intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+
+    at C:\Users\HsinYuChen\source\repos\toenow\tools\verify-all-title-controls.cjs:48:75 {
+  log: [
+    "  - waiting for locator('#theaterGameActions').getByRole('button', { name: /pause|暫停/i })",
+    '    - locator resolved to <button type="button" class="theater-btn" aria-label="Pause Game" title="Pause Game (P / Esc)">…</button>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <button type="button" class="theater-btn" id="fullscreenGameBtn">↵          ⛶ Fullscreen↵        </button> from <div class="theater-controls">…</div> subtree intercepts pointer events',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <button type="button" class="theater-btn" id="fullscreenGameBtn">↵          ⛶ Fullscreen↵        </button> from <div class="theater-controls">…</div> subtree intercepts pointer events',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    9 × waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <button type="button" class="theater-btn" id="fullscreenGameBtn">↵          ⛶ Fullscreen↵        </button> from <div class="theater-controls">…</div> subtree intercepts pointer events',
+    '    - retrying click action',
+    '      - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}

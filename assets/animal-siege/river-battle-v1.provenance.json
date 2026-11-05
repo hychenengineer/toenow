@@ -1,0 +1,19 @@
+{
+  "generator": "Built-in image_gen",
+  "generatedOn": "2026-11-04",
+  "reference": "acorn-battle-v1.webp (approved woodland art and playable composition)",
+  "source": "sources/river-battle-v1.png",
+  "runtime": "river-battle-v1.webp",
+  "prompt": "Use case: stylized-concept. Asset type: production square painted terrain background for an existing playable animal siege web game. The supplied image is a STYLE AND COMPOSITION REFERENCE ONLY; create a NEW RIVER KEEP battlefield, not a UI mockup. Match the reference's premium richly painted woodland storybook strategy art, strong contrast, intricate emerald woodland and honey sunlight, subtle overhead perspective. ONE SQUARE full-bleed image. No text, grid, UI, characters, animals, flags, banners or tokens.\nCRITICAL COMPOSITION: exactly the TOP 24% is scenic architecture. Across this upper band, a turquoise river and little waterfall enter from the upper left, with a distinctive charming beaver-built timber river keep on the upper right: chunky carved logs, mossy stone foundations, teal-blue shingle roof, a large wooden waterwheel tucked beside the river at upper middle, arched gate near x66%, watchtower near x83%. All architecture, water, wheel, cliffs and dense trees MUST stay above y24%; do NOT extend water or bridge across the playable area. Border foliage only at the extreme outer edges. Bottom 76% is one broad, flat, unobstructed and very low-detail walkable grass-and-dry-riverside-earth clearing, clearly contiguous left to right; pale sage meadow on left, warm tan packed earth on right, subtle soft leaf shadows, readable for overlaid animal sprites. No painted trees, rocks, walls, roots, buildings, fences, standing water or clutter within the lower playable area. The actual game overlays its own collision obstacles and two open gates, so do not paint additional obstacles. Background gate above playfield, not an obstacle in its middle. Keep the same framing as the reference so its lower 76% tactical area stays equally open. Inviting bright river kingdom, turquoise/emerald and honey-gold accents; differentiate clearly from the orange-roof Acorn Fort. Not a raised board or tabletop, no perspective grid, no heavy foreground objects.",
+  "notes": "Background scenery only. Collision walls, trees and open gates are rendered from the actual 8x6 battle terrain; no gameplay balance changes.",
+  "runtimeDimensions": {
+    "width": 1254,
+    "height": 1254
+  },
+  "runtimeEncoding": {
+    "format": "webp",
+    "quality": 90
+  },
+  "sourceSha256": "0734380e189b3bad7c9b6b7e5cc691bbf37b3b292014d3f483a5359a74f6eb2f",
+  "runtimeSha256": "85e627a25dd8d5fa250997a9ffd62a13f91a8627b4a1ffb3d2ff6725d01076d0"
+}

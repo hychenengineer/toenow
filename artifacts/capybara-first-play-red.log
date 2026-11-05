@@ -1,0 +1,71 @@
+TAP version 13
+# Subtest: a new drift has something to collect immediately instead of an empty river
+not ok 1 - a new drift has something to collect immediately instead of an empty river
+  ---
+  duration_ms: 7.2234
+  location: 'C:\\Users\\HsinYuChen\\source\\repos\\toenow\\tests\\capybara-drift.test.cjs:5:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert(s.items.some(i=>i.type==='bubble'&&i.y>.5))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (C:\Users\HsinYuChen\source\repos\toenow\tests\capybara-drift.test.cjs:6:21)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:789:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:517:18)
+    node:internal/test_runner/harness:252:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+  ...
+# Subtest: endless drift keeps speed fixed, positions safe and entity memory bounded
+ok 2 - endless drift keeps speed fixed, positions safe and entity memory bounded
+  ---
+  duration_ms: 9.4649
+  ...
+# Subtest: collection is once only, misses and rocks never subtract points
+ok 3 - collection is once only, misses and rocks never subtract points
+  ---
+  duration_ms: 0.2417
+  ...
+# Subtest: pause freezes simulation and friends stay bounded during an endless run
+ok 4 - pause freezes simulation and friends stay bounded during an endless run
+  ---
+  duration_ms: 0.579
+  ...
+# Subtest: checkpoint credits only new normal-play points, reload does not duplicate wallet
+ok 5 - checkpoint credits only new normal-play points, reload does not duplicate wallet
+  ---
+  duration_ms: 0.4825
+  ...
+# Subtest: practice cannot overwrite checkpoint, points, purchases or best records
+ok 6 - practice cannot overwrite checkpoint, points, purchases or best records
+  ---
+  duration_ms: 0.1294
+  ...
+# Subtest: cosmetics charge exactly once and cannot be equipped before purchase
+ok 7 - cosmetics charge exactly once and cannot be equipped before purchase
+  ---
+  duration_ms: 0.1991
+  ...
+# Subtest: corrupt saves and inaccessible storage fail safely
+ok 8 - corrupt saves and inaccessible storage fail safely
+  ---
+  duration_ms: 0.2233
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 7
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 80.4446

@@ -1,0 +1,5 @@
+{
+  "method": "original editable SVG illustration",
+  "generator": "tools/prepare-capybara-art.cjs",
+  "note": "Code-drawn art; not Blender or image generation. Existing watercolor assets and their manifest are preserved."
+}

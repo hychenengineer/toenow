@@ -1,0 +1,16 @@
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
++ {}
+- {
+-   beaver: 6,
+-   fox: 4,
+-   squirrel: 5
+- }
+    at run (C:\Users\HsinYuChen\source\repos\toenow\tools\verify-animal-journey-popup-browser.cjs:7:9) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: {},
+  expected: [Object],
+  operator: 'deepStrictEqual'
+}

@@ -1,0 +1,29 @@
+{
+  "generator": "OpenAI imagegen (built-in)",
+  "assets": [
+    {
+      "kind": "background",
+      "source": "sources/background.png",
+      "runtime": "background.webp",
+      "sourceImage": "exec-48c99952-db4a-459f-add6-c10b6ca8589f.png",
+      "width": 1448,
+      "height": 1086,
+      "hasAlpha": false,
+      "transparentFraction": 0,
+      "sha256": "a4b0bacdd0d70333547c0b7857a441f76ede427a16dfc9694de60b4a52d93809",
+      "prompt": "Game environment background, 4:3 landscape. Warm hand-painted cozy children's storybook illustration matching a pastoral animal village game. Scene: a peaceful bamboo railway station garden, tiny modest station cottage at upper left, a single low bamboo bench at x35% y45%; spacious grassy right yard and foreground, distant narrow railway track only along back fence, bamboo grove behind; no large platform or canopy yet. Eye-level slightly elevated view, perspective and scale suitable for adding a standing animal at left foreground (x20% y68%) and four independent building sprites on right half later. Only the modest starter home is present, clustered in leftmost 35% at top/middle; the right 60% is deliberately empty walkable buildable terrain with no structures. Full coherent environment filling canvas, soft natural lighting, painterly detailed edges, clear simple ground. No animals or people, no text, no signs with letters, no UI, no borders, no purchased future buildings. Keep foreground at x20% y68% uncluttered for character overlay."
+    },
+    {
+      "kind": "buildings",
+      "source": "sources/buildings.png",
+      "runtime": "buildings.webp",
+      "sourceImage": "exec-4cce8089-61fe-48e9-b2f6-b2798acd7d55.png",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "transparentFraction": 0.511847178141276,
+      "sha256": "7261acc2ce0d1941796b1e729ea6b25e3370012d0a5ffd2f4e4e61a0c7f65ae1",
+      "prompt": "Transparent sprite atlas for a cozy hand-painted storybook animal village game. Exactly SIX isolated objects, 3 columns x 2 rows, equal square cells, overall landscape 3:2. Top row left to right: a little bamboo waiting bench; a small green-roof ticket shelter; a little rescue supply storehouse with bamboo crates. Bottom row left to right: an open bamboo station platform canopy; a little station planter full of bamboo shoots and flowers; a tiny garden platform ornament with planter boxes. Each object centered in its own equal cell with at least 8% transparent padding, completely contained, no overlap or crossing cells. All same warm painted woodland style, three-quarter slightly elevated perspective. Fully transparent alpha around and between objects and through open spaces. NO backdrop, no colored gradient, no ground plates, no cast shadows outside object, no scenery, no characters, no text, no UI, no grid lines. Only the six specified objects; retain transparent alpha."
+    }
+  ]
+}

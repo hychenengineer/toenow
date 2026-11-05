@@ -1,0 +1,38 @@
+{
+  "checks": [
+    "three authentic game tiles",
+    "no video sources loaded before interaction",
+    "hover plays, time advances, exit pauses: 0",
+    "hover plays, time advances, exit pauses: 1",
+    "hover plays, time advances, exit pauses: 2",
+    "keyboard focus previews",
+    "enlarged preview plays and Escape stops",
+    "390px no overflow and touch preview plays",
+    "all tiles link to actual standalone game"
+  ],
+  "errors": [],
+  "media": [
+    {
+      "id": "animal-rescue-train",
+      "width": 960,
+      "height": 788,
+      "duration": 7.896,
+      "bytes": 825522
+    },
+    {
+      "id": "number-pop",
+      "width": 960,
+      "height": 600,
+      "duration": 7.897,
+      "bytes": 1182865
+    },
+    {
+      "id": "block-match",
+      "width": 960,
+      "height": 600,
+      "duration": 7.911,
+      "bytes": 1301286
+    }
+  ],
+  "physicalIPad": "NOT VERIFIED"
+}

@@ -1,0 +1,1202 @@
+/* ============================================================================
+   TOENOW UNIFIED TITLE SCREEN STYLESHEET (UNIVERSAL DESIGN SYSTEM)
+   ============================================================================ */
+
+.unified-title-screen {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 100 !important;
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 50%, rgba(8, 11, 20, 0.88) 0%, rgba(4, 6, 12, 0.98) 100%) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.22s ease !important;
+}
+
+/* Active states across the games:
+   - ball-track: .active
+   - number-pop: .visible
+   - spot-quick, tap-match: not .hidden and not [hidden]
+   - block-match: not [hidden]
+   - add-up, space-scale: body[data-state='title']
+*/
+.unified-title-screen.active,
+.unified-title-screen.visible,
+body[data-mode='title'] .unified-title-screen:not(.hidden):not([hidden]),
+body[data-state='title'] .unified-title-screen:not(.hidden):not([hidden]),
+body:not([data-mode]):not([data-state]) .unified-title-screen:not(.hidden):not([hidden]) {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.unified-title-screen.hidden,
+.unified-title-screen[hidden] {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  display: none !important;
+}
+
+.unified-title-card {
+  width: 100% !important;
+  max-width: 460px !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+  background: rgba(11, 15, 25, 0.94) !important;
+  border: 1px solid rgba(34, 211, 238, 0.32) !important;
+  border-radius: 16px !important;
+  padding: 28px 24px 24px !important;
+  text-align: center !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85), 0 0 36px rgba(34, 211, 238, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  position: relative !important;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+.unified-title-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, #22d3ee, transparent) !important;
+}
+
+/* 1. Category Tag */
+.unified-category-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: #22d3ee !important;
+  background: rgba(34, 211, 238, 0.1) !important;
+  border: 1px solid rgba(34, 211, 238, 0.3) !important;
+  padding: 4px 14px !important;
+  border-radius: 999px !important;
+  margin-bottom: 12px !important;
+}
+
+.unified-category-icon {
+  font-size: 13px !important;
+  line-height: 1 !important;
+}
+
+/* 2. Game Title */
+.unified-game-title {
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: clamp(26px, 5.5vw, 34px) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1.1 !important;
+  color: #f8fafc !important;
+  margin: 0 0 8px 0 !important;
+  text-transform: uppercase !important;
+  text-shadow: 0 0 24px rgba(34, 211, 238, 0.35) !important;
+}
+
+/* 3. Description */
+.unified-game-desc {
+  font-size: 13.5px !important;
+  line-height: 1.5 !important;
+  color: #94a3b8 !important;
+  margin: 0 0 16px 0 !important;
+  max-width: 42ch !important;
+}
+
+/* How to play / Rules 2-column or list box */
+.unified-rules-box {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 10px !important;
+  background: rgba(15, 23, 42, 0.65) !important;
+  border: 1px solid rgba(148, 163, 184, 0.14) !important;
+  border-radius: 10px !important;
+  padding: 12px 14px !important;
+  margin-bottom: 16px !important;
+  text-align: left !important;
+  box-sizing: border-box !important;
+}
+
+.unified-rule-item {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+
+.unified-rule-kicker {
+  font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: #38bdf8 !important;
+}
+
+.unified-rule-text {
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+  color: #cbd5e1 !important;
+}
+
+/* 4. History / Records Strip */
+.unified-records-strip {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 16px !important;
+  padding: 8px 12px !important;
+  background: rgba(10, 14, 24, 0.75) !important;
+  border: 1px solid rgba(34, 211, 238, 0.22) !important;
+  border-radius: 8px !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  margin-bottom: 20px !important;
+  box-sizing: border-box !important;
+}
+
+.unified-record-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.unified-record-label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: #94a3b8 !important;
+}
+
+.unified-record-val {
+  font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: #22d3ee !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.unified-record-sep {
+  color: #334155 !important;
+  user-select: none !important;
+}
+
+/* 5. Start Game Button */
+.unified-start-btn {
+  width: 100% !important;
+  padding: 14px 20px !important;
+  border-radius: 10px !important;
+  border: 1px solid #67e8f9 !important;
+  background: linear-gradient(135deg, #0891b2 0%, #06b6d4 50%, #22d3ee 100%) !important;
+  color: #ffffff !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 24px rgba(34, 211, 238, 0.45) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  box-sizing: border-box !important;
+}
+
+.unified-start-btn:hover {
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 0 0 36px rgba(34, 211, 238, 0.75) !important;
+  background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 50%, #67e8f9 100%) !important;
+}
+
+.unified-start-btn:active {
+  transform: translateY(0) scale(0.99) !important;
+}
+
+@media (max-width: 480px) {
+  .unified-title-card {
+    padding: 22px 18px 18px !important;
+  }
+  .unified-rules-box {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  .unified-records-strip {
+    gap: 10px !important;
+    font-size: 11.5px !important;
+  }
+}
+
+/* ============================================================================
+   ANTI-CHEAT BLACKOUT SCREEN WHEN PAUSED
+   Default: Hidden until explicitly activated by game state
+   ============================================================================ */
+
+.unified-pause-screen {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 1000 !important;
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  box-sizing: border-box !important;
+  /* 100% Solid Pitch Black background to completely hide puzzle/game canvas */
+  background: #000000 !important;
+}
+
+/* Active states across the games:
+   - ball-track: .active
+   - number-pop: .visible
+   - spot-quick: #pauseModal.active, body[data-paused='true'] #pauseModal
+   - tap-match: #modal-pause.active, body[data-paused='true'] #modal-pause
+   - block-match, add-up, space-scale: body[data-state='paused']
+*/
+.unified-pause-screen.active,
+.unified-pause-screen.visible,
+body[data-paused='true'] .unified-pause-screen:not(.hidden):not([hidden]),
+body[data-state='paused'] .unified-pause-screen:not(.hidden):not([hidden]),
+body[data-mode='paused'] .unified-pause-screen:not(.hidden):not([hidden]) {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.unified-pause-screen.hidden,
+.unified-pause-screen[hidden] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.unified-pause-card {
+  width: 100% !important;
+  max-width: 420px !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+  background: rgba(10, 14, 24, 0.98) !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 16px !important;
+  padding: 28px 24px 22px !important;
+  text-align: center !important;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 1), 0 0 30px rgba(34, 211, 238, 0.15) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  position: relative !important;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+.unified-pause-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 20% !important;
+  right: 20% !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, #38bdf8, transparent) !important;
+}
+
+.unified-pause-kicker {
+  font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: #38bdf8 !important;
+  background: rgba(56, 189, 248, 0.12) !important;
+  border: 1px solid rgba(56, 189, 248, 0.28) !important;
+  padding: 4px 12px !important;
+  border-radius: 999px !important;
+  margin-bottom: 12px !important;
+}
+
+.unified-pause-title {
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 28px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.04em !important;
+  color: #f8fafc !important;
+  margin: 0 0 6px 0 !important;
+  text-transform: uppercase !important;
+}
+
+.unified-pause-notice {
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  color: #94a3b8 !important;
+  margin: 0 0 16px 0 !important;
+}
+
+.unified-pause-stats-grid {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px !important;
+  margin-bottom: 20px !important;
+  box-sizing: border-box !important;
+}
+
+.unified-pause-stat-box {
+  background: rgba(15, 23, 42, 0.75) !important;
+  border: 1px solid rgba(148, 163, 184, 0.14) !important;
+  border-radius: 8px !important;
+  padding: 10px 6px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+
+.unified-pause-stat-label {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: #64748b !important;
+}
+
+.unified-pause-stat-val {
+  font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  color: #22d3ee !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.unified-pause-btn-row {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.unified-pause-resume-btn {
+  flex: 2 !important;
+  padding: 13px 18px !important;
+  border-radius: 8px !important;
+  border: 1px solid #67e8f9 !important;
+  background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%) !important;
+  color: #ffffff !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 14.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.4) !important;
+  transition: transform 0.12s ease, background 0.12s ease !important;
+}
+
+.unified-pause-resume-btn:hover {
+  transform: translateY(-1px) !important;
+  background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%) !important;
+}
+
+.unified-pause-action-btn {
+  flex: 1 !important;
+  padding: 13px 14px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(148, 163, 184, 0.28) !important;
+  background: rgba(15, 23, 42, 0.8) !important;
+  color: #cbd5e1 !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  transition: background 0.12s ease, border-color 0.12s ease !important;
+}
+
+.unified-pause-action-btn:hover {
+  background: rgba(30, 41, 59, 0.95) !important;
+  border-color: rgba(148, 163, 184, 0.5) !important;
+  color: #ffffff !important;
+}
+
+
+/* ============================================================================
+   5b. Actions Bar & Universal Practice Mode Buttons
+   ============================================================================ */
+.unified-actions-bar {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  width: 100% !important;
+  margin-top: 10px !important;
+}
+
+@media (min-width: 380px) {
+  .unified-actions-bar {
+    flex-direction: row !important;
+  }
+  .unified-actions-bar .unified-start-btn {
+    flex: 1.4 !important;
+  }
+  .unified-actions-bar .unified-practice-btn {
+    flex: 1 !important;
+  }
+}
+
+.unified-practice-btn {
+  width: 100% !important;
+  padding: 13px 18px !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(139, 92, 246, 0.45) !important;
+  background: linear-gradient(135deg, rgba(30, 27, 75, 0.85) 0%, rgba(76, 29, 149, 0.85) 100%) !important;
+  color: #e0e7ff !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.25) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  box-sizing: border-box !important;
+}
+
+.unified-practice-btn:hover {
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 0 0 28px rgba(139, 92, 246, 0.6) !important;
+  border-color: #a78bfa !important;
+  background: linear-gradient(135deg, rgba(76, 29, 149, 0.95) 0%, rgba(109, 40, 217, 0.95) 100%) !important;
+  color: #ffffff !important;
+}
+
+.unified-practice-btn:active {
+  transform: translateY(0) scale(0.99) !important;
+}
+
+/* Practice Level Selector Modal Overlay */
+.unified-practice-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 200 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  background: rgba(5, 7, 14, 0.88) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  box-sizing: border-box !important;
+  transition: opacity 0.2s ease, visibility 0.2s ease !important;
+}
+
+.unified-practice-modal.hidden {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.unified-practice-card {
+  width: 100% !important;
+  max-width: 440px !important;
+  background: rgba(15, 23, 42, 0.96) !important;
+  border: 1px solid rgba(139, 92, 246, 0.45) !important;
+  border-radius: 18px !important;
+  padding: 24px 20px 20px !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.9), 0 0 36px rgba(139, 92, 246, 0.25) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+}
+
+.unified-practice-pill {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  color: #c084fc !important;
+  background: rgba(147, 51, 234, 0.15) !important;
+  border: 1px solid rgba(168, 85, 247, 0.35) !important;
+  border-radius: 9999px !important;
+  padding: 4px 12px !important;
+  display: inline-block !important;
+  margin-bottom: 6px !important;
+}
+
+.unified-practice-title {
+  margin: 0 !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  color: #f8fafc !important;
+  letter-spacing: 0.05em !important;
+}
+
+.unified-practice-subtitle {
+  margin: 4px 0 0 !important;
+  font-size: 12px !important;
+  color: #94a3b8 !important;
+  line-height: 1.4 !important;
+}
+
+.unified-practice-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+
+.unified-practice-level-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 10px 14px !important;
+  background: rgba(30, 41, 59, 0.65) !important;
+  border: 1px solid rgba(148, 163, 184, 0.18) !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  text-align: left !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.unified-practice-level-btn:hover {
+  background: rgba(49, 46, 129, 0.55) !important;
+  border-color: #818cf8 !important;
+  transform: translateX(4px) !important;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3) !important;
+}
+
+.unified-practice-level-num {
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  color: #38bdf8 !important;
+  background: rgba(14, 165, 233, 0.15) !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
+  min-width: 44px !important;
+  text-align: center !important;
+}
+
+.unified-practice-level-details {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  flex: 1 !important;
+  margin-left: 12px !important;
+}
+
+.unified-practice-level-name {
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 13.5px !important;
+  font-weight: 800 !important;
+  color: #f1f5f9 !important;
+  letter-spacing: 0.04em !important;
+}
+
+.unified-practice-level-range {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  color: #94a3b8 !important;
+}
+
+.unified-practice-play-arrow {
+  color: #818cf8 !important;
+  font-size: 13px !important;
+  transition: transform 0.15s ease !important;
+}
+
+.unified-practice-level-btn:hover .unified-practice-play-arrow {
+  transform: scale(1.25) translateX(2px) !important;
+  color: #c084fc !important;
+}
+
+.unified-practice-cancel-btn {
+  background: transparent !important;
+  border: 1px solid rgba(148, 163, 184, 0.22) !important;
+  border-radius: 8px !important;
+  color: #94a3b8 !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  padding: 8px 14px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  margin-top: 4px !important;
+}
+
+.unified-practice-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+
+/* ============================================================================
+   5c. Universal Share Button & Share Feedback Toast
+   ============================================================================ */
+.unified-share-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  padding: 12px 18px !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(56, 189, 248, 0.45) !important;
+  background: linear-gradient(135deg, rgba(12, 74, 110, 0.75) 0%, rgba(3, 105, 161, 0.75) 100%) !important;
+  color: #f0f9ff !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.25) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease !important;
+  box-sizing: border-box !important;
+  margin-top: 8px !important;
+}
+
+.unified-share-btn:hover {
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.6) !important;
+  border-color: #38bdf8 !important;
+  background: linear-gradient(135deg, rgba(3, 105, 161, 0.9) 0%, rgba(2, 132, 199, 0.9) 100%) !important;
+  color: #ffffff !important;
+}
+
+.unified-share-btn:active {
+  transform: translateY(0) scale(0.99) !important;
+}
+
+.unified-share-toast {
+  position: fixed !important;
+  bottom: 24px !important;
+  left: 50% !important;
+  transform: translateX(-50%) translateY(0) !important;
+  z-index: 9999 !important;
+  background: rgba(15, 23, 42, 0.96) !important;
+  border: 1px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 9999px !important;
+  padding: 10px 22px !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #f0f9ff !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.3) !important;
+  pointer-events: none !important;
+  animation: unifiedToastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+}
+
+@keyframes unifiedToastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ============================================================================
+   6. UNIFIED GAME OVER POPUP & MODAL SYSTEM (STANDARD RESULT SCREEN)
+   ============================================================================ */
+
+/* Outer Overlay Container */
+.unified-gameover-screen,
+.overlay-screen.unified-gameover,
+.modal-backdrop.unified-gameover {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 105 !important;
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at 50% 40%, rgba(15, 23, 42, 0.92) 0%, rgba(4, 6, 14, 0.98) 100%) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.24s ease !important;
+}
+
+/* Active State Compatibility across games - STRICT ACTIVATION ONLY */
+.unified-gameover-screen.active,
+.unified-gameover-screen.visible,
+body[data-mode='gameover'] .unified-gameover-screen,
+body[data-state='gameover'] .unified-gameover-screen {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.unified-gameover-screen.hidden,
+.unified-gameover-screen[hidden] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Unified Game Over Modal Card */
+.unified-gameover-card,
+.unified-gameover-screen .modal-card,
+.unified-gameover-screen .status-modal-card {
+  width: 100% !important;
+  max-width: 460px !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+  background: rgba(11, 15, 25, 0.95) !important;
+  border: 1px solid rgba(244, 63, 94, 0.38) !important;
+  border-radius: 18px !important;
+  padding: 26px 22px 22px !important;
+  text-align: center !important;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.9), 0 0 35px rgba(244, 63, 94, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  position: relative !important;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  animation: unifiedModalZoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@keyframes unifiedModalZoomIn {
+  from { opacity: 0; transform: scale(0.94) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.unified-gameover-card::before,
+.unified-gameover-screen .modal-card::before,
+.unified-gameover-screen .status-modal-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, #f43f5e, #fb7185, transparent) !important;
+}
+
+/* Kicker / Status Pill */
+.unified-gameover-kicker,
+.unified-gameover-screen .modal-kicker,
+.unified-gameover-screen .eyebrow-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: #fda4af !important;
+  background: rgba(244, 63, 94, 0.15) !important;
+  border: 1px solid rgba(244, 63, 94, 0.35) !important;
+  border-radius: 9999px !important;
+  padding: 4px 14px !important;
+  margin-bottom: 12px !important;
+}
+
+/* Modal Title */
+.toenow-result-heading {
+  margin: 0 0 6px !important;
+  font: 800 2.1rem/1.15 'Outfit', system-ui, sans-serif !important;
+  color: #ff3b5c !important;
+  text-align: center !important;
+}
+
+[data-toenow-screen-owner="ToenowScreens"] .modal-card {
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  gap: 0 !important;
+}
+
+[data-toenow-screen-owner="ToenowScreens"] .stat-grid {
+  margin: 0 0 20px !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+[data-toenow-screen-owner="ToenowScreens"] .stat-tile-label,
+[data-toenow-screen-owner="ToenowScreens"] .stat-tile-value {
+  font-family: Consolas, 'Liberation Mono', monospace !important;
+}
+[data-toenow-screen-owner="ToenowScreens"] .stat-tile { gap: 0 !important; }
+[data-toenow-screen-owner="ToenowScreens"] .stat-tile-label {
+  line-height: 14px !important;
+  font-size: 9px !important;
+  letter-spacing: 0.05em !important;
+  white-space: nowrap !important;
+}
+[data-toenow-screen-owner="ToenowScreens"] .stat-tile-value { line-height: 24px !important; }
+
+[data-toenow-screen-owner="ToenowScreens"] .modal-actions {
+  margin: 0 !important;
+  padding: 0 !important;
+  flex-wrap: nowrap !important;
+}
+
+.unified-gameover-title,
+.unified-gameover-screen .modal-title {
+  margin: 0 0 6px 0 !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 26px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 20px rgba(244, 63, 94, 0.4) !important;
+  line-height: 1.15 !important;
+}
+
+/* Subtitle / Reason */
+.unified-gameover-subtitle,
+.unified-gameover-screen .modal-subtitle,
+.unified-gameover-screen .modal-desc {
+  margin: 0 0 18px 0 !important;
+  font-size: 13px !important;
+  color: #94a3b8 !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+}
+
+/* Stats Container (2-col or 3-col adaptive grid) */
+.unified-gameover-stats,
+.unified-gameover-screen .stats-grid,
+.unified-gameover-screen .stat-grid,
+.unified-gameover-screen .telemetry-stats-grid {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(95px, 1fr)) !important;
+  gap: 8px !important;
+  margin-bottom: 20px !important;
+}
+
+/* Individual Stat Box / Tile */
+.unified-gameover-stat,
+.unified-gameover-screen .stat-tile,
+.unified-gameover-screen .stat-box,
+.unified-gameover-screen .stat-item {
+  background: rgba(15, 23, 42, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 10px !important;
+  padding: 10px 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: border-color 0.18s ease !important;
+}
+
+.unified-gameover-stat:hover,
+.unified-gameover-screen .stat-tile:hover,
+.unified-gameover-screen .stat-box:hover {
+  border-color: rgba(34, 211, 238, 0.3) !important;
+}
+
+.unified-gameover-screen .stat-label,
+.unified-gameover-screen .stat-tile-label,
+.unified-gameover-screen .stat-box-label {
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  color: #64748b !important;
+  text-transform: uppercase !important;
+  margin-bottom: 4px !important;
+}
+
+.unified-gameover-screen .stat-value,
+.unified-gameover-screen .stat-tile-value,
+.unified-gameover-screen .stat-tile-val,
+.unified-gameover-screen .stat-box-val {
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: #f8fafc !important;
+}
+
+.unified-gameover-screen .stat-value.highlight,
+.unified-gameover-screen .stat-tile-value.highlight-amber,
+.unified-gameover-screen .stat-box-val.highlight {
+  color: #fbbf24 !important;
+  text-shadow: 0 0 12px rgba(251, 191, 36, 0.4) !important;
+}
+
+/* Action Button Group */
+.unified-gameover-actions,
+.unified-gameover-screen .modal-actions,
+.unified-gameover-screen .btn-row,
+.unified-gameover-screen .btn-stack,
+.unified-gameover-screen .cta-stack {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+/* Standardized Buttons inside game over */
+.unified-gameover-actions button,
+.unified-gameover-screen .modal-actions > button,
+.unified-gameover-screen .primary-cta-btn,
+.unified-gameover-screen .secondary-cta-btn,
+.unified-gameover-screen .primary-btn,
+.unified-gameover-screen .btn-primary,
+.unified-gameover-screen .action-btn.retry-btn,
+.unified-gameover-screen #retryBtn {
+  width: 100% !important;
+  min-height: 45px !important;
+  padding: 12px 18px !important;
+  line-height: 20px !important;
+  box-sizing: border-box !important;
+  border-radius: 10px !important;
+  font-family: 'Outfit', system-ui, sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Shared icon-only controls for in-game toolbars. */
+.toenow-icon-control {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  min-width: 36px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  flex: 0 0 36px !important;
+  border-radius: 8px !important;
+}
+
+.toenow-icon-control svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.toenow-icon-control .control-sound-off,
+.toenow-icon-control[data-muted="true"] .control-sound-on {
+  display: none;
+}
+
+.toenow-icon-control[data-muted="true"] .control-sound-off {
+  display: inline;
+}
+
+/* Primary Play Again CTA */
+.unified-gameover-screen [data-start="true"],
+.unified-gameover-screen #btn-retry,
+.unified-gameover-screen #btn-try-again,
+.unified-gameover-screen #btn-play-again,
+.unified-gameover-screen #btn-reboot-optics,
+.unified-gameover-screen #retryBtn {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 4px 18px rgba(244, 63, 94, 0.4) !important;
+}
+
+.unified-gameover-screen [data-start="true"]:hover,
+.unified-gameover-screen #btn-retry:hover,
+.unified-gameover-screen #btn-try-again:hover,
+.unified-gameover-screen #btn-play-again:hover,
+.unified-gameover-screen #btn-reboot-optics:hover,
+.unified-gameover-screen #retryBtn:hover {
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 0 6px 24px rgba(244, 63, 94, 0.6) !important;
+  filter: brightness(1.1) !important;
+}
+
+/* Secondary Button (Title / Hub Exit) */
+.unified-gameover-screen .secondary-cta-btn,
+.unified-gameover-screen .secondary-btn,
+.unified-gameover-screen .btn-secondary,
+.unified-gameover-screen #btn-gameover-title,
+.unified-gameover-screen #btn-title-gameover,
+.unified-gameover-screen #btn-title-over,
+.unified-gameover-screen #btn-go-title {
+  background: rgba(30, 41, 59, 0.65) !important;
+  color: #cbd5e1 !important;
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+}
+
+.unified-gameover-screen .secondary-cta-btn:hover,
+.unified-gameover-screen .secondary-btn:hover,
+.unified-gameover-screen .btn-secondary:hover,
+.unified-gameover-screen #btn-gameover-title:hover,
+.unified-gameover-screen #btn-title-gameover:hover,
+.unified-gameover-screen #btn-title-over:hover,
+.unified-gameover-screen #btn-go-title:hover {
+  background: rgba(51, 65, 85, 0.85) !important;
+  color: #ffffff !important;
+  border-color: rgba(148, 163, 184, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Optional guest invitation, owned by the common result renderer. */
+[data-toenow-screen-owner="ToenowScreens"] .toenow-membership {
+  padding: 16px 14px;
+  border: 1px solid rgba(56,189,248,.25);
+  border-radius: 12px;
+  background: linear-gradient(135deg,rgba(14,165,233,.08),rgba(139,92,246,.09));
+  color: #e2e8f0;
+  font-family: system-ui, sans-serif;
+  text-align: center;
+}
+[data-toenow-screen-owner="ToenowScreens"] .toenow-membership[hidden] { display: none !important; }
+[data-toenow-screen-owner="ToenowScreens"] .toenow-membership h3 { margin: 0 0 6px; font-size: 17px; line-height: 1.35; color: #f8fafc; }
+[data-toenow-screen-owner="ToenowScreens"] .toenow-membership p { margin: 0 0 12px; font-size: 13px; line-height: 1.5; color: #a8b6cc; }
+[data-toenow-screen-owner="ToenowScreens"] .toenow-membership a { text-decoration: none; color: #67e8f9; }
+[data-toenow-screen-owner="ToenowScreens"] a.toenow-membership-register { display: flex; align-items: center; justify-content: center; min-height: 44px; border: 1px solid rgba(56,189,248,.5); border-radius: 9px; background: rgba(14,165,233,.14); font-size: 14px; font-weight: 700; color: #e0f2fe; }
+[data-toenow-screen-owner="ToenowScreens"] p.toenow-membership-login { margin: 10px 0 0; }
+[data-toenow-screen-owner="ToenowScreens"] .toenow-membership-login a { display: inline-flex; align-items: center; min-height: 32px; text-decoration: underline; text-underline-offset: 3px; }
+[data-toenow-screen-owner="ToenowScreens"] .toenow-membership a:focus-visible { outline: 2px solid #67e8f9; outline-offset: 3px; }
+/* Keep long result cards usable on short mobile screens. */
+[data-toenow-screen-owner="ToenowScreens"].unified-gameover-screen .modal-card { max-height: calc(100dvh - 32px); overflow-y: auto; }
+
+/* Island stationery: one shared visual system for every title and result. */
+.unified-title-screen, .unified-gameover-screen, .unified-practice-modal {
+  --island-ink: #304d43;
+  --island-muted: #52685b;
+  --island-accent: #3d7059;
+  --island-wash: #e6efdd;
+  color-scheme: light;
+  color: var(--island-ink) !important;
+  background: radial-gradient(ellipse at 12% 8%, #cbded1 0, transparent 48%), radial-gradient(ellipse at 90% 90%, #c6e2df 0, transparent 48%), #f2efdf !important;
+}
+[data-toenow-game="number-pop"], [data-toenow-game="add-up"] { --island-accent: #7b5931; --island-wash: #f2e6ce; }
+[data-toenow-game="ball-track"], [data-toenow-game="tap-match"] { --island-accent: #316c78; --island-wash: #dceef0; }
+[data-toenow-game="block-match"], [data-toenow-game="space-scale"] { --island-accent: #8a513b; --island-wash: #f4e3d6; }
+[data-toenow-game="spot-quick"], [data-toenow-game="shadow-match"] { --island-accent: #6c5878; --island-wash: #ece3ef; }
+[data-toenow-game="flash-brain"] { --island-accent: #4e6a4c; --island-wash: #e5edda; }
+.unified-title-screen .unified-title-card,
+.unified-gameover-screen .modal-card,
+.unified-practice-modal .unified-practice-card {
+  background: #fffaf0 !important;
+  background-image: radial-gradient(ellipse at 50% 0, var(--island-wash), transparent 48%) !important;
+  color: var(--island-ink) !important;
+  border: 1px solid #bdcbb6 !important;
+  border-radius: 28px 24px 30px 22px !important;
+  box-shadow: 0 16px 44px #36534426, inset 0 0 0 5px #ffffff80 !important;
+  max-height: calc(100dvh - 32px) !important;
+  overflow-y: auto !important;
+  scrollbar-color: #afbea4 #fffaf0;
+}
+.unified-title-screen .unified-title-card::before,
+.unified-gameover-screen .modal-card::before { background: linear-gradient(90deg, transparent, #92b590, transparent) !important; height: 3px !important; }
+.unified-title-screen .unified-game-title,
+.unified-gameover-screen .toenow-result-heading,
+.unified-practice-modal .unified-practice-title {
+  color: var(--island-ink) !important;
+  text-shadow: none !important;
+  letter-spacing: .01em !important;
+}
+.unified-title-screen .unified-game-title { text-transform: none !important; }
+.unified-title-screen .unified-game-desc,
+.unified-title-screen .unified-rule-text,
+.unified-title-screen .unified-record-label,
+.unified-gameover-screen .modal-subtitle,
+.unified-gameover-screen .unified-gameover-subtitle,
+.unified-gameover-screen .stat-tile-label,
+.unified-practice-modal .unified-practice-subtitle,
+.unified-practice-modal .unified-practice-level-range { color: var(--island-muted) !important; }
+.unified-title-screen .unified-category-pill,
+.unified-title-screen .unified-rules-box,
+.unified-title-screen .unified-records-strip,
+.unified-gameover-screen .stat-tile,
+.unified-practice-modal .unified-practice-level-btn,
+.unified-practice-modal .unified-practice-pill,
+.unified-practice-modal .unified-practice-level-num {
+  background: var(--island-wash) !important;
+  border-color: #c6d1bd !important;
+  color: var(--island-ink) !important;
+  box-shadow: none !important;
+}
+.unified-title-screen .unified-rule-kicker,
+.unified-title-screen .unified-record-val,
+.unified-gameover-screen .stat-tile-value,
+.unified-practice-modal .unified-practice-level-name { color: var(--island-accent) !important; }
+.unified-title-screen .unified-record-sep { color: #82977b !important; }
+.unified-title-screen .unified-start-btn,
+.unified-gameover-screen :is(#btn-retry, #btn-try-again, #btn-play-again, #btn-reboot-optics, #retryBtn, [data-start="true"]) {
+  background: var(--island-accent) !important;
+  color: #fffdf7 !important;
+  border: 1px solid var(--island-accent) !important;
+  box-shadow: 0 4px 0 #304d4320, 0 6px 16px #36534418 !important;
+}
+.unified-title-screen .unified-practice-btn,
+.unified-gameover-screen .modal-actions > .unified-share-btn,
+.unified-gameover-screen :is(#btn-gameover-title, #btn-title-gameover, #btn-title-over, #btn-go-title, .secondary-btn),
+.unified-practice-modal .unified-practice-cancel-btn {
+  background: #fff5df !important;
+  color: var(--island-ink) !important;
+  border: 1px solid #b5c5ac !important;
+  box-shadow: 0 3px 0 #36534412 !important;
+}
+.unified-title-screen button:hover,
+.unified-gameover-screen .modal-actions > button:hover,
+.unified-practice-modal button:hover { filter: brightness(.96); }
+.unified-title-screen button:focus-visible,
+.unified-gameover-screen button:focus-visible,
+.unified-practice-modal button:focus-visible { outline: 3px solid #aa7637 !important; outline-offset: 3px !important; }
+.unified-gameover-screen [data-membership-invite] {
+  background: #edf2e4 !important; border-color: #c6d1bd !important; color: var(--island-ink) !important;
+}
+.unified-gameover-screen .toenow-membership h3 { color: var(--island-ink) !important; }
+.unified-gameover-screen .toenow-membership p { color: var(--island-muted) !important; }
+.unified-gameover-screen .toenow-membership a { color: #315e49 !important; }
+.unified-gameover-screen a.toenow-membership-register { background: #fffaf0 !important; border-color: #9eb79b !important; }
+.unified-gameover-screen .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+.unified-title-screen .unified-animal-art,
+.unified-gameover-screen .unified-animal-art { width: 160px; height: 100px; object-fit: contain; flex-shrink: 0; margin: 0 auto 8px; }
+@media(max-width:480px) {
+  .unified-title-screen .unified-animal-art,
+  .unified-gameover-screen .unified-animal-art { width: 126px; height: 80px; }
+}

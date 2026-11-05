@@ -1,3 +1,4 @@
+const {restartAnimalGame,startAnimalGame}=require('./lib/animal-journey-driver.cjs');
 const {prepareJourneyAction}=require('./lib/animal-journey-driver.cjs');
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {chooseAction}=require('./lib/animal-siege-driver.cjs');
@@ -7,7 +8,7 @@ try{for(const [width,lang] of [[1280,'zh-Hant'],[390,'en'],[320,'zh-Hant']]){
  const p=await browser.newPage({viewport:{width,height:950},isMobile:width<700,hasTouch:width<700,reducedMotion:'reduce'}),errors=[];p.on('pageerror',e=>errors.push(e.message));
  await p.addInitScript(l=>{localStorage.setItem('toenow_language_v1',l);localStorage.setItem('animal_siege_hands_on_v2','skipped');localStorage.setItem('animal_siege_best_score_v1','17');localStorage.setItem('animal_siege_best_wave_v1','2');},lang);
  const source=fs.readFileSync(path.resolve(__dirname,'../games/animal-siege/main.js'),'utf8').replace('},650);','},80);').replace(/\}\)\(\);\s*$/,'window.__trailCamp=()=>structuredClone({run,state,scene,campBuilding,isPractice});})();');
- await p.route('**/games/animal-siege/main.js*',r=>r.fulfill({contentType:'application/javascript',body:source}));await p.goto(base+'/games/animal-siege/?mode=expedition');await p.locator('#btn-start').click();
+ await p.route('**/games/animal-siege/main.js*',r=>r.fulfill({contentType:'application/javascript',body:source}));await p.goto(base+'/games/animal-siege/?mode=expedition');await startAnimalGame(p);
  const snap=()=>p.evaluate(()=>window.__trailCamp()),click=async selector=>{if(await prepareJourneyAction(p,selector))return;
   if(selector==='[data-enter-camp]'&&await p.locator('#expedition').isVisible()&&!await p.locator('#location-dialog').isVisible())await p.locator('[data-location="home"]').click();
   if(selector==='[data-enter-trail="cache"]'&&!await p.locator('#location-dialog').isVisible())await p.locator('[data-location="cache"]').click();
@@ -35,7 +36,7 @@ try{for(const [width,lang] of [[1280,'zh-Hant'],[390,'en'],[320,'zh-Hant']]){
  await p.evaluate(l=>ToenowI18n.setLanguage(l==='en'?'zh-Hant':'en'),lang);assert.equal((await snap()).campBuilding,'beaver');assert.match(await p.locator('#camp').innerText(),/已升級|Trained/);
  await click('#camp-exit');await click('[data-location="cache"]');await click('[data-enter-trail="cache"]');assert.equal(await p.locator('[data-claim="cache"]').count(),0);
  assert.deepEqual(await p.evaluate(()=>[localStorage.getItem('animal_siege_best_score_v1'),localStorage.getItem('animal_siege_best_wave_v1')]),['17','2']);assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.deepEqual(errors,[]);
- await p.evaluate(()=>ToenowGameSDK.getInstance('animal-siege').restart());assert.equal((await snap()).scene,'map');assert.equal((await snap()).run.gold,90);assert.equal((await snap()).run.sites.cache.stage,'hidden');assert.equal(await p.locator('#camp').isVisible(),false);assert.equal(await p.locator('#trail').isVisible(),false);
+ await restartAnimalGame(p);assert.equal((await snap()).scene,'map');assert.equal((await snap()).run.gold,90);assert.equal((await snap()).run.sites.cache.stage,'hidden');assert.equal(await p.locator('#camp').isVisible(),false);assert.equal(await p.locator('#trail').isVisible(),false);
  console.log('PASS '+width+' '+lang+': camp buildings, real recruit/train, trail clues/guards, optional leave, persistent retreat, real victory, once-only loot, language and restart');await p.close();
 }}finally{await browser.close();}}
 run().catch(e=>{console.error(e);process.exitCode=1;});

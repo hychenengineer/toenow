@@ -1,3 +1,4 @@
+const {startAnimalGame}=require('./lib/animal-journey-driver.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -12,7 +13,7 @@ async function run(){
       await p.addInitScript(l=>{localStorage.setItem('toenow_language_v1',l);localStorage.setItem('animal_siege_hands_on_v2','completed');},lang);
       const source=fs.readFileSync(path.resolve(__dirname,'../games/animal-siege/main.js'),'utf8').replace(/\}\)\(\);\s*$/,'window.__moveSnapshot=()=>structuredClone(state);})();');
       await p.route('**/games/animal-siege/main.js*',route=>route.fulfill({contentType:'application/javascript',body:source}));
-      await p.goto(base+'/games/animal-siege/?mode='+mode);await p.locator('#btn-start').click();
+      await p.goto(base+'/games/animal-siege/?mode='+mode);await startAnimalGame(p);
       if(mode==='expedition'){await p.locator('.map-node[data-location="acorn"]').click();await p.locator('[data-attack="acorn"]').click();}
       const click=async selector=>width<700?p.locator(selector).tap():p.locator(selector).click();
       const snap=()=>p.evaluate(()=>window.__moveSnapshot());const original=await snap();

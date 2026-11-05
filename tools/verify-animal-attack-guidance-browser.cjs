@@ -1,3 +1,4 @@
+const {restartAnimalGame,startAnimalGame}=require('./lib/animal-journey-driver.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -12,7 +13,7 @@ async function run(){
     let source=fs.readFileSync(path.resolve(__dirname,'../games/animal-siege/main.js'),'utf8');
     source=source.replace(/\}\)\(\);\s*$/,'window.__guideSnapshot=()=>structuredClone(state);window.__guideSetup=()=>{byId("p-beaver").x=3;render();};})();');
     await p.route('**/games/animal-siege/main.js*',r=>r.fulfill({contentType:'application/javascript',body:source}));
-    await p.goto(base+'/games/animal-siege/?mode=battle');await p.locator('#btn-start').click();
+    await p.goto(base+'/games/animal-siege/?mode=battle');await startAnimalGame(p);
     assert.equal(await p.locator('#confirm-attack').count(),1,'an explicit attack button must exist');
     assert.equal(await p.locator('#confirm-attack').isVisible(),false);
     assert.match(await p.locator('#action-hint').innerText(),/move|移動/);
@@ -23,7 +24,7 @@ async function run(){
     await p.locator('[data-cell="2,1"]').click();await p.locator('#confirm-move').click();
     await p.waitForFunction(()=>document.getElementById('board').getAttribute('aria-busy')!=='true');
     assert.match(await p.locator('#action-hint').innerText(),/No enemy|沒有可攻擊/);
-    await p.evaluate(()=>ToenowGameSDK.getInstance('animal-siege').restart());await p.evaluate(()=>window.__guideSetup());
+    await restartAnimalGame(p);await p.evaluate(()=>window.__guideSetup());
     await p.locator('[data-cell="5,1"]').click();
     assert.equal(await p.locator('#confirm-attack').isVisible(),false);
     await p.locator('#confirm-move').click();await p.waitForFunction(()=>document.getElementById('board').getAttribute('aria-busy')!=='true');

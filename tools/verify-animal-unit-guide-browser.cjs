@@ -1,3 +1,4 @@
+const {restartAnimalGame,startAnimalGame}=require('./lib/animal-journey-driver.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -12,7 +13,7 @@ async function run(){
     p.on('pageerror',e=>errors.push(e.message));await p.addInitScript(l=>{localStorage.setItem('toenow_language_v1',l);localStorage.setItem('animal_siege_hands_on_v2','completed');},lang);
     const source=fs.readFileSync(path.resolve(__dirname,'../games/animal-siege/main.js'),'utf8').replace(/\}\)\(\);\s*$/,'window.__guideState=()=>structuredClone({run,state,paused,plannedMove});window.__trainGuideBeaver=()=>{if(run)run.upgrades.beaver=true;else state.units.find(u=>u.id==="p-beaver").trained=true;labels();};})();');
     await p.route('**/games/animal-siege/main.js*',r=>r.fulfill({contentType:'application/javascript',body:source}));
-    await p.goto(base+'/games/animal-siege/?mode='+mode);await p.locator('#btn-start').click();
+    await p.goto(base+'/games/animal-siege/?mode='+mode);await startAnimalGame(p);
     assert.equal(await p.locator('.preparation-card').count(),0,'the attached preparation panel is removed');
     assert.equal(await p.locator('#unit-guide-open').isVisible(),true,'the handbook has a dedicated visible button');
     if(mode==='expedition')await p.screenshot({path:path.join(dir,width+'-'+lang+'-map.png'),fullPage:true});
@@ -41,13 +42,13 @@ async function run(){
     await p.locator('#cancel-move').click();await p.locator('#end-turn').click();await p.locator('#unit-guide-open').click();
     const frozen=await p.evaluate(()=>window.__guideState());await p.waitForTimeout(850);assert.deepEqual(await p.evaluate(()=>window.__guideState()),frozen,'reading never advances an enemy turn');
     await p.locator('#unit-guide-close').click();await p.waitForFunction(()=>window.__guideState().state.phase==='player'&&document.getElementById('board').getAttribute('aria-busy')!=='true');
-    await p.locator('#unit-guide-open').click();await p.evaluate(()=>ToenowGameSDK.getInstance('animal-siege').restart());assert.equal(await p.locator('#unit-guide').isVisible(),false);
+    await p.locator('#unit-guide-open').click();await restartAnimalGame(p);assert.equal(await p.locator('#unit-guide').isVisible(),false);
     assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.deepEqual(errors,[]);
     console.log('PASS '+width+' '+lang+' '+mode+': removed panel, full chain, real stats, upgrades, language, modal focus, draft and enemy pause, restart');await p.close();
   }
     const p=await browser.newPage({viewport:{width:390,height:950},reducedMotion:'reduce'});
     await p.setContent('<iframe title="Embedded Animal Siege" style="border:0;width:100%;height:880px" src="'+base+'/games/animal-siege/?mode=battle"></iframe>');
-    const game=p.frameLocator('iframe');await game.locator('#btn-start').click();await game.locator('#unit-guide-open').click();
+    const game=p.frameLocator('iframe');await startAnimalGame(game);await game.locator('#unit-guide-open').click();
     assert.equal(await game.locator('#unit-guide').evaluate(e=>e.matches(':modal')),true);assert.equal(await game.locator('.guide-unit').count(),3);
     await game.locator('#unit-guide-close').click();assert.equal(await game.locator('#unit-guide').isVisible(),false);
     console.log('PASS iframe: handbook opens modally and closes inside the embedded game');await p.close();

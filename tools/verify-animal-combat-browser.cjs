@@ -1,3 +1,4 @@
+const {startAnimalGame}=require('./lib/animal-journey-driver.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -15,7 +16,7 @@ async function run(){
   try{
     for(const [width,lang,reduced] of [[1280,'zh-Hant',false],[390,'en',false],[390,'zh-Hant',true]]){
       const p=await browser.newPage({viewport:{width,height:950},isMobile:width<700,hasTouch:width<700,reducedMotion:reduced?'reduce':'no-preference'});const errors=[];p.on('pageerror',e=>errors.push(e.message));
-      await p.addInitScript(l=>{localStorage.setItem('toenow_language_v1',l);localStorage.setItem('animal_siege_hands_on_v2','completed');},lang);await instrument(p);await p.goto(base+'/games/animal-siege/?mode=battle');await p.locator('#btn-start').click();
+      await p.addInitScript(l=>{localStorage.setItem('toenow_language_v1',l);localStorage.setItem('animal_siege_hands_on_v2','completed');},lang);await instrument(p);await p.goto(base+'/games/animal-siege/?mode=battle');await startAnimalGame(p);
       async function rangeMatches(){const s=await p.evaluate(()=>window.__combatSnapshot());const selected=s.units.find(u=>u.id==='p-squirrel');const actual=await p.locator('.attack-range').evaluateAll(nodes=>nodes.map(n=>n.dataset.cell).sort());const expected=E.attackRange(s,selected).map(p=>p.x+','+p.y).sort();assert.deepEqual(actual,expected);}
       await p.locator('[data-unit="p-squirrel"]').click();await rangeMatches();
       const before=await p.evaluate(()=>window.__combatSnapshot());await p.locator('.tile.reachable').first().click();

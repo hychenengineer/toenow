@@ -14,7 +14,7 @@
   <script src="../../shared/toenow-sdk.js"></script>
   <script src="../../shared/toenow-i18n-core.js"></script>
   <script src="../../shared/toenow-i18n-games-a.js"></script>
-  <script src="../../shared/toenow-i18n-games-b.js"></script>
+  <script src="../../shared/toenow-i18n-games-b.js?v=opening-20261104"></script>
   <script src="../../shared/toenow-i18n.js"></script>
   <script src="../../shared/toenow-screen-config.js"></script>
   <script src="../../shared/toenow-screens.js"></script>
@@ -31,9 +31,23 @@
   <link rel="stylesheet" href="map-dialog.css">
   <link rel="stylesheet" href="journey-dialog.css">
   <link rel="stylesheet" href="field-orders.css">
+  <link rel="stylesheet" href="opening-story.css?v=opening-20261104">
 </head>
 <body data-state="title">
   <header class="topbar"><button id="back" type="button">← Back to Hub</button><span>TOENOW · EXPEDITION</span><div class="topbar-actions"><button id="unit-guide-open" type="button" hidden aria-haspopup="dialog" aria-controls="unit-guide"></button></div></header>
+  <section id="opening-story" hidden data-i18n-ignore aria-labelledby="story-heading">
+    <div class="story-card">
+      <div class="story-heading"><span class="eyebrow" id="story-chapter"></span><span id="story-progress"></span></div>
+      <h1 id="story-heading"></h1>
+      <div class="story-cast">
+        <figure data-story-character="fox"><img src="../../assets/animal-island/fox-character.webp" alt="" width="170" height="165"><figcaption></figcaption></figure>
+        <figure data-story-character="squirrel"><img src="../../assets/animal-island/squirrel-character.webp" alt="" width="170" height="165"><figcaption></figcaption></figure>
+        <figure data-story-character="beaver"><img src="../../assets/animal-island/beaver-character.webp" alt="" width="170" height="165"><figcaption></figcaption></figure>
+      </div>
+      <div class="story-dialogue" aria-live="polite" aria-atomic="true"><strong id="story-speaker"></strong><p id="story-dialogue"></p></div>
+      <div class="story-actions"><button id="story-skip" type="button"></button><button id="story-next" type="button"></button></div>
+    </div>
+  </section>
   <main id="expedition" hidden data-i18n-ignore></main>
   <main id="camp" hidden data-i18n-ignore></main>
   <main id="trail" hidden data-i18n-ignore></main>
@@ -79,6 +93,7 @@
   <script src="unit-guide.js"></script>
   <script src="battle-coach.js"></script>
   <script src="battle-view.js"></script>
-  <script src="main.js"></script>
+  <script src="opening-story.js"></script>
+  <script src="main.js?v=opening-20261104"></script>
 </body>
 </html>

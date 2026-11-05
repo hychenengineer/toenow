@@ -1,3 +1,4 @@
+const {startAnimalGame}=require('./lib/animal-journey-driver.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -10,7 +11,7 @@ async function run(){
     for(const [width,height,lang] of [[1280,950,'zh-Hant'],[390,844,'zh-Hant'],[390,844,'en'],[320,740,'en'],[844,390,'zh-Hant']]){
       const page=await browser.newPage({viewport:{width,height},isMobile:width<700,hasTouch:width<700});const errors=[];page.on('pageerror',e=>errors.push(e.message));
       await page.addInitScript(l=>{localStorage.setItem('toenow_language_v1',l);localStorage.setItem('animal_siege_hands_on_v2','completed');},lang);
-      await page.goto(base+'/games/animal-siege/?mode=expedition');await page.locator('#btn-start').click();
+      await page.goto(base+'/games/animal-siege/?mode=expedition');await startAnimalGame(page);
       assert.match(await page.locator('.exp-map').evaluate(el=>getComputedStyle(el).backgroundImage),/kingdom-map-v1.webp/);
       const mapAsset=await page.request.get(base+'/assets/animal-siege/kingdom-map-v1.webp');assert.equal(mapAsset.status(),200);
       await page.locator('#expedition img').evaluateAll(imgs=>Promise.all(imgs.map(i=>i.decode())));

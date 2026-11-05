@@ -1,3 +1,4 @@
+const {restartAnimalGame,startAnimalGame}=require('./lib/animal-journey-driver.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -13,7 +14,7 @@ async function run(){
       let source=fs.readFileSync(path.resolve(__dirname,'../games/animal-siege/main.js'),'utf8');
       source=source.replace(/\}\)\(\);\s*$/,`window.__siegeSceneSnapshot=()=>structuredClone({state,run});window.__nearSiegeVictory=()=>{for(const u of state.units.filter(u=>u.team==='enemy'))u.hp=0;const fox=byId('e-fox');fox.hp=1;fox.x=2;fox.y=1;selected='p-beaver';render();};window.__repeatFinish=()=>finish();})();`);
       await p.route('**/games/animal-siege/main.js*',route=>route.fulfill({contentType:'application/javascript',body:source}));
-      await p.goto(base+'/games/animal-siege/?mode=expedition');await p.locator('#btn-start').click();await p.locator('.map-node[data-location="acorn"]').click();await p.locator('[data-attack="acorn"]').click();
+      await p.goto(base+'/games/animal-siege/?mode=expedition');await startAnimalGame(p);await p.locator('.map-node[data-location="acorn"]').click();await p.locator('[data-attack="acorn"]').click();
       assert.equal(await p.locator('.siege-flag').count(),1,'the fort has a live flag instead of a painted status');
       assert.equal(await p.locator('.wood-wall').count(),4);assert.equal(await p.locator('.tile.wall:disabled').count(),4);assert.equal(await p.locator('.tile.gate:not(:disabled)').count(),2);
       assert.match(await p.locator('.gate-lane').first().evaluate(el=>getComputedStyle(el).backgroundImage),/acorn-gate-side-v1.webp/);
@@ -30,10 +31,10 @@ async function run(){
       await p.screenshot({path:path.join(dir,width+'-'+lang+'-capture.png'),fullPage:true});
       await p.locator('#expedition').waitFor({state:'visible'});const before=await p.evaluate(()=>window.__siegeSceneSnapshot());assert.equal(before.run.gold,230);assert.equal(before.run.wood,65);assert.equal(before.run.forts.acorn.captured,true);
       await p.evaluate(()=>window.__repeatFinish());assert.deepEqual(await p.evaluate(()=>window.__siegeSceneSnapshot()),before,'reward settles once');
-      await p.evaluate(()=>ToenowGameSDK.getInstance('animal-siege').restart());
+      await restartAnimalGame(p);
       await p.locator('.map-node[data-location="acorn"]').click();await p.locator('[data-attack="acorn"]').click();await p.evaluate(()=>window.__nearSiegeVictory());
       await p.locator('[data-cell="2,1"]').click();await p.locator('#confirm-attack').click();await p.locator('#siege-victory').waitFor({state:'visible'});
-      await p.evaluate(()=>ToenowGameSDK.getInstance('animal-siege').restart());
+      await restartAnimalGame(p);
       await p.locator('#expedition').waitFor({state:'visible'});await p.waitForTimeout(1400);assert.equal(await p.locator('#siege-victory').isVisible(),false);assert.equal(await p.locator('#exp-gold').innerText(),'90');assert.equal((await p.evaluate(()=>window.__siegeSceneSnapshot())).run.forts.acorn.captured,false,'old celebration cannot settle into restarted run');assert.deepEqual(errors,[]);
       console.log('PASS '+width+' '+lang+' reduced='+reduced+': illustrated fort, legal wood walls/gates, live capture flag, reward cue, one-time settlement and restart');await p.close();
     }

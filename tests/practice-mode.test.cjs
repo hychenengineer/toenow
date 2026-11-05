@@ -29,6 +29,12 @@ GAMES.forEach(({ id, path: relPath, titleCardId, controller }) => {
     assert.ok(html.includes('shared/toenow-levels.js'), `${id} must include shared/toenow-levels.js`);
 
     // Journey practice uses the same trip length and no difficulty/wave picker.
+    if (id === 'animal-siege') {
+      assert.ok(!source.includes('setupPracticeMode'), 'Expedition entry has no Practice picker');
+      assert.ok(source.includes('!!o?.isPractice'), 'SDK still accepts isolated practice runs');
+      assert.ok(source.includes('sdk.handleGameOver'), 'Records retain SDK practice protection');
+      return;
+    }
     if (id === 'carefree-farm') {
       const config=require('../shared/toenow-screen-config.js')[id];
       assert.equal(config.presentation,'visit');

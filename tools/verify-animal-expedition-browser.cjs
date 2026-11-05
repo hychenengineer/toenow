@@ -1,4 +1,4 @@
-const {prepareJourneyAction}=require('./lib/animal-journey-driver.cjs');
+const {prepareJourneyAction,startAnimalPractice}=require('./lib/animal-journey-driver.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -104,11 +104,11 @@ async function run(){
       await click(p,'#btn-retry');await map(p);assert.equal((await snapshot(p)).run.gold,90);assert.equal((await snapshot(p)).run.army.beaver,72);
       await click(p,'#menu');await click(p,'#title-button');
       await p.evaluate(()=>{localStorage.setItem('animal_siege_best_score_v1','17');localStorage.setItem('animal_siege_best_wave_v1','2');});
-      await click(p,'.unified-practice-btn');await click(p,'.unified-practice-level-btn[data-level="1"]');await map(p);assert.equal((await snapshot(p)).isPractice,true);
+      await startAnimalPractice(p);await map(p);assert.equal((await snapshot(p)).isPractice,true);
       await expedition(p,true);await click(p,'#btn-title');await p.locator('#title-screen').waitFor({state:'visible'});
       if(width===1280){
         // Isolate defeat-banner localization from battle balance; practice protects records.
-        await click(p,'.unified-practice-btn');await click(p,'.unified-practice-level-btn[data-level="1"]');
+        await startAnimalPractice(p);
         await p.evaluate(()=>window.__outcomeTest('defeat'));
         await p.evaluate(()=>ToenowI18n.setLanguage('en'));assert.match(await p.locator('#outcome').innerText(),/No troops/);
         await p.evaluate(()=>ToenowI18n.setLanguage('zh-Hant'));assert.match(await p.locator('#outcome').innerText(),/遠征結束/);

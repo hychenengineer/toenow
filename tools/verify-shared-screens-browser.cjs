@@ -46,9 +46,10 @@ async function instrument(page, id) {
 function structure(el) {
   // Material receipts are optional and have their own browser suites.
   // Their content/layout is covered by the material receipt browser suites.
-  return [el.tagName, el.className, ...[...el.children].filter(n=>!n.classList.contains('toenow-material-reward')).map(structure)];
+  return [el.tagName, el.className, ...[...el.children].filter(n=>!n.classList.contains('toenow-material-reward')&&!n.classList.contains('unified-practice-btn')).map(structure)];
 }
 async function confirmReady(host,id) {
+  if(id==='animal-siege'&&await host.locator('#opening-story').isVisible())await host.locator('#story-skip').click();
   if(id==='flash-brain')assert.equal(await host.locator('#toenow-tutorial').count(),0,'no startup tutorial for returning players');
 }
 async function islandAppearance(host, cardSelector, species, stage) {
@@ -105,7 +106,7 @@ async function run() {
         } else {
           assert.equal(await title.locator('[data-screen-record]').count(),0,id+' no rank records');
         }
-        assert.equal(await title.locator(journey?'[data-screen-practice]':'.unified-practice-btn').count(),1,id+' practice button');
+        assert.equal(await title.locator(journey?'[data-screen-practice]':'.unified-practice-btn').count(),id==='animal-siege'?0:1,id+' practice button');
         await page.locator('#'+c.startId).click();
         await confirmReady(page,id);
         await page.evaluate(()=>window.__finishScreenTest());
@@ -183,8 +184,11 @@ async function run() {
       await page.addInitScript(k=>{localStorage.setItem(k.score,'17');localStorage.setItem(k.wave,'2');},keys[id]);
       await instrument(page,id); await page.goto(base+'/games/'+id+'/');
       await page.evaluate(k=>{localStorage.setItem(k.score,'17');localStorage.setItem(k.wave,'2');},keys[id]);
-      await page.locator(journey?'[data-screen-practice]':'.unified-practice-btn').click();
-      if (!journey) await page.locator('.unified-practice-level-btn[data-level="3"]').click();
+      if(id==='animal-siege')await page.evaluate(()=>ToenowGameSDK.getInstance('animal-siege').start({wave:11,isPractice:true}));
+      else {
+        await page.locator(journey?'[data-screen-practice]':'.unified-practice-btn').click();
+        if (!journey) await page.locator('.unified-practice-level-btn[data-level="3"]').click();
+      }
       if(id==='flash-brain') await page.waitForURL(/autostart=1/);
       await confirmReady(page,id);
       await page.waitForFunction(()=>typeof window.__finishScreenTest==='function');

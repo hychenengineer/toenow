@@ -1,3 +1,4 @@
+const {restartAnimalGame,startAnimalGame}=require('./lib/animal-journey-driver.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -11,7 +12,7 @@ async function run(){
     p.on('pageerror',e=>errors.push(e.message));await p.addInitScript(l=>{localStorage.setItem('toenow_language_v1',l);localStorage.setItem('animal_siege_hands_on_v2','completed');},lang);
     const source=fs.readFileSync(path.resolve(__dirname,'../games/animal-siege/main.js'),'utf8').replace(/\}\)\(\);\s*$/,'window.__groundSnapshot=()=>structuredClone(state);})();');
     await p.route('**/games/animal-siege/main.js*',r=>r.fulfill({contentType:'application/javascript',body:source}));
-    await p.goto(base+'/games/animal-siege/?mode=battle');await p.locator('#btn-start').click();
+    await p.goto(base+'/games/animal-siege/?mode=battle');await startAnimalGame(p);
     const snapshot=()=>p.evaluate(()=>window.__groundSnapshot());
     assert.equal(await p.locator('#board').evaluate(e=>getComputedStyle(e).backgroundColor),'rgba(0, 0, 0, 0)');
     assert.equal(await p.locator('#board').evaluate(e=>getComputedStyle(e).boxShadow),'none');
@@ -33,9 +34,9 @@ async function run(){
     if(!reduced){await p.locator('.combat-walker[data-team="enemy"]').first().waitFor({state:'attached'});await p.locator('#board').evaluate(()=>ToenowGameSDK.getInstance('animal-siege').pause());await p.waitForTimeout(450);await p.locator('#resume').click();}
     await p.waitForFunction(()=>window.__groundSnapshot().phase==='player'&&document.getElementById('board').getAttribute('aria-busy')!=='true');
     assert.equal((await snapshot()).round,2);assert.equal(await p.locator('.combat-walker').count(),0);
-    await p.evaluate(()=>ToenowGameSDK.getInstance('animal-siege').restart());
+    await restartAnimalGame(p);
     await p.locator('[data-cell="2,1"]').click();await p.locator('#confirm-move').click();
-    await p.evaluate(()=>ToenowGameSDK.getInstance('animal-siege').restart());await p.waitForTimeout(450);
+    await restartAnimalGame(p);await p.waitForTimeout(450);
     assert.equal((await snapshot()).round,1);assert.equal((await snapshot()).units.find(u=>u.id==='p-beaver').x,1);
     assert.equal(await p.locator('.combat-walker').count(),0);assert.deepEqual(errors,[]);
     assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));

@@ -1,3 +1,4 @@
+const {startAnimalGame,startAnimalPractice}=require('./lib/animal-journey-driver.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -13,8 +14,9 @@ async function setup(browser,width,lang,mode,{first=false,motion='reduce'}={}){
   const source=fs.readFileSync(path.resolve(__dirname,'../games/animal-siege/main.js'),'utf8').replace(/\}\)\(\);\s*$/,
     'window.__orders=()=>structuredClone({state,run,plannedMove,targetId,lessonReturn:typeof lessonReturn==="undefined"?null:lessonReturn});window.__nearGate=()=>{byId("p-beaver").x=3;render();};window.__ordersEnd=()=>{state.result="defeat";state.phase="finished";finish();};})();');
   await p.route('**/games/animal-siege/main.js*',r=>r.fulfill({contentType:'application/javascript',body:source}));
-  await p.goto(base+'/games/animal-siege/?mode='+mode);await p.locator('#btn-start').click();
+  await p.goto(base+'/games/animal-siege/?mode='+mode);await startAnimalGame(p);
   if(mode==='expedition'){await p.locator('[data-location="acorn"]').click();await p.locator('[data-attack="acorn"]').click();}
+  if(first){assert.equal(await p.locator('#battle').getAttribute('data-lesson'),'false','fresh players enter their real battle');await p.evaluate(()=>ToenowGameSDK.getInstance('animal-siege').pause());await p.locator('#battle-coach-replay').click();}
   const snap=()=>p.evaluate(()=>window.__orders());
   const idle=()=>p.waitForFunction(()=>document.getElementById('board').getAttribute('aria-busy')==='false');
   return {p,errors,snap,idle};
@@ -67,7 +69,7 @@ async function run(){
     }
     for(const [width,lang,mode] of [[1280,'en','battle'],[390,'zh-Hant','expedition'],[320,'en','battle']]){
       const {p,errors,snap,idle}=await setup(browser,width,lang,mode,{first:true});
-      const start=await snap(),saved=start.lessonReturn;assert.ok(saved,'first play uses an isolated rehearsal');
+      const start=await snap(),saved=start.lessonReturn;assert.ok(saved,'manual tutorial uses an isolated rehearsal');
       assert.equal(await p.locator('#battle-coach').getAttribute('data-step'),'select');
       assert.equal(await p.locator('#end-turn').isDisabled(),true);
       await p.screenshot({path:path.join(dir,width+'-'+lang+'-lesson-select.png'),fullPage:true});
@@ -82,7 +84,7 @@ async function run(){
       assert.equal(await p.evaluate(k=>localStorage.getItem(k),key),'completed');
       assert.deepEqual((await snap()).state,saved.state,'lesson completion restores the actual battle');assert.deepEqual((await snap()).run,start.run);
       assert.deepEqual(await p.evaluate(()=>[localStorage.getItem('animal_siege_best_score_v1'),localStorage.getItem('animal_siege_best_wave_v1')]),['17','2']);
-      await p.reload();await p.locator('#btn-start').click();if(mode==='expedition'){await p.locator('[data-location="acorn"]').click();await p.locator('[data-attack="acorn"]').click();}
+      await p.reload();await startAnimalGame(p);if(mode==='expedition'){await p.locator('[data-location="acorn"]').click();await p.locator('[data-attack="acorn"]').click();}
       assert.equal((await snap()).lessonReturn,null,'completed lesson does not repeat');assert.deepEqual(errors,[]);
       console.log('PASS lesson '+width+' '+lang+' '+mode+': gated five steps, real actions, safe enemy turn, restore without records or losses');await p.close();
     }
@@ -107,11 +109,12 @@ async function run(){
       await p.route('**/games/animal-siege/main.js*',r=>r.fulfill({contentType:'application/javascript',body:source}));
       await p.route(base+'/__orders_embed__',r=>r.fulfill({contentType:'text/html',body:'<iframe style="width:100%;height:790px;border:0" src="'+base+'/games/animal-siege/?mode=battle"></iframe>'}));
       await p.goto(base+'/__orders_embed__');const game=p.frameLocator('iframe');
-      await game.locator('.unified-practice-btn').click();await game.locator('.unified-practice-level-btn[data-level="5"]').click();
+      await startAnimalPractice(game,21);
+      assert.equal(await game.locator('#board').evaluate(()=>window.__practiceOrders().wave),21);
+      await game.locator('#board').evaluate(()=>ToenowGameSDK.getInstance('animal-siege').pause());await game.locator('#battle-coach-replay').click();
       assert.equal(await game.locator('#board').evaluate(()=>window.__practiceOrders().realWave),21);
       await game.locator('#board').evaluate(()=>ToenowGameSDK.getInstance('animal-siege').restart());
-      assert.equal(await game.locator('#board').evaluate(()=>window.__practiceOrders().realWave),21,'restarting during a rehearsal must keep the selected practice tier');
-      await game.locator('#battle-coach-skip').click();
+      assert.equal(await game.locator('#board').evaluate(()=>window.__practiceOrders().realWave),undefined,'restart does not reinsert rehearsal');
       assert.equal(await game.locator('#board').evaluate(()=>window.__practiceOrders().wave),21);
       assert.equal(await game.locator('#battle-coach').isVisible(),false);assert.equal(await game.locator('#board').evaluate(()=>localStorage.getItem('animal_siege_best_score_v1')),null);
       await game.locator('#board').evaluate(()=>ToenowGameSDK.getInstance('animal-siege').pause());await game.locator('#battle-coach-replay').click();

@@ -1,3 +1,4 @@
+const {startAnimalGame}=require('./lib/animal-journey-driver.cjs');
 const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -14,7 +15,7 @@ async function run(){
     const hooks='window.__terrainGateApproach=()=>{const a=byId("p-beaver");a.x=4;a.y=1;a.moved=false;a.acted=false;selected=a.id;render();};window.__terrainSnapshot=()=>structuredClone({run,state});window.__terrainUnlock=()=>{run.forts.acorn.captured=true;run.forts.river.captured=true;renderMap();};window.__terrainNearWin=()=>{for(const u of state.units.filter(u=>u.team==="enemy"))u.hp=0;const a=byId("p-beaver"),t=byId("e-fox");a.x=1;a.y=1;a.acted=false;a.moved=false;t.x=2;t.y=1;t.hp=1;selected=a.id;render();};window.__terrainFinish=()=>finish();';
     const source=fs.readFileSync(path.resolve(__dirname,'../games/animal-siege/main.js'),'utf8').replace(/\}\)\(\);\s*$/,hooks+'})();');
     await p.route('**/games/animal-siege/main.js*',r=>r.fulfill({contentType:'application/javascript',body:source}));
-    await p.goto(base+'/games/animal-siege/?mode=expedition');await p.locator('#btn-start').click();if(id==='tower')await p.evaluate(()=>window.__terrainUnlock());
+    await p.goto(base+'/games/animal-siege/?mode=expedition');await startAnimalGame(p);if(id==='tower')await p.evaluate(()=>window.__terrainUnlock());
     await p.locator('[data-location="'+id+'"]').click();
     for(const kind of ['battle','tree','wall','gate'])assert.equal(await p.locator('link[rel="preload"][href$="'+id+'-'+kind+(kind==='wall'||kind==='gate'?'-side-v1.webp':'-v1.webp')+'"]').count(),1,'scouting warms the fort art before entering battle');
     await p.locator('[data-attack="'+id+'"]').click();

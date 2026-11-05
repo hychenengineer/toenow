@@ -7,6 +7,7 @@
   let plannedMove=null,orderMode=null;
   let scene='map',campBuilding=null,locationOpen=false,campOpen=false,trailOpen=false;
   let lessonReturn=null;
+  let lessonRequested=false,opening=null,openingStart=null;
   let feedbackBusy=false,combatVersion=0;
   let pendingFeedback=null;
   let captureShown=false,captureBusy=false,sceneVersion=0;
@@ -100,7 +101,7 @@
     $('unit-guide').close();if(continueGame)pause(false);
     if(resume&&!$('unit-guide-open').hidden)$('unit-guide-open').focus();
   }
-  const sdk=new window.ToenowGameSDK({gameId:ID,category:'logic',onStart:o=>start(o?.wave||1,!!o?.isPractice),onPause:()=>pause(true),onResume:()=>pause(false),onRestart:()=>start(run?.wave||lessonReturn?.state.wave||state?.wave||1,isPractice)});
+  const sdk=new window.ToenowGameSDK({gameId:ID,category:'logic',onStart:o=>begin(o?.wave||1,!!o?.isPractice),onPause:()=>pause(true),onResume:()=>pause(false),onRestart:()=>begin(openingStart?.wave||run?.wave||lessonReturn?.state.wave||state?.wave||1,isPractice)});
   const feedback=window.AnimalCombatFeedback.create({surface:document.querySelector('.board-surround'),board:$('board'),layer:$('combat-effects'),live:$('combat-announcement'),text,art});
   const siege=window.AnimalSiegeScene.create({flag:document.querySelector('.siege-flag'),notice:$('siege-victory'),title:$('siege-capture-title'),gold:$('siege-gold'),wood:$('siege-wood'),goldLabel:$('siege-gold-label'),woodLabel:$('siege-wood-label'),text});
   function resetSiege(){sceneVersion++;captureShown=false;captureBusy=false;siege.reset();}
@@ -135,14 +136,39 @@
   function launchTrailBattle(id){
     if(paused||!run)return false;const next=C.beginTrailBattle(run,id);if(!next)return false;
     cancel();resetFeedback();resetSiege();plannedMove=null;state=next;settled=false;selected=alive('player')[0]?.id||null;targetId=null;
-    setScene('battle');window.scrollTo({top:0,behavior:'instant'});if(coach.needsLesson)startLesson();else render();return true;
+    setScene('battle');window.scrollTo({top:0,behavior:'instant'});if(lessonRequested){lessonRequested=false;startLesson();}else render();return true;
   }
   function cancel(){generation++;clearTimeout(timer);timer=null;}
-  function title(){clearOrder();closeLocation(false);closeJourney('camp',false);closeJourney('trail',false);coach.stop();lessonReturn=null;closeGuide(false);cancel();resetFeedback();resetSiege();plannedMove=null;state=null;run=null;paused=false;sdk.runActive=false;sdk.cancelMaterials();show('pause-layer',false);show('battle',false);show('expedition',false);show('camp',false);show('trail',false);scene='map';campBuilding=null;show('outcome',false);show('gameover-screen',false);show('title-screen',true);document.body.dataset.state='title';ToenowScreens.updateTitle(ID,{bestScore:sdk.loadBestScore(),bestWave:sdk.loadBestWave()});paintCoach();}
+  function closeOpening(){opening=null;openingStart=null;show('opening-story',false);}
+  function paintOpening(){
+    if(!opening)return;
+    const current=opening.current(),copy=window.AnimalOpeningStory.copy;
+    const translate=value=>window.ToenowI18n?.t(value)||value;
+    $('story-chapter').textContent=translate(copy.chapter);
+    $('story-heading').textContent=translate(copy.title);
+    $('story-progress').textContent=(current.index+1)+' / '+current.total;
+    $('story-speaker').textContent=translate(copy[current.speaker]);
+    $('story-dialogue').textContent=translate(current.text);
+    $('story-next').textContent=translate(current.last?copy.depart:copy.next);
+    $('story-skip').textContent=translate(copy.skip);
+    for(const character of document.querySelectorAll('[data-story-character]')){
+      character.setAttribute('aria-current',String(character.dataset.storyCharacter===current.speaker));
+      character.querySelector('figcaption').textContent=translate(copy[character.dataset.storyCharacter]);
+    }
+  }
+  function begin(wave=1,practice=false){
+    if(skirmishMode||practice){start(wave,practice);return;}
+    title();isPractice=false;opening=window.AnimalOpeningStory.create();openingStart={wave,practice};
+    show('title-screen',false);show('opening-story',true);document.body.dataset.state='story';
+    paintOpening();window.scrollTo({top:0,behavior:'instant'});$('story-next').focus({preventScroll:true});
+  }
+  function finishOpening(){if(!openingStart)return;const pending=openingStart;start(pending.wave,pending.practice);}
+  function title(){closeOpening();lessonRequested=false;clearOrder();closeLocation(false);closeJourney('camp',false);closeJourney('trail',false);coach.stop();lessonReturn=null;closeGuide(false);cancel();resetFeedback();resetSiege();plannedMove=null;state=null;run=null;paused=false;sdk.runActive=false;sdk.cancelMaterials();show('pause-layer',false);show('battle',false);show('expedition',false);show('camp',false);show('trail',false);scene='map';campBuilding=null;show('outcome',false);show('gameover-screen',false);show('title-screen',true);document.body.dataset.state='title';ToenowScreens.updateTitle(ID,{bestScore:sdk.loadBestScore(),bestWave:sdk.loadBestWave()});paintCoach();}
   function start(wave=1,practice=false){
+    closeOpening();lessonRequested=false;
     coach.stop();lessonReturn=null;
     closeGuide(false);cancel();resetFeedback();resetSiege();plannedMove=null;isPractice=practice;run=skirmishMode?null:C.create(wave);state=run?null:E.createBattle(wave);locationId='home';selected=state?'p-beaver':null;targetId=null;paused=false;settled=false;expeditionSettled=false;
-    sdk.startRun({wave:run?.wave||state.wave,isPractice});show('title-screen',false);show('gameover-screen',false);show('outcome',false);show('pause-layer',false);campBuilding=null;setScene(run?'map':'battle');document.body.dataset.state='playing';if(state&&coach.needsLesson)startLesson();if(run)renderMap();else render();labels();
+    sdk.startRun({wave:run?.wave||state.wave,isPractice});show('title-screen',false);show('gameover-screen',false);show('outcome',false);show('pause-layer',false);campBuilding=null;setScene(run?'map':'battle');document.body.dataset.state='playing';if(run)renderMap();else render();labels();
   }
   function warmFortArt(id){if(!C.FORTS[id])return;for(const kind of id==='acorn'?['battle','wall','gate']:['battle','tree','wall','gate']){const href='../../assets/animal-siege/'+id+'-'+kind+(kind==='wall'||kind==='gate'?'-side-v1.webp':'-v1.webp');if(document.querySelector('link[rel="preload"][href="'+href+'"]'))continue;const link=document.createElement('link');link.rel='preload';link.as='image';link.href=href;document.head.appendChild(link);}}
   function closeLocation(focus=true){locationOpen=false;const dialog=$('location-dialog');if(dialog?.open)dialog.close();if(focus&&scene==='map')$('expedition').querySelector('[data-location="'+locationId+'"]')?.focus({preventScroll:true});}
@@ -158,7 +184,7 @@
     if(paused||!run)return false;closeGuide(false);const next=C.beginBattle(run,id);if(!next)return false;
     warmFortArt(id);
     cancel();resetFeedback();resetSiege();plannedMove=null;state=next;settled=false;selected=alive('player')[0]?.id||null;targetId=null;
-    setScene('battle');document.body.dataset.state='playing';window.scrollTo({top:0,behavior:'instant'});if(coach.needsLesson)startLesson();else render();return true;
+    setScene('battle');document.body.dataset.state='playing';window.scrollTo({top:0,behavior:'instant'});if(lessonRequested){lessonRequested=false;startLesson();}else render();return true;
   }
   function paintOutcome(){
     $('outcome').textContent=run?(run.result==='victory'?text('All three forts captured. Expedition complete!','三座城堡全數攻下，遠征成功！'):text('No troops or supplies remain. Your expedition ends here.','部隊與補給都已耗盡，這趟遠征結束了。')):(state?.result==='victory'?text('Fort captured! +140 gold · +40 wood','攻下堡壘！獲得 140 金幣・40 木材'):text('The fort held. Try a different formation.','攻城未成，再試試不同的站位！'));
@@ -349,11 +375,12 @@
   // Contextual tips follow the real battle; the shared sandbox lesson is not registered.
   const lessonButton=document.querySelector('#title-screen [data-tutorial-replay]');
   if(lessonButton)lessonButton.hidden=true;
-  $('btn-start').addEventListener('click',()=>start());
-  $('btn-retry').addEventListener('click',()=>start(run?.wave||lessonReturn?.state.wave||state?.wave||1,isPractice));
+  $('btn-start').addEventListener('click',()=>begin());
+  $('btn-retry').addEventListener('click',()=>begin(run?.wave||lessonReturn?.state.wave||state?.wave||1,isPractice));
   $('btn-title').addEventListener('click',title);
-  // #title-screen supplies the shared practice selector, including its five tiers.
-  window.ToenowLevels.setupPracticeMode({container:'#title-screen .unified-title-card',onStartGame:(wave,isPractice)=>start(wave,isPractice)});
+  // Isolated runs remain available through the SDK; the opening has no Practice picker.
+  $('story-next').addEventListener('click',()=>{if(!opening)return;if(opening.current().last)finishOpening();else{opening.advance();paintOpening();}});
+  $('story-skip').addEventListener('click',finishOpening);
   $('board').addEventListener('click',e=>{const cell=e.target.closest('[data-cell]');if(cell){const [x,y]=cell.dataset.cell.split(',').map(Number);clickTile(x,y);}});
   $('confirm-move').addEventListener('click',confirmMove);
   $('confirm-attack').addEventListener('click',confirmAttack);
@@ -362,7 +389,7 @@
   $('battle-order').addEventListener('cancel',e=>{e.preventDefault();dismissOrder();});
   $('battle-order').addEventListener('click',e=>{if(e.target!==$('battle-order'))return;const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dismissOrder();});
   $('battle-coach-skip').addEventListener('click',()=>{coach.skip();if(lessonReturn)restoreLesson();else paintCoach();});
-  $('battle-coach-replay').addEventListener('click',()=>{if(captureBusy||feedbackBusy||lessonReturn||state?.phase==='enemy'||!(run&&!run.result||state&&!state.result))return;if(state)startLesson();else{coach.replay(false);pause(false);}});
+  $('battle-coach-replay').addEventListener('click',()=>{if(captureBusy||feedbackBusy||lessonReturn||state?.phase==='enemy'||!(run&&!run.result||state&&!state.result))return;if(state)startLesson();else{lessonRequested=true;coach.replay(false);pause(false);}});
   $('unit-guide-open').addEventListener('click',openGuide);
   $('unit-guide-close').addEventListener('click',()=>closeGuide());
   $('unit-guide').addEventListener('cancel',e=>{e.preventDefault();closeGuide();});
@@ -409,9 +436,9 @@
   });
   $('back').addEventListener('click',()=>{cancel();sdk.exitToHub();});
   $('resume').addEventListener('click',()=>pause(false));$('title-button').addEventListener('click',title);
-  function labels(){if(state)render();else if(run){if(scene==='camp')renderCamp();else if(scene==='trail')renderTrail();else renderMap();}guideLabels();if(!$('outcome').hidden)paintOutcome();$('pause-label').textContent=text('Take a breather','休息一下');$('resume').textContent=text('Continue','繼續');$('title-button').textContent=run?text('Title screen · end this run','返回標題・結束這一局'):text('Title screen','返回標題');}
+  function labels(){if(opening){paintOpening();return;}if(state)render();else if(run){if(scene==='camp')renderCamp();else if(scene==='trail')renderTrail();else renderMap();}guideLabels();if(!$('outcome').hidden)paintOutcome();$('pause-label').textContent=text('Take a breather','休息一下');$('resume').textContent=text('Continue','繼續');$('title-button').textContent=run?text('Title screen · end this run','返回標題・結束這一局'):text('Title screen','返回標題');}
   window.addEventListener('toenow:languagechange',labels);
-  window.addEventListener('keydown',e=>{if(e.key!=='Escape'||$('battle-order').open||$('unit-guide').open||$('location-dialog')?.open||$('camp-dialog')?.open||$('trail-dialog')?.open)return;if(plannedMove&&!paused&&!coach.isLesson){plannedMove=null;targetId=null;render();return;}if(run&&!run.result||state&&!state.result)pause(!paused);});
+  window.addEventListener('keydown',e=>{if(e.key==='Escape'&&opening){title();return;}if(e.key!=='Escape'||$('battle-order').open||$('unit-guide').open||$('location-dialog')?.open||$('camp-dialog')?.open||$('trail-dialog')?.open)return;if(plannedMove&&!paused&&!coach.isLesson){plannedMove=null;targetId=null;render();return;}if(run&&!run.result||state&&!state.result)pause(!paused);});
   window.addEventListener('resize',()=>requestAnimationFrame(()=>{positionOrders();keepLessonTargetVisible();positionCoach();}));window.addEventListener('scroll',positionCoach,{passive:true});
   window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==window.parent)return;if(e.data?.type==='GAME_RESTART')sdk.restart();if(e.data?.type==='GAME_PAUSE')sdk.pause();if(e.data?.type==='GAME_RESUME')sdk.resume();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&(run&&!run.result||state&&!state.result))pause(true);});

@@ -64,9 +64,7 @@ const KEY='toenow_carefree_farm_v1';
   // Real Hub route, iframe, restart and return contract.
   const hub=await browser.newPage();hub.on('pageerror',e=>errors.push(e.message));await hub.goto(base+'/');
   if(await hub.locator('#islandWelcome').isVisible())await hub.locator('#welcomeGuestBtn').click();
-  const order=await hub.evaluate(()=>{const spring=document.querySelector('[aria-labelledby="carefree-entry-title"]'),farm=document.querySelector('[aria-labelledby="carefree-farm-title"]');return {adjacent:spring.nextElementSibling===farm,springBottom:spring.getBoundingClientRect().bottom,farmTop:farm.getBoundingClientRect().top};});
-  assert.equal(order.adjacent,true);assert(order.farmTop>=order.springBottom,'Farm entry is below the hot spring');
-  await hub.locator('#open-carefree-farm').click();const farm=hub.frameLocator('#gameViewer');await farm.locator('#btn-start').click();await farm.locator('[data-plot="0"]').click();
+  await hub.locator('[data-island-select="carefree"]').click();await hub.locator('#open-carefree-farm').click();const farm=hub.frameLocator('#gameViewer');await farm.locator('#btn-start').click();await farm.locator('[data-plot="0"]').click();
   await hub.evaluate(()=>document.getElementById('gameViewer').contentWindow.postMessage({type:'GAME_RESTART'},location.origin));await farm.locator('#tab-pasture').click();assert.equal(await farm.locator('.roaming-animal').count(),1);await farm.locator('#back-hub').click();checks++;await hub.close();
   assert.deepEqual(errors,[]);fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({checks,errors},null,2));console.log(JSON.stringify({checks,errors,artifacts:out},null,2));
  }finally{await browser.close();}

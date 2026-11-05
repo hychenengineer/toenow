@@ -65,7 +65,7 @@ const out = path.resolve(__dirname, '../artifacts/garden-touch-postcards');fs.mk
   }
   const hub=await browser.newPage({viewport:{width:1024,height:768},hasTouch:true}),errors=[];hub.on('pageerror',e=>errors.push(e.message));
   await hub.goto(base+'/');if(await hub.locator('#welcomeGuestBtn').isVisible())await hub.locator('#welcomeGuestBtn').click();
-  await hub.locator('#open-capybara').click();const f=hub.frameLocator('#gameViewer');await f.locator('#btn-start').click();
+  await hub.locator('[data-island-select="carefree"]').click();await hub.locator('#open-capybara').click();const f=hub.frameLocator('#gameViewer');await f.locator('#btn-start').click();
   await f.locator('#pan-toggle').click();a.equal(await f.locator('#pan-toggle').getAttribute('aria-pressed'),'true');
   await f.locator('#postcard').click();await hub.waitForTimeout(700);await f.locator('#album-open').click();
   await f.locator('.postcard-open').first().click();await f.locator('#postcard-continue').click();

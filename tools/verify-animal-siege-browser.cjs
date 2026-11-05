@@ -59,7 +59,7 @@ async function run(){
     // The actual Hub entry must open the game without extending the locked route.
     const p=await browser.newPage({viewport:{width:1280,height:950}});await p.addInitScript(()=>localStorage.setItem('animal_siege_hands_on_v2','completed'));await p.goto(base+'/');
     await p.locator('#welcomeGuestBtn').click();
-    await p.locator('#open-animal-siege').click();const frame=p.frameLocator('#gameViewer');await startAnimalGame(frame);await frame.locator('[data-location="acorn"]').click();await frame.locator('[data-attack="acorn"]').click();await frame.locator('#board').waitFor({state:'visible'});assert.equal(await frame.locator('#board img').count(),6);
+    await p.locator('[data-island-select="expedition"]').click();await p.locator('#open-animal-siege').click();const frame=p.frameLocator('#gameViewer');await startAnimalGame(frame);await frame.locator('[data-location="acorn"]').click();await frame.locator('[data-attack="acorn"]').click();await frame.locator('#board').waitFor({state:'visible'});assert.equal(await frame.locator('#board img').count(),6);
     await frame.locator('#back').click();await p.locator('#theaterModal[aria-hidden="true"]').waitFor({state:'attached'});assert.equal(await p.locator('#gameViewer').getAttribute('src'),'about:blank');await p.close();
     console.log('PASS Hub: independent Expedition entry, iframe start, exit to Hub');
   }finally{await browser.close();}

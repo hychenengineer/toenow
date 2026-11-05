@@ -1503,7 +1503,8 @@
     }
   </style>
   <link rel="stylesheet" href="assets/toenow-game-previews.css">
-  <link rel="stylesheet" href="assets/capybara-entry.css">
+  <link rel="stylesheet" href="assets/toenow-archipelago.css?v=20261104-1">
+  <script src="shared/toenow-archipelago.js?v=20261104-1"></script>
   <script src="shared/toenow-game-previews.js"></script>
   <link rel="stylesheet" href="assets/toenow-hub-themes.css">
   <script src="shared/toenow-hub-themes.js"></script>
@@ -1581,21 +1582,26 @@
        MAIN BENTO HUB
        ========================================== -->
   <main class="main-container">
+    <nav class="archipelago-nav" aria-label="TOENOW Archipelago">
+      <button type="button" data-island-select="explore" aria-controls="islandExplorer" aria-pressed="true">Explore Island</button>
+      <button type="button" data-island-select="carefree" aria-controls="carefreeIsland" aria-pressed="false">Carefree Island</button>
+      <button type="button" data-island-select="expedition" aria-controls="expeditionIsland" aria-pressed="false">Expedition Island</button>
+    </nav>
     <section id="islandExplorer" aria-label="Island explorer"></section>
-    <section class="carefree-entry" aria-labelledby="carefree-entry-title">
-      <img src="assets/capybara-hot-spring-garden-preview.png" alt="" width="155" height="100">
-      <div><span class="carefree-kicker">CAREFREE ISLAND</span><h2 id="carefree-entry-title">Capybara Hot Spring Garden</h2><p>A little spring, a world of possibilities.</p></div>
-      <button id="open-capybara" type="button">Visit Capybara</button>
+    <section id="carefreeIsland" class="archipelago-panel" data-island-panel="carefree" aria-labelledby="carefreeIslandTitle" hidden>
+      <header class="archipelago-heading"><h1 id="carefreeIslandTitle">Carefree Island</h1><p>Visit the hot spring or farm. There is room for more little joys.</p></header>
+      <div class="archipelago-map">
+        <img class="archipelago-art" src="assets/island-maps/carefree.webp" width="1448" height="1086" alt="Carefree island with a hot spring and farm beside an open meadow">
+        <button id="open-capybara" class="island-game-entry" type="button" style="--entry-x:5%;--entry-y:48%;--entry-w:35%;--entry-h:39%"><span>Hot spring</span></button>
+        <button id="open-carefree-farm" class="island-game-entry" type="button" style="--entry-x:56%;--entry-y:48%;--entry-w:38%;--entry-h:39%"><span>Farm</span></button>
+      </div>
     </section>
-    <section class="carefree-entry" aria-labelledby="animal-siege-entry-title">
-      <img src="assets/animal-siege-preview.png" alt="" width="155" height="100">
-      <div><span class="carefree-kicker">EXPEDITION ISLAND</span><h2 id="animal-siege-entry-title">Animal Siege</h2><p>Explore the mist. Build your animal army. Capture three forts.</p></div>
-      <button id="open-animal-siege" type="button">Open expedition</button>
-    </section>
-    <section class="carefree-entry" aria-labelledby="carefree-farm-title">
-      <img src="assets/carefree-farm-preview.png" alt="" width="155" height="100">
-      <div><span class="carefree-kicker">CAREFREE ISLAND</span><h2 id="carefree-farm-title">Carefree Farm</h2><p>Plant a little, raise a friend, grow together.</p></div>
-      <button id="open-carefree-farm" type="button">Open Carefree Farm</button>
+    <section id="expeditionIsland" class="archipelago-panel" data-island-panel="expedition" aria-labelledby="expeditionIslandTitle" hidden>
+      <header class="archipelago-heading"><h1 id="expeditionIslandTitle">Expedition Island</h1><p>Begin your expedition at the animal camp.</p></header>
+      <div class="archipelago-map">
+        <img class="archipelago-art" src="assets/island-maps/expedition.webp" width="1448" height="1086" alt="Expedition island with an animal camp, harbor, forest and castles">
+        <button id="open-animal-siege" class="island-game-entry" type="button" style="--entry-x:9%;--entry-y:54%;--entry-w:33%;--entry-h:28%"><span>Animal Siege</span></button>
+      </div>
     </section>
     <div id="hubListView" class="hub-list-view">
     <section class="hub-challenge-hero" id="hubChallengeHero" aria-labelledby="hubChallengeTitle" data-i18n-ignore>
@@ -2537,7 +2543,9 @@
       return target.href;
     }
 
+    let archipelago;
     function openTheaterModal(game, onReady) {
+      archipelago?.selectGame(game);
       if (game.category !== 'relax' && game.island !== 'expedition' && exploration && !exploration.isUnlocked(game.id)) {
         islandExplorer?.showLocation(game.id);
         return;
@@ -3577,6 +3585,7 @@
         openGame: openTheaterModal,
         exploration, materials
       });
+      if (window.ToenowArchipelago) archipelago = window.ToenowArchipelago.mount();
       discoverAdditionalGames();
       const authReady = initAuthListener().catch(() => {});
       Promise.race([authReady, new Promise(resolve => setTimeout(resolve, 2000))]).then(() => window.showIslandWelcome?.());

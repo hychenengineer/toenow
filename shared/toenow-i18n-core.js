@@ -2,6 +2,16 @@
   'use strict';
   // Display strings only. Game IDs, stored records and animal identifiers stay unchanged.
   const entries = {
+    'TOENOW Archipelago':'TOENOW 群島',
+    'Explore Island':'探索島',
+    'Carefree Island':'無憂島',
+    'Expedition Island':'遠征島',
+    'Visit the hot spring or farm. There is room for more little joys.':'去泡溫泉，或逛逛農場。空地留給未來的小幸福。',
+    'Begin your expedition at the animal camp.':'從動物營地出發，展開你的遠征。',
+    'Hot spring':'溫泉',
+    'Farm':'農場',
+    'Carefree island with a hot spring and farm beside an open meadow':'溫泉與農場位於前方，後方保留草地的無憂島',
+    'Expedition island with an animal camp, harbor, forest and castles':'有動物營地、港口、森林與城堡的遠征島',
     'We still need {count} {material} for our next project!':'下一個建設還需要 {count} 個{material}！',
     'New vegetable patch':'新菜圃','Little greenhouse':'小溫室','Harvest stall':'採收攤位','Garden pergola':'花園棚架',
     'Our home is full of little joys. Thank you!':'小屋充滿小小的幸福，謝謝你！','Just {count} more carrots for our next project!':'再收集 {count} 根紅蘿蔔，就能蓋下一個新地方！','Everything is ready. Shall we build together?':'材料齊了，一起動手建造吧！',

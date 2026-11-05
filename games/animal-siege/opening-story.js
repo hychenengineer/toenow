@@ -19,12 +19,15 @@
     { speaker: 'beaver', text: 'Commander, lead us to reclaim all three forts and bring the forest together again! First, come into camp and prepare with us.' }
   ].map(Object.freeze));
   const campLines = Object.freeze([
-    { speaker: 'beaver', topic: 'buildings', text: 'Welcome to Forest Camp! The Beaver Workshop, Fox Barracks and Squirrel Lookout each recruit and train their own animals. Let us visit the workshop first.' },
-    { speaker: 'fox', topic: 'recruit', text: 'One Beaver costs 20 gold here. Press Recruit +1 or +3 to buy new animals: your gold goes down and your army grows. The other buildings recruit their own squads in the same way.' },
+    { speaker: 'beaver', topic: 'buildings', text: 'Welcome to Forest Camp! The Beaver Workshop, Fox Barracks and Squirrel Lookout recruit and train their own animals. First I will explain the camp. You can open a building after the introduction.' },
+    { speaker: 'fox', topic: 'recruit', text: 'To buy troops later, open a building and choose Recruit +1 or +3. One Beaver costs 20 gold. Recruiting spends gold and adds healthy animals to your army. Foxes and Squirrels are recruited in their own buildings.' },
     { speaker: 'squirrel', topic: 'train', text: 'Training costs 35 wood per squad. Trained Beavers take 20% less damage. Gather wood on the trails if you need more. The tour ends here. Prepare your army at your own pace.' }
   ].map(Object.freeze));
-  function create() {
-    let index = 0, phase = 'story';
+  const KEY = 'animal_siege_introduction_v1';
+  function create(saved) {
+    let phase = saved?.phase === 'camp' ? 'camp' : 'story';
+    const length = phase === 'camp' ? campLines.length : lines.length;
+    let index = Number.isInteger(saved?.index) && saved.index >= 0 && saved.index < length ? saved.index : 0;
     const currentLines = () => phase === 'story' ? lines : campLines;
     return {
       current: () => ({ ...currentLines()[index], phase, index, total: currentLines().length, last: index === currentLines().length - 1 }),
@@ -32,5 +35,23 @@
       enterCamp() { if (phase !== 'story' || index !== lines.length - 1) return false; phase = 'camp'; index = 0; return true; }
     };
   }
-  return { copy, lines, campLines, create };
+  function progress(storage) {
+    let memory = null, sessionOnly = false;
+    function normalize(value) {
+      if (value?.status === 'completed' || value?.status === 'skipped') return { status: value.status };
+      if (value?.status !== 'progress') return null;
+      const current = create(value).current();
+      return { status: 'progress', phase: current.phase, index: current.index };
+    }
+    function write(value) {
+      memory = value; sessionOnly = true;
+      try { if (storage?.setItem) { storage.setItem(KEY, JSON.stringify(value)); sessionOnly = false; } } catch (_) {}
+    }
+    return {
+      read() { if (sessionOnly) return memory; try { if (storage?.getItem) { const raw = storage.getItem(KEY); memory = raw ? normalize(JSON.parse(raw)) : null; } } catch (_) {} return memory; },
+      save(current) { write({ status: 'progress', phase: current.phase, index: current.index }); },
+      finish(status = 'completed') { write({ status: status === 'skipped' ? 'skipped' : 'completed' }); }
+    };
+  }
+  return { KEY, copy, lines, campLines, create, progress };
 });

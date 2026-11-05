@@ -22,6 +22,7 @@
   const alive=team=>state.units.filter(u=>u.team===team&&u.hp>0);
   let tipStorage;try{tipStorage=window.localStorage;}catch(_){}
   const coach=window.AnimalBattleCoach.create(tipStorage);
+  const introduction=window.AnimalOpeningStory.progress(tipStorage);
   function clearLessonLocks(){for(const el of document.querySelectorAll('[data-lesson-locked]')){el.disabled=el.dataset.lessonLocked==='true';delete el.dataset.lessonLocked;}}
   function keepLessonTargetVisible(){
     if(!coach.isLesson||$('battle-coach').hidden)return;
@@ -120,7 +121,6 @@
   function show(id,visible){const el=$(id);el.hidden=!visible;el.classList.toggle('hidden',!visible);el.classList.toggle('active',visible);}
   function setScene(value){clearOrder();closeLocation(false);closeJourney('camp',false);closeJourney('trail',false);scene=value;for(const id of ['expedition','camp','trail','battle'])show(id,id===(value==='map'?'expedition':value));}
   function closeJourney(kind,focus=true){
-    if(kind==='camp'&&opening?.current().phase==='camp'&&opening.current().index>0){closeOpening();guideLabels();}
     if(kind==='camp')campOpen=false;else trailOpen=false;
     const dialog=$(kind+'-dialog');if(dialog?.open)dialog.close();
     if(focus&&scene===kind)(kind==='camp'?$('camp').querySelector('[data-building="'+campBuilding+'"]'):$('trail-inspect'))?.focus({preventScroll:true});
@@ -131,7 +131,7 @@
     dialog.addEventListener('click',e=>{if(e.target!==dialog)return;const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeJourney(kind);});
     if(isOpen&&scene===kind&&!paused)dialog.showModal();
   }
-  function renderCamp(){if(run){parkOpening();$('camp').innerHTML=window.AnimalCampView.render(run,campBuilding,{text,name,image});bindJourney('camp',campOpen);}guideLabels();paintCoach();if(opening)paintOpening();}
+  function renderCamp(){if(run){$('camp').innerHTML=window.AnimalCampView.render(run,campBuilding,{text,name,image});bindJourney('camp',campOpen);}guideLabels();paintCoach();if(opening)paintOpening();}
   function renderTrail(){if(run){$('trail').innerHTML=window.AnimalTrailView.render(run,locationId,{text,name,image});bindJourney('trail',trailOpen);}guideLabels();paintCoach();}
   function openCamp(){if(paused||!run||run.result||state)return;campBuilding=null;setScene('camp');renderCamp();window.scrollTo({top:0,behavior:'instant'});}
   function enterTrail(id){if(paused||!run||state||run.result||!C.SITES[id]?.guards)return;C.explore(run,id);locationId=id;setScene('trail');renderTrail();window.scrollTo({top:0,behavior:'instant'});}
@@ -141,22 +141,16 @@
     setScene('battle');window.scrollTo({top:0,behavior:'instant'});if(lessonRequested||coach.needsLesson){lessonRequested=false;startLesson();}else render();return true;
   }
   function cancel(){generation++;clearTimeout(timer);timer=null;}
-  function parkOpening(){if(openingHost.parentElement!==document.body)document.body.appendChild(openingHost);}
   function closeOpening(){
-    opening=null;parkOpening();show('opening-story',false);$('expedition').inert=false;$('camp').inert=false;
-    for(const node of document.querySelectorAll('.camp-tour-focus'))node.classList.remove('camp-tour-focus');
+    opening=null;show('opening-story',false);$('expedition').inert=false;$('camp').inert=false;
     if(run&&!run.result)document.body.dataset.state=paused?'paused':'playing';
   }
   function paintOpening(){
     if(!opening)return;
     const current=opening.current(),copy=window.AnimalOpeningStory.copy,inCamp=current.phase==='camp';
     const translate=value=>window.ToenowI18n?.t(value)||value;
-    const inBuilding=inCamp&&current.index>0&&!paused;
-    const parent=inBuilding?$('camp-dialog').querySelector('.journey-panel'):document.body;
-    if(openingHost.parentElement!==parent)parent.prepend(openingHost);
-    openingHost.classList.toggle('in-building',inBuilding);
     show('opening-story',!paused);
-    $('expedition').inert=!inCamp&&!paused;$('camp').inert=inCamp&&current.index===0&&!paused;
+    $('expedition').inert=!paused;$('camp').inert=!paused;
     $('story-chapter').textContent=translate(inCamp?copy.campChapter:copy.chapter);
     $('story-heading').textContent=translate(inCamp?copy.campTitle:copy.title);
     $('story-progress').textContent=(current.index+1)+' / '+current.total;
@@ -166,24 +160,26 @@
     $('story-skip').textContent=translate(copy.skip);
     const character=openingHost.querySelector('[data-story-character]');character.dataset.storyCharacter=current.speaker;
     character.querySelector('figcaption').textContent=translate(copy[current.speaker]);$('story-portrait').src=art(current.speaker);
-    for(const node of document.querySelectorAll('.camp-tour-focus'))node.classList.remove('camp-tour-focus');
-    if(inBuilding){const target=$('camp-dialog').querySelector(current.topic==='recruit'?'.recruit-actions':'.camp-training');target?.classList.add('camp-tour-focus');if(target)openingHost.after(target);}
   }
   function begin(wave=1,practice=false){
     start(wave,practice);
     if(skirmishMode||practice)return;
-    opening=window.AnimalOpeningStory.create();document.body.dataset.state='story';
+    const saved=introduction.read();
+    if(saved?.status==='completed'||saved?.status==='skipped')return;
+    opening=window.AnimalOpeningStory.create(saved);
+    if(opening.current().phase==='camp')openCamp();
+    introduction.save(opening.current());document.body.dataset.state='story';
     paintOpening();guideLabels();$('story-next').focus({preventScroll:true});
   }
   function advanceOpening(){
     if(!opening||paused)return;
     const current=opening.current();
     if(current.phase==='story'&&current.last){opening.enterCamp();openCamp();}
-    else if(current.phase==='camp'&&current.last){finishOpening();$('camp-dialog-close').focus({preventScroll:true});return;}
-    else {opening.advance();if(current.phase==='camp'){campBuilding='beaver';campOpen=true;renderCamp();}}
-    paintOpening();$('story-next').focus({preventScroll:true});
+    else if(current.phase==='camp'&&current.last){finishOpening('completed');return;}
+    else opening.advance();
+    introduction.save(opening.current());paintOpening();$('story-next').focus({preventScroll:true});
   }
-  function finishOpening(){closeOpening();if(scene==='camp'&&run&&!run.result)renderCamp();guideLabels();}
+  function finishOpening(status='skipped'){if(opening)introduction.finish(status);closeOpening();guideLabels();const target=scene==='camp'?$('camp').querySelector('[data-building="beaver"]'):$('expedition').querySelector('[data-location="home"]');target?.focus({preventScroll:true});}
   function title(){closeOpening();lessonRequested=false;clearOrder();closeLocation(false);closeJourney('camp',false);closeJourney('trail',false);coach.stop();lessonReturn=null;closeGuide(false);cancel();resetFeedback();resetSiege();plannedMove=null;state=null;run=null;paused=false;sdk.runActive=false;sdk.cancelMaterials();show('pause-layer',false);show('battle',false);show('expedition',false);show('camp',false);show('trail',false);scene='map';campBuilding=null;show('outcome',false);show('gameover-screen',false);show('title-screen',true);document.body.dataset.state='title';ToenowScreens.updateTitle(ID,{bestScore:sdk.loadBestScore(),bestWave:sdk.loadBestWave()});paintCoach();}
   function start(wave=1,practice=false){
     closeOpening();lessonRequested=false;
@@ -401,7 +397,7 @@
   $('btn-title').addEventListener('click',title);
   // Isolated runs remain available through the SDK; the opening has no Practice picker.
   $('story-next').addEventListener('click',advanceOpening);
-  $('story-skip').addEventListener('click',finishOpening);
+  $('story-skip').addEventListener('click',()=>finishOpening());
   $('board').addEventListener('click',e=>{const cell=e.target.closest('[data-cell]');if(cell){const [x,y]=cell.dataset.cell.split(',').map(Number);clickTile(x,y);}});
   $('confirm-move').addEventListener('click',confirmMove);
   $('confirm-attack').addEventListener('click',confirmAttack);

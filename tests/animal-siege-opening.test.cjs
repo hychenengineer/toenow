@@ -57,3 +57,42 @@ test('Animal Siege uses the shared title without rank records and keeps standard
     querySelector() { throw new Error('A title without records must not query missing record nodes'); } };
   assert.doesNotThrow(() => Screens.renderTitle(host, 'animal-siege', { bestScore: 999, bestWave: 21 }));
 });
+
+test('introduction completion and skip survive a new session without touching game records', () => {
+  const Opening = require('../games/animal-siege/opening-story.js');
+  for (const status of ['completed', 'skipped']) {
+    const values = new Map([['animal_siege_best_score_v1','17']]);
+    const storage = { getItem:key=>values.get(key), setItem:(key,value)=>values.set(key,value) };
+    Opening.progress(storage).finish(status);
+    assert.equal(Opening.progress(storage).read().status, status);
+    assert.equal(values.get('animal_siege_best_score_v1'), '17');
+  }
+});
+
+test('an interrupted introduction resumes its camp step instead of restarting the story', () => {
+  const Opening = require('../games/animal-siege/opening-story.js');
+  const values = new Map();
+  const storage = { getItem:key=>values.get(key), setItem:(key,value)=>values.set(key,value) };
+  const first = Opening.create();
+  while(first.advance()) {}
+  first.enterCamp();first.advance();
+  Opening.progress(storage).save(first.current());
+  const resumed = Opening.create(Opening.progress(storage).read());
+  assert.equal(resumed.current().phase, 'camp');
+  assert.equal(resumed.current().topic, 'recruit');
+  assert.equal(resumed.current().index, 1);
+});
+
+test('unavailable or corrupt introduction storage cannot interrupt play', () => {
+  const Opening = require('../games/animal-siege/opening-story.js');
+  const blocked = Opening.progress({ getItem(){throw Error('blocked');}, setItem(){throw Error('blocked');} });
+  assert.equal(blocked.read(), null);
+  blocked.finish('completed');
+  assert.equal(blocked.read().status, 'completed', 'session still remembers completion');
+  const quota = Opening.progress({getItem:()=>null,setItem(){throw Error('quota');}});
+  quota.finish('completed');
+  assert.equal(quota.read().status, 'completed', 'readable but full storage must retain session completion');
+  const corrupt = Opening.progress({getItem:()=>'{broken',setItem(){}});
+  assert.equal(corrupt.read(), null);
+  assert.equal(Opening.create({phase:'camp',index:999}).current().index, 0);
+});

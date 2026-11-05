@@ -1,0 +1,12 @@
+{
+  "exclude": [
+    "artifacts",
+    "docs",
+    "tests",
+    "tools",
+    "node_modules",
+    "package.json",
+    "package-lock.json",
+    "AGENTS.md"
+  ]
+}

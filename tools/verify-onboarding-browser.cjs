@@ -26,7 +26,7 @@ const output = path.resolve(__dirname, '..', process.env.TOENOW_ONBOARDING_SHOTS
       await page.setViewportSize({ width, height: 900 });
       for (const lang of ['en', 'zh-Hant']) {
         await page.evaluate(lang => ToenowI18n.setLanguage(lang), lang);
-        assert.equal(await page.locator('#welcomeGuestBtn').innerText(), lang === 'en' ? 'Continue as a guest' : '以訪客繼續');
+        assert.equal(await page.locator('#welcomeGuestBtn').innerText(), lang === 'en' ? 'Skip story' : '跳過故事');
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
         await page.screenshot({ path: path.join(output, `welcome-${width}-${lang}.png`), fullPage: true });
         checks.push(`welcome ${width}/${lang}`);
@@ -69,7 +69,7 @@ const output = path.resolve(__dirname, '..', process.env.TOENOW_ONBOARDING_SHOTS
     });
     async function finish(wave, practice = false, score = 120) {
       await page.locator('[data-island-game="number-pop"]').click();
-      await page.locator('.island-play-button').click();
+      await page.locator('.rabbit-home-actions [data-rabbit-action="play"]').click();
       const frame = page.locator('#gameViewer').contentFrame();
       if (practice) {
         await frame.locator('.unified-practice-btn').click();
@@ -164,7 +164,8 @@ const output = path.resolve(__dirname, '..', process.env.TOENOW_ONBOARDING_SHOTS
     }
     const restored = await authFixture({ user: { id: 'test-only', email: 'explorer@example.invalid' } });
     await restored.tab.waitForFunction(() => ToenowAccount.signedIn);
-    assert.equal(await restored.tab.locator('#islandWelcome[open]').count(), 0);
+    await restored.tab.locator('#islandWelcome[open]').waitFor();
+    assert.equal(await restored.tab.evaluate(() => localStorage.getItem('toenow_island_story_v1')), null, 'restoring a new account must not complete the island story');
     assert.equal(await restored.tab.locator('.island-location:not(.is-locked)').count(), 1, 'new signed-in account still explores');
     await restored.ctx.close();
     const cloud = await authFixture({ user: { id: 'test-only', email: 'explorer@example.invalid' }, rows: [{ game_id: 'flash-brain', score: 100, created_at: '2026-01-01T00:00:00Z' }] });
@@ -185,6 +186,6 @@ const output = path.resolve(__dirname, '..', process.env.TOENOW_ONBOARDING_SHOTS
     await choices.ctx.close();
     assert.deepEqual(errors, []);
     fs.writeFileSync(path.join(output, 'results.json'), JSON.stringify({ status: 'PASS', checks, practice: 'PASS', normalWaveBoundary: 'PASS', duplicate: 'PASS', legacy: 'PASS', reload: 'PASS', messageSource: 'PASS', rejectedResult: 'PASS', authWithLocalStub: 'PASS', liveAuth: 'NOT VERIFIED', errors }, null, 2));
-    console.log('PASS: welcome EN/ZH at 4 widths; sign-in/register/guest; real practice/Wave5/Wave6/duplicate/rejected results; discovery/reload; automatic legacy-to-exploration migration retaining scores; restored/cloud accounts cannot bypass the route.');
+    console.log('PASS: story welcome EN/ZH at 4 widths; sign-in/register/skip; real practice/Wave5/Wave6/duplicate/rejected results; discovery/reload; automatic legacy-to-exploration migration retaining scores; new restored accounts see the story and cloud accounts cannot bypass the route.');
   } finally { let timer; await Promise.race([browser.close(), new Promise(resolve => { timer = setTimeout(resolve, 5000); })]); clearTimeout(timer); }
 })().then(() => process.exit(0), error => { console.error(error); process.exit(1); });

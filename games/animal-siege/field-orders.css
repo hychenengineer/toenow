@@ -9,11 +9,6 @@
 #board [data-action-state=acted] .unit-status{background:#454c42;color:#dbe0c9}
 #board [data-action-state=guarding] .unit-status{background:#325572;color:#eff8ff}
 #board [data-action-state=moved] .unit-status{background:#775326;color:#fff2c8}
-#board .unit-hp{position:absolute;bottom:7px;left:2px;font-size:10px;font-weight:700;padding:1px 4px;border-radius:4px;background:#163a2cde;color:#fff4ca;z-index:5;pointer-events:none}
-#board .unit-health{position:absolute;bottom:1px;left:4%;width:66%;height:4px;border-radius:4px;background:#402f25;overflow:hidden;box-shadow:0 0 0 1px #e4d5a580;z-index:5;pointer-events:none}
-#board .unit-health i{display:block;height:100%;background:#a2d26a}
-#board .enemy-unit .unit-health i{background:#ef936d}
-#board .unit-capability{position:absolute;top:22px;left:50%;transform:translateX(-50%);font-size:10px;color:#fff5cc;background:#193b2cc7;padding:1px 4px;border-radius:4px;white-space:nowrap;z-index:5;pointer-events:none}
 #unit-orders.battle-actions{position:absolute;right:auto;bottom:auto;z-index:12;width:max-content;max-width:calc(100% - 16px);max-height:none;margin:0;padding:6px;border:1px solid #e0ba6a;border-radius:10px;background:#193d30f5;color:#fff0c8;box-shadow:0 4px 12px #09281c66;display:block;overflow:visible}
 #unit-orders .selection{display:none}
 #unit-orders .selection strong{display:none}
@@ -42,4 +37,13 @@
 body:has(#battle-order[open]){overflow:hidden}
 body:not([data-state="playing"]) #unit-orders,body:not([data-state="playing"]) #end-turn{display:none}
 @media(max-width:780px){#battle{padding:18px 10px 25px}.field-turn-controls{gap:8px}.field-turn-controls #remaining-orders{order:3;width:100%;text-align:right;font-size:11px}.battle-confirm-card{padding:20px}#unit-orders .selection{font-size:9px}}
-@media(max-width:520px){#board .unit-status{top:-1px;font-size:9px;padding:1px 3px}#board .unit-status>span{display:none}#board .unit-hp{bottom:5px;left:0;padding:0 2px;font-size:8px}#board .unit-health{height:3px;bottom:0;width:58%;left:1%}#board .unit-capability{top:12px;font-size:8px}#board .unit-count{z-index:6}#unit-orders button{min-height:36px;font-size:11px;padding:6px 9px}#unit-orders .selection{display:none}}
+@media(max-width:520px){#board .unit-status{top:-1px;font-size:9px;padding:1px 3px}#board .unit-status>span{display:none}#board .unit-count{z-index:6}#unit-orders button{min-height:36px;font-size:11px;padding:6px 9px}#unit-orders .selection{display:none}}
+
+/* Keep squad counts and orders anchored to the animal tile. */
+#board .unit-count{left:50%;right:auto;bottom:5px;transform:translateX(-50%);font-size:16px;min-width:28px;padding:2px 7px;z-index:6}
+#unit-orders.battle-actions{max-width:none;padding:3px}
+#unit-orders .move-confirmation{gap:3px}
+#unit-orders button{min-width:0;flex:1;padding:6px 3px;white-space:normal;line-height:1.2}
+@media(max-width:520px){#board .unit-count{font-size:14px;bottom:3px}#unit-orders button{font-size:10px}}
+
+@media(max-width:780px){#battle .board-surround{overflow-x:auto;overscroll-behavior-x:contain}#board{min-width:800px}}

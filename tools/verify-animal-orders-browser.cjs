@@ -4,7 +4,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const base=process.env.TOENOW_TEST_URL||'http://127.0.0.1:8774';
-const dir=path.resolve(__dirname,'../artifacts/animal-orders');
+const dir=path.resolve(__dirname,'../artifacts/animal-orders-refined');
 const key='animal_siege_hands_on_v2';
 async function setup(browser,width,lang,mode,{first=false,motion='reduce'}={}){
   const p=await browser.newPage({viewport:{width,height:900},isMobile:width<781,hasTouch:width<781,reducedMotion:motion});
@@ -52,10 +52,10 @@ async function run(){
         await p.setViewportSize({width:390,height:900});
       }
       await p.locator('#battle-coach-skip').click();assert.deepEqual((await snap()).state,hit.state,'replay/skip restores a battle including casualties');
-      // A move-only order leaves the attack available; pending move/end-turn explicitly commits before defending.
-      await p.locator('[data-unit="p-fox"]').click();await p.locator('[data-cell="1,3"]').click();await p.locator('#confirm-move').click();await idle();
-      assert.equal((await snap()).state.units.find(u=>u.id==='p-fox').acted,false);
-      await p.locator('#defend').click();await p.locator('[data-unit="p-squirrel"]').click();await p.locator('[data-cell="2,4"]').click();
+      // Moving without a target automatically defends; an explicit pending move/end-turn still commits.
+      await p.locator('[data-unit="p-fox"] .unit-count').click();await p.locator('[data-cell="1,3"]').click();await p.locator('#confirm-move').click();await idle();
+      assert.equal((await snap()).state.units.find(u=>u.id==='p-fox').guarding,true);
+      await p.locator('[data-unit="p-squirrel"] .unit-count').click();await p.locator('[data-cell="2,4"]').click();
       assert.match(await p.locator('#end-turn').innerText(),/Move.*end|移動.*結束/);assert.equal(await p.locator('#end-turn').isEnabled(),true);
       await p.locator('#end-turn').click();await p.locator('#order-accept').click();await p.waitForFunction(()=>window.__orders().state.round===2);await idle();
       assert.deepEqual((await snap()).state.units.find(u=>u.id==='p-squirrel').x,2);

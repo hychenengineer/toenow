@@ -134,7 +134,7 @@
   function renderCamp(){if(run){$('camp').innerHTML=window.AnimalCampView.render(run,campBuilding,{text,name,image});bindJourney('camp',campOpen);}guideLabels();paintCoach();if(opening)paintOpening();}
   function renderTrail(){if(run){$('trail').innerHTML=window.AnimalTrailView.render(run,locationId,{text,name,image});bindJourney('trail',trailOpen);}guideLabels();paintCoach();}
   function openCamp(){if(paused||!run||run.result||state)return;campBuilding=null;setScene('camp');renderCamp();window.scrollTo({top:0,behavior:'instant'});}
-  function enterTrail(id){if(paused||!run||state||run.result||!C.SITES[id]?.guards)return;C.explore(run,id);locationId=id;setScene('trail');renderTrail();window.scrollTo({top:0,behavior:'instant'});}
+  function enterTrail(id){if(paused||!run||state||run.result||!C.SITES[id]?.guards)return;C.explore(run,id);locationId=id;setScene('trail');trailOpen=true;renderTrail();window.scrollTo({top:0,behavior:'instant'});}
   function launchTrailBattle(id){
     if(paused||!run)return false;const next=C.beginTrailBattle(run,id);if(!next)return false;
     cancel();resetFeedback();resetSiege();plannedMove=null;state=next;settled=false;selected=alive('player')[0]?.id||null;targetId=null;
@@ -230,7 +230,7 @@
       const trail=state.kind==='trail',siteId=state.siteId;
       if(!(trail?C.completeTrailBattle(run,state):C.completeBattle(run,state)))return;
       if(run.result){endExpedition();return;}
-      state=null;selected=null;targetId=null;locationId=trail?siteId:'home';setScene(trail?'trail':'map');if(trail)renderTrail();else renderMap();window.scrollTo({top:0,behavior:'instant'});return;
+      state=null;selected=null;targetId=null;locationId=trail?siteId:'home';setScene(trail?'trail':'map');if(trail){trailOpen=true;renderTrail();}else renderMap();window.scrollTo({top:0,behavior:'instant'});return;
     }
     const score=state.score??(state.result==='victory'?300+alive('player').reduce((n,u)=>n+E.count(u)*10,0):state.units.filter(u=>u.team==='enemy').reduce((n,u)=>n+(u.hp===0?30:0),0));
     sdk.handleGameOver({score,wave:state.wave,isPractice});
@@ -261,14 +261,10 @@
   function positionOrders(){
     const controls=$('unit-orders');if(controls.hidden)return;
     const a=byId(selected),at=plannedMove||a,tile=at&&$('board').querySelector('[data-cell="'+at.x+','+at.y+'"]');if(!tile)return;
-    const r=tile.getBoundingClientRect(),surface=document.querySelector('.board-surround').getBoundingClientRect(),w=controls.offsetWidth,h=controls.offsetHeight;
-    const clampX=x=>Math.max(8,Math.min(surface.width-w-8,x)),clampY=y=>Math.max(8,Math.min(surface.height-h-8,y));
-    const center=clampX(r.left-surface.left+r.width/2-w/2);
-    const candidates=[{x:center,y:r.bottom-surface.top+5},{x:center,y:r.top-surface.top-h-5},{x:r.right-surface.left+5,y:r.top-surface.top},{x:r.left-surface.left-w-5,y:r.top-surface.top}].map(p=>({x:clampX(p.x),y:clampY(p.y)}));
-    const cells=[...$('board').querySelectorAll('.tile.reachable,.tile.target,.tile.has-unit,.tile.move-origin')].map(el=>el.getBoundingClientRect());
-    const available=p=>!cells.some(b=>p.x+surface.left<b.right&&p.x+surface.left+w>b.left&&p.y+surface.top<b.bottom&&p.y+surface.top+h>b.top);
-    const point=candidates.find(available)||{x:center,y:clampY($('board').getBoundingClientRect().top-surface.top-h-8)};
-    controls.style.left=point.x+'px';controls.style.top=point.y+'px';
+    const r=tile.getBoundingClientRect(),surface=document.querySelector('.board-surround').getBoundingClientRect();
+    controls.style.width=Math.max(0,r.width-8)+'px';
+    controls.style.left=(r.left-surface.left+document.querySelector('.board-surround').scrollLeft+4)+'px';
+    controls.style.top=(r.top-surface.top+24)+'px';
   }
   function syncOrder(ready,a,t,predicted,predictedLoss){
     const d=$('battle-order'),valid=!!(state&&state.phase==='player'&&!state.result&&!feedbackBusy&&!captureBusy&&(orderMode==='end-turn'||orderMode==='attack'&&a&&!a.acted&&t&&E.canAttack(state,plannedMove?{...a,x:plannedMove.x,y:plannedMove.y}:a,t)));
@@ -291,7 +287,18 @@
     if(!E.move(state,move.id,move.x,move.y))return;
     plannedMove=null;targetId=null;playWalk(unit,path,after);
   }
-  function confirmMove(){if(!coach.isLesson)commitMove(render);}
+  function completeUnitAction(){
+    targetId=null;
+    if(state.result){render();finish();return;}
+    if(!coach.isLesson&&state.phase==='player'&&alive('player').every(u=>u.acted)){finishTurn();return;}
+    selected=alive('player').find(u=>!u.acted)?.id||selected;
+    render();
+  }
+  function confirmMove(){if(!coach.isLesson)commitMove(()=>{
+    const unit=byId(selected);
+    if(unit&&!alive('enemy').some(target=>E.canAttack(state,unit,target))){E.defend(state,unit.id);completeUnitAction();}
+    else render();
+  });}
   function confirmAttack(){
     if(orderMode!=='attack')return;
     if(paused||feedbackBusy||captureBusy||!state||state.phase!=='player'||state.result||!coach.allows('attack'))return;
@@ -304,7 +311,7 @@
   function executeAttack(id,enemyId){
     const a=byId(id);if(!E.attack(state,id,enemyId)){render();return;}
     coach.attack();
-    targetId=null;playAttack({...state.last},()=>{selected=alive('player').find(p=>!p.acted)?.id||a.id;render();if(state.result)finish();});
+    targetId=null;playAttack({...state.last},completeUnitAction);
   }
   function clickTile(x,y){
     if(!state||paused||feedbackBusy||state.phase!=='player')return;
@@ -366,14 +373,14 @@
     const predictedLoss=t?E.count(t)-Math.ceil(Math.max(0,t.hp-predicted)/E.TYPES[t.kind].hp):0;
     const targets=canAct&&a&&!a.acted?alive('enemy').filter(t=>E.canAttack(state,attackOrigin,t)):[];
     const ready=!!(canAct&&a&&!a.acted&&t&&E.canAttack(state,attackOrigin,t));
-    $('action-hint').textContent=captureBusy||state.result?text('Battle complete','戰鬥結束'):paused?text('Battle paused','戰鬥已暫停'):feedbackBusy?text('Action in progress…','行動中…'):state.phase==='enemy'?text('Watch the defenders. Your turn is next.','觀察守軍的行動，接著輪到你。'):ready?(plannedMove?text('Ready: one order moves and attacks.','準備好了：一個指令就能移動並攻擊。'):text('Target selected. Press Attack.','已選取目標，按「攻擊」出手。')):plannedMove?(targets.length?text('From here you can attack '+targets.map(t=>name(t.kind)).join(', ')+'. Tap a red-sword enemy.','走到這裡可以攻擊'+targets.map(t=>name(t.kind)).join('、')+'。點選紅色劍標記的敵人。'):text('No enemy in range here. Move only, choose another tile, or move and end turn.','這裡沒有可攻擊的敵人。可以只移動、改選位置，或移動並結束回合。')):!a||a.acted?text('Choose another squad, or end your turn.','選擇其他部隊，或結束回合。'):a.moved?(targets.length?text('You can still attack! Select a red-sword enemy.','還可以攻擊！請選擇紅色劍標記的敵人。'):text('No enemy in range. Defend or choose another squad.','目前沒有可攻擊的敵人，可以防守或操作其他動物。')):text('Choose a blue tile to move, or select a red-sword enemy to attack.','選藍色格子移動，或選紅色劍標記的敵人攻擊。');
+    $('action-hint').textContent=captureBusy||state.result?text('Battle complete','戰鬥結束'):paused?text('Battle paused','戰鬥已暫停'):feedbackBusy?text('Action in progress…','行動中…'):state.phase==='enemy'?text('Watch the defenders. Your turn is next.','觀察守軍的行動，接著輪到你。'):ready?(plannedMove?text('Ready: one order moves and attacks.','準備好了：一個指令就能移動並攻擊。'):text('Target selected. Press Attack.','已選取目標，按「攻擊」出手。')):plannedMove?(targets.length?text('From here you can attack '+targets.map(t=>name(t.kind)).join(', ')+'. Tap a red-sword enemy.','走到這裡可以攻擊'+targets.map(t=>name(t.kind)).join('、')+'。點選紅色劍標記的敵人。'):text('No enemy in range here. Confirm the move to automatically defend, or choose another tile.','這裡沒有可攻擊的敵人。確認移動後會自動防守，也可以改選位置。')):!a||a.acted?text('Choose another squad, or end your turn.','選擇其他部隊，或結束回合。'):a.moved?(targets.length?text('You can still attack! Select a red-sword enemy.','還可以攻擊！請選擇紅色劍標記的敵人。'):text('No enemy in range. Defend or choose another squad.','目前沒有可攻擊的敵人，可以防守或操作其他動物。')):text('Choose a blue tile to move, or select a red-sword enemy to attack.','選藍色格子移動，或選紅色劍標記的敵人攻擊。');
     $('preview').hidden=!t||!a||!canAct;
     $('preview').textContent=t&&a?(E.canAttack(state,attackOrigin,t)?name(a.kind)+' → '+name(t.kind)+' · '+text('Predicted damage ','預計傷害 ')+predicted+text(' · troops lost ','・減兵 ')+predictedLoss+(E.TYPES[a.kind].counters===t.kind?text(' · Counter ×1.8','・克制 ×1.8'):''):text('Out of reach, or the wall blocks your shot. Choose another position or target.','距離太遠，或城牆擋住射線。請改選位置或目標。')):'';
     $('confirm-attack').hidden=!ready;$('confirm-attack').disabled=!ready;
     $('confirm-attack').textContent=ready?(plannedMove?text('⚔ Move & attack '+name(t.kind),'⚔ 移動並攻擊'+name(t.kind)):text('⚔ Attack '+name(t.kind),'⚔ 攻擊'+name(t.kind))):text('⚔ Attack','⚔ 攻擊');
     $('action-hint').dataset.step=ready?'attack':plannedMove?'move':canAct&&a?.moved&&targets.length?'target':'choose';
     $('move-confirmation').hidden=!plannedMove;
-    $('confirm-move').textContent=text('Move only','只移動');$('confirm-move').disabled=!plannedMove||!canAct;
+    $('confirm-move').textContent=text(targets.length?'Move only':'Move & defend',targets.length?'只移動':'移動並防守');$('confirm-move').disabled=!plannedMove||!canAct;
     $('cancel-move').textContent=text('Cancel','取消');$('cancel-move').disabled=!plannedMove||!canAct;
     $('defend').textContent=text('◈ Defend','◈ 防守');$('defend').disabled=!!plannedMove||!canAct||!a||a.acted;
     $('end-turn').textContent=plannedMove?text('Move & end turn →','移動並結束回合 →'):text('End turn →','結束回合 →');$('end-turn').disabled=!canAct;
@@ -412,7 +419,7 @@
   $('unit-guide').addEventListener('cancel',e=>{e.preventDefault();closeGuide();});
   $('unit-guide').addEventListener('click',e=>{if(e.target!==$('unit-guide'))return;const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeGuide();});
   $('cancel-move').addEventListener('click',()=>{if(!paused&&!coach.isLesson&&plannedMove){plannedMove=null;targetId=null;render();}});
-  $('defend').addEventListener('click',()=>{if(!paused&&!feedbackBusy&&!plannedMove&&state?.phase==='player'&&E.defend(state,selected)){selected=alive('player').find(u=>!u.acted)?.id||null;targetId=null;render();}});
+  $('defend').addEventListener('click',()=>{if(!paused&&!feedbackBusy&&!plannedMove&&state?.phase==='player'&&E.defend(state,selected)){completeUnitAction();}});
   $('end-turn').addEventListener('click',endTurn);
   $('restart').addEventListener('click',()=>run?retreat():start(state?.wave||1,isPractice));
   $('expedition').addEventListener('click',e=>{

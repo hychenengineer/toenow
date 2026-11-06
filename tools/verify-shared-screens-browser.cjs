@@ -10,7 +10,7 @@ const keys = require('../shared/toenow-levels.js').GAME_STORAGE_KEYS;
 const root = path.resolve(__dirname, '..');
 const base = process.env.TOENOW_TEST_URL || 'http://127.0.0.1:8766';
 const hooks = {
-  'animal-siege': `run.wave=11;Object.values(run.forts).forEach(f=>f.captured=true);run.result='victory';const oldScore=C.score;try{C.score=()=>321;endExpedition();}finally{C.score=oldScore;}`,
+  'animal-siege': `run.wave=11;if(storyMode){run.story.cleared=[1,2,3,4,5];run.story.chapter=5;run.story.completed=true;}else Object.values(run.forts).forEach(f=>f.captured=true);run.result='victory';const scores=storyMode?S:C,oldScore=scores.score;try{scores.score=()=>321;endExpedition();}finally{scores.score=oldScore;}`,
   'capybara-drift': `state.inventory={[E.POOLS.collectibles[0].id]:2};state.newFinds=[E.POOLS.collectibles[0].id];state.friends=1;state.elapsed=E.DURATION;state.completed=true;finishDrift();window.__journeyExpected=journeySummary();`,
   'number-pop': `game.score=321;game.wave=13;triggerGameOver();`,
   'ball-track': `state.score=321;state.wave=13;saveRecords(state.score,state.wave);state.frozenSnapshot={score:321,wave:13,best:bestScore};showGameOverModal();`,
@@ -129,7 +129,7 @@ async function run() {
         assert.deepEqual(endShape,endStructure,id+' result DOM differs');
         assert.equal(await end.locator('[data-screen-field="score"]').innerText(),'321');
         assert.equal(await end.locator('[data-screen-field="bestScore"]').innerText(),'900');
-        assert.equal(await end.locator('[data-screen-field="wave"]').innerText(),'13');
+        assert.equal(await end.locator('[data-screen-field="wave"]').innerText(),id==='animal-siege'?'15':'13');
         assert.equal(await end.locator('[data-screen-field="level"]').innerText(),lang==='en'?'LVL 3 · ADVANCED':'第 3 級 · 進階');
         } else {
           assert.equal(await end.locator('[data-screen-field]').count(),0,id+' no competitive result fields');
@@ -169,7 +169,7 @@ async function run() {
         const shared=await page.evaluate(()=>window.__sharedScreenScore);
         if (journey) {
           const memory=await page.evaluate(()=>window.__sharedJourney);assert.ok(memory.text);assert.doesNotMatch(memory.text,/LVL|score|wave/i);const expected=await page.evaluate(()=>window.__journeyExpected);assert.ok(memory.text.includes(expected.items[0].name));assert.ok(memory.text.includes(expected.friend));assert.ok(memory.text.includes('×2'));
-        } else {assert.equal(shared.score,321); assert.equal(shared.wave,13); assert.equal(shared.level,3);}
+        } else {assert.equal(shared.score,321); assert.equal(shared.wave,id==='animal-siege'?15:13); assert.equal(shared.level,3);}
         await end.locator('[data-screen-action="retry"]').click();
         await end.waitFor({state:'hidden'});
         await confirmReady(page,id);

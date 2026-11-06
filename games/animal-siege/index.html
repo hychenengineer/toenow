@@ -15,6 +15,7 @@
   <script src="../../shared/toenow-i18n-core.js"></script>
   <script src="../../shared/toenow-i18n-games-a.js"></script>
   <script src="../../shared/toenow-i18n-games-b.js?v=clear-guide-20261104"></script>
+  <script src="../../shared/toenow-i18n-hero-story.js"></script>
   <script src="../../shared/toenow-i18n.js"></script>
   <script src="../../shared/toenow-screen-config.js?v=clear-guide-20261104"></script>
   <script src="../../shared/toenow-screens.js?v=clear-guide-20261104"></script>
@@ -32,6 +33,7 @@
   <link rel="stylesheet" href="journey-dialog.css">
   <link rel="stylesheet" href="field-orders.css">
   <link rel="stylesheet" href="opening-story.css?v=clear-guide-20261104">
+  <link rel="stylesheet" href="hero-story.css">
 </head>
 <body data-state="title">
   <header class="topbar"><button id="back" type="button">← Back to Hub</button><span>TOENOW · EXPEDITION</span><div class="topbar-actions"><button id="unit-guide-open" type="button" hidden aria-haspopup="dialog" aria-controls="unit-guide"></button></div></header>
@@ -51,6 +53,8 @@
   <main id="trail" hidden data-i18n-ignore></main>
   <main id="battle" hidden data-i18n-ignore>
     <div class="battle-heading"><div><span class="eyebrow" id="edition"></span><h1 id="battle-name"></h1><p id="objective"></p></div><div class="round"><span id="round-label"></span><strong id="round-number">1</strong></div></div>
+    <div id="hero-battle-bar" hidden data-i18n-ignore></div>
+    <p id="hero-announcement" role="status" aria-live="polite" data-i18n-ignore></p>
     <section id="battle-coach" hidden aria-label="Battle tips">
       <div class="battle-coach-heading"><strong id="battle-coach-label"></strong><button id="battle-coach-skip" type="button"></button></div>
       <p id="battle-coach-prompt" role="status" aria-live="polite"></p>
@@ -80,8 +84,13 @@
     <header class="unit-guide-header"><div><h2 id="unit-guide-title"></h2><p id="unit-guide-intro"></p></div><button id="unit-guide-close" type="button"></button></header>
     <div id="unit-guide-content"></div>
   </dialog>
+  <dialog id="hero-dialog" aria-labelledby="hero-dialog-title" data-i18n-ignore><button type="button" id="hero-dialog-close" class="hero-dialog-close">×</button><div id="hero-dialog-content" class="hero-dialog-shell"></div></dialog>
+  <p id="story-storage-warning" class="story-storage-warning" role="status" hidden data-i18n-ignore></p>
   <script src="engine.js"></script>
   <script src="campaign.js"></script>
+  <script src="hero.js"></script>
+  <script src="story.js"></script>
+  <script src="story-view.js"></script>
   <script src="army-view.js"></script>
   <script src="expedition-view.js"></script>
   <script src="camp-view.js"></script>

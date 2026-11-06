@@ -8,7 +8,7 @@
   const COMBAT=Object.freeze({counterMultiplier:1.8,guardMultiplier:0.55,trainedBeaverMultiplier:0.8});
   const distance=(a,b)=>Math.abs(a.x-b.x)+Math.abs(a.y-b.y);
   const count=u=>Math.ceil(Math.max(0,u.hp)/TYPES[u.kind].hp);
-  const stats=u=>({...TYPES[u.kind],move:TYPES[u.kind].move+(u.trained&&u.kind==='fox'?1:0),range:TYPES[u.kind].range+(u.trained&&u.kind==='squirrel'?1:0)});
+  const stats=u=>({...TYPES[u.kind],move:Math.max(1,TYPES[u.kind].move+(u.trained&&u.kind==='fox'?1:0)+(u.commander?.faction==='moon'?1:0)+(u.statuses||[]).filter(s=>s.id==='haste'||s.id==='slow').reduce((n,s)=>n+s.value,0)),range:TYPES[u.kind].range+(u.trained&&u.kind==='squirrel'?1:0)});
   function unit(id,team,kind,x,y,n){return {id,team,kind,x,y,hp:n*TYPES[kind].hp,moved:false,acted:false,guarding:false};}
   function createBattle(wave=1){
     const tier=Math.min(5,Math.max(1,Math.ceil((Number(wave)||1)/5))),extra=tier-1;
@@ -57,7 +57,7 @@
     }
     return tiles;
   }
-  function damage(s,a,b){return Math.max(1,Math.floor(count(a)*TYPES[a.kind].attack*(TYPES[a.kind].counters===b.kind?COMBAT.counterMultiplier:1)*(b.guarding?COMBAT.guardMultiplier:1)*(b.trained&&b.kind==='beaver'?COMBAT.trainedBeaverMultiplier:1)));}
+  function damage(s,a,b){return Math.max(1,Math.floor(count(a)*TYPES[a.kind].attack*(TYPES[a.kind].counters===b.kind?COMBAT.counterMultiplier:1)*(b.guarding?COMBAT.guardMultiplier:1)*(b.trained&&b.kind==='beaver'?COMBAT.trainedBeaverMultiplier:1)*(1+(a.commander?.attack||0)*.04)/(1+(b.commander?.defense||0)*.04)*(b.commander?.faction==='rock'?.85:1)*(a.statuses||[]).filter(s=>s.id==='inspire').reduce((n,s)=>n*s.value,1)*(b.statuses||[]).filter(s=>s.id==='shield'||s.id==='shelter').reduce((n,s)=>n*s.value,1)));}
   const allowed=(s,u)=>u&&u.hp>0&&!u.acted&&!s.result&&s.phase===u.team;
   function move(s,id,x,y){
     const u=s.units.find(u=>u.id===id);if(!allowed(s,u)||u.moved||!reachable(s,u).some(p=>p.x===x&&p.y===y&&p.cost>0))return false;
@@ -72,15 +72,18 @@
     const a=s.units.find(u=>u.id===id),b=s.units.find(u=>u.id===targetId);
     if(!allowed(s,a)||!canAttack(s,a,b))return false;
     const hit=damage(s,a,b),before=count(b),hpBefore=b.hp;b.hp=Math.max(0,b.hp-hit);a.acted=true;a.moved=true;a.guarding=false;
+    if(a.statuses)a.statuses=a.statuses.filter(s=>s.id!=='inspire');
     s.last={type:'attack',id,targetId,damage:hit,hpBefore,hpAfter:b.hp,actualDamage:hpBefore-b.hp,loss:before-count(b),counter:TYPES[a.kind].counters===b.kind};
     if(s.last.counter){const total=s.counterTotals[a.team];total.hits++;total.damage+=s.last.actualDamage;}
     s.log.push({...s.last});s.log=s.log.slice(-8);settle(s);return true;
   }
   function defend(s,id){const u=s.units.find(u=>u.id===id);if(!allowed(s,u))return false;u.guarding=true;u.acted=true;u.moved=true;s.last={type:'defend',id};return true;}
+  function expireStatuses(s,team){for(const u of s.units)if(u.statuses)u.statuses=u.statuses.filter(status=>status.sourceTeam!==team||status.expiresRound>s.round);}
   function endPlayerTurn(s){
     if(s.phase!=='player'||s.result)return false;
     for(const u of s.units.filter(u=>u.team==='player'&&u.hp>0&&!u.acted))defend(s,u.id);
     s.phase='enemy';s.enemyQueue=s.units.filter(u=>u.team==='enemy'&&u.hp>0).map(u=>u.id);
+    expireStatuses(s,'enemy');
     for(const u of s.units.filter(u=>u.team==='enemy')){u.moved=false;u.acted=false;u.guarding=false;}
     return true;
   }
@@ -113,8 +116,8 @@
         defend(s,u.id);
       }
     }
-    if(!s.result&&!s.enemyQueue.length){s.phase='player';s.round++;for(const p of s.units.filter(u=>u.team==='player')){p.moved=false;p.acted=false;p.guarding=false;}}
+    if(!s.result&&!s.enemyQueue.length){s.phase='player';s.round++;expireStatuses(s,'player');for(const p of s.units.filter(u=>u.team==='player')){p.moved=false;p.acted=false;p.guarding=false;}}
     return true;
   }
-  return {TYPES,COMBAT,stats,createBattle,unit,count,blocked,occupant,reachable,movementPath,lineOfSight,canAttack,attackRange,damage,move,attack,defend,endPlayerTurn,enemyStep};
+  return {TYPES,COMBAT,stats,createBattle,unit,count,blocked,occupant,reachable,movementPath,lineOfSight,canAttack,attackRange,damage,move,attack,defend,endPlayerTurn,enemyStep,settle};
 });

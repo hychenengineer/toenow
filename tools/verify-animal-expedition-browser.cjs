@@ -94,7 +94,7 @@ async function run(){
     for(const [width,lang] of cases){
       const p=await browser.newPage({viewport:{width,height:950},isMobile:width<700,hasTouch:width<700,reducedMotion:process.env.TOENOW_TEST_REDUCED_MOTION==='1'?'reduce':'no-preference'});const errors=[];p.on('pageerror',e=>errors.push(e.message));
       await p.addInitScript(lang=>{localStorage.setItem('toenow_language_v1',lang);localStorage.setItem('animal_siege_hands_on_v2','completed');localStorage.setItem('animal_siege_best_score_v1','17');localStorage.setItem('animal_siege_best_wave_v1','2');},lang);
-      await instrument(p);await p.goto(base+'/games/animal-siege/');await click(p,'#btn-start');await map(p);
+      await instrument(p);await p.goto(base+'/games/animal-siege/?mode=classic');await click(p,'#btn-start');await map(p);
       assert.equal(await p.locator('[data-enter-camp]').count(),1);
       await p.locator('#expedition img').evaluateAll(imgs=>Promise.all(imgs.map(i=>i.decode())));assert.equal(await p.locator('.map-node').count(),7);assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
       await p.screenshot({path:path.join(dir,width+'-'+lang+'-map.png'),fullPage:true});

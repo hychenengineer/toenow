@@ -47,3 +47,6 @@ body:not([data-state="playing"]) #unit-orders,body:not([data-state="playing"]) #
 @media(max-width:520px){#board .unit-count{font-size:14px;bottom:3px}#unit-orders button{font-size:10px}}
 
 @media(max-width:780px){#battle .board-surround{overflow-x:auto;overscroll-behavior-x:contain}#board{min-width:800px}}
+
+/* Leave space for orders below squads on the last row. */
+#board{margin-bottom:56px}

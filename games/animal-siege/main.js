@@ -264,7 +264,7 @@
     const r=tile.getBoundingClientRect(),surface=document.querySelector('.board-surround').getBoundingClientRect();
     controls.style.width=Math.max(0,r.width-8)+'px';
     controls.style.left=(r.left-surface.left+document.querySelector('.board-surround').scrollLeft+4)+'px';
-    controls.style.top=(r.top-surface.top+24)+'px';
+    controls.style.top=(r.bottom-surface.top+4)+'px';
   }
   function syncOrder(ready,a,t,predicted,predictedLoss){
     const d=$('battle-order'),valid=!!(state&&state.phase==='player'&&!state.result&&!feedbackBusy&&!captureBusy&&(orderMode==='end-turn'||orderMode==='attack'&&a&&!a.acted&&t&&E.canAttack(state,plannedMove?{...a,x:plannedMove.x,y:plannedMove.y}:a,t)));
@@ -296,8 +296,7 @@
   }
   function confirmMove(){if(!coach.isLesson)commitMove(()=>{
     const unit=byId(selected);
-    if(unit&&!alive('enemy').some(target=>E.canAttack(state,unit,target))){E.defend(state,unit.id);completeUnitAction();}
-    else render();
+    if(unit){E.defend(state,unit.id);completeUnitAction();}
   });}
   function confirmAttack(){
     if(orderMode!=='attack')return;
@@ -380,7 +379,7 @@
     $('confirm-attack').textContent=ready?(plannedMove?text('⚔ Move & attack '+name(t.kind),'⚔ 移動並攻擊'+name(t.kind)):text('⚔ Attack '+name(t.kind),'⚔ 攻擊'+name(t.kind))):text('⚔ Attack','⚔ 攻擊');
     $('action-hint').dataset.step=ready?'attack':plannedMove?'move':canAct&&a?.moved&&targets.length?'target':'choose';
     $('move-confirmation').hidden=!plannedMove;
-    $('confirm-move').textContent=text(targets.length?'Move only':'Move & defend',targets.length?'只移動':'移動並防守');$('confirm-move').disabled=!plannedMove||!canAct;
+    $('confirm-move').textContent=text('Defend','防守');$('confirm-move').disabled=!plannedMove||!canAct;
     $('cancel-move').textContent=text('Cancel','取消');$('cancel-move').disabled=!plannedMove||!canAct;
     $('defend').textContent=text('◈ Defend','◈ 防守');$('defend').disabled=!!plannedMove||!canAct||!a||a.acted;
     $('end-turn').textContent=plannedMove?text('Move & end turn →','移動並結束回合 →'):text('End turn →','結束回合 →');$('end-turn').disabled=!canAct;
